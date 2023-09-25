@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="204" viewBox="0 0 24 204">
+  <g id="Group_24767" data-name="Group 24767" transform="translate(-20 -513)">
+    <g id="vuesax_bold_location" data-name="vuesax/bold/location" transform="translate(-408 325)">
+      <path id="Vector" d="M17.5,6.7A8.626,8.626,0,0,0,8.88,0H8.87A8.624,8.624,0,0,0,.25,6.69C-.92,11.85,2.24,16.22,5.1,18.97a5.422,5.422,0,0,0,7.55,0C15.51,16.22,18.67,11.86,17.5,6.7ZM8.88,11.71a3.15,3.15,0,1,1,3.15-3.15A3.15,3.15,0,0,1,8.88,11.71Z" transform="translate(431.12 189.75)" fill="#ff6302"/>
+      <path id="Vector-2" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(428 188)" fill="none" opacity="0"/>
+      <path id="Vector-3" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(452 212) rotate(180)" fill="none" opacity="0"/>
+    </g>
+    <g id="vuesax_bold_location-2" data-name="vuesax/bold/location" transform="translate(-408 385)">
+      <path id="Vector-4" data-name="Vector" d="M17.5,6.7A8.626,8.626,0,0,0,8.88,0H8.87A8.624,8.624,0,0,0,.25,6.69C-.92,11.85,2.24,16.22,5.1,18.97a5.422,5.422,0,0,0,7.55,0C15.51,16.22,18.67,11.86,17.5,6.7ZM8.88,11.71a3.15,3.15,0,1,1,3.15-3.15A3.15,3.15,0,0,1,8.88,11.71Z" transform="translate(431.12 189.75)" fill="#ff6302"/>
+      <path id="Vector-5" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(428 188)" fill="none" opacity="0"/>
+      <path id="Vector-6" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(452 212) rotate(180)" fill="none" opacity="0"/>
+    </g>
+    <g id="vuesax_bold_frame" data-name="vuesax/bold/frame" transform="translate(-88 381)">
+      <g id="frame">
+        <path id="Vector-7" data-name="Vector" d="M4.75,0a4.746,4.746,0,0,0-.12,9.49.807.807,0,0,1,.22,0h.07A4.746,4.746,0,0,0,4.75,0Z" transform="translate(115.25 254)" fill="#a3a6aa"/>
+        <path id="Vector-8" data-name="Vector" d="M12.12,1.395a9.929,9.929,0,0,0-10.15,0A3.947,3.947,0,0,0,0,4.625a3.914,3.914,0,0,0,1.96,3.21,9.239,9.239,0,0,0,5.08,1.41,9.239,9.239,0,0,0,5.08-1.41,3.945,3.945,0,0,0,1.96-3.23A3.937,3.937,0,0,0,12.12,1.395Z" transform="translate(112.96 264.755)" fill="#a3a6aa"/>
+        <path id="Vector-9" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(132 276) rotate(180)" fill="none" opacity="0"/>
+      </g>
+    </g>
+    <g id="vuesax_bold_call" data-name="vuesax/bold/call" transform="translate(-88 505)">
+      <g id="call">
+        <path id="Vector-10" data-name="Vector" d="M9.05,12.95,7.2,14.8a1,1,0,0,1-1.41.01c-.11-.11-.22-.21-.33-.32a28.414,28.414,0,0,1-2.79-3.27A17.828,17.828,0,0,1,.71,7.81,8.586,8.586,0,0,1,0,4.54,5.173,5.173,0,0,1,.36,2.61,4.6,4.6,0,0,1,1.51.94,2.93,2.93,0,0,1,3.59,0,1.879,1.879,0,0,1,4.4.18a1.63,1.63,0,0,1,.67.56L7.39,4.01a3.422,3.422,0,0,1,.4.7,1.581,1.581,0,0,1,.14.61,1.357,1.357,0,0,1-.21.71,3.4,3.4,0,0,1-.56.71l-.76.79a.535.535,0,0,0-.16.4.908.908,0,0,0,.03.23c.03.08.06.14.08.2a8.3,8.3,0,0,0,.93,1.28c.45.52.93,1.05,1.45,1.58.1.1.21.2.31.3A1,1,0,0,1,9.05,12.95Z" transform="translate(110 190)" fill="#a3a6aa"/>
+        <path id="Vector-11" data-name="Vector" d="M12.37,4.29a2.54,2.54,0,0,1-.15.85,2.442,2.442,0,0,1-.1.24,4.126,4.126,0,0,1-.68,1.02A4.508,4.508,0,0,1,9.8,7.58c-.01,0-.02.01-.03.01a5.052,5.052,0,0,1-1.92.37,8.334,8.334,0,0,1-3.26-.73A17.564,17.564,0,0,1,1.15,5.25C.76,4.96.37,4.67,0,4.36L3.27,1.09a5.618,5.618,0,0,0,.74.48c.05.02.11.05.18.08a.69.69,0,0,0,.25.04.55.55,0,0,0,.41-.17L5.61.77A3.068,3.068,0,0,1,6.33.21,1.332,1.332,0,0,1,7.04,0a1.6,1.6,0,0,1,.61.13,3.868,3.868,0,0,1,.7.39l3.31,2.35a1.517,1.517,0,0,1,.55.64A2.052,2.052,0,0,1,12.37,4.29Z" transform="translate(117.6 202.04)" fill="#a3a6aa"/>
+        <path id="Vector-12" data-name="Vector" d="M0,0H24V24H0Z" transform="translate(132 212) rotate(180)" fill="none" opacity="0"/>
+      </g>
+    </g>
+    <line id="Line_165" data-name="Line 165" y2="36" transform="translate(32.5 537.5)" fill="none" stroke="#ff6302" stroke-linecap="round" stroke-width="1" stroke-dasharray="2"/>
+    <line id="Line_166" data-name="Line 166" y2="36" transform="translate(32.5 597.5)" fill="none" stroke="#a3a6aa" stroke-linecap="round" stroke-width="1" stroke-dasharray="2"/>
+    <line id="Line_167" data-name="Line 167" y2="36" transform="translate(32.5 657.5)" fill="none" stroke="#a3a6aa" stroke-linecap="round" stroke-width="1" stroke-dasharray="2"/>
+  </g>
+</svg>

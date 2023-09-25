@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12.29" height="12.29" viewBox="0 0 12.29 12.29">
+  <g id="vuesax_bold_security-time" data-name="vuesax/bold/security-time" transform="translate(-428 -188)" opacity="0.39">
+    <g id="security-time" transform="translate(428 188)">
+      <path id="Vector" d="M0,0H12.29V12.29H0Z" fill="none" opacity="0"/>
+      <path id="Vector-2" data-name="Vector" d="M1.816,0A1.816,1.816,0,1,0,3.631,1.816,1.819,1.819,0,0,0,1.816,0Zm.559,1.637a.985.985,0,0,1-.475.838l-.43.257a.428.428,0,0,1-.218.061.417.417,0,0,1-.212-.777l.425-.257a.138.138,0,0,0,.067-.117v-.52a.422.422,0,0,1,.844-.006Z" transform="translate(4.329 4.082)" fill="#0a0a0a"/>
+      <path id="Vector-3" data-name="Vector" d="M7.382,1.116,4.674.079a1.679,1.679,0,0,0-1.019,0L.946,1.116A1.6,1.6,0,0,0,0,2.509V6.584A1.683,1.683,0,0,0,.581,7.771L3.29,9.839a1.509,1.509,0,0,0,1.738,0L7.737,7.771a1.693,1.693,0,0,0,.581-1.187V2.509A1.591,1.591,0,0,0,7.382,1.116ZM4.162,7.193a2.39,2.39,0,0,1,0-4.779,2.39,2.39,0,0,1,0,4.779Z" transform="translate(1.983 1.091)" fill="#0a0a0a"/>
+    </g>
+  </g>
+</svg>

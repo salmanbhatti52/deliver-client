@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <g id="vuesax_bold_clock" data-name="vuesax/bold/clock" transform="translate(-172 -188)">
+    <g id="clock" transform="translate(172 188)">
+      <path id="Vector" d="M9.135,0A9.135,9.135,0,1,0,18.27,9.135,9.15,9.15,0,0,0,9.135,0Zm3.974,12.4a.682.682,0,0,1-.594.338.612.612,0,0,1-.347-.1l-2.832-1.69A2.694,2.694,0,0,1,8.112,8.788V5.043a.685.685,0,1,1,1.37,0V8.788a1.35,1.35,0,0,0,.557.977l2.832,1.69A.676.676,0,0,1,13.109,12.4Z" transform="translate(1.865 1.865)" fill="#292d32"/>
+      <path id="Vector-2" data-name="Vector" d="M0,0H22V22H0Z" transform="translate(22 22) rotate(180)" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

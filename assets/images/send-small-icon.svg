@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24.217" height="24.217" viewBox="0 0 24.217 24.217">
+  <g id="Group_1583" data-name="Group 1583" transform="translate(-37.761 -558.706)">
+    <circle id="Oval" cx="8.003" cy="8.003" r="8.003" transform="matrix(0.891, -0.454, 0.454, 0.891, 39.106, 567.317)" fill="#ff6302" stroke="#fff" stroke-miterlimit="10" stroke-width="2"/>
+    <g id="vuesax_bold_send-2" data-name="vuesax/bold/send-2" transform="translate(42.684 564.339)">
+      <g id="send-2" transform="translate(0 7.187) rotate(-45)">
+        <path id="Vector" d="M5.177.151,1.735,1.295c-2.313.774-2.313,2.035,0,2.805l1.021.339L3.1,5.46c.77,2.313,2.035,2.313,2.805,0L7.048,2.023C7.559.479,6.72-.363,5.177.151ZM5.3,2.2,3.85,3.658a.285.285,0,0,1-.4,0,.288.288,0,0,1,0-.4L4.895,1.8a.286.286,0,1,1,.4.4Z" transform="translate(5.347 0) rotate(48)" fill="#fff"/>
+        <path id="Vector-2" data-name="Vector" d="M0,0H9.147V9.147H0Z" transform="translate(9.655 9.654) rotate(180)" fill="none" opacity="0"/>
+      </g>
+    </g>
+  </g>
+</svg>

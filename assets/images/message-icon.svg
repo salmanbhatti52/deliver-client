@@ -1,0 +1,12 @@
+<svg id="Group_1627" data-name="Group 1627" xmlns="http://www.w3.org/2000/svg" width="39.619" height="39.619" viewBox="0 0 39.619 39.619">
+  <g id="Group_1626" data-name="Group 1626" transform="translate(0)">
+    <circle id="Ellipse_13" data-name="Ellipse 13" cx="19.473" cy="19.473" r="19.473" transform="matrix(-1, 0.017, -0.017, -1, 39.619, 38.939)" fill="#ff6302"/>
+  </g>
+  <g id="vuesax_bold_message-text" data-name="vuesax/bold/message-text" transform="translate(7.46 8.177)">
+    <g id="message-text">
+      <path id="Vector" d="M15.858,0H5.286A5.277,5.277,0,0,0,0,5.265v7.379a5.277,5.277,0,0,0,5.286,5.265H6.872a1.215,1.215,0,0,1,.846.423l1.586,2.1a1.5,1.5,0,0,0,2.537,0l1.586-2.1a1.072,1.072,0,0,1,.846-.423h1.586a5.277,5.277,0,0,0,5.286-5.265V5.265A5.277,5.277,0,0,0,15.858,0ZM11.629,12.422H5.286a.793.793,0,1,1,0-1.586h6.343a.793.793,0,0,1,0,1.586Zm4.229-5.286H5.286a.793.793,0,0,1,0-1.586H15.858a.793.793,0,0,1,0,1.586Z" transform="translate(2.114 2.114)" fill="#fbf9f7"/>
+      <path id="Vector-2" data-name="Vector" d="M0,0H25.373V25.373H0Z" fill="none" opacity="0"/>
+      <path id="Vector-3" data-name="Vector" d="M0,0H25.373V25.373H0Z" transform="translate(25.373 25.373) rotate(180)" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

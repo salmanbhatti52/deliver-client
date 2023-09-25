@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <path id="clock" d="M11,2a9,9,0,1,0,9,9A9.026,9.026,0,0,0,11,2Zm.9,9a.945.945,0,0,1-.45.81L9.11,13.16a.927.927,0,1,1-.9-1.62l1.89-1.08V6.5a.9.9,0,1,1,1.8,0Z" transform="translate(-2 -2)" fill="#ff6302"/>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="58" height="58" viewBox="0 0 58 58">
+  <defs>
+    <filter id="Ellipse_17" x="0" y="0" width="58" height="58" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_17277" data-name="Group 17277" transform="translate(-311 -497)">
+    <g id="Group_1579" data-name="Group 1579">
+      <g transform="matrix(1, 0, 0, 1, 311, 497)" filter="url(#Ellipse_17)">
+        <circle id="Ellipse_17-2" data-name="Ellipse 17" cx="14" cy="14" r="14" transform="translate(15 15)" fill="#ff6302"/>
+      </g>
+    </g>
+    <g id="vuesax_bold_gps" data-name="vuesax/bold/gps" transform="translate(-225.071 264.929)">
+      <path id="Vector" d="M15.686,7.559H14.143a6.054,6.054,0,0,0-5.45-5.45V.567a.567.567,0,0,0-1.134,0V2.109a6.054,6.054,0,0,0-5.45,5.45H.567a.567.567,0,0,0,0,1.134H2.109a6.054,6.054,0,0,0,5.45,5.45v1.542a.567.567,0,1,0,1.134,0V14.143a6.054,6.054,0,0,0,5.45-5.45h1.542a.567.567,0,0,0,0-1.134ZM8.126,10.485a2.359,2.359,0,1,1,2.359-2.359A2.362,2.362,0,0,1,8.126,10.485Z" transform="translate(556.945 252.945)" fill="#fff"/>
+      <path id="Vector-2" data-name="Vector" d="M0,0H18.142V18.142H0Z" transform="translate(556 252)" fill="none" opacity="0"/>
+      <path id="Vector-3" data-name="Vector" d="M0,0H18.142V18.142H0Z" transform="translate(574.142 270.142) rotate(180)" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

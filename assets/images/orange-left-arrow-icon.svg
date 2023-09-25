@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Navigate" transform="translate(-252 -724)">
+    <g id="Ellipse_669" data-name="Ellipse 669" transform="translate(252 724)" fill="#fff" stroke="#efefef" stroke-width="1">
+      <circle cx="12" cy="12" r="12" stroke="none"/>
+      <circle cx="12" cy="12" r="11.5" fill="none"/>
+    </g>
+    <path id="Icon_material-navigate-before" data-name="Icon material-navigate-before" d="M18.8,10.293,17.5,9,12,14.5l5.5,5.5L18.8,18.714,14.6,14.5Z" transform="translate(248.602 721.497)" fill="#ff6302"/>
+  </g>
+</svg>

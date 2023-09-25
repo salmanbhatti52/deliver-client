@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128.815" height="129.104" viewBox="0 0 128.815 129.104">
+  <defs>
+    <filter id="Oval" x="10.244" y="55.959" width="73.145" height="73.145" filterUnits="userSpaceOnUse">
+      <feOffset dy="2" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#222b45" flood-opacity="0.2"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Union_1" x="0" y="0" width="128.815" height="82.503" filterUnits="userSpaceOnUse">
+      <feOffset input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="5" result="blur-2"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_24767" data-name="Group 24767" transform="translate(-171.165 -219.395)">
+    <g id="Group_22285" data-name="Group 22285" transform="translate(9 -4)">
+      <circle id="Ellipse_16" data-name="Ellipse 16" cx="35" cy="35" r="35" transform="translate(173 280)" fill="#ff6302" opacity="0.32"/>
+      <g id="Group" transform="translate(187.771 292.716)">
+        <g transform="matrix(1, 0, 0, 1, -25.61, -69.32)" filter="url(#Oval)">
+          <circle id="Oval-2" data-name="Oval" cx="15.77" cy="15.77" r="15.77" transform="matrix(0.89, -0.45, 0.45, 0.89, 25.61, 83.64)" fill="#ffa167" stroke="#fff" stroke-miterlimit="10" stroke-width="5"/>
+        </g>
+        <g id="vuesax_bold_send-2" data-name="vuesax/bold/send-2" transform="translate(12.198 13.597)">
+          <g id="send-2">
+            <path id="Vector" d="M10.2.3,3.419,2.551c-4.559,1.525-4.559,4.011,0,5.528l2.013.668L6.1,10.76c1.517,4.559,4.011,4.559,5.528,0l2.261-6.774C14.9.944,13.243-.716,10.2.3Zm.24,4.041L7.587,7.207a.562.562,0,0,1-.8,0,.567.567,0,0,1,0-.8L9.645,3.542a.563.563,0,0,1,.8.8Z" transform="translate(1.921 1.925)" fill="#292d32"/>
+            <path id="Vector-2" data-name="Vector" d="M0,0H18.025V18.025H0Z" transform="translate(18.025 18.025) rotate(180)" fill="none" opacity="0"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="Group_22286" data-name="Group 22286" transform="translate(80.202 -80.388)">
+      <g id="Group_835" data-name="Group 835" transform="translate(120.964 318.879)">
+        <g transform="matrix(1, 0, 0, 1, -30, -19.1)" filter="url(#Union_1)">
+          <path id="Union_1-2" data-name="Union 1" d="M36.543,37.332H62.272L51.931,52.5Zm15.162,0H20.416C9.141,37.332,0,28.975,0,18.666S9.141,0,20.416,0H78.4C89.674,0,98.815,8.357,98.815,18.666S89.674,37.332,78.4,37.332Z" transform="translate(15 15)" fill="#fbf9f7"/>
+        </g>
+      </g>
+      <text id="Neon_Cafe_23_A_Park_Avenue" data-name="Neon Cafe
+23/A Park Avenue" transform="translate(156.177 332.553)" fill="#0a0a0a" font-size="12" font-family="Syne-Regular, Syne" letter-spacing="0.01em"><tspan x="-33.408" y="0">Neon Cafe</tspan><tspan font-size="9"><tspan x="-34.943" y="11">23/A Park Avenue</tspan></tspan></text>
+    </g>
+  </g>
+</svg>

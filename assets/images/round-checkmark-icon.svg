@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="vuesax_bold_tick-circle" data-name="vuesax/bold/tick-circle" transform="translate(-748 -188)">
+    <g id="tick-circle" transform="translate(748 188)">
+      <path id="Vector" d="M8.333,0a8.333,8.333,0,1,0,8.333,8.333A8.347,8.347,0,0,0,8.333,0Zm3.983,6.417L7.592,11.142a.624.624,0,0,1-.883,0L4.35,8.783A.625.625,0,0,1,5.233,7.9L7.15,9.817l4.283-4.283a.625.625,0,0,1,.883.883Z" transform="translate(1.667 1.667)" fill="#ff6302"/>
+      <path id="Vector-2" data-name="Vector" d="M0,0H20V20H0Z" transform="translate(20 20) rotate(180)" fill="none" opacity="0"/>
+    </g>
+  </g>
+</svg>

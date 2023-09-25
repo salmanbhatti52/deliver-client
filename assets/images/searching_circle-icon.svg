@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="350" viewBox="0 0 350 350">
+  <g id="Group_24772" data-name="Group 24772" transform="translate(-20 -210)">
+    <g id="Ellipse_24" data-name="Ellipse 24" transform="translate(138 328)" fill="#fff" stroke="#ff6302" stroke-width="2.6" stroke-dasharray="6">
+      <circle cx="57" cy="57" r="57" stroke="none"/>
+      <circle cx="57" cy="57" r="55.7" fill="none"/>
+    </g>
+    <g id="Ellipse_25" data-name="Ellipse 25" transform="translate(75 265)" fill="none" stroke="#ff6302" stroke-width="2.6" stroke-dasharray="6">
+      <circle cx="120" cy="120" r="120" stroke="none"/>
+      <circle cx="120" cy="120" r="118.7" fill="none"/>
+    </g>
+    <g id="Ellipse_26" data-name="Ellipse 26" transform="translate(20 210)" fill="none" stroke="#ff6302" stroke-width="2.6" stroke-dasharray="6">
+      <circle cx="175" cy="175" r="175" stroke="none"/>
+      <circle cx="175" cy="175" r="173.7" fill="none"/>
+    </g>
+    <g id="box_3_" data-name="box (3)" transform="translate(170.345 358.741)">
+      <path id="Path_19707" data-name="Path 19707" d="M24.645,17.567v27.82S9.406,38.866,3.021,36.141L3,36.109V8.306l.019.036,21.606,9.246Z" transform="translate(0.002 4.335)" fill="#fcd062" fill-rule="evenodd"/>
+      <path id="Path_19708" data-name="Path 19708" d="M36.121,8.3l-.019.034L14.5,17.586v27.8L36.1,36.142l.019-.034V8.3Z" transform="translate(10.151 4.334)" fill="#f8aa3a" fill-rule="evenodd"/>
+      <path id="Path_19709" data-name="Path 19709" d="M24.286,3.4,3,12.643v.023l21.649,9.289,21.66-9.312L24.873,3.4h-.584Z" fill="#f8b84e" fill-rule="evenodd"/>
+      <path id="Path_19710" data-name="Path 19710" d="M27.26,22.255l-5.4,2.31-5.4,2.312m5.4-6.009-5.4,2.31" transform="translate(11.883 15.428)" fill="none" stroke="#1c4d7e" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.908"/>
+      <path id="Path_19711" data-name="Path 19711" d="M28.189,4.88l-.132.049-21.5,9.3V27.286L10.37,25.4l3.766,5.649,0-13.569,21.508-9.4Z" transform="translate(3.137 1.31)" fill="#e9eded" fill-rule="evenodd"/>
+    </g>
+  </g>
+</svg>
