@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:deliver_client/widgets/tabbar_scheduled_rides.dart';
 
 class ScheduledRideScreen extends StatefulWidget {
   final int? selectedRadio;
@@ -11,12 +12,10 @@ class ScheduledRideScreen extends StatefulWidget {
 }
 
 class _ScheduledRideScreenState extends State<ScheduledRideScreen> {
-  DateTime? selectedDate;
-  DateTime? selectedTime;
 
   @override
   Widget build(BuildContext context) {
-    // var size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
@@ -47,6 +46,17 @@ class _ScheduledRideScreenState extends State<ScheduledRideScreen> {
           ),
         ),
         centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: size.height * 0.03),
+              const TabbarScheduledHistory(),
+            ],
+          ),
+        ),
       ),
     );
   }

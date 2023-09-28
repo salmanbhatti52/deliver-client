@@ -254,6 +254,58 @@ Widget buttonTransparentGradientSmall(buttonText, context) {
   );
 }
 
+Widget buttonTransparentGradientSmallWithLoader(buttonText, context) {
+  return Center(
+    child: Container(
+      height: MediaQuery.of(context).size.height * 0.06,
+      width: MediaQuery.of(context).size.width * 0.43,
+      decoration: BoxDecoration(
+        color: transparentColor,
+        borderRadius: BorderRadius.circular(10),
+        border: GradientBoxBorder(
+          gradient: LinearGradient(
+            begin: Alignment.centerRight,
+            end: Alignment.centerLeft,
+            stops: const [0.1, 1.5],
+            colors: [
+              orangeColor,
+              yellowColor,
+            ],
+          ),
+          width: 2,
+        ),
+      ),
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: orangeColor,
+                  strokeWidth: 3,
+                ),
+              ),
+            ),
+            const SizedBox(width: 15),
+            Text(
+              buttonText,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: orangeColor,
+                fontSize: 14,
+                fontFamily: 'Syne-Medium',
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 Widget bottomSheetButtonGradientBig(buttonText, context) {
   return Center(
     child: Container(

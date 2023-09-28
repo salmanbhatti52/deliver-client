@@ -1,5 +1,6 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -14,16 +15,20 @@ import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:deliver_client/screens/call_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
+import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
+import 'package:deliver_client/models/update_booking_status_model.dart';
 
 class ArrivingScreen extends StatefulWidget {
   final double? distance;
   final Map? singleData;
+  final String? currentBookingId;
   final SearchRiderData? riderData;
   const ArrivingScreen({
     super.key,
     this.distance,
     this.singleData,
+    this.currentBookingId,
     this.riderData,
   });
 
@@ -36,6 +41,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
 
   String? currencyUnit;
   String? distanceUnit;
+  Timer? timer;
   String? lat;
   String? lng;
   double? riderLat;
@@ -86,6 +92,67 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     }
   }
 
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
+
+  updateBookingStatus() async {
+    try {
+      String apiUrl = "$baseUrl/get_updated_status_booking";
+      print("apiUrl: $apiUrl");
+      print("currentBookingId: ${widget.currentBookingId}");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.currentBookingId,
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        updateBookingStatusModel =
+            updateBookingStatusModelFromJson(responseString);
+        print(
+            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        if (updateBookingStatusModel.data?.bookingsFleet?[0]
+                .bookingsDestinations?.bookingsDestinationsStatus?.name ==
+            "Start Ride") {
+          timer?.cancel();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePageScreen(
+                singleData: widget.singleData,
+                currentBookingId: widget.currentBookingId,
+                riderData: widget.riderData!,
+              ),
+            ),
+          );
+        } else {
+          timer?.cancel();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ArrivingScreen(
+                distance: widget.distance,
+                singleData: widget.singleData,
+                riderData: widget.riderData!,
+                currentBookingId: widget.currentBookingId,
+              ),
+            ),
+          );
+        }
+        setState(() {});
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
   Future<void> loadCustomMarker() async {
     final ByteData bytes = await rootBundle.load(
       'assets/images/rider-marker-icon.png',
@@ -108,398 +175,407 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     riderLng = double.parse(lng!);
     print("riderLat: $riderLat");
     print("riderLng: $riderLng");
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      updateBookingStatus();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: bgColor,
-      body: isLoading
-          ? Center(
-              child: Container(
-                width: 100,
-                height: 100,
-                color: transparentColor,
-                child: lottie.Lottie.asset(
-                  'assets/images/loading-icon.json',
-                  fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: bgColor,
+        body: isLoading
+            ? Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: transparentColor,
+                  child: lottie.Lottie.asset(
+                    'assets/images/loading-icon.json',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            )
-          : widget.riderData != null
-              ? Stack(
-                  children: [
-                    Container(
-                      color: transparentColor,
-                      width: size.width,
-                      height: size.height * 1,
-                      child: GoogleMap(
-                        onMapCreated: (controller) {
-                          mapController = controller;
-                        },
-                        mapType: MapType.normal,
-                        myLocationEnabled: false,
-                        zoomControlsEnabled: false,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            riderLat != null ? riderLat! : 0.0,
-                            riderLng != null ? riderLng! : 0.0,
-                          ),
-                          zoom: 15,
-                        ),
-                        markers: {
-                          Marker(
-                            markerId: const MarkerId("riderMarker"),
-                            position: LatLng(
+              )
+            : widget.riderData != null
+                ? Stack(
+                    children: [
+                      Container(
+                        color: transparentColor,
+                        width: size.width,
+                        height: size.height * 1,
+                        child: GoogleMap(
+                          onMapCreated: (controller) {
+                            mapController = controller;
+                          },
+                          mapType: MapType.normal,
+                          myLocationEnabled: false,
+                          zoomControlsEnabled: false,
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
                               riderLat != null ? riderLat! : 0.0,
                               riderLng != null ? riderLng! : 0.0,
                             ),
-                            icon: customMarkerIcon ??
-                                BitmapDescriptor.defaultMarker,
+                            zoom: 15,
                           ),
-                        },
-                      ),
-                    ),
-                    // Image.asset(
-                    //   'assets/images/arriving-location-background.png',
-                    //   fit: BoxFit.cover,
-                    // ),
-                    Positioned(
-                      top: 45,
-                      left: 0,
-                      right: 0,
-                      child: Text(
-                        "Arriving",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: blackColor,
-                          fontSize: 20,
-                          fontFamily: 'Syne-Bold',
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId("riderMarker"),
+                              position: LatLng(
+                                riderLat != null ? riderLat! : 0.0,
+                                riderLng != null ? riderLng! : 0.0,
+                              ),
+                              icon: customMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
+                            ),
+                          },
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40),
-                        ),
-                        child: Container(
-                          width: size.width,
-                          height: size.height * 0.46,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
+                      // Image.asset(
+                      //   'assets/images/arriving-location-background.png',
+                      //   fit: BoxFit.cover,
+                      // ),
+                      Positioned(
+                        top: 45,
+                        left: 0,
+                        right: 0,
+                        child: Text(
+                          "Arriving",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 20,
+                            fontFamily: 'Syne-Bold',
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: size.height * 0.04),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Arriving",
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40),
+                          ),
+                          child: Container(
+                            width: size.width,
+                            height: size.height * 0.46,
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: size.height * 0.04),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Arriving",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 22,
+                                          fontFamily: 'Syne-Bold',
+                                        ),
+                                      ),
+                                      // Text(
+                                      //   "5min",
+                                      //   textAlign: TextAlign.left,
+                                      //   style: TextStyle(
+                                      //     color: textHaveAccountColor,
+                                      //     fontSize: 16,
+                                      //     fontFamily: 'Inter-Regular',
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.02),
+                                  Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Container(
+                                          color: transparentColor,
+                                          width: 55,
+                                          height: 55,
+                                          child: FadeInImage(
+                                            placeholder: const AssetImage(
+                                              "assets/images/user-profile.png",
+                                            ),
+                                            image: NetworkImage(
+                                              '$imageUrl${widget.riderData!.profilePic}',
+                                            ),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.03),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.45,
+                                            child: AutoSizeText(
+                                              "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: drawerTextColor,
+                                                fontSize: 16,
+                                                fontFamily: 'Syne-SemiBold',
+                                              ),
+                                              maxFontSize: 16,
+                                              minFontSize: 12,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          SizedBox(height: size.height * 0.003),
+                                          Stack(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/images/star-with-container-icon.svg',
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.5, left: 24),
+                                                child: Text(
+                                                  "${widget.riderData!.bookingsRatings}",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Regular',
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: size.height * 0.003),
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.45,
+                                            child: AutoSizeText(
+                                              "${widget.riderData!.usersFleetVehicles!.color} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: textHaveAccountColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Syne-Regular',
+                                              ),
+                                              minFontSize: 14,
+                                              maxFontSize: 14,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ChatScreen(
+                                                    riderId: widget
+                                                        .riderData!.usersFleetId
+                                                        .toString(),
+                                                    name:
+                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                    address: widget
+                                                        .riderData!.address,
+                                                    image: widget
+                                                        .riderData!.profilePic,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: SvgPicture.asset(
+                                              'assets/images/message-icon.svg',
+                                            ),
+                                          ),
+                                          SizedBox(width: size.width * 0.02),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CallScreen(
+                                                    name:
+                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                    image: widget
+                                                        .riderData!.profilePic,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: SvgPicture.asset(
+                                              'assets/images/call-icon.svg',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.03),
+                                  Tooltip(
+                                    message:
+                                        "${widget.singleData?["destin_address"]}",
+                                    child: Text(
+                                      "${widget.singleData?["destin_address"]}",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: blackColor,
-                                        fontSize: 22,
+                                        fontSize: 16,
                                         fontFamily: 'Syne-Bold',
                                       ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    // Text(
-                                    //   "5min",
-                                    //   textAlign: TextAlign.left,
-                                    //   style: TextStyle(
-                                    //     color: textHaveAccountColor,
-                                    //     fontSize: 16,
-                                    //     fontFamily: 'Inter-Regular',
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                                SizedBox(height: size.height * 0.02),
-                                Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Container(
-                                        color: transparentColor,
-                                        width: 55,
-                                        height: 55,
-                                        child: FadeInImage(
-                                          placeholder: const AssetImage(
-                                            "assets/images/user-profile.png",
+                                  ),
+                                  SizedBox(height: size.height * 0.03),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/images/black-location-icon.svg',
                                           ),
-                                          image: NetworkImage(
-                                            '$imageUrl${widget.riderData!.profilePic}',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width * 0.03),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.45,
-                                          child: AutoSizeText(
-                                            "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: drawerTextColor,
-                                              fontSize: 16,
-                                              fontFamily: 'Syne-SemiBold',
-                                            ),
-                                            maxFontSize: 16,
-                                            minFontSize: 12,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        SizedBox(height: size.height * 0.003),
-                                        Stack(
-                                          children: [
-                                            SvgPicture.asset(
-                                              'assets/images/star-with-container-icon.svg',
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 1.5, left: 24),
-                                              child: Text(
-                                                "${widget.riderData!.bookingsRatings}",
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${widget.distance} $distanceUnit",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.18,
+                                              child: AutoSizeText(
+                                                "${widget.distance} $distanceUnit",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
+                                                  color: drawerTextColor,
+                                                  fontSize: 16,
                                                   fontFamily: 'Inter-Regular',
                                                 ),
+                                                maxFontSize: 16,
+                                                minFontSize: 12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        SizedBox(height: size.height * 0.003),
-                                        Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.45,
-                                          child: AutoSizeText(
-                                            "${widget.riderData!.usersFleetVehicles!.color} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Syne-Regular',
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                              'assets/images/black-clock-icon.svg'),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${widget.singleData?["destin_time"]}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.38,
+                                              child: AutoSizeText(
+                                                "${widget.singleData?["destin_time"]}",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: drawerTextColor,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                                maxFontSize: 16,
+                                                minFontSize: 12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Spacer(),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ChatScreen(
-                                                  riderId: widget
-                                                      .riderData!.usersFleetId
-                                                      .toString(),
-                                                  name:
-                                                      "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                  address:
-                                                      widget.riderData!.address,
-                                                  image: widget
-                                                      .riderData!.profilePic,
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/images/black-naira-icon.svg',
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "$currencyUnit${widget.singleData?["total_charges"]}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.2,
+                                              child: AutoSizeText(
+                                                "$currencyUnit${widget.singleData?["total_charges"]}",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: drawerTextColor,
+                                                  fontSize: 16,
+                                                  fontFamily: 'Inter-Regular',
                                                 ),
+                                                maxFontSize: 16,
+                                                minFontSize: 12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                            );
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/images/message-icon.svg',
+                                            ),
                                           ),
-                                        ),
-                                        SizedBox(width: size.width * 0.02),
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CallScreen(
-                                                  name:
-                                                      "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                  image: widget
-                                                      .riderData!.profilePic,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/images/call-icon.svg',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: size.height * 0.03),
-                                Tooltip(
-                                  message:
-                                      "${widget.singleData?["destin_address"]}",
-                                  child: Text(
-                                    "${widget.singleData?["destin_address"]}",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 16,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(height: size.height * 0.03),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/black-location-icon.svg',
-                                        ),
-                                        SizedBox(height: size.height * 0.01),
-                                        Tooltip(
-                                          message:
-                                              "${widget.distance} $distanceUnit",
-                                          child: Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.18,
-                                            child: AutoSizeText(
-                                              "${widget.distance} $distanceUnit",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: drawerTextColor,
-                                                fontSize: 16,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                              maxFontSize: 16,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/black-clock-icon.svg'),
-                                        SizedBox(height: size.height * 0.01),
-                                        Tooltip(
-                                          message:
-                                              "${widget.singleData?["destin_time"]}",
-                                          child: Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.38,
-                                            child: AutoSizeText(
-                                              "${widget.singleData?["destin_time"]}",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: drawerTextColor,
-                                                fontSize: 16,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                              maxFontSize: 16,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/black-naira-icon.svg',
-                                        ),
-                                        SizedBox(height: size.height * 0.01),
-                                        Tooltip(
-                                          message:
-                                              "$currencyUnit${widget.singleData?["total_charges"]}",
-                                          child: Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.2,
-                                            child: AutoSizeText(
-                                              "$currencyUnit${widget.singleData?["total_charges"]}",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: drawerTextColor,
-                                                fontSize: 16,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                              maxFontSize: 16,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: size.height * 0.03),
-                                buttonTransparent("CANCEL", context),
-                              ],
+                                  SizedBox(height: size.height * 0.03),
+                                  buttonTransparent("CANCEL", context),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 40,
-                      left: 20,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/back-icon.svg',
-                          fit: BoxFit.scaleDown,
+                      // Positioned(
+                      //   top: 40,
+                      //   left: 20,
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.pop(context);
+                      //     },
+                      //     child: SvgPicture.asset(
+                      //       'assets/images/back-icon.svg',
+                      //       fit: BoxFit.scaleDown,
+                      //     ),
+                      //   ),
+                      // ),
+                      Positioned(
+                        top: 40,
+                        right: 20,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: SvgPicture.asset(
+                            'assets/images/share-icon.svg',
+                            fit: BoxFit.scaleDown,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 40,
-                      right: 20,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          'assets/images/share-icon.svg',
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : null,
+                    ],
+                  )
+                : null,
+      ),
     );
   }
 }

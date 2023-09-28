@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print("userId in LoginPrefs is = $userId");
 
     if (userId != null) {
-      Navigator.push(context,
+      Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const HomePageScreen()));
       print("current session starts with userId = $userId");
     } else {

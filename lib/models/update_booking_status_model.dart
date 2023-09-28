@@ -1,26 +1,26 @@
 // To parse this JSON data, do
 //
-//     final createBookingModel = createBookingModelFromJson(jsonString);
+//     final updateBookingStatusModel = updateBookingStatusModelFromJson(jsonString);
 
 import 'dart:convert';
 
-CreateBookingModel createBookingModelFromJson(String str) =>
-    CreateBookingModel.fromJson(json.decode(str));
+UpdateBookingStatusModel updateBookingStatusModelFromJson(String str) =>
+    UpdateBookingStatusModel.fromJson(json.decode(str));
 
-String createBookingModelToJson(CreateBookingModel data) =>
+String updateBookingStatusModelToJson(UpdateBookingStatusModel data) =>
     json.encode(data.toJson());
 
-class CreateBookingModel {
+class UpdateBookingStatusModel {
   String? status;
   Data? data;
 
-  CreateBookingModel({
+  UpdateBookingStatusModel({
     this.status,
     this.data,
   });
 
-  factory CreateBookingModel.fromJson(Map<String, dynamic> json) =>
-      CreateBookingModel(
+  factory UpdateBookingStatusModel.fromJson(Map<String, dynamic> json) =>
+      UpdateBookingStatusModel(
         status: json["status"],
         data: Data.fromJson(json["data"]),
       );
@@ -51,7 +51,7 @@ class Data {
   String? paymentBy;
   String? paymentStatus;
   String? dateAdded;
-  dynamic dateModified;
+  String? dateModified;
   String? status;
   BookingsTypes? bookingsTypes;
   PaymentGateways? paymentGateways;
@@ -154,7 +154,7 @@ class BookingsFleet {
   dynamic reason;
   String? fleetAmount;
   String? dateAdded;
-  dynamic dateModified;
+  String? dateModified;
   String? status;
   BookingsDestinations? bookingsDestinations;
   Vehicles? vehicles;

@@ -12,6 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/create_booking_model.dart';
 import 'package:deliver_client/screens/driver_found_screen.dart';
+import 'package:deliver_client/models/schedule_booking_model.dart';
+import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
 
@@ -21,6 +23,7 @@ class RidersList extends StatefulWidget {
   final String? fleetId;
   final double? distanceKm;
   final String? distanceFormatted;
+
   const RidersList({
     super.key,
     this.singleData,
@@ -37,6 +40,7 @@ class RidersList extends StatefulWidget {
 class _RidersListState extends State<RidersList> {
   bool isLoading = false;
   bool isExpanded = false;
+  String? currentBookingId;
 
   CreateBookingModel createBookingModel = CreateBookingModel();
 
@@ -102,6 +106,86 @@ class _RidersListState extends State<RidersList> {
       if (response.statusCode == 200) {
         createBookingModel = createBookingModelFromJson(responseString);
         print('createBookingModel status: ${createBookingModel.status}');
+        currentBookingId = createBookingModel.data?.bookingsId.toString();
+        print('currentBookingId: $currentBookingId');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  ScheduleBookingModel scheduleBookingModel = ScheduleBookingModel();
+
+  scheduleBooking() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
+      final Map<String, dynamic> requestData = {
+        "users_fleet_id": widget.fleetId,
+        "vehicles_id": widget.singleData?["vehicles_id"],
+        "users_customers_id": userId,
+        "bookings_types_id": widget.singleData?["bookings_types_id"],
+        "delivery_type": widget.singleData?["delivery_type"],
+        "pickup_address": widget.singleData?["pickup_address"],
+        "pickup_latitude": widget.singleData?["pickup_latitude"],
+        "pickup_longitude": widget.singleData?["pickup_longitude"],
+        "bookings_destinations": [
+          {
+            "destin_address": widget.singleData?["destin_address"],
+            "destin_latitude": widget.singleData?["destin_latitude"],
+            "destin_longitude": widget.singleData?["destin_longitude"],
+            "destin_distance": widget.singleData?["destin_distance"],
+            "destin_time": widget.singleData?["destin_time"],
+            "destin_delivery_charges":
+                widget.singleData?["destin_delivery_charges"],
+            "destin_vat_charges": widget.singleData?["destin_vat_charges"],
+            "destin_total_charges": widget.singleData?["destin_total_charges"],
+            "destin_discount": widget.singleData?["destin_discount"],
+            "destin_discounted_charges":
+                widget.singleData?["destin_discounted_charges"],
+            "receiver_name": widget.singleData?["receiver_name"],
+            "receiver_phone": widget.singleData?["receiver_phone"],
+          }
+        ],
+        "delivery_date": widget.singleData?["delivery_date"],
+        "delivery_time": widget.singleData?["delivery_time"],
+        "total_delivery_charges": widget.singleData?["destin_total_charges"],
+        "total_vat_charges": widget.singleData?["total_vat_charges"],
+        "total_charges": widget.singleData?["total_charges"],
+        "total_discount": widget.singleData?["total_discount"],
+        "total_discounted_charges":
+            widget.singleData?["total_discounted_charges"],
+        "payment_gateways_id": widget.singleData?["payment_gateways_id"],
+        "payment_by": widget.singleData?["payment_gateways_id"] == "1"
+            ? "Receiver"
+            : "Sender",
+        "payment_status": "Unpaid"
+      };
+      String apiUrl = "$baseUrl/send_request_scheduled_booking";
+      print("apiUrl: $apiUrl");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestData),
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        scheduleBookingModel = scheduleBookingModelFromJson(responseString);
+        print('scheduleBookingModel status: ${scheduleBookingModel.status}');
+        currentBookingId = scheduleBookingModel.data?.bookingsId.toString();
+        print('currentBookingId: $currentBookingId');
         setState(() {
           isLoading = false;
         });
@@ -195,22 +279,36 @@ class _RidersListState extends State<RidersList> {
                   SizedBox(height: size.height * 0.005),
                   GestureDetector(
                     onTap: () async {
-                      await createBooking();
-                      if (createBookingModel.data != null) {
-                        if (createBookingModel.status == 'success') {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DriverFoundScreen(
-                                bookingId: createBookingModel.data?.bookingsId
-                                    .toString(),
-                                fleetId: widget.fleetId,
-                                distance: widget.distanceKm,
-                                singleData: widget.singleData,
-                                riderData: widget.searchRider,
+                      if (widget.singleData?["type"] == "booking") {
+                        print("booking");
+                        await createBooking();
+                        if (createBookingModel.data != null) {
+                          if (createBookingModel.status == 'success') {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DriverFoundScreen(
+                                  bookingId: createBookingModel.data?.bookingsId
+                                      .toString(),
+                                  fleetId: widget.fleetId,
+                                  currentBookingId: currentBookingId,
+                                  distance: widget.distanceKm,
+                                  singleData: widget.singleData,
+                                  riderData: widget.searchRider,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: "Please try again.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: toastColor,
+                              textColor: whiteColor,
+                              fontSize: 12,
+                            );
+                          }
                         } else {
                           Fluttertoast.showToast(
                             msg: "Please try again.",
@@ -222,16 +320,18 @@ class _RidersListState extends State<RidersList> {
                             fontSize: 12,
                           );
                         }
-                      } else {
-                        Fluttertoast.showToast(
-                          msg: "Please try again.",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: toastColor,
-                          textColor: whiteColor,
-                          fontSize: 12,
-                        );
+                      } else if (widget.singleData?["type"] == "schedule") {
+                        print("schedule");
+                        await scheduleBooking();
+                        if (scheduleBookingModel.status == 'success') {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const HomePageScreen()));
+                        } else {
+                          print("error");
+                        }
                       }
                     },
                     child: isLoading

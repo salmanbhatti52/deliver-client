@@ -1,12 +1,21 @@
+import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:deliver_client/utils/baseurl.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/report_boxes.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 class ReportScreen extends StatefulWidget {
-  const ReportScreen({super.key});
+  final SearchRiderData? riderData;
+  final String? currentBookingId;
+  const ReportScreen({
+    super.key,
+    this.riderData,
+    this.currentBookingId,
+  });
 
   @override
   State<ReportScreen> createState() => _ReportScreenState();
@@ -17,236 +26,254 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
         backgroundColor: bgColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: SvgPicture.asset(
-              'assets/images/back-icon.svg',
-              width: 22,
-              height: 22,
-              fit: BoxFit.scaleDown,
+        appBar: AppBar(
+          backgroundColor: bgColor,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: SvgPicture.asset(
+                'assets/images/back-icon.svg',
+                width: 22,
+                height: 22,
+                fit: BoxFit.scaleDown,
+              ),
             ),
           ),
-        ),
-        title: Text(
-          "Report Driver",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: blackColor,
-            fontSize: 20,
-            fontFamily: 'Syne-Bold',
+          title: Text(
+            "Report Driver",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: blackColor,
+              fontSize: 20,
+              fontFamily: 'Syne-Bold',
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: size.height * 0.03),
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    width: size.width * 0.4,
-                    height: size.height * 0.2,
-                    decoration: BoxDecoration(
-                      color: transparentColor,
-                    ),
-                    child: Image.asset(
-                      'assets/images/user-profile.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: size.height * 0.03),
-              Text(
-                'User Name',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: drawerTextColor,
-                  fontSize: 17,
-                  fontFamily: 'Syne-Bold',
-                ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              Card(
-                color: whiteColor,
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: widget.riderData != null
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
+                      SizedBox(height: size.height * 0.03),
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            width: size.width * 0.4,
+                            height: size.height * 0.2,
+                            decoration: BoxDecoration(
+                              color: transparentColor,
+                            ),
+                            child: FadeInImage(
+                              placeholder: const AssetImage(
+                                "assets/images/user-profile.png",
+                              ),
+                              image: NetworkImage(
+                                '$imageUrl${widget.riderData!.profilePic}',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.03),
+                      Text(
+                        '${widget.riderData!.firstName} ${widget.riderData!.lastName}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: drawerTextColor,
+                          fontSize: 17,
+                          fontFamily: 'Syne-Bold',
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Card(
+                        color: whiteColor,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/images/star-icon.svg'),
+                                  SizedBox(width: size.width * 0.02),
+                                  Text(
+                                    '${widget.riderData!.bookingsRatings}',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter-Medium',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/images/car-icon.svg'),
+                                  SizedBox(width: size.width * 0.02),
+                                  Text(
+                                    '120 Trips',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter-Medium',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/images/arrival-time-icon.svg'),
+                                  SizedBox(width: size.width * 0.02),
+                                  Text(
+                                    '3 Years',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 14,
+                                      fontFamily: 'Inter-Medium',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Select Reason',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: drawerTextColor,
+                            fontSize: 16,
+                            fontFamily: 'Syne-Bold',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      reportBoxes(
+                          context,
+                          'Lorem ipsum dolor sit amet.',
+                          'Lorem ipsum dolor sit amet.',
+                          'Lorem ipsum dolor sit amet.',
+                          'Lorem ipsum dolor sit amet.',
+                          'Any Other Reason'),
+                      SizedBox(height: size.height * 0.02),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Upload Evidence',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            color: drawerTextColor,
+                            fontSize: 16,
+                            fontFamily: 'Syne-Bold',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset('assets/images/star-icon.svg'),
-                          SizedBox(width: size.width * 0.02),
-                          Text(
-                            '4.8',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: drawerTextColor,
-                              fontSize: 14,
-                              fontFamily: 'Inter-Medium',
+                          Card(
+                            color: whiteColor,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              color: transparentColor,
+                              width: size.width * 0.25,
+                              height: size.height * 0.12,
+                              child: SvgPicture.asset(
+                                'assets/images/evidence-picture-icon.svg',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: whiteColor,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              color: transparentColor,
+                              width: size.width * 0.25,
+                              height: size.height * 0.12,
+                              child: SvgPicture.asset(
+                                'assets/images/evidence-video-icon.svg',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: whiteColor,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Container(
+                              color: transparentColor,
+                              width: size.width * 0.25,
+                              height: size.height * 0.12,
+                              child: SvgPicture.asset(
+                                'assets/images/evidence-recording-icon.svg',
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          SvgPicture.asset('assets/images/car-icon.svg'),
-                          SizedBox(width: size.width * 0.02),
-                          Text(
-                            '120 Trips',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: drawerTextColor,
-                              fontSize: 14,
-                              fontFamily: 'Inter-Medium',
-                            ),
-                          ),
-                        ],
+                      SizedBox(height: size.height * 0.04),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            // barrierColor: sheetBarrierColor,
+                            builder: (context) => confirmDialog(),
+                          );
+                        },
+                        child: buttonGradient("SUBMIT", context),
                       ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                              'assets/images/arrival-time-icon.svg'),
-                          SizedBox(width: size.width * 0.02),
-                          Text(
-                            '3 Years',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: drawerTextColor,
-                              fontSize: 14,
-                              fontFamily: 'Inter-Medium',
-                            ),
-                          ),
-                        ],
-                      ),
+                      SizedBox(height: size.height * 0.02),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Select Reason',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: drawerTextColor,
-                    fontSize: 16,
-                    fontFamily: 'Syne-Bold',
+              )
+            : Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: transparentColor,
+                  child: Lottie.asset(
+                    'assets/images/loading-icon.json',
+                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              reportBoxes(
-                  context,
-                  'Lorem ipsum dolor sit amet.',
-                  'Lorem ipsum dolor sit amet.',
-                  'Lorem ipsum dolor sit amet.',
-                  'Lorem ipsum dolor sit amet.',
-                  'Any Other Reason'),
-              SizedBox(height: size.height * 0.02),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Upload Evidence',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    color: drawerTextColor,
-                    fontSize: 16,
-                    fontFamily: 'Syne-Bold',
-                  ),
-                ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Card(
-                    color: whiteColor,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      color: transparentColor,
-                      width: size.width * 0.25,
-                      height: size.height * 0.12,
-                      child: SvgPicture.asset(
-                        'assets/images/evidence-picture-icon.svg',
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                  ),
-                  Card(
-                    color: whiteColor,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      color: transparentColor,
-                      width: size.width * 0.25,
-                      height: size.height * 0.12,
-                      child: SvgPicture.asset(
-                        'assets/images/evidence-video-icon.svg',
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                  ),
-                  Card(
-                    color: whiteColor,
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Container(
-                      color: transparentColor,
-                      width: size.width * 0.25,
-                      height: size.height * 0.12,
-                      child: SvgPicture.asset(
-                        'assets/images/evidence-recording-icon.svg',
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.04),
-              GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    // barrierColor: sheetBarrierColor,
-                    builder: (context) => confirmDialog(),
-                  );
-                },
-                child: buttonGradient("SUBMIT", context),
-              ),
-              SizedBox(height: size.height * 0.02),
-            ],
-          ),
-        ),
-      ),
-    );
+              ));
   }
 
   Widget confirmDialog() {

@@ -1,26 +1,26 @@
 // To parse this JSON data, do
 //
-//     final createBookingModel = createBookingModelFromJson(jsonString);
+//     final scheduleBookingModel = scheduleBookingModelFromJson(jsonString);
 
 import 'dart:convert';
 
-CreateBookingModel createBookingModelFromJson(String str) =>
-    CreateBookingModel.fromJson(json.decode(str));
+ScheduleBookingModel scheduleBookingModelFromJson(String str) =>
+    ScheduleBookingModel.fromJson(json.decode(str));
 
-String createBookingModelToJson(CreateBookingModel data) =>
+String scheduleBookingModelToJson(ScheduleBookingModel data) =>
     json.encode(data.toJson());
 
-class CreateBookingModel {
+class ScheduleBookingModel {
   String? status;
   Data? data;
 
-  CreateBookingModel({
+  ScheduleBookingModel({
     this.status,
     this.data,
   });
 
-  factory CreateBookingModel.fromJson(Map<String, dynamic> json) =>
-      CreateBookingModel(
+  factory ScheduleBookingModel.fromJson(Map<String, dynamic> json) =>
+      ScheduleBookingModel(
         status: json["status"],
         data: Data.fromJson(json["data"]),
       );
@@ -40,8 +40,8 @@ class Data {
   String? pickupLatitude;
   String? pickupLongitude;
   String? scheduled;
-  dynamic deliveryDate;
-  dynamic deliveryTime;
+  String? deliveryDate;
+  String? deliveryTime;
   String? totalDeliveryCharges;
   String? totalVatCharges;
   String? totalCharges;
@@ -642,8 +642,8 @@ class UsersCustomers {
   String? email;
   dynamic password;
   String? profilePic;
-  dynamic latitude;
-  dynamic longitude;
+  String? latitude;
+  String? longitude;
   dynamic googleAccessToken;
   String? accountType;
   String? socialAccountType;
@@ -660,7 +660,7 @@ class UsersCustomers {
   dynamic forgotPwdOtp;
   dynamic forgotPwdOtpCreatedAt;
   String? dateAdded;
-  dynamic dateModified;
+  String? dateModified;
   String? status;
 
   UsersCustomers({

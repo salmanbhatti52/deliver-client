@@ -3,11 +3,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/app_drawer.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/tabbar_items/new_screen.dart';
 import 'package:deliver_client/screens/home/tabbar_items/inprogress_screen.dart';
 
 class HomePageScreen extends StatefulWidget {
-  const HomePageScreen({super.key});
+  final Map? singleData;
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  const HomePageScreen({
+    super.key,
+    this.singleData,
+    this.currentBookingId,
+    this.riderData,
+  });
 
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
@@ -125,7 +134,11 @@ class _HomePageScreenState extends State<HomePageScreen>
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         NewScreen(),
-                        const InProgressHomeScreen(),
+                        InProgressHomeScreen(
+                          singleData: widget.singleData,
+                          currentBookingId: widget.currentBookingId,
+                          riderData: widget.riderData,
+                        ),
                       ],
                     ),
                   ),
