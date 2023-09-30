@@ -14,14 +14,14 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
 class ScheduleRideScreen extends StatefulWidget {
   final Map? scheduledSingleData;
   final int? selectedRadio;
-  const ScheduleRideScreen({super.key, this.scheduledSingleData, this.selectedRadio});
+  const ScheduleRideScreen(
+      {super.key, this.scheduledSingleData, this.selectedRadio});
 
   @override
   State<ScheduleRideScreen> createState() => _ScheduleRideScreenState();
 }
 
 class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
-
   @override
   initState() {
     super.initState();
@@ -106,44 +106,58 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  picker.DatePicker.showDatePicker(
-                                    context,
-                                    showTitleActions: true,
-                                    minTime: DateTime.now(),
-                                    maxTime: DateTime(2050, 12, 31),
-                                    theme: picker.DatePickerTheme(
-                                      headerColor: bgColor,
-                                      backgroundColor: bgColor,
-                                      itemStyle: TextStyle(
-                                        color: blackColor,
-                                        fontSize: 16,
-                                        fontFamily: 'Syne-Medium',
-                                      ),
-                                      doneStyle: TextStyle(
-                                        color: orangeColor,
-                                        fontSize: 16,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                      cancelStyle: TextStyle(
-                                        color: borderColor,
-                                        fontSize: 16,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                    ),
-                                    onChanged: (date) {
+                                  showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime(2100),
+                                  ).then((selectedDate) {
+                                    if (selectedDate != null) {
                                       setState(() {
-                                        selectedDate = date;
+                                        DateFormat('dd-MM-yyyy')
+                                            .format(selectedDate);
+                                        print("selectedDate: $selectedDate");
                                       });
-                                    },
-                                    onConfirm: (date) {
-                                      setState(() {
-                                        selectedDate = date;
-                                      });
-                                      print("selectedDate: $selectedDate");
-                                    },
-                                    currentTime: DateTime.now(),
-                                    locale: picker.LocaleType.en,
-                                  );
+                                    }
+                                  });
+                                  // picker.DatePicker.showDatePicker(
+                                  //   context,
+                                  //   showTitleActions: true,
+                                  //   minTime: DateTime.now(),
+                                  //   maxTime: DateTime(2050, 12, 31),
+                                  //   theme: picker.DatePickerTheme(
+                                  //     headerColor: bgColor,
+                                  //     backgroundColor: bgColor,
+                                  //     itemStyle: TextStyle(
+                                  //       color: blackColor,
+                                  //       fontSize: 16,
+                                  //       fontFamily: 'Syne-Medium',
+                                  //     ),
+                                  //     doneStyle: TextStyle(
+                                  //       color: orangeColor,
+                                  //       fontSize: 16,
+                                  //       fontFamily: 'Syne-Bold',
+                                  //     ),
+                                  //     cancelStyle: TextStyle(
+                                  //       color: borderColor,
+                                  //       fontSize: 16,
+                                  //       fontFamily: 'Syne-Bold',
+                                  //     ),
+                                  //   ),
+                                  //   onChanged: (date) {
+                                  //     setState(() {
+                                  //       selectedDate = date;
+                                  //     });
+                                  //   },
+                                  //   onConfirm: (date) {
+                                  //     setState(() {
+                                  //       selectedDate = date;
+                                  //     });
+                                  //     print("selectedDate: $selectedDate");
+                                  //   },
+                                  //   currentTime: DateTime.now(),
+                                  //   locale: picker.LocaleType.en,
+                                  // );
                                 },
                                 child: Container(
                                   color: transparentColor,
@@ -174,7 +188,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                             children: [
                               Text(
                                 selectedTime != null
-                                    ? DateFormat('h:mm a').format(selectedTime!)
+                                    ? DateFormat('h:mm').format(selectedTime!)
                                     : 'Select Time',
                                 style: TextStyle(
                                   color: hintColor,
@@ -248,12 +262,10 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
             right: 0,
             child: GestureDetector(
               onTap: () {
-                if(selectedDate == null || selectedTime == null) {
+                if (selectedDate == null || selectedTime == null) {
                   Fluttertoast.showToast(
-                    msg:
-                    "Please select date and time!",
-                    toastLength:
-                    Toast.LENGTH_SHORT,
+                    msg: "Please select date and time!",
+                    toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIosWeb: 2,
                     backgroundColor: toastColor,
@@ -262,11 +274,15 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                   );
                 } else {
                   if (widget.selectedRadio == 1) {
-                    Map? updatedScheduledData = Map.from(widget.scheduledSingleData!);
+                    Map? updatedScheduledData =
+                        Map.from(widget.scheduledSingleData!);
                     updatedScheduledData.addAll({
                       "type": "schedule",
-                      "delivery_date": DateFormat('yyyy-MM-dd').format(selectedDate!).toString(),
-                      "delivery_time": DateFormat('h:mm').format(selectedTime!).toString(),
+                      "delivery_date": DateFormat('yyyy-MM-dd')
+                          .format(selectedDate!)
+                          .toString(),
+                      "delivery_time":
+                          DateFormat('h:mm').format(selectedTime!).toString(),
                       // "total_vat_charges": roundedTotalVatAmount.toString(),
                       // "total_charges": totalPrice.toString(),
                       // "total_discount": "0.00",
@@ -286,7 +302,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                        const ConfirmMultipleDetailsScreen(),
+                            const ConfirmMultipleDetailsScreen(),
                       ),
                     );
                   }
