@@ -108,15 +108,14 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                                 onTap: () {
                                   showDatePicker(
                                     context: context,
-                                    initialDate: DateTime.now(),
+                                    initialDate: selectedDate ?? DateTime.now(),
                                     firstDate: DateTime.now(),
                                     lastDate: DateTime(2100),
-                                  ).then((selectedDate) {
-                                    if (selectedDate != null) {
+                                  ).then((date) {
+                                    if (date != null) {
                                       setState(() {
-                                        DateFormat('dd-MM-yyyy')
-                                            .format(selectedDate);
-                                        print("selectedDate: $selectedDate");
+                                        selectedDate =
+                                            date; // Update selectedDate with the chosen date
                                       });
                                     }
                                   });
