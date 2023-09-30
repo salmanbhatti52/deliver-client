@@ -139,7 +139,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         child: SvgPicture.asset('assets/images/back-icon.svg'),
                       ),
                     ),
-                    SizedBox(height: size.height * 0.04),
+                    SizedBox(height: size.height * 0.03),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Container(
@@ -170,10 +170,10 @@ class _AppDrawerState extends State<AppDrawer> {
                     SizedBox(height: size.height * 0.02),
                     Container(
                       color: transparentColor,
-                      height: size.height * 0.688,
+                      height: size.height * 0.705,
                       child: ListView(
                         scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
                           buildMenuItem(
                             title: 'Profile',
@@ -240,12 +240,19 @@ class _AppDrawerState extends State<AppDrawer> {
                               selecteditem(context, 8);
                             },
                           ),
-                          SizedBox(height: size.height * 0.04),
+                          buildMenuItem(
+                            title: 'Legel',
+                            image: 'assets/images/drawer-legel-icon.svg',
+                            onTap: () {
+                              selecteditem(context, 9);
+                            },
+                          ),
+                          // SizedBox(height: size.height * 0.04),
                           buildMenuItem(
                             title: 'Logout',
                             image: 'assets/images/drawer-logout-icon.svg',
                             onTap: () {
-                              selecteditem(context, 9);
+                              selecteditem(context, 10);
                             },
                           ),
                         ],
@@ -273,7 +280,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               SvgPicture.asset('assets/images/back-icon.svg'),
                         ),
                       ),
-                      SizedBox(height: size.height * 0.04),
+                      SizedBox(height: size.height * 0.03),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Container(
@@ -299,9 +306,9 @@ class _AppDrawerState extends State<AppDrawer> {
                       SizedBox(height: size.height * 0.02),
                       Container(
                         color: transparentColor,
-                        height: size.height * 0.688,
+                        height: size.height * 0.705,
                         child: ListView(
-                          physics: const BouncingScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           scrollDirection: Axis.vertical,
                           children: [
                             buildMenuItem(
@@ -366,12 +373,19 @@ class _AppDrawerState extends State<AppDrawer> {
                               image: 'assets/images/drawer-support-icon.svg',
                               onTap: () {},
                             ),
-                            SizedBox(height: size.height * 0.04),
+                            buildMenuItem(
+                              title: 'Legel',
+                              image: 'assets/images/drawer-legel-icon.svg',
+                              onTap: () {
+                                selecteditem(context, 9);
+                              },
+                            ),
+                            // SizedBox(height: size.height * 0.04),
                             buildMenuItem(
                               title: 'Logout',
                               image: 'assets/images/drawer-logout-icon.svg',
                               onTap: () {
-                                selecteditem(context, 9);
+                                selecteditem(context, 10);
                               },
                             ),
                           ],
@@ -492,6 +506,8 @@ class _AppDrawerState extends State<AppDrawer> {
         );
         break;
       case 9:
+        break;
+      case 10:
         removeDataFormSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const LoginScreen()),
