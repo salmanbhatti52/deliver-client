@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, must_be_immutable, use_build_context_synchronously, prefer_typing_uninitialized_variables
 
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
@@ -12,6 +13,7 @@ import 'package:deliver_client/utils/baseurl.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:google_maps_webservice_ex/places.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:deliver_client/widgets/home_textfields.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/get_charges_model.dart';
@@ -388,6 +390,7 @@ class _NewScreenState extends State<NewScreen> {
   MarkerId? selectedMarker;
   LatLng? selectedLocation;
   LatLng? currentLocation;
+  BitmapDescriptor? customMarkerIcon;
 
   Future<void> searchPickUpPlaces(String input) async {
     if (input.isNotEmpty) {
@@ -439,7 +442,7 @@ class _NewScreenState extends State<NewScreen> {
       });
 
       mapController
-          ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 12));
+          ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
     }
   }
 
@@ -454,9 +457,21 @@ class _NewScreenState extends State<NewScreen> {
         CameraUpdate.newLatLngZoom(selectedLocation!, zoomLevel));
   }
 
+  Future<void> loadCustomMarker() async {
+    final ByteData bytes = await rootBundle.load(
+      'assets/images/current-location-name-white-icon.png',
+    );
+    final Uint8List list = bytes.buffer.asUint8List();
+
+    customMarkerIcon = BitmapDescriptor.fromBytes(list);
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
+    loadCustomMarker();
     getAllSystemData();
     getServiceTypes();
     getBookingsType();
@@ -505,6 +520,8 @@ class _NewScreenState extends State<NewScreen> {
                               position: currentLocation!,
                               infoWindow:
                                   const InfoWindow(title: 'My Location'),
+                              icon: customMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
                             ),
                           if (selectedLocation != null)
                             Marker(
@@ -512,6 +529,8 @@ class _NewScreenState extends State<NewScreen> {
                               position: selectedLocation!,
                               infoWindow:
                                   const InfoWindow(title: 'My Location'),
+                              icon: customMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
                             ),
                         },
                       ),
@@ -661,7 +680,7 @@ class _NewScreenState extends State<NewScreen> {
                                             prediction.geometry!.location.lat;
                                         final double lng =
                                             prediction.geometry!.location.lng;
-                                        const double zoomLevel = 12.0;
+                                        const double zoomLevel = 15.0;
                                         onPickUpLocationSelected(
                                             LatLng(lat, lng), zoomLevel);
                                         pickupLat = lat.toString();
