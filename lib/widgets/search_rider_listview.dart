@@ -336,9 +336,14 @@ class _RidersListState extends State<RidersList> {
                     },
                     child: isLoading
                         ? statusGradientButtonSmallWithLoader(
-                            "Please wait...", context)
+                            "Please wait...",
+                            context,
+                          )
                         : statusGradientButtonSmall(
-                            "Send Request", greenStatusButtonColor, context),
+                            "Send Request",
+                            greenStatusButtonColor,
+                            context,
+                          ),
                   ),
                 ],
               ),

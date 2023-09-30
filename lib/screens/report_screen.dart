@@ -22,6 +22,8 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  TextEditingController otherController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -109,7 +111,8 @@ class _ReportScreenState extends State<ReportScreen> {
                               Row(
                                 children: [
                                   SvgPicture.asset(
-                                      'assets/images/star-icon.svg'),
+                                    'assets/images/star-icon.svg',
+                                  ),
                                   SizedBox(width: size.width * 0.02),
                                   Text(
                                     '${widget.riderData!.bookingsRatings}',
@@ -125,10 +128,11 @@ class _ReportScreenState extends State<ReportScreen> {
                               Row(
                                 children: [
                                   SvgPicture.asset(
-                                      'assets/images/car-icon.svg'),
+                                    'assets/images/car-icon.svg',
+                                  ),
                                   SizedBox(width: size.width * 0.02),
                                   Text(
-                                    '120 Trips',
+                                    '${widget.riderData!.trips} Trips',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: drawerTextColor,
@@ -141,10 +145,11 @@ class _ReportScreenState extends State<ReportScreen> {
                               Row(
                                 children: [
                                   SvgPicture.asset(
-                                      'assets/images/arrival-time-icon.svg'),
+                                    'assets/images/arrival-time-icon.svg',
+                                  ),
                                   SizedBox(width: size.width * 0.02),
                                   Text(
-                                    '3 Years',
+                                    '${widget.riderData!.experience}',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: drawerTextColor,
@@ -172,13 +177,87 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.02),
-                      reportBoxes(
-                          context,
-                          'Lorem ipsum dolor sit amet.',
-                          'Lorem ipsum dolor sit amet.',
-                          'Lorem ipsum dolor sit amet.',
-                          'Lorem ipsum dolor sit amet.',
-                          'Any Other Reason'),
+                      const ReportBoxes(),
+                      // reportBoxes(
+                      //   context,
+                      //   'Lorem ipsum dolor sit amet.',
+                      //   'Lorem ipsum dolor sit amet.',
+                      //   'Lorem ipsum dolor sit amet.',
+                      //   'Lorem ipsum dolor sit amet.',
+                      // ),
+                      SizedBox(height: size.height * 0.02),
+                      Container(
+                        height: size.height * 0.15,
+                        decoration: BoxDecoration(
+                          color: filledColor,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: filledColor,
+                            width: 1.0,
+                          ),
+                        ),
+                        child: TextFormField(
+                          controller: otherController,
+                          cursorColor: orangeColor,
+                          keyboardType: TextInputType.text,
+                          maxLines: null,
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: filledColor,
+                            errorStyle: TextStyle(
+                              color: redColor,
+                              fontSize: 12,
+                              fontFamily: 'Inter-Bold',
+                            ),
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedErrorBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide(
+                                color: redColor,
+                                width: 1,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            hintText: "Any Other Reason",
+                            hintStyle: TextStyle(
+                              color: hintColor,
+                              fontSize: 12,
+                              fontFamily: 'Inter-Light',
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(height: size.height * 0.02),
                       Align(
                         alignment: Alignment.centerLeft,

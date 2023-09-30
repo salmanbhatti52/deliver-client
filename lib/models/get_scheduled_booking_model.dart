@@ -1,37 +1,37 @@
 // To parse this JSON data, do
 //
-//     final scheduleBookingModel = scheduleBookingModelFromJson(jsonString);
+//     final getScheduledBookingModel = getScheduledBookingModelFromJson(jsonString);
 
 import 'dart:convert';
 
-ScheduleBookingModel scheduleBookingModelFromJson(String str) =>
-    ScheduleBookingModel.fromJson(json.decode(str));
+GetScheduledBookingModel getScheduledBookingModelFromJson(String str) =>
+    GetScheduledBookingModel.fromJson(json.decode(str));
 
-String scheduleBookingModelToJson(ScheduleBookingModel data) =>
+String getScheduledBookingModelToJson(GetScheduledBookingModel data) =>
     json.encode(data.toJson());
 
-class ScheduleBookingModel {
+class GetScheduledBookingModel {
   String? status;
-  Data? data;
+  List<Datum>? data;
 
-  ScheduleBookingModel({
+  GetScheduledBookingModel({
     this.status,
     this.data,
   });
 
-  factory ScheduleBookingModel.fromJson(Map<String, dynamic> json) =>
-      ScheduleBookingModel(
+  factory GetScheduledBookingModel.fromJson(Map<String, dynamic> json) =>
+      GetScheduledBookingModel(
         status: json["status"],
-        data: Data.fromJson(json["data"]),
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
-        "data": data?.toJson(),
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
       };
 }
 
-class Data {
+class Datum {
   int? bookingsId;
   int? usersCustomersId;
   int? bookingsTypesId;
@@ -58,7 +58,7 @@ class Data {
   List<BookingsFleet>? bookingsFleet;
   UsersCustomers? usersCustomers;
 
-  Data({
+  Datum({
     this.bookingsId,
     this.usersCustomersId,
     this.bookingsTypesId,
@@ -86,7 +86,7 @@ class Data {
     this.usersCustomers,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         bookingsId: json["bookings_id"],
         usersCustomersId: json["users_customers_id"],
         bookingsTypesId: json["bookings_types_id"],
@@ -157,7 +157,7 @@ class BookingsFleet {
   dynamic dateModified;
   String? status;
   BookingsDestinations? bookingsDestinations;
-  Vehicles? vehicles;
+  UsersFleetVehicles? usersFleetVehicles;
   UsersFleet? usersFleet;
 
   BookingsFleet({
@@ -172,7 +172,7 @@ class BookingsFleet {
     this.dateModified,
     this.status,
     this.bookingsDestinations,
-    this.vehicles,
+    this.usersFleetVehicles,
     this.usersFleet,
   });
 
@@ -189,7 +189,8 @@ class BookingsFleet {
         status: json["status"],
         bookingsDestinations:
             BookingsDestinations.fromJson(json["bookings_destinations"]),
-        vehicles: Vehicles.fromJson(json["vehicles"]),
+        usersFleetVehicles:
+            UsersFleetVehicles.fromJson(json["users_fleet_vehicles"]),
         usersFleet: UsersFleet.fromJson(json["users_fleet"]),
       );
 
@@ -205,7 +206,7 @@ class BookingsFleet {
         "date_modified": dateModified,
         "status": status,
         "bookings_destinations": bookingsDestinations?.toJson(),
-        "vehicles": vehicles?.toJson(),
+        "users_fleet_vehicles": usersFleetVehicles?.toJson(),
         "users_fleet": usersFleet?.toJson(),
       };
 }
@@ -225,7 +226,6 @@ class BookingsDestinations {
   String? destinDiscountedCharges;
   String? receiverName;
   String? receiverPhone;
-  String? passcode;
   int? bookingsDestinationsStatusId;
   BookingsDestinationsStatus? bookingsDestinationsStatus;
 
@@ -244,7 +244,6 @@ class BookingsDestinations {
     this.destinDiscountedCharges,
     this.receiverName,
     this.receiverPhone,
-    this.passcode,
     this.bookingsDestinationsStatusId,
     this.bookingsDestinationsStatus,
   });
@@ -265,7 +264,6 @@ class BookingsDestinations {
         destinDiscountedCharges: json["destin_discounted_charges"],
         receiverName: json["receiver_name"],
         receiverPhone: json["receiver_phone"],
-        passcode: json["passcode"],
         bookingsDestinationsStatusId: json["bookings_destinations_status_id"],
         bookingsDestinationsStatus: BookingsDestinationsStatus.fromJson(
             json["bookings_destinations_status"]),
@@ -286,7 +284,6 @@ class BookingsDestinations {
         "destin_discounted_charges": destinDiscountedCharges,
         "receiver_name": receiverName,
         "receiver_phone": receiverPhone,
-        "passcode": passcode,
         "bookings_destinations_status_id": bookingsDestinationsStatusId,
         "bookings_destinations_status": bookingsDestinationsStatus?.toJson(),
       };
@@ -493,6 +490,87 @@ class UsersFleet {
       };
 }
 
+class UsersFleetVehicles {
+  int? usersFleetVehiclesId;
+  int? usersFleetId;
+  int? vehiclesId;
+  String? model;
+  String? color;
+  String? vehicleRegistrationNo;
+  String? vehicleIdentificationNo;
+  String? vehicleLicenseExpiryDate;
+  String? vehicleInsuranceExpiryDate;
+  String? rwcExpiryDate;
+  dynamic cost;
+  String? manufactureYear;
+  String? image;
+  String? dateAdded;
+  String? dateModified;
+  String? status;
+  Vehicles? vehicles;
+
+  UsersFleetVehicles({
+    this.usersFleetVehiclesId,
+    this.usersFleetId,
+    this.vehiclesId,
+    this.model,
+    this.color,
+    this.vehicleRegistrationNo,
+    this.vehicleIdentificationNo,
+    this.vehicleLicenseExpiryDate,
+    this.vehicleInsuranceExpiryDate,
+    this.rwcExpiryDate,
+    this.cost,
+    this.manufactureYear,
+    this.image,
+    this.dateAdded,
+    this.dateModified,
+    this.status,
+    this.vehicles,
+  });
+
+  factory UsersFleetVehicles.fromJson(Map<String, dynamic> json) =>
+      UsersFleetVehicles(
+        usersFleetVehiclesId: json["users_fleet_vehicles_id"],
+        usersFleetId: json["users_fleet_id"],
+        vehiclesId: json["vehicles_id"],
+        model: json["model"],
+        color: json["color"],
+        vehicleRegistrationNo: json["vehicle_registration_no"],
+        vehicleIdentificationNo: json["vehicle_identification_no"],
+        vehicleLicenseExpiryDate: json["vehicle_license_expiry_date"],
+        vehicleInsuranceExpiryDate: json["vehicle_insurance_expiry_date"],
+        rwcExpiryDate: json["rwc_expiry_date"],
+        cost: json["cost"],
+        manufactureYear: json["manufacture_year"],
+        image: json["image"],
+        dateAdded: json["date_added"],
+        dateModified: json["date_modified"],
+        status: json["status"],
+        vehicles: Vehicles.fromJson(json["vehicles"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "users_fleet_vehicles_id": usersFleetVehiclesId,
+        "users_fleet_id": usersFleetId,
+        "vehicles_id": vehiclesId,
+        "model": model,
+        "color": color,
+        "vehicle_registration_no": vehicleRegistrationNo,
+        "vehicle_identification_no": vehicleIdentificationNo,
+        "vehicle_license_expiry_date": vehicleLicenseExpiryDate,
+        "vehicle_insurance_expiry_date": vehicleInsuranceExpiryDate,
+        "rwc_expiry_date": rwcExpiryDate,
+        "cost": cost,
+        "manufacture_year": manufactureYear,
+        "image": image,
+        "date_added": dateAdded,
+        "date_modified": dateModified,
+        "status": status,
+        "vehicles": vehicles?.toJson(),
+      };
+}
+
 class Vehicles {
   int? vehiclesId;
   int? serviceTypesId;
@@ -646,8 +724,8 @@ class UsersCustomers {
   String? email;
   dynamic password;
   String? profilePic;
-  String? latitude;
-  String? longitude;
+  dynamic latitude;
+  dynamic longitude;
   dynamic googleAccessToken;
   String? accountType;
   String? socialAccountType;
@@ -664,7 +742,7 @@ class UsersCustomers {
   dynamic forgotPwdOtp;
   dynamic forgotPwdOtpCreatedAt;
   String? dateAdded;
-  String? dateModified;
+  dynamic dateModified;
   String? status;
 
   UsersCustomers({

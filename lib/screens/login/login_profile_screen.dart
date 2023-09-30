@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/utils/baseurl.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:deliver_client/models/create_profile_model.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
@@ -66,6 +67,20 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         createProfileModel = createProfileModelFromJson(responseString);
+        SharedPreferences sharedPref = await SharedPreferences.getInstance();
+        await sharedPref.setString('userId',
+            "${createProfileModel.data?.usersCustomersId.toString()}");
+        await sharedPref.setString(
+            'email', "${createProfileModel.data?.email}");
+        await sharedPref.setString(
+            'firstName', "${createProfileModel.data?.firstName}");
+        await sharedPref.setString(
+            'lastName', "${createProfileModel.data?.lastName}");
+        print(
+            "sharedPref userId: ${createProfileModel.data!.usersCustomersId.toString()}");
+        print("sharedPref email: ${createProfileModel.data!.email}");
+        print("sharedPref firstName: ${createProfileModel.data!.firstName}");
+        print("sharedPref lastName: ${createProfileModel.data!.lastName}");
         print('createProfileModel status: ${createProfileModel.status}');
         setState(() {});
       }

@@ -43,9 +43,8 @@ class _NewScreenState extends State<NewScreen> {
       DraggableScrollableController();
   Map addSingleData = {};
   Map addScheduledSingleData = {};
-  bool isSelectedTruck = true;
-  bool isSelectedFreight = false;
-  bool isSelectedCourier = false;
+  bool isSelectedBus = false;
+  bool isSelectedCourier = true;
   String? totalDistance;
   String? systemLat;
   String? systemLng;
@@ -148,7 +147,7 @@ class _NewScreenState extends State<NewScreen> {
           if (getServiceTypesModel.data?[i].name == "Others") {
             otherId = "${getServiceTypesModel.data?[i].serviceTypesId}";
             print("otherId: $otherId");
-            getVehiclesByServiceType(otherId);
+            getVehiclesByServiceType(courierId);
             setState(() {});
           }
         }
@@ -166,7 +165,7 @@ class _NewScreenState extends State<NewScreen> {
     try {
       String apiUrl = "$baseUrl/get_vehicles_by_service_type";
       print("apiUrl: $apiUrl");
-      // print("serviceTypesId: ");
+      print("serviceTypesId: $serviceId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -1012,7 +1011,6 @@ class _NewScreenState extends State<NewScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: size.height * 0.02),
                       Center(
                         child: Container(
                           width: size.width * 0.3,
@@ -1023,7 +1021,7 @@ class _NewScreenState extends State<NewScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: size.height * 0.01),
+                      SizedBox(height: size.height * 0.03),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
@@ -1046,150 +1044,9 @@ class _NewScreenState extends State<NewScreen> {
                               onTap: () async {
                                 vehiclesType.clear();
                                 selectedVehicle = null;
-                                getVehiclesByServiceType(otherId);
-                                setState(() {
-                                  isSelectedTruck = true;
-                                  isSelectedFreight = false;
-                                  isSelectedCourier = false;
-                                });
-                              },
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    color: transparentColor,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.28,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.1,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.28,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.08,
-                                      decoration: BoxDecoration(
-                                        color: isSelectedTruck == true
-                                            ? orangeColor
-                                            : const Color(0xFFEBEBEB),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 20,
-                                    left: 0,
-                                    right: 0,
-                                    child: Text(
-                                      "Haulage",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: isSelectedTruck == true
-                                            ? whiteColor
-                                            : drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: SvgPicture.asset(
-                                      "assets/images/home-turck-icon.svg",
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 30,
-                                    right: 8,
-                                    child: SvgPicture.asset(
-                                      "assets/images/help-icon.svg",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                vehiclesType.clear();
-                                selectedVehicle = null;
-                                getVehiclesByServiceType(otherId);
-                                setState(() {
-                                  isSelectedTruck = false;
-                                  isSelectedFreight = true;
-                                  isSelectedCourier = false;
-                                });
-                              },
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    color: transparentColor,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.28,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.1,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.28,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.08,
-                                      decoration: BoxDecoration(
-                                        color: isSelectedFreight == true
-                                            ? orangeColor
-                                            : const Color(0xFFEBEBEB),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 20,
-                                    left: 0,
-                                    right: 0,
-                                    child: Text(
-                                      "Freight",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: isSelectedFreight == true
-                                            ? whiteColor
-                                            : drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: SvgPicture.asset(
-                                      "assets/images/home-freight-icon.svg",
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 30,
-                                    right: 8,
-                                    child: SvgPicture.asset(
-                                      "assets/images/help-icon.svg",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                vehiclesType.clear();
-                                selectedVehicle = null;
                                 getVehiclesByServiceType(courierId);
                                 setState(() {
-                                  isSelectedTruck = false;
-                                  isSelectedFreight = false;
+                                  isSelectedBus = false;
                                   isSelectedCourier = true;
                                 });
                               },
@@ -1198,18 +1055,18 @@ class _NewScreenState extends State<NewScreen> {
                                   Container(
                                     color: transparentColor,
                                     width: MediaQuery.of(context).size.width *
-                                        0.28,
+                                        0.43,
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.12,
                                   ),
                                   Positioned(
                                     bottom: 0,
                                     child: Container(
                                       width: MediaQuery.of(context).size.width *
-                                          0.28,
+                                          0.43,
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.08,
+                                              0.1,
                                       decoration: BoxDecoration(
                                         color: isSelectedCourier == true
                                             ? orangeColor
@@ -1223,7 +1080,7 @@ class _NewScreenState extends State<NewScreen> {
                                     left: 0,
                                     right: 0,
                                     child: Text(
-                                      "Courier",
+                                      "Deliver a Parcel",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: isSelectedCourier == true
@@ -1239,14 +1096,69 @@ class _NewScreenState extends State<NewScreen> {
                                     left: 0,
                                     right: 0,
                                     child: SvgPicture.asset(
-                                      "assets/images/home-courier-icon.svg",
+                                      "assets/images/login-parcel-icon.svg",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                vehiclesType.clear();
+                                selectedVehicle = null;
+                                getVehiclesByServiceType(otherId);
+                                setState(() {
+                                  isSelectedBus = true;
+                                  isSelectedCourier = false;
+                                });
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    color: transparentColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.43,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.12,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.43,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.1,
+                                      decoration: BoxDecoration(
+                                        color: isSelectedBus == true
+                                            ? orangeColor
+                                            : const Color(0xFFEBEBEB),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
                                     ),
                                   ),
                                   Positioned(
-                                    bottom: 30,
-                                    right: 8,
+                                    bottom: 20,
+                                    left: 0,
+                                    right: 0,
+                                    child: Text(
+                                      "Book a Van",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: isSelectedBus == true
+                                            ? whiteColor
+                                            : drawerTextColor,
+                                        fontSize: 14,
+                                        fontFamily: 'Syne-Bold',
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
                                     child: SvgPicture.asset(
-                                      "assets/images/help-icon.svg",
+                                      "assets/images/login-truck-icon.svg",
                                     ),
                                   ),
                                 ],
@@ -1444,12 +1356,6 @@ class _NewScreenState extends State<NewScreen> {
                                           ),
                                         )
                                         .toList(),
-                                    // validator: (value) {
-                                    //   if (value == null) {
-                                    //     return 'Category is required!';
-                                    //   }
-                                    //   return null;
-                                    // },
                                     value: selectedVehicle,
                                     onChanged: (value) {
                                       setState(() {
@@ -1573,12 +1479,6 @@ class _NewScreenState extends State<NewScreen> {
                                           ),
                                         )
                                         .toList(),
-                                    // validator: (value) {
-                                    //   if (value == null) {
-                                    //     return 'Category is required!';
-                                    //   }
-                                    //   return null;
-                                    // },
                                     value: selectedBookingType,
                                     onChanged: (value) async {
                                       selectedBookingType = value;
@@ -1589,7 +1489,7 @@ class _NewScreenState extends State<NewScreen> {
                                                 getBookingsTypeModel
                                                     .data!.length;
                                             i++) {
-                                          if ("${getBookingsTypeModel.data?[i].name} (${getBookingsTypeModel.data?[i].sameDay})" ==
+                                          if ("${getBookingsTypeModel.data?[i].name}" ==
                                               value) {
                                             bookingsTypeId =
                                                 getBookingsTypeModel
@@ -1699,19 +1599,146 @@ class _NewScreenState extends State<NewScreen> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ScheduleRideScreen(
-                                      selectedRadio: selectedRadio,
+                                calculateTime();
+                                if (pickupController.text.isEmpty ||
+                                    destinationController.text.isEmpty ||
+                                    receiversNameController.text.isEmpty ||
+                                    receiversNumberController.text.isEmpty ||
+                                    selectedVehicle == null ||
+                                    selectedBookingType == null) {
+                                  if (pickupController.text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill pickup address!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (destinationController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill destination address!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (receiversNameController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill receiver's name!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (receiversNumberController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill receiver's number!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (selectedVehicle == null) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please select a vehicle!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (selectedBookingType == null) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please select booking type!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  }
+                                } else {
+                                  setState(() {
+                                    isLoading2 = true;
+                                  });
+                                  await distanceCalculator();
+                                  await getCharges(bookingsTypeId);
+                                  print('bookingsTypeId: $bookingsTypeId');
+                                  if (bookingsTypeId == "1") {
+                                    print("fromKm: $fromKm");
+                                    print("toKm: $toKm");
+                                    print("perKmAmount: $perKmAmount");
+                                    print("totalDistance: $totalDistance");
+                                    calculateStandardAmount(
+                                      double.parse(fromKm!),
+                                      toKm != "null"
+                                          ? double.parse(toKm!)
+                                          : 0.0,
+                                      double.parse(perKmAmount!),
+                                      double.parse(totalDistance!),
+                                    );
+                                  }
+                                  addSingleData = {
+                                    "type": "schedule",
+                                    "vehicles_id": vehicleId,
+                                    "bookings_types_id": bookingsTypeId,
+                                    "delivery_type": selectedRadio == 1
+                                        ? "Single"
+                                        : "Multiple",
+                                    "pickup_address": pickupController.text,
+                                    "pickup_latitude": pickupLat ?? currentLat,
+                                    "pickup_longitude": pickupLng ?? currentLng,
+                                    "destin_address":
+                                        destinationController.text,
+                                    "destin_latitude": destinationLat,
+                                    "destin_longitude": destinationLng,
+                                    "destin_distance": totalDistance,
+                                    "destin_time": "2 hrs 44 mins",
+                                    "destin_delivery_charges":
+                                        roundedTotalAmount ?? "0.00",
+                                    "destin_vat_charges": "0.00",
+                                    "destin_total_charges": "0.00",
+                                    "destin_discount": "0.00",
+                                    "destin_discounted_charges": "0.00",
+                                    "receiver_name":
+                                        receiversNameController.text,
+                                    "receiver_phone":
+                                        receiversNumberController.text,
+                                  };
+                                  setState(() {
+                                    isLoading2 = false;
+                                  });
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ScheduleRideScreen(
+                                        selectedRadio: selectedRadio,
+                                        scheduledSingleData: addSingleData,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               },
-                              child: buttonTransparentGradientSmall(
-                                "SCHEDULE RIDE",
-                                context,
-                              ),
+                              child: isLoading2
+                                  ? buttonTransparentGradientSmallWithLoader(
+                                      "Please Wait...", context)
+                                  : buttonTransparentGradientSmall(
+                                      "SCHEDULE RIDE",
+                                      context,
+                                    ),
                             ),
                             GestureDetector(
                               onTap: () async {
@@ -1809,6 +1836,7 @@ class _NewScreenState extends State<NewScreen> {
                                       );
                                     }
                                     addSingleData = {
+                                      "type": "booking",
                                       "vehicles_id": vehicleId,
                                       "bookings_types_id": bookingsTypeId,
                                       "delivery_type": selectedRadio == 1
@@ -1836,7 +1864,9 @@ class _NewScreenState extends State<NewScreen> {
                                       "receiver_phone":
                                           receiversNumberController.text,
                                     };
-                                    setState(() {});
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -1858,10 +1888,15 @@ class _NewScreenState extends State<NewScreen> {
                                   );
                                 }
                               },
-                              child: buttonGradientSmall(
-                                "FIND RIDER",
-                                context,
-                              ),
+                              child: isLoading
+                                  ? buttonGradientSmallWithLoader(
+                                      "Please Wait...",
+                                      context,
+                                    )
+                                  : buttonGradientSmall(
+                                      "FIND RIDER",
+                                      context,
+                                    ),
                             ),
                           ],
                         ),

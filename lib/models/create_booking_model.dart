@@ -225,6 +225,7 @@ class BookingsDestinations {
   String? destinDiscountedCharges;
   String? receiverName;
   String? receiverPhone;
+  String? passcode;
   int? bookingsDestinationsStatusId;
   BookingsDestinationsStatus? bookingsDestinationsStatus;
 
@@ -243,6 +244,7 @@ class BookingsDestinations {
     this.destinDiscountedCharges,
     this.receiverName,
     this.receiverPhone,
+    this.passcode,
     this.bookingsDestinationsStatusId,
     this.bookingsDestinationsStatus,
   });
@@ -263,6 +265,7 @@ class BookingsDestinations {
         destinDiscountedCharges: json["destin_discounted_charges"],
         receiverName: json["receiver_name"],
         receiverPhone: json["receiver_phone"],
+        passcode: json["passcode"],
         bookingsDestinationsStatusId: json["bookings_destinations_status_id"],
         bookingsDestinationsStatus: BookingsDestinationsStatus.fromJson(
             json["bookings_destinations_status"]),
@@ -283,6 +286,7 @@ class BookingsDestinations {
         "destin_discounted_charges": destinDiscountedCharges,
         "receiver_name": receiverName,
         "receiver_phone": receiverPhone,
+        "passcode": passcode,
         "bookings_destinations_status_id": bookingsDestinationsStatusId,
         "bookings_destinations_status": bookingsDestinationsStatus?.toJson(),
       };

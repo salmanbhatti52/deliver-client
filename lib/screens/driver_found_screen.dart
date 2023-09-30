@@ -500,6 +500,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
+                                              timer?.cancel();
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -525,6 +526,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                           SizedBox(width: size.width * 0.02),
                                           GestureDetector(
                                             onTap: () {
+                                              timer?.cancel();
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(

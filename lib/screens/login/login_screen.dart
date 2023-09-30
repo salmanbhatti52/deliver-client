@@ -7,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
-import 'package:deliver_client/widgets/login_boxes.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
@@ -111,11 +110,11 @@ class _LoginScreenState extends State<LoginScreen> {
             key: logInFormKey,
             child: Column(
               children: [
-                SizedBox(height: size.height * 0.08),
+                SizedBox(height: size.height * 0.1),
                 Center(
-                  child: SvgPicture.asset('assets/images/logo-small-icon.svg'),
+                  child: SvgPicture.asset('assets/images/logo-big-icon.svg'),
                 ),
-                SizedBox(height: size.height * 0.03),
+                SizedBox(height: size.height * 0.05),
                 Text(
                   "Login".toUpperCase(),
                   textAlign: TextAlign.center,
@@ -134,20 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontFamily: 'Syne-Regular',
                   ),
                 ),
-                SizedBox(height: size.height * 0.01),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 38),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      loginBox("assets/images/login-truck-icon.svg",
-                          "Book a Van", context),
-                      loginBox("assets/images/login-parcel-icon.svg",
-                          "Deliver a Parcel", context),
-                    ],
-                  ),
-                ),
-                SizedBox(height: size.height * 0.05),
+                SizedBox(height: size.height * 0.06),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: TextFormField(
@@ -301,9 +287,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ? buttonGradientWithLoader("Pleasw Wait...", context)
                       : buttonGradient("LOGIN", context),
                 ),
-                SizedBox(height: size.height * 0.03),
+                SizedBox(height: size.height * 0.04),
                 SvgPicture.asset('assets/images/fingerprint-icon.svg'),
-                SizedBox(height: size.height * 0.03),
+                SizedBox(height: size.height * 0.04),
                 Container(
                   width: size.width,
                   decoration: BoxDecoration(

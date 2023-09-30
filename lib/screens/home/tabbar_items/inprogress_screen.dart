@@ -1,14 +1,18 @@
 // ignore_for_file: avoid_print
 
-import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/utils/baseurl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:deliver_client/screens/report_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/payment/amount_to_pay_edit_screen.dart';
 
@@ -30,6 +34,17 @@ class InProgressHomeScreen extends StatefulWidget {
 class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   bool isLoading = false;
   String? distanceUnit;
+  String? latDest;
+  String? lngDest;
+  String? latRider;
+  String? lngRider;
+  double? destLat;
+  double? destLng;
+  double? riderLat;
+  double? riderLng;
+  GoogleMapController? mapController;
+  BitmapDescriptor? customMarkerIcon;
+  BitmapDescriptor? customDestMarkerIcon;
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -70,10 +85,74 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     }
   }
 
+  getLocation() {
+    if (widget.singleData != null) {
+      latDest = "${widget.singleData!['destin_latitude']}";
+      lngDest = "${widget.singleData!['destin_longitude']}";
+      destLat = double.parse(latDest!);
+      destLng = double.parse(lngDest!);
+      print("destLat: $destLat");
+      print("destLng: $destLng");
+      latRider = "${widget.riderData!.latitude}";
+      lngRider = "${widget.riderData!.longitude}";
+      riderLat = double.parse(latRider!);
+      riderLng = double.parse(lngRider!);
+      print("riderLat: $riderLat");
+      print("riderLng: $riderLng");
+    } else {
+      print("No Rider Data");
+    }
+  }
+
+  Future<void> loadCustomMarker() async {
+    final ByteData bytes = await rootBundle.load(
+      'assets/images/rider-marker-icon.png',
+    );
+    final Uint8List list = bytes.buffer.asUint8List();
+
+    customMarkerIcon = BitmapDescriptor.fromBytes(list);
+
+    setState(() {});
+  }
+
+  Future<void> loadCustomDestMarker() async {
+    final ByteData bytes = await rootBundle.load(
+      'assets/images/custom-dest-icon.png',
+    );
+    final Uint8List list = bytes.buffer.asUint8List();
+
+    customDestMarkerIcon = BitmapDescriptor.fromBytes(list);
+
+    setState(() {});
+  }
+
+  List<LatLng> polylineCoordinates = [];
+  void getPolyPoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw', // Your Google Map Key
+      PointLatLng(riderLat!, riderLng!),
+      PointLatLng(destLat!, destLng!),
+    );
+    if (result.points.isNotEmpty) {
+      print("polylineCoordinates: $polylineCoordinates");
+      for (var point in result.points) {
+        polylineCoordinates.add(
+          LatLng(point.latitude, point.longitude),
+        );
+      }
+      setState(() {});
+    }
+  }
+
   @override
   initState() {
     super.initState();
     getAllSystemData();
+    loadCustomMarker();
+    loadCustomDestMarker();
+    getLocation();
+    getPolyPoints();
     isLoading = true;
     Future.delayed(const Duration(milliseconds: 1000), () {
       setState(() {
@@ -93,7 +172,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                 width: 100,
                 height: 100,
                 color: transparentColor,
-                child: Lottie.asset(
+                child: lottie.Lottie.asset(
                   'assets/images/loading-icon.json',
                   fit: BoxFit.cover,
                 ),
@@ -102,11 +181,58 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
           : widget.singleData != null
               ? Stack(
                   children: [
-                    Image.asset(
-                      'assets/images/tracking-location-background.png',
+                    Container(
+                      color: transparentColor,
                       width: size.width,
-                      height: size.height,
-                      fit: BoxFit.cover,
+                      height: size.height * 1,
+                      child: GoogleMap(
+                        onMapCreated: (controller) {
+                          mapController = controller;
+                        },
+                        mapType: MapType.normal,
+                        myLocationEnabled: false,
+                        zoomControlsEnabled: false,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            riderLat != null ? riderLat! : 0.0,
+                            riderLng != null ? riderLng! : 0.0,
+                          ),
+                          zoom: 15,
+                        ),
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId("riderMarker"),
+                            position: LatLng(
+                              riderLat != null ? riderLat! : 0.0,
+                              riderLng != null ? riderLng! : 0.0,
+                            ),
+                            icon: customMarkerIcon ??
+                                BitmapDescriptor.defaultMarker,
+                          ),
+                          Marker(
+                            markerId: const MarkerId('destMarker'),
+                            position: LatLng(
+                              destLat != null ? destLat! : 0.0,
+                              destLng != null ? destLng! : 0.0,
+                            ),
+                            icon: customDestMarkerIcon ??
+                                BitmapDescriptor.defaultMarker,
+                          ),
+                        },
+                        polylines: {
+                          Polyline(
+                            polylineId: const PolylineId("polyline"),
+                            points: polylineCoordinates,
+                            color: orangeColor,
+                            geodesic: true,
+                            patterns: [
+                              PatternItem.dash(40),
+                              PatternItem.gap(10),
+                            ],
+                            width: 6,
+                          ),
+                        },
+                      ),
                     ),
                     Positioned(
                       bottom: 0,
@@ -550,7 +676,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                   padding: const EdgeInsets.only(top: 180),
                   child: Column(
                     children: [
-                      Lottie.asset('assets/images/no-data-icon.json'),
+                      lottie.Lottie.asset('assets/images/no-data-icon.json'),
                       SizedBox(height: size.height * 0.04),
                       Text(
                         "No Ride Inprogress",

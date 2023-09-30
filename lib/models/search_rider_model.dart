@@ -47,12 +47,12 @@ class SearchRiderData {
   String? phone;
   String? email;
   String? password;
-  dynamic profilePic;
-  dynamic address;
-  dynamic nationalIdentificationNo;
-  dynamic drivingLicenseNo;
-  dynamic drivingLicenseFrontImage;
-  dynamic drivingLicenseBackImage;
+  String? profilePic;
+  String? address;
+  String? nationalIdentificationNo;
+  String? drivingLicenseNo;
+  String? drivingLicenseFrontImage;
+  String? drivingLicenseBackImage;
   dynamic cacCertificate;
   String? latitude;
   String? longitude;
@@ -76,6 +76,8 @@ class SearchRiderData {
   String? status;
   UsersFleetVehicles? usersFleetVehicles;
   String? distance;
+  int? trips;
+  String? experience;
 
   SearchRiderData({
     this.usersFleetId,
@@ -121,6 +123,8 @@ class SearchRiderData {
     this.status,
     this.usersFleetVehicles,
     this.distance,
+    this.trips,
+    this.experience,
   });
 
   factory SearchRiderData.fromJson(Map<String, dynamic> json) =>
@@ -169,6 +173,8 @@ class SearchRiderData {
         usersFleetVehicles:
             UsersFleetVehicles.fromJson(json["users_fleet_vehicles"]),
         distance: json["distance"],
+        trips: json["trips"],
+        experience: json["experience"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -215,6 +221,8 @@ class SearchRiderData {
         "status": status,
         "users_fleet_vehicles": usersFleetVehicles?.toJson(),
         "distance": distance,
+        "trips": trips,
+        "experience": experience,
       };
 }
 
@@ -233,7 +241,7 @@ class UsersFleetVehicles {
   String? manufactureYear;
   String? image;
   String? dateAdded;
-  dynamic dateModified;
+  String? dateModified;
   String? status;
   Vehicles? vehicles;
 
