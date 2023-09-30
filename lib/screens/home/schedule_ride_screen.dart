@@ -3,6 +3,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/screens/confirm_single_details_screen.dart';
@@ -11,14 +12,22 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
     as picker;
 
 class ScheduleRideScreen extends StatefulWidget {
+  final Map? scheduledSingleData;
   final int? selectedRadio;
-  const ScheduleRideScreen({super.key, this.selectedRadio});
+  const ScheduleRideScreen({super.key, this.scheduledSingleData, this.selectedRadio});
 
   @override
   State<ScheduleRideScreen> createState() => _ScheduleRideScreenState();
 }
 
 class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
+
+  @override
+  initState() {
+    super.initState();
+    print("mapData: ${widget.scheduledSingleData}");
+  }
+
   DateTime? selectedDate;
   DateTime? selectedTime;
 
@@ -239,22 +248,48 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
             right: 0,
             child: GestureDetector(
               onTap: () {
-                if (widget.selectedRadio == 1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ConfirmSingleDetailsScreen(),
-                    ),
+                if(selectedDate == null || selectedTime == null) {
+                  Fluttertoast.showToast(
+                    msg:
+                    "Please select date and time!",
+                    toastLength:
+                    Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: toastColor,
+                    textColor: whiteColor,
+                    fontSize: 12,
                   );
-                }
-                if (widget.selectedRadio == 2) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const ConfirmMultipleDetailsScreen(),
-                    ),
-                  );
+                } else {
+                  if (widget.selectedRadio == 1) {
+                    Map? updatedScheduledData = Map.from(widget.scheduledSingleData!);
+                    updatedScheduledData.addAll({
+                      "type": "schedule",
+                      "delivery_date": DateFormat('yyyy-MM-dd').format(selectedDate!).toString(),
+                      "delivery_time": DateFormat('h:mm').format(selectedTime!).toString(),
+                      // "total_vat_charges": roundedTotalVatAmount.toString(),
+                      // "total_charges": totalPrice.toString(),
+                      // "total_discount": "0.00",
+                      // "total_discounted_charges": "0.00",
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ConfirmSingleDetailsScreen(
+                          singleData: updatedScheduledData,
+                        ),
+                      ),
+                    );
+                  }
+                  if (widget.selectedRadio == 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                        const ConfirmMultipleDetailsScreen(),
+                      ),
+                    );
+                  }
                 }
               },
               child: buttonGradient("CONFIRM", context),

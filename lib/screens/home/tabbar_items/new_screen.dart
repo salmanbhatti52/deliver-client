@@ -26,6 +26,7 @@ import 'package:deliver_client/screens/confirm_multiple_details_screen.dart';
 
 class NewScreen extends StatefulWidget {
   late double? location;
+
   NewScreen({super.key, this.location});
 
   @override
@@ -41,6 +42,7 @@ class _NewScreenState extends State<NewScreen> {
   final DraggableScrollableController dragController =
       DraggableScrollableController();
   Map addSingleData = {};
+  Map addScheduledSingleData = {};
   bool isSelectedTruck = true;
   bool isSelectedFreight = false;
   bool isSelectedCourier = false;
@@ -73,6 +75,7 @@ class _NewScreenState extends State<NewScreen> {
   String? roundedTotalAmount;
 
   bool isLoading = false;
+  bool isLoading2 = false;
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -536,7 +539,7 @@ class _NewScreenState extends State<NewScreen> {
     );
   }
 
-  Widget singleTextFeild() {
+  Widget singleTextField() {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -822,12 +825,6 @@ class _NewScreenState extends State<NewScreen> {
                         controller: receiversNameController,
                         cursorColor: orangeColor,
                         keyboardType: TextInputType.text,
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return "Receiver's Name is required!";
-                        //   }
-                        //   return null;
-                        // },
                         style: TextStyle(
                           color: blackColor,
                           fontSize: 14,
@@ -893,12 +890,6 @@ class _NewScreenState extends State<NewScreen> {
                         controller: receiversNumberController,
                         cursorColor: orangeColor,
                         keyboardType: TextInputType.phone,
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return "Receiver's Phone Number is required!";
-                        //   }
-                        //   return null;
-                        // },
                         style: TextStyle(
                           color: blackColor,
                           fontSize: 14,
@@ -1361,7 +1352,7 @@ class _NewScreenState extends State<NewScreen> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.015),
-                      if (selectedRadio == 1) singleTextFeild(),
+                      if (selectedRadio == 1) singleTextField(),
                       if (selectedRadio == 2) multiPageView(),
                       SizedBox(height: size.height * 0.01),
                       if (selectedRadio == 1) SizedBox(height: size.height * 0),
