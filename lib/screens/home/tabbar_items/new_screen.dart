@@ -479,8 +479,8 @@ class _NewScreenState extends State<NewScreen> {
                     Container(
                       color: transparentColor,
                       width: size.width,
-                      height: size.height * 0.35, //for fixed Container height
-                      // height: size.height * 0.631, //for bottomSheet height
+                      height:
+                          size.height * 0.631, // Adjust the height accordingly
                       child: GoogleMap(
                         onMapCreated: (controller) {
                           mapController = controller;
@@ -493,8 +493,6 @@ class _NewScreenState extends State<NewScreen> {
                           target: LatLng(
                             doubleSystemLat != null ? doubleSystemLat! : 0.0,
                             doubleSystemLng != null ? doubleSystemLng! : 0.0,
-                            // widget.location ?? 0.0,
-                            // widget.location ?? 0.0,
                           ),
                           zoom: 6,
                         ),
@@ -516,992 +514,10 @@ class _NewScreenState extends State<NewScreen> {
                         },
                       ),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                        child: Container(
-                          width: size.width,
-                          height: size.height * 0.75,
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            ),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(height: size.height * 0.02),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Text(
-                                    "Select service type",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: drawerTextColor,
-                                      fontSize: 20,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.01),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async {
-                                          vehiclesType.clear();
-                                          selectedVehicle = null;
-                                          getVehiclesByServiceType(otherId);
-                                          setState(() {
-                                            isSelectedTruck = true;
-                                            isSelectedFreight = false;
-                                            isSelectedCourier = false;
-                                          });
-                                        },
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              color: transparentColor,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.28,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.1,
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.28,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.08,
-                                                decoration: BoxDecoration(
-                                                  color: isSelectedTruck == true
-                                                      ? orangeColor
-                                                      : const Color(0xFFEBEBEB),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 20,
-                                              left: 0,
-                                              right: 0,
-                                              child: Text(
-                                                "Haulage",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: isSelectedTruck == true
-                                                      ? whiteColor
-                                                      : drawerTextColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Syne-Bold',
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: SvgPicture.asset(
-                                                "assets/images/home-turck-icon.svg",
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 30,
-                                              right: 8,
-                                              child: SvgPicture.asset(
-                                                "assets/images/help-icon.svg",
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          vehiclesType.clear();
-                                          selectedVehicle = null;
-                                          getVehiclesByServiceType(otherId);
-                                          setState(() {
-                                            isSelectedTruck = false;
-                                            isSelectedFreight = true;
-                                            isSelectedCourier = false;
-                                          });
-                                        },
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              color: transparentColor,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.28,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.1,
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.28,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.08,
-                                                decoration: BoxDecoration(
-                                                  color: isSelectedFreight ==
-                                                          true
-                                                      ? orangeColor
-                                                      : const Color(0xFFEBEBEB),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 20,
-                                              left: 0,
-                                              right: 0,
-                                              child: Text(
-                                                "Freight",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color:
-                                                      isSelectedFreight == true
-                                                          ? whiteColor
-                                                          : drawerTextColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Syne-Bold',
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: SvgPicture.asset(
-                                                "assets/images/home-freight-icon.svg",
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 30,
-                                              right: 8,
-                                              child: SvgPicture.asset(
-                                                "assets/images/help-icon.svg",
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          vehiclesType.clear();
-                                          selectedVehicle = null;
-                                          getVehiclesByServiceType(courierId);
-                                          setState(() {
-                                            isSelectedTruck = false;
-                                            isSelectedFreight = false;
-                                            isSelectedCourier = true;
-                                          });
-                                        },
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              color: transparentColor,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.28,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.1,
-                                            ),
-                                            Positioned(
-                                              bottom: 0,
-                                              child: Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.28,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.08,
-                                                decoration: BoxDecoration(
-                                                  color: isSelectedCourier ==
-                                                          true
-                                                      ? orangeColor
-                                                      : const Color(0xFFEBEBEB),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 20,
-                                              left: 0,
-                                              right: 0,
-                                              child: Text(
-                                                "Courier",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color:
-                                                      isSelectedCourier == true
-                                                          ? whiteColor
-                                                          : drawerTextColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Syne-Bold',
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              top: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: SvgPicture.asset(
-                                                "assets/images/home-courier-icon.svg",
-                                              ),
-                                            ),
-                                            Positioned(
-                                              bottom: 30,
-                                              right: 8,
-                                              child: SvgPicture.asset(
-                                                "assets/images/help-icon.svg",
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.03),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Find best rider?",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: drawerTextColor,
-                                          fontSize: 20,
-                                          fontFamily: 'Syne-Bold',
-                                        ),
-                                      ),
-                                      if (selectedRadio == 2)
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                removePage();
-                                                setState(() {});
-                                              },
-                                              child: SvgPicture.asset(
-                                                'assets/images/minus-icon.svg',
-                                              ),
-                                            ),
-                                            SizedBox(width: size.width * 0.02),
-                                            GestureDetector(
-                                              onTap: () {
-                                                addPage();
-                                                setState(() {});
-                                              },
-                                              child: SvgPicture.asset(
-                                                'assets/images/add-icon.svg',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.005),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Theme(
-                                    data: ThemeData(
-                                      unselectedWidgetColor: orangeColor,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Radio(
-                                          value: 1,
-                                          groupValue: selectedRadio,
-                                          activeColor: orangeColor,
-                                          visualDensity: VisualDensity.compact,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              selectedRadio = value!;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          "Single Delivery",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: drawerTextColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Syne-Bold',
-                                          ),
-                                        ),
-                                        Radio(
-                                          value: 2,
-                                          groupValue: selectedRadio,
-                                          activeColor: orangeColor,
-                                          visualDensity: VisualDensity.compact,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              selectedRadio = value!;
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          "Multiple Delivery",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: drawerTextColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Syne-Bold',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.015),
-                                if (selectedRadio == 1) singleTextFeild(),
-                                if (selectedRadio == 2) multiPageView(),
-                                SizedBox(height: size.height * 0.01),
-                                if (selectedRadio == 1)
-                                  SizedBox(height: size.height * 0),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 22),
-                                      child: SvgPicture.asset(
-                                        "assets/images/info-icon.svg",
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 1.5, right: 16),
-                                        child: ButtonTheme(
-                                          alignedDropdown: true,
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButtonFormField(
-                                              icon: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 3),
-                                                child: SvgPicture.asset(
-                                                  'assets/images/dropdown-icon.svg',
-                                                  width: 5,
-                                                  height: 5,
-                                                  fit: BoxFit.scaleDown,
-                                                ),
-                                              ),
-                                              decoration: InputDecoration(
-                                                filled: true,
-                                                fillColor: filledColor,
-                                                border:
-                                                    const OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                                errorBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    color: redColor,
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 10),
-                                                hintText: 'Select Vehicle',
-                                                hintStyle: TextStyle(
-                                                  color: hintColor,
-                                                  fontSize: 12,
-                                                  fontFamily: 'Inter-Light',
-                                                ),
-                                                errorStyle: TextStyle(
-                                                  color: redColor,
-                                                  fontSize: 10,
-                                                  fontFamily: 'Inter-Bold',
-                                                ),
-                                              ),
-                                              padding: const EdgeInsets.only(
-                                                  right: 5),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              items: vehiclesType
-                                                  .map(
-                                                    (item) => DropdownMenuItem<
-                                                        String>(
-                                                      value: item,
-                                                      child: Text(
-                                                        item,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Regular',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                              // validator: (value) {
-                                              //   if (value == null) {
-                                              //     return 'Category is required!';
-                                              //   }
-                                              //   return null;
-                                              // },
-                                              value: selectedVehicle,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  selectedVehicle = value;
-                                                  print(
-                                                      "selectedVehicle: $value");
-                                                  if (getVehiclesByServiceTypeModel
-                                                          .data !=
-                                                      null) {
-                                                    for (int i = 0;
-                                                        i <
-                                                            getVehiclesByServiceTypeModel
-                                                                .data!.length;
-                                                        i++) {
-                                                      if (getVehiclesByServiceTypeModel
-                                                              .data?[i].name ==
-                                                          value) {
-                                                        vehicleId =
-                                                            getVehiclesByServiceTypeModel
-                                                                .data?[i]
-                                                                .vehiclesId
-                                                                .toString();
-                                                        print(
-                                                            'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
-                                                      }
-                                                    }
-                                                  }
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: size.height * 0.01),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 22),
-                                      child: SvgPicture.asset(
-                                        "assets/images/info-icon.svg",
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 1.5, right: 16),
-                                        child: ButtonTheme(
-                                          alignedDropdown: true,
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButtonFormField(
-                                              icon: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 3),
-                                                child: SvgPicture.asset(
-                                                  'assets/images/dropdown-icon.svg',
-                                                  width: 5,
-                                                  height: 5,
-                                                  fit: BoxFit.scaleDown,
-                                                ),
-                                              ),
-                                              decoration: InputDecoration(
-                                                filled: true,
-                                                fillColor: filledColor,
-                                                border:
-                                                    const OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                                enabledBorder:
-                                                    const OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                                focusedBorder:
-                                                    const OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide.none,
-                                                ),
-                                                errorBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                  borderSide: BorderSide(
-                                                    color: redColor,
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 10),
-                                                hintText: 'Select Booking Type',
-                                                hintStyle: TextStyle(
-                                                  color: hintColor,
-                                                  fontSize: 12,
-                                                  fontFamily: 'Inter-Light',
-                                                ),
-                                                errorStyle: TextStyle(
-                                                  color: redColor,
-                                                  fontSize: 10,
-                                                  fontFamily: 'Inter-Bold',
-                                                ),
-                                              ),
-                                              padding: const EdgeInsets.only(
-                                                  right: 5),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              items: bookingType
-                                                  .map(
-                                                    (item) => DropdownMenuItem<
-                                                        String>(
-                                                      value: item,
-                                                      child: Text(
-                                                        item,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Regular',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                              // validator: (value) {
-                                              //   if (value == null) {
-                                              //     return 'Category is required!';
-                                              //   }
-                                              //   return null;
-                                              // },
-                                              value: selectedBookingType,
-                                              onChanged: (value) async {
-                                                selectedBookingType = value;
-                                                print(
-                                                    "selectedBookingType: $value");
-                                                if (getBookingsTypeModel.data !=
-                                                    null) {
-                                                  for (int i = 0;
-                                                      i <
-                                                          getBookingsTypeModel
-                                                              .data!.length;
-                                                      i++) {
-                                                    if ("${getBookingsTypeModel.data?[i].name}" ==
-                                                        value) {
-                                                      bookingsTypeId =
-                                                          getBookingsTypeModel
-                                                              .data?[i]
-                                                              .bookingsTypesId
-                                                              .toString();
-                                                      await distanceCalculator();
-                                                      await getCharges(
-                                                          bookingsTypeId);
-                                                      print(
-                                                          'bookingsTypeId: $bookingsTypeId');
-                                                      if (bookingsTypeId ==
-                                                          "1") {
-                                                        print(
-                                                            "fromKm: $fromKm");
-                                                        print("toKm: $toKm");
-                                                        print(
-                                                            "perKmAmount: $perKmAmount");
-                                                        print(
-                                                            "totalDistance: $totalDistance");
-                                                        calculateStandardAmount(
-                                                          double.parse(fromKm!),
-                                                          toKm != "null"
-                                                              ? double.parse(
-                                                                  toKm!)
-                                                              : 0.0,
-                                                          double.parse(
-                                                              perKmAmount!),
-                                                          double.parse(
-                                                              totalDistance!),
-                                                        );
-                                                      }
-                                                    }
-                                                  }
-                                                }
-                                                setState(() {});
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                if (selectedRadio == 2)
-                                  Column(
-                                    children: [
-                                      SizedBox(height: size.height * 0.025),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (pageController.page!.toInt() >
-                                                  0) {
-                                                pageController.previousPage(
-                                                  duration: const Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                                  curve: Curves.easeInOut,
-                                                );
-                                              }
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/images/orange-left-arrow-icon.svg',
-                                            ),
-                                          ),
-                                          SizedBox(width: size.width * 0.02),
-                                          DotsIndicator(
-                                            dotsCount: pages.length,
-                                            position: currentIndex,
-                                            decorator: DotsDecorator(
-                                              color:
-                                                  dotsColor, // Inactive color
-                                              activeColor: orangeColor,
-                                              spacing:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 3,
-                                              ),
-                                            ),
-                                            onTap: (index) {
-                                              pageController.animateToPage(
-                                                currentIndex = index,
-                                                duration: const Duration(
-                                                  milliseconds: 500,
-                                                ),
-                                                curve: Curves.linear,
-                                              );
-                                            },
-                                          ),
-                                          SizedBox(width: size.width * 0.02),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (pageController.page!.toInt() <
-                                                  pages.length - 1) {
-                                                pageController.nextPage(
-                                                  duration: const Duration(
-                                                    milliseconds: 500,
-                                                  ),
-                                                  curve: Curves.easeInOut,
-                                                );
-                                              }
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/images/orange-right-arrow-icon.svg',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                SizedBox(height: size.height * 0.035),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ScheduleRideScreen(
-                                                selectedRadio: selectedRadio,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: buttonTransparentGradientSmall(
-                                          "SCHEDULE RIDE",
-                                          context,
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          if (selectedRadio == 1) {
-                                            calculateTime();
-                                            if (pickupController.text.isEmpty ||
-                                                destinationController
-                                                    .text.isEmpty ||
-                                                receiversNameController
-                                                    .text.isEmpty ||
-                                                receiversNumberController
-                                                    .text.isEmpty ||
-                                                selectedVehicle == null ||
-                                                selectedBookingType == null) {
-                                              if (pickupController
-                                                  .text.isEmpty) {
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please fill pickup address!",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 2,
-                                                  backgroundColor: toastColor,
-                                                  textColor: whiteColor,
-                                                  fontSize: 12,
-                                                );
-                                              } else if (destinationController
-                                                  .text.isEmpty) {
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please fill destination address!",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 2,
-                                                  backgroundColor: toastColor,
-                                                  textColor: whiteColor,
-                                                  fontSize: 12,
-                                                );
-                                              } else if (receiversNameController
-                                                  .text.isEmpty) {
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please fill receiver's name!",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 2,
-                                                  backgroundColor: toastColor,
-                                                  textColor: whiteColor,
-                                                  fontSize: 12,
-                                                );
-                                              } else if (receiversNumberController
-                                                  .text.isEmpty) {
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please fill receiver's number!",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 2,
-                                                  backgroundColor: toastColor,
-                                                  textColor: whiteColor,
-                                                  fontSize: 12,
-                                                );
-                                              } else if (selectedVehicle ==
-                                                  null) {
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please select a vehicle!",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 2,
-                                                  backgroundColor: toastColor,
-                                                  textColor: whiteColor,
-                                                  fontSize: 12,
-                                                );
-                                              } else if (selectedBookingType ==
-                                                  null) {
-                                                Fluttertoast.showToast(
-                                                  msg:
-                                                      "Please select booking type!",
-                                                  toastLength:
-                                                      Toast.LENGTH_SHORT,
-                                                  gravity: ToastGravity.BOTTOM,
-                                                  timeInSecForIosWeb: 2,
-                                                  backgroundColor: toastColor,
-                                                  textColor: whiteColor,
-                                                  fontSize: 12,
-                                                );
-                                              }
-                                            } else {
-                                              setState(() {
-                                                isLoading = true;
-                                              });
-                                              await distanceCalculator();
-                                              await getCharges(bookingsTypeId);
-                                              print(
-                                                  'bookingsTypeId: $bookingsTypeId');
-                                              if (bookingsTypeId == "1") {
-                                                print("fromKm: $fromKm");
-                                                print("toKm: $toKm");
-                                                print(
-                                                    "perKmAmount: $perKmAmount");
-                                                print(
-                                                    "totalDistance: $totalDistance");
-                                                calculateStandardAmount(
-                                                  double.parse(fromKm!),
-                                                  toKm != "null"
-                                                      ? double.parse(toKm!)
-                                                      : 0.0,
-                                                  double.parse(perKmAmount!),
-                                                  double.parse(totalDistance!),
-                                                );
-                                              }
-                                              addSingleData = {
-                                                "vehicles_id": vehicleId,
-                                                "bookings_types_id":
-                                                    bookingsTypeId,
-                                                "delivery_type":
-                                                    selectedRadio == 1
-                                                        ? "Single"
-                                                        : "Multiple",
-                                                "pickup_address":
-                                                    pickupController.text,
-                                                "pickup_latitude":
-                                                    pickupLat ?? currentLat,
-                                                "pickup_longitude":
-                                                    pickupLng ?? currentLng,
-                                                "destin_address":
-                                                    destinationController.text,
-                                                "destin_latitude":
-                                                    destinationLat,
-                                                "destin_longitude":
-                                                    destinationLng,
-                                                "destin_distance":
-                                                    totalDistance,
-                                                "destin_time": "2 hrs 44 mins",
-                                                "destin_delivery_charges":
-                                                    roundedTotalAmount ??
-                                                        "0.00",
-                                                "destin_vat_charges": "0.00",
-                                                "destin_total_charges": "0.00",
-                                                "destin_discount": "0.00",
-                                                "destin_discounted_charges":
-                                                    "0.00",
-                                                "receiver_name":
-                                                    receiversNameController
-                                                        .text,
-                                                "receiver_phone":
-                                                    receiversNumberController
-                                                        .text,
-                                              };
-                                              setState(() {
-                                                isLoading = false;
-                                              });
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ConfirmSingleDetailsScreen(
-                                                    singleData: addSingleData,
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          }
-                                          if (selectedRadio == 2) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const ConfirmMultipleDetailsScreen(),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: isLoading
-                                            ? buttonGradientSmallWithLoader(
-                                                "Please Wait...", context)
-                                            : buttonGradientSmall(
-                                                "FIND RIDER", context),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.14),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: bottomDetailsSheet(), // Add the bottom sheet here
                     ),
-                    // bottomDetailsSheet(),
                   ],
                 ),
               )
@@ -1974,6 +990,7 @@ class _NewScreenState extends State<NewScreen> {
 
   Widget bottomDetailsSheet() {
     var size = MediaQuery.of(context).size;
+
     return DraggableScrollableSheet(
       initialChildSize: .38,
       minChildSize: .38,
@@ -1985,267 +1002,41 @@ class _NewScreenState extends State<NewScreen> {
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
-          child: Container(
-            width: size.width,
-            height: size.height,
-            decoration: BoxDecoration(
-              color: whiteColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Container(
+              width: size.width,
+              height: size.height,
+              decoration: BoxDecoration(
+                color: whiteColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
               ),
-            ),
-            child: SingleChildScrollView(
-              controller: scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
+                controller: scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
                 children: [
-                  SizedBox(height: size.height * 0.02),
-                  Center(
-                    child: Container(
-                      width: size.width * 0.3,
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: dividerColor,
-                        borderRadius: BorderRadius.circular(100),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: size.height * 0.02),
+                      Center(
+                        child: Container(
+                          width: size.width * 0.3,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: dividerColor,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.02),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      "Select service type",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: drawerTextColor,
-                        fontSize: 20,
-                        fontFamily: 'Syne-Bold',
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            vehiclesType.clear();
-                            selectedVehicle = null;
-                            getVehiclesByServiceType(otherId);
-                            setState(() {
-                              isSelectedTruck = true;
-                              isSelectedFreight = false;
-                              isSelectedCourier = false;
-                            });
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                color: transparentColor,
-                                width: MediaQuery.of(context).size.width * 0.28,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.28,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  decoration: BoxDecoration(
-                                    color: isSelectedTruck == true
-                                        ? orangeColor
-                                        : const Color(0xFFEBEBEB),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 20,
-                                left: 0,
-                                right: 0,
-                                child: Text(
-                                  "Haulage",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: isSelectedTruck == true
-                                        ? whiteColor
-                                        : drawerTextColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                child: SvgPicture.asset(
-                                  "assets/images/home-turck-icon.svg",
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 30,
-                                right: 8,
-                                child: SvgPicture.asset(
-                                  "assets/images/help-icon.svg",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            vehiclesType.clear();
-                            selectedVehicle = null;
-                            getVehiclesByServiceType(otherId);
-                            setState(() {
-                              isSelectedTruck = false;
-                              isSelectedFreight = true;
-                              isSelectedCourier = false;
-                            });
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                color: transparentColor,
-                                width: MediaQuery.of(context).size.width * 0.28,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.28,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  decoration: BoxDecoration(
-                                    color: isSelectedFreight == true
-                                        ? orangeColor
-                                        : const Color(0xFFEBEBEB),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 20,
-                                left: 0,
-                                right: 0,
-                                child: Text(
-                                  "Freight",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: isSelectedFreight == true
-                                        ? whiteColor
-                                        : drawerTextColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                child: SvgPicture.asset(
-                                  "assets/images/home-freight-icon.svg",
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 30,
-                                right: 8,
-                                child: SvgPicture.asset(
-                                  "assets/images/help-icon.svg",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            vehiclesType.clear();
-                            selectedVehicle = null;
-                            getVehiclesByServiceType(courierId);
-                            setState(() {
-                              isSelectedTruck = false;
-                              isSelectedFreight = false;
-                              isSelectedCourier = true;
-                            });
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                color: transparentColor,
-                                width: MediaQuery.of(context).size.width * 0.28,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.28,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  decoration: BoxDecoration(
-                                    color: isSelectedCourier == true
-                                        ? orangeColor
-                                        : const Color(0xFFEBEBEB),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 20,
-                                left: 0,
-                                right: 0,
-                                child: Text(
-                                  "Courier",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: isSelectedCourier == true
-                                        ? whiteColor
-                                        : drawerTextColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                child: SvgPicture.asset(
-                                  "assets/images/home-courier-icon.svg",
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 30,
-                                right: 8,
-                                child: SvgPicture.asset(
-                                  "assets/images/help-icon.svg",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.03),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Find best rider?",
+                      SizedBox(height: size.height * 0.01),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          "Select service type",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: drawerTextColor,
@@ -2253,607 +1044,860 @@ class _NewScreenState extends State<NewScreen> {
                             fontFamily: 'Syne-Bold',
                           ),
                         ),
-                        if (selectedRadio == 2)
-                          Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  removePage();
-                                  setState(() {});
-                                },
-                                child: SvgPicture.asset(
-                                  'assets/images/minus-icon.svg',
-                                ),
-                              ),
-                              SizedBox(width: size.width * 0.02),
-                              GestureDetector(
-                                onTap: () {
-                                  addPage();
-                                  setState(() {});
-                                },
-                                child: SvgPicture.asset(
-                                  'assets/images/add-icon.svg',
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.005),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Theme(
-                      data: ThemeData(
-                        unselectedWidgetColor: orangeColor,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Radio(
-                            value: 1,
-                            groupValue: selectedRadio,
-                            activeColor: orangeColor,
-                            visualDensity: VisualDensity.compact,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedRadio = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            "Single Delivery",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: drawerTextColor,
-                              fontSize: 14,
-                              fontFamily: 'Syne-Bold',
-                            ),
-                          ),
-                          Radio(
-                            value: 2,
-                            groupValue: selectedRadio,
-                            activeColor: orangeColor,
-                            visualDensity: VisualDensity.compact,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedRadio = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            "Multiple Delivery",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: drawerTextColor,
-                              fontSize: 14,
-                              fontFamily: 'Syne-Bold',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.015),
-                  if (selectedRadio == 1) singleTextFeild(),
-                  if (selectedRadio == 2) multiPageView(),
-                  SizedBox(height: size.height * 0.01),
-                  if (selectedRadio == 1) SizedBox(height: size.height * 0),
-                  Row(
-                    children: [
+                      SizedBox(height: size.height * 0.04),
                       Padding(
-                        padding: const EdgeInsets.only(left: 22),
-                        child: SvgPicture.asset(
-                          "assets/images/info-icon.svg",
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.02),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 1.5, right: 16),
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField(
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(top: 3),
-                                  child: SvgPicture.asset(
-                                    'assets/images/dropdown-icon.svg',
-                                    width: 5,
-                                    height: 5,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: filledColor,
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: redColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  hintText: 'Select Vehicle',
-                                  hintStyle: TextStyle(
-                                    color: hintColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Light',
-                                  ),
-                                  errorStyle: TextStyle(
-                                    color: redColor,
-                                    fontSize: 10,
-                                    fontFamily: 'Inter-Bold',
-                                  ),
-                                ),
-                                padding: const EdgeInsets.only(right: 5),
-                                borderRadius: BorderRadius.circular(10),
-                                items: vehiclesType
-                                    .map(
-                                      (item) => DropdownMenuItem<String>(
-                                        value: item,
-                                        child: Text(
-                                          item,
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Regular',
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                                // validator: (value) {
-                                //   if (value == null) {
-                                //     return 'Category is required!';
-                                //   }
-                                //   return null;
-                                // },
-                                value: selectedVehicle,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedVehicle = value;
-                                    print("selectedVehicle: $value");
-                                    if (getVehiclesByServiceTypeModel.data !=
-                                        null) {
-                                      for (int i = 0;
-                                          i <
-                                              getVehiclesByServiceTypeModel
-                                                  .data!.length;
-                                          i++) {
-                                        if (getVehiclesByServiceTypeModel
-                                                .data?[i].name ==
-                                            value) {
-                                          vehicleId =
-                                              getVehiclesByServiceTypeModel
-                                                  .data?[i].vehiclesId
-                                                  .toString();
-                                          print(
-                                              'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
-                                        }
-                                      }
-                                    }
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 22),
-                        child: SvgPicture.asset(
-                          "assets/images/info-icon.svg",
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.02),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 1.5, right: 16),
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButtonFormField(
-                                icon: Padding(
-                                  padding: const EdgeInsets.only(top: 3),
-                                  child: SvgPicture.asset(
-                                    'assets/images/dropdown-icon.svg',
-                                    width: 5,
-                                    height: 5,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: filledColor,
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: redColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  hintText: 'Select Booking Type',
-                                  hintStyle: TextStyle(
-                                    color: hintColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Light',
-                                  ),
-                                  errorStyle: TextStyle(
-                                    color: redColor,
-                                    fontSize: 10,
-                                    fontFamily: 'Inter-Bold',
-                                  ),
-                                ),
-                                padding: const EdgeInsets.only(right: 5),
-                                borderRadius: BorderRadius.circular(10),
-                                items: bookingType
-                                    .map(
-                                      (item) => DropdownMenuItem<String>(
-                                        value: item,
-                                        child: Text(
-                                          item,
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Regular',
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                                // validator: (value) {
-                                //   if (value == null) {
-                                //     return 'Category is required!';
-                                //   }
-                                //   return null;
-                                // },
-                                value: selectedBookingType,
-                                onChanged: (value) async {
-                                  selectedBookingType = value;
-                                  print("selectedBookingType: $value");
-                                  if (getBookingsTypeModel.data != null) {
-                                    for (int i = 0;
-                                        i < getBookingsTypeModel.data!.length;
-                                        i++) {
-                                      if ("${getBookingsTypeModel.data?[i].name} (${getBookingsTypeModel.data?[i].sameDay})" ==
-                                          value) {
-                                        bookingsTypeId = getBookingsTypeModel
-                                            .data?[i].bookingsTypesId
-                                            .toString();
-                                        await distanceCalculator();
-                                        await getCharges(bookingsTypeId);
-                                        print(
-                                            'bookingsTypeId: $bookingsTypeId');
-                                        if (bookingsTypeId == "1") {
-                                          print("fromKm: $fromKm");
-                                          print("toKm: $toKm");
-                                          print("perKmAmount: $perKmAmount");
-                                          print(
-                                              "totalDistance: $totalDistance");
-                                          calculateStandardAmount(
-                                            double.parse(fromKm!),
-                                            toKm != "null"
-                                                ? double.parse(toKm!)
-                                                : 0.0,
-                                            double.parse(perKmAmount!),
-                                            double.parse(totalDistance!),
-                                          );
-                                        }
-                                      }
-                                    }
-                                  }
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (selectedRadio == 2)
-                    Column(
-                      children: [
-                        SizedBox(height: size.height * 0.025),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                if (pageController.page!.toInt() > 0) {
-                                  pageController.previousPage(
-                                    duration: const Duration(
-                                      milliseconds: 500,
-                                    ),
-                                    curve: Curves.easeInOut,
-                                  );
-                                }
+                              onTap: () async {
+                                vehiclesType.clear();
+                                selectedVehicle = null;
+                                getVehiclesByServiceType(otherId);
+                                setState(() {
+                                  isSelectedTruck = true;
+                                  isSelectedFreight = false;
+                                  isSelectedCourier = false;
+                                });
                               },
-                              child: SvgPicture.asset(
-                                'assets/images/orange-left-arrow-icon.svg',
-                              ),
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            DotsIndicator(
-                              dotsCount: pages.length,
-                              position: currentIndex,
-                              decorator: DotsDecorator(
-                                color: dotsColor, // Inactive color
-                                activeColor: orangeColor,
-                                spacing: const EdgeInsets.symmetric(
-                                  horizontal: 3,
-                                ),
-                              ),
-                              onTap: (index) {
-                                pageController.animateToPage(
-                                  currentIndex = index,
-                                  duration: const Duration(
-                                    milliseconds: 500,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    color: transparentColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.28,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
                                   ),
-                                  curve: Curves.linear,
-                                );
-                              },
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            GestureDetector(
-                              onTap: () {
-                                if (pageController.page!.toInt() <
-                                    pages.length - 1) {
-                                  pageController.nextPage(
-                                    duration: const Duration(
-                                      milliseconds: 500,
+                                  Positioned(
+                                    bottom: 0,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.28,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.08,
+                                      decoration: BoxDecoration(
+                                        color: isSelectedTruck == true
+                                            ? orangeColor
+                                            : const Color(0xFFEBEBEB),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
                                     ),
-                                    curve: Curves.easeInOut,
-                                  );
-                                }
+                                  ),
+                                  Positioned(
+                                    bottom: 20,
+                                    left: 0,
+                                    right: 0,
+                                    child: Text(
+                                      "Haulage",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: isSelectedTruck == true
+                                            ? whiteColor
+                                            : drawerTextColor,
+                                        fontSize: 14,
+                                        fontFamily: 'Syne-Bold',
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: SvgPicture.asset(
+                                      "assets/images/home-turck-icon.svg",
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 30,
+                                    right: 8,
+                                    child: SvgPicture.asset(
+                                      "assets/images/help-icon.svg",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                vehiclesType.clear();
+                                selectedVehicle = null;
+                                getVehiclesByServiceType(otherId);
+                                setState(() {
+                                  isSelectedTruck = false;
+                                  isSelectedFreight = true;
+                                  isSelectedCourier = false;
+                                });
                               },
-                              child: SvgPicture.asset(
-                                'assets/images/orange-right-arrow-icon.svg',
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    color: transparentColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.28,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.28,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.08,
+                                      decoration: BoxDecoration(
+                                        color: isSelectedFreight == true
+                                            ? orangeColor
+                                            : const Color(0xFFEBEBEB),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 20,
+                                    left: 0,
+                                    right: 0,
+                                    child: Text(
+                                      "Freight",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: isSelectedFreight == true
+                                            ? whiteColor
+                                            : drawerTextColor,
+                                        fontSize: 14,
+                                        fontFamily: 'Syne-Bold',
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: SvgPicture.asset(
+                                      "assets/images/home-freight-icon.svg",
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 30,
+                                    right: 8,
+                                    child: SvgPicture.asset(
+                                      "assets/images/help-icon.svg",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                vehiclesType.clear();
+                                selectedVehicle = null;
+                                getVehiclesByServiceType(courierId);
+                                setState(() {
+                                  isSelectedTruck = false;
+                                  isSelectedFreight = false;
+                                  isSelectedCourier = true;
+                                });
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    color: transparentColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.28,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.28,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.08,
+                                      decoration: BoxDecoration(
+                                        color: isSelectedCourier == true
+                                            ? orangeColor
+                                            : const Color(0xFFEBEBEB),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 20,
+                                    left: 0,
+                                    right: 0,
+                                    child: Text(
+                                      "Courier",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: isSelectedCourier == true
+                                            ? whiteColor
+                                            : drawerTextColor,
+                                        fontSize: 14,
+                                        fontFamily: 'Syne-Bold',
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    child: SvgPicture.asset(
+                                      "assets/images/home-courier-icon.svg",
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 30,
+                                    right: 8,
+                                    child: SvgPicture.asset(
+                                      "assets/images/help-icon.svg",
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  SizedBox(height: size.height * 0.025),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ScheduleRideScreen(
-                                  selectedRadio: selectedRadio,
+                      ),
+                      SizedBox(height: size.height * 0.03),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Find best rider?",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: drawerTextColor,
+                                fontSize: 20,
+                                fontFamily: 'Syne-Bold',
+                              ),
+                            ),
+                            if (selectedRadio == 2)
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      removePage();
+                                      setState(() {});
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/images/minus-icon.svg',
+                                    ),
+                                  ),
+                                  SizedBox(width: size.width * 0.02),
+                                  GestureDetector(
+                                    onTap: () {
+                                      addPage();
+                                      setState(() {});
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/images/add-icon.svg',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.005),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Theme(
+                          data: ThemeData(
+                            unselectedWidgetColor: orangeColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Radio(
+                                value: 1,
+                                groupValue: selectedRadio,
+                                activeColor: orangeColor,
+                                visualDensity: VisualDensity.compact,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedRadio = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                "Single Delivery",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: drawerTextColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Syne-Bold',
                                 ),
                               ),
-                            );
-                          },
-                          child: buttonTransparentGradientSmall(
-                            "SCHEDULE RIDE",
-                            context,
+                              Radio(
+                                value: 2,
+                                groupValue: selectedRadio,
+                                activeColor: orangeColor,
+                                visualDensity: VisualDensity.compact,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedRadio = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                "Multiple Delivery",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: drawerTextColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Syne-Bold',
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () async {
-                            if (selectedRadio == 1) {
-                              calculateTime();
-                              if (pickupController.text.isEmpty ||
-                                  destinationController.text.isEmpty ||
-                                  receiversNameController.text.isEmpty ||
-                                  receiversNumberController.text.isEmpty ||
-                                  selectedVehicle == null ||
-                                  selectedBookingType == null) {
-                                if (pickupController.text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please fill pickup address!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                } else if (destinationController.text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please fill destination address!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                } else if (receiversNameController
-                                    .text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please fill receiver's name!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                } else if (receiversNumberController
-                                    .text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please fill receiver's number!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                } else if (selectedVehicle == null) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please select a vehicle!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                } else if (selectedBookingType == null) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please select booking type!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                }
-                              } else {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                await distanceCalculator();
-                                await getCharges(bookingsTypeId);
-                                print('bookingsTypeId: $bookingsTypeId');
-                                if (bookingsTypeId == "1") {
-                                  print("fromKm: $fromKm");
-                                  print("toKm: $toKm");
-                                  print("perKmAmount: $perKmAmount");
-                                  print("totalDistance: $totalDistance");
-                                  calculateStandardAmount(
-                                    double.parse(fromKm!),
-                                    toKm != "null" ? double.parse(toKm!) : 0.0,
-                                    double.parse(perKmAmount!),
-                                    double.parse(totalDistance!),
-                                  );
-                                }
-                                addSingleData = {
-                                  "vehicles_id": vehicleId,
-                                  "bookings_types_id": bookingsTypeId,
-                                  "delivery_type": selectedRadio == 1
-                                      ? "Single"
-                                      : "Multiple",
-                                  "pickup_address": pickupController.text,
-                                  "pickup_latitude": pickupLat ?? currentLat,
-                                  "pickup_longitude": pickupLng ?? currentLng,
-                                  "destin_address": destinationController.text,
-                                  "destin_latitude": destinationLat,
-                                  "destin_longitude": destinationLng,
-                                  "destin_distance": totalDistance,
-                                  "destin_time": "2 hrs 44 mins",
-                                  "destin_delivery_charges":
-                                      roundedTotalAmount ?? "0.00",
-                                  "destin_vat_charges": "0.00",
-                                  "destin_total_charges": "0.00",
-                                  "destin_discount": "0.00",
-                                  "destin_discounted_charges": "0.00",
-                                  "receiver_name": receiversNameController.text,
-                                  "receiver_phone":
-                                      receiversNumberController.text,
-                                };
-                                setState(() {});
+                      ),
+                      SizedBox(height: size.height * 0.015),
+                      if (selectedRadio == 1) singleTextFeild(),
+                      if (selectedRadio == 2) multiPageView(),
+                      SizedBox(height: size.height * 0.01),
+                      if (selectedRadio == 1) SizedBox(height: size.height * 0),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 22),
+                            child: SvgPicture.asset(
+                              "assets/images/info-icon.svg",
+                            ),
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 1.5, right: 16),
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButtonFormField(
+                                    icon: Padding(
+                                      padding: const EdgeInsets.only(top: 3),
+                                      child: SvgPicture.asset(
+                                        'assets/images/dropdown-icon.svg',
+                                        width: 5,
+                                        height: 5,
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    ),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: filledColor,
+                                      border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: redColor,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                      hintText: 'Select Vehicle',
+                                      hintStyle: TextStyle(
+                                        color: hintColor,
+                                        fontSize: 12,
+                                        fontFamily: 'Inter-Light',
+                                      ),
+                                      errorStyle: TextStyle(
+                                        color: redColor,
+                                        fontSize: 10,
+                                        fontFamily: 'Inter-Bold',
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.only(right: 5),
+                                    borderRadius: BorderRadius.circular(10),
+                                    items: vehiclesType
+                                        .map(
+                                          (item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                    // validator: (value) {
+                                    //   if (value == null) {
+                                    //     return 'Category is required!';
+                                    //   }
+                                    //   return null;
+                                    // },
+                                    value: selectedVehicle,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedVehicle = value;
+                                        print("selectedVehicle: $value");
+                                        if (getVehiclesByServiceTypeModel
+                                                .data !=
+                                            null) {
+                                          for (int i = 0;
+                                              i <
+                                                  getVehiclesByServiceTypeModel
+                                                      .data!.length;
+                                              i++) {
+                                            if (getVehiclesByServiceTypeModel
+                                                    .data?[i].name ==
+                                                value) {
+                                              vehicleId =
+                                                  getVehiclesByServiceTypeModel
+                                                      .data?[i].vehiclesId
+                                                      .toString();
+                                              print(
+                                                  'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
+                                            }
+                                          }
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: size.height * 0.01),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 22),
+                            child: SvgPicture.asset(
+                              "assets/images/info-icon.svg",
+                            ),
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 1.5, right: 16),
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButtonFormField(
+                                    icon: Padding(
+                                      padding: const EdgeInsets.only(top: 3),
+                                      child: SvgPicture.asset(
+                                        'assets/images/dropdown-icon.svg',
+                                        width: 5,
+                                        height: 5,
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    ),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: filledColor,
+                                      border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      focusedBorder: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: redColor,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                      hintText: 'Select Booking Type',
+                                      hintStyle: TextStyle(
+                                        color: hintColor,
+                                        fontSize: 12,
+                                        fontFamily: 'Inter-Light',
+                                      ),
+                                      errorStyle: TextStyle(
+                                        color: redColor,
+                                        fontSize: 10,
+                                        fontFamily: 'Inter-Bold',
+                                      ),
+                                    ),
+                                    padding: const EdgeInsets.only(right: 5),
+                                    borderRadius: BorderRadius.circular(10),
+                                    items: bookingType
+                                        .map(
+                                          (item) => DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                    // validator: (value) {
+                                    //   if (value == null) {
+                                    //     return 'Category is required!';
+                                    //   }
+                                    //   return null;
+                                    // },
+                                    value: selectedBookingType,
+                                    onChanged: (value) async {
+                                      selectedBookingType = value;
+                                      print("selectedBookingType: $value");
+                                      if (getBookingsTypeModel.data != null) {
+                                        for (int i = 0;
+                                            i <
+                                                getBookingsTypeModel
+                                                    .data!.length;
+                                            i++) {
+                                          if ("${getBookingsTypeModel.data?[i].name} (${getBookingsTypeModel.data?[i].sameDay})" ==
+                                              value) {
+                                            bookingsTypeId =
+                                                getBookingsTypeModel
+                                                    .data?[i].bookingsTypesId
+                                                    .toString();
+                                            await distanceCalculator();
+                                            await getCharges(bookingsTypeId);
+                                            print(
+                                                'bookingsTypeId: $bookingsTypeId');
+                                            if (bookingsTypeId == "1") {
+                                              print("fromKm: $fromKm");
+                                              print("toKm: $toKm");
+                                              print(
+                                                  "perKmAmount: $perKmAmount");
+                                              print(
+                                                  "totalDistance: $totalDistance");
+                                              calculateStandardAmount(
+                                                double.parse(fromKm!),
+                                                toKm != "null"
+                                                    ? double.parse(toKm!)
+                                                    : 0.0,
+                                                double.parse(perKmAmount!),
+                                                double.parse(totalDistance!),
+                                              );
+                                            }
+                                          }
+                                        }
+                                      }
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (selectedRadio == 2)
+                        Column(
+                          children: [
+                            SizedBox(height: size.height * 0.025),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (pageController.page!.toInt() > 0) {
+                                      pageController.previousPage(
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    'assets/images/orange-left-arrow-icon.svg',
+                                  ),
+                                ),
+                                SizedBox(width: size.width * 0.02),
+                                DotsIndicator(
+                                  dotsCount: pages.length,
+                                  position: currentIndex,
+                                  decorator: DotsDecorator(
+                                    color: dotsColor, // Inactive color
+                                    activeColor: orangeColor,
+                                    spacing: const EdgeInsets.symmetric(
+                                      horizontal: 3,
+                                    ),
+                                  ),
+                                  onTap: (index) {
+                                    pageController.animateToPage(
+                                      currentIndex = index,
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
+                                      curve: Curves.linear,
+                                    );
+                                  },
+                                ),
+                                SizedBox(width: size.width * 0.02),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (pageController.page!.toInt() <
+                                        pages.length - 1) {
+                                      pageController.nextPage(
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  },
+                                  child: SvgPicture.asset(
+                                    'assets/images/orange-right-arrow-icon.svg',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      SizedBox(height: size.height * 0.025),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        ConfirmSingleDetailsScreen(
-                                      singleData: addSingleData,
+                                    builder: (context) => ScheduleRideScreen(
+                                      selectedRadio: selectedRadio,
                                     ),
                                   ),
                                 );
-                              }
-                            }
-                            if (selectedRadio == 2) {
-                              Navigator.push(
+                              },
+                              child: buttonTransparentGradientSmall(
+                                "SCHEDULE RIDE",
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ConfirmMultipleDetailsScreen(),
-                                ),
-                              );
-                            }
-                          },
-                          child: buttonGradientSmall(
-                            "FIND RIDER",
-                            context,
-                          ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                if (selectedRadio == 1) {
+                                  calculateTime();
+                                  if (pickupController.text.isEmpty ||
+                                      destinationController.text.isEmpty ||
+                                      receiversNameController.text.isEmpty ||
+                                      receiversNumberController.text.isEmpty ||
+                                      selectedVehicle == null ||
+                                      selectedBookingType == null) {
+                                    if (pickupController.text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill pickup address!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (destinationController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill destination address!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (receiversNameController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill receiver's name!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (receiversNumberController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill receiver's number!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (selectedVehicle == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please select a vehicle!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (selectedBookingType == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please select booking type!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    await distanceCalculator();
+                                    await getCharges(bookingsTypeId);
+                                    print('bookingsTypeId: $bookingsTypeId');
+                                    if (bookingsTypeId == "1") {
+                                      print("fromKm: $fromKm");
+                                      print("toKm: $toKm");
+                                      print("perKmAmount: $perKmAmount");
+                                      print("totalDistance: $totalDistance");
+                                      calculateStandardAmount(
+                                        double.parse(fromKm!),
+                                        toKm != "null"
+                                            ? double.parse(toKm!)
+                                            : 0.0,
+                                        double.parse(perKmAmount!),
+                                        double.parse(totalDistance!),
+                                      );
+                                    }
+                                    addSingleData = {
+                                      "vehicles_id": vehicleId,
+                                      "bookings_types_id": bookingsTypeId,
+                                      "delivery_type": selectedRadio == 1
+                                          ? "Single"
+                                          : "Multiple",
+                                      "pickup_address": pickupController.text,
+                                      "pickup_latitude":
+                                          pickupLat ?? currentLat,
+                                      "pickup_longitude":
+                                          pickupLng ?? currentLng,
+                                      "destin_address":
+                                          destinationController.text,
+                                      "destin_latitude": destinationLat,
+                                      "destin_longitude": destinationLng,
+                                      "destin_distance": totalDistance,
+                                      "destin_time": "2 hrs 44 mins",
+                                      "destin_delivery_charges":
+                                          roundedTotalAmount ?? "0.00",
+                                      "destin_vat_charges": "0.00",
+                                      "destin_total_charges": "0.00",
+                                      "destin_discount": "0.00",
+                                      "destin_discounted_charges": "0.00",
+                                      "receiver_name":
+                                          receiversNameController.text,
+                                      "receiver_phone":
+                                          receiversNumberController.text,
+                                    };
+                                    setState(() {});
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ConfirmSingleDetailsScreen(
+                                          singleData: addSingleData,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                                if (selectedRadio == 2) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ConfirmMultipleDetailsScreen(),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: buttonGradientSmall(
+                                "FIND RIDER",
+                                context,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/info-icon.svg",
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            Text(
+                              'Note: Please drag down to see your location on the map.',
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 10,
+                                fontFamily: 'Inter-Bold',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.12),
+                    ],
                   ),
-                  SizedBox(height: size.height * 0.02),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/images/info-icon.svg",
-                        ),
-                        SizedBox(width: size.width * 0.02),
-                        Text(
-                          'Note: Please drag down to see your location on the map.',
-                          style: TextStyle(
-                            color: blackColor,
-                            fontSize: 10,
-                            fontFamily: 'Inter-Bold',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.12),
                 ],
               ),
             ),
