@@ -1,9 +1,11 @@
+import 'package:deliver_client/models/get_scheduled_booking_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 
 class ScheduledRideDetailScreen extends StatefulWidget {
-  const ScheduledRideDetailScreen({super.key});
+  final Datum? getScheduledBookingModel;
+  const ScheduledRideDetailScreen({super.key, this.getScheduledBookingModel});
 
   @override
   State<ScheduledRideDetailScreen> createState() =>

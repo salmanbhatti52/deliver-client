@@ -7,7 +7,8 @@ import 'package:google_maps_webservice_ex/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeTextFeilds extends StatefulWidget {
-  const HomeTextFeilds({super.key});
+  final int? currentIndex;
+  const HomeTextFeilds({super.key, this.currentIndex});
 
   @override
   State<HomeTextFeilds> createState() => _HomeTextFeildsState();

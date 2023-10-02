@@ -356,10 +356,7 @@ class _NewScreenState extends State<NewScreen> {
 
   PageController pageController = PageController();
   int currentIndex = 0;
-  List<Widget> pages = [
-    const HomeTextFeilds(),
-    const HomeTextFeilds(),
-  ];
+  late List<Widget> pages;
 
   void addPage() {
     if (pages.length >= 5) {
@@ -367,7 +364,9 @@ class _NewScreenState extends State<NewScreen> {
     }
     setState(() {
       pages.add(
-        const HomeTextFeilds(),
+        HomeTextFeilds(
+          currentIndex: currentIndex,
+        ),
       );
     });
   }
@@ -475,6 +474,10 @@ class _NewScreenState extends State<NewScreen> {
     getAllSystemData();
     getServiceTypes();
     getBookingsType();
+    pages = [
+      HomeTextFeilds(currentIndex: currentIndex),
+      HomeTextFeilds(currentIndex: currentIndex),
+    ];
   }
 
   @override

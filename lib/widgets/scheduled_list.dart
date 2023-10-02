@@ -310,10 +310,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const ScheduledRideDetailScreen(
-                                                // completedRideModel:
-                                                // completedRideModel.data?[index],
-                                                ),
+                                            ScheduledRideDetailScreen(),
                                       ),
                                     );
                                   },
