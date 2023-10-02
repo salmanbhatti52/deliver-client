@@ -292,6 +292,11 @@ class _RidersListState extends State<RidersList> {
                                       .toString(),
                                   fleetId: widget.fleetId,
                                   currentBookingId: currentBookingId,
+                                  passCode: createBookingModel
+                                      .data
+                                      ?.bookingsFleet?[0]
+                                      .bookingsDestinations
+                                      ?.passcode,
                                   distance: widget.distanceKm,
                                   singleData: widget.singleData,
                                   riderData: widget.searchRider,

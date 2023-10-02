@@ -310,12 +310,18 @@ class _ScheduledListState extends State<ScheduledList> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            ScheduledRideDetailScreen(),
+                                            ScheduledRideDetailScreen(
+                                          getScheduledBookingModel:
+                                              getScheduledBookingModel
+                                                  .data?[index],
+                                        ),
                                       ),
                                     );
                                   },
                                   child: detailButtonGradientSmall(
-                                      'See detail', context),
+                                    'See detail',
+                                    context,
+                                  ),
                                 ),
                               ),
                             ],

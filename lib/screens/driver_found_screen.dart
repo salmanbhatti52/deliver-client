@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,6 +29,7 @@ String? userId;
 class DriverFoundScreen extends StatefulWidget {
   final String? bookingId;
   final String? fleetId;
+  final String? passCode;
   final String? currentBookingId;
   final double? distance;
   final Map? singleData;
@@ -36,6 +38,7 @@ class DriverFoundScreen extends StatefulWidget {
     super.key,
     this.bookingId,
     this.fleetId,
+    this.passCode,
     this.currentBookingId,
     this.distance,
     this.singleData,
@@ -171,6 +174,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
               builder: (context) => BookingAcceptedScreen(
                 distance: widget.distance,
                 singleData: widget.singleData,
+                passCode: widget.passCode,
                 riderData: widget.riderData!,
                 currentBookingId: widget.currentBookingId,
               ),
@@ -196,9 +200,102 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     setState(() {});
   }
 
+  void showPasscodeDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var size = MediaQuery.of(context).size;
+        return WillPopScope(
+          onWillPop: () {
+            return Future.value(false);
+          },
+          child: StatefulBuilder(
+            builder: (context, setState) => Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40),
+              ),
+              insetPadding: const EdgeInsets.only(left: 20, right: 20),
+              child: SizedBox(
+                height: size.height * 0.36,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(height: size.height * 0.02),
+                      Text(
+                        'Passcode',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: orangeColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-Bold',
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.01),
+                      Text(
+                        'Share your passcode with the receiver\nto ensure a secure and safe delivery.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 16,
+                          fontFamily: 'Syne-Regular',
+                        ),
+                      ),
+                      Text(
+                        '${widget.passCode}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-Bold',
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.002),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: dialogButtonTransparentGradientSmall(
+                              "Cancel",
+                              context,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              sharePasscode("${widget.passCode}");
+                            },
+                            child: dialogButtonGradientSmall("Share", context),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: size.height * 0.01),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void sharePasscode(String passcode) {
+    Share.share('Your passcode is: $passcode');
+  }
+
   @override
   void initState() {
     super.initState();
+    print("passCode: ${widget.passCode}");
+    Future.delayed(Duration.zero, () {
+      showPasscodeDialog();
+    });
     getAllSystemData();
     loadCustomMarker();
     lat = "${widget.riderData!.latitude}";
@@ -693,7 +790,9 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                         top: 40,
                         right: 20,
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            showPasscodeDialog();
+                          },
                           child: SvgPicture.asset(
                             'assets/images/share-icon.svg',
                             fit: BoxFit.scaleDown,

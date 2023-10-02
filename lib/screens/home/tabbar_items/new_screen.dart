@@ -20,9 +20,9 @@ import 'package:deliver_client/models/get_charges_model.dart';
 import 'package:deliver_client/models/get_vehicles_model.dart';
 import 'package:deliver_client/models/get_services_type_model.dart';
 import 'package:deliver_client/models/get_bookings_type_model.dart';
+import 'package:deliver_client/models/calculate_distance_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/home/schedule_ride_screen.dart';
-import 'package:deliver_client/models/calculate_distance_model.dart';
 import 'package:deliver_client/screens/confirm_single_details_screen.dart';
 import 'package:deliver_client/screens/confirm_multiple_details_screen.dart';
 

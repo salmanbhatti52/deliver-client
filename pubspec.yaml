@@ -42,6 +42,7 @@ dependencies:
   location: ^5.0.3
   geocoding: ^2.1.0
   geolocator: ^9.0.2
+  share_plus: ^7.1.0
   flutter_svg: ^2.0.7
   searchfield: ^0.8.3
   file_picker: ^5.5.0
@@ -50,7 +51,6 @@ dependencies:
   bottom_sheet: ^4.0.0
   firebase_auth: ^4.9.0
   firebase_core: ^2.15.1
-  google_sign_in: ^6.1.5
   device_preview: ^1.1.0
   flutter_switch: ^0.3.2
   auto_size_text: ^3.0.0
