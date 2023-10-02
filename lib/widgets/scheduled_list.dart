@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/cancel_booking_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/models/get_scheduled_booking_model.dart';
+import 'package:deliver_client/screens/home/drawer/scheduled_ride/scheduled_ride_details/scheduled_ride_details_screen.dart';
 
 String? userId;
 
@@ -305,16 +306,16 @@ class _ScheduledListState extends State<ScheduledList> {
                                 right: 0,
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         RideHistoryCompletedDetailsScreen(
-                                    //           completedRideModel:
-                                    //           completedRideModel.data?[index],
-                                    //         ),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ScheduledRideDetailScreen(
+                                                // completedRideModel:
+                                                // completedRideModel.data?[index],
+                                                ),
+                                      ),
+                                    );
                                   },
                                   child: detailButtonGradientSmall(
                                       'See detail', context),

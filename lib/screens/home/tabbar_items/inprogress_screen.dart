@@ -129,19 +129,26 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   List<LatLng> polylineCoordinates = [];
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw', // Your Google Map Key
-      PointLatLng(riderLat!, riderLng!),
-      PointLatLng(destLat!, destLng!),
-    );
-    if (result.points.isNotEmpty) {
-      print("polylineCoordinates: $polylineCoordinates");
-      for (var point in result.points) {
-        polylineCoordinates.add(
-          LatLng(point.latitude, point.longitude),
-        );
+    if (riderLat != null &&
+        riderLng != null &&
+        destLat != null &&
+        destLng != null) {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        'AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw', // Your Google Map Key
+        PointLatLng(riderLat!, riderLng!),
+        PointLatLng(destLat!, destLng!),
+      );
+      if (result.points.isNotEmpty) {
+        print("polylineCoordinates: $polylineCoordinates");
+        for (var point in result.points) {
+          polylineCoordinates.add(
+            LatLng(point.latitude, point.longitude),
+          );
+        }
+        setState(() {});
       }
-      setState(() {});
+    } else {
+      print("No Rider Data");
     }
   }
 
