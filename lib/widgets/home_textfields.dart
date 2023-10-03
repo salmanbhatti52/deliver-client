@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,7 +15,7 @@ class HomeTextFeilds extends StatefulWidget {
   final TextEditingController destinationController;
   final TextEditingController receiversNameController;
   final TextEditingController receiversNumberController;
-  
+
   const HomeTextFeilds(
       {super.key,
       this.currentIndex,
@@ -383,8 +385,8 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                         onTap: () {
                           // destinationController.clear();
                           destinationPredictions.clear();
-                          print("Pickup Controller Text: ${widget.pickupController.text}");
-
+                          print(
+                              "Pickup Controller Text: ${widget.pickupController.text}");
                         },
                         cursorColor: orangeColor,
                         keyboardType: TextInputType.text,
