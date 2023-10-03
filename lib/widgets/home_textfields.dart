@@ -8,7 +8,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeTextFeilds extends StatefulWidget {
   final int? currentIndex;
-  const HomeTextFeilds({super.key, this.currentIndex});
+  final PageController pageController;
+  final TextEditingController pickupController;
+  final TextEditingController destinationController;
+  final TextEditingController receiversNameController;
+  final TextEditingController receiversNumberController;
+  const HomeTextFeilds(
+      {super.key,
+      this.currentIndex,
+      required this.pageController,
+      required this.pickupController,
+      required this.destinationController,
+      required this.receiversNameController,
+      required this.receiversNumberController});
 
   @override
   State<HomeTextFeilds> createState() => _HomeTextFeildsState();
@@ -36,6 +48,24 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
   TextEditingController receiversNameController5 = TextEditingController();
   TextEditingController receiversNumberController5 = TextEditingController();
   final GlobalKey<FormState> homeNewFormKey = GlobalKey<FormState>();
+  List<TextEditingController> pickupControllers = [];
+  List<TextEditingController> destinationControllers = [];
+  List<TextEditingController> receiversNameControllers = [];
+  List<TextEditingController> receiversNumberControllers = [];
+
+//   List<TextEditingController> pickupControllers = List.generate(5, (index) => TextEditingController());
+// List<TextEditingController> destinationControllers = List.generate(5, (index) => TextEditingController());
+// List<TextEditingController> receiversNameControllers = List.generate(5, (index) => TextEditingController());
+// List<TextEditingController> receiversNumberControllers = List.generate(5, (index) => TextEditingController());
+
+  late TextEditingController selectedPickupController =
+      pickupControllers[widget.currentIndex!];
+  late TextEditingController selectedDestinationController =
+      destinationControllers[widget.currentIndex!];
+  late TextEditingController selectedReceiversNameController =
+      receiversNameControllers[widget.currentIndex!];
+  late TextEditingController selectedReceiversNumberController =
+      receiversNumberControllers[widget.currentIndex!];
 
   String? pickupLat;
   String? pickupLng;
@@ -78,6 +108,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
     }
   }
 
+  String currentAddress = "";
   Future<void> getCurrentLocation() async {
     final Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.best,
@@ -88,14 +119,22 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
 
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
-      final String currentAddress =
+      currentAddress =
           "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
 
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         selectedLocation = null; // Clear selected location
         selectedMarker = const MarkerId('currentLocation');
-        pickupController1.text = currentAddress;
+        // (widget.currentIndex == 0)
+        //     ? pickupController1.text
+        //     : (widget.currentIndex == 1)
+        //         ? pickupController2.text
+        //         : (widget.currentIndex == 2)
+        //             ? pickupController3.text
+        //             : (widget.currentIndex == 3)
+        //                 ? pickupController4.text
+        //                 : pickupController5.text = currentAddress;
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
         print("currentLat: $currentLat");
@@ -119,6 +158,59 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
         CameraUpdate.newLatLngZoom(selectedLocation!, zoomLevel));
   }
 
+  List<List<TextEditingController>> allControllers = [
+    // For pickup controllers
+    [
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+    ],
+    // For destination controllers
+    [
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+    ],
+    // For receiver name controllers
+    [
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+    ],
+    // For receiver number controllers
+    [
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+      TextEditingController(),
+    ],
+  ];
+
+  List<String> controllerNames = [
+    "Pickup",
+    "Destination",
+    "Receiver Name",
+    "Receiver Number",
+  ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (int i = 0; i < 5; i++) {
+      pickupControllers.add(TextEditingController());
+      destinationControllers.add(TextEditingController());
+      receiversNameControllers.add(TextEditingController());
+      receiversNumberControllers.add(TextEditingController());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -139,7 +231,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                   child: Stack(
                     children: [
                       TextFormField(
-                        controller: pickupController1,
+                        controller: widget.pickupController,
                         onChanged: (value) {
                           searchPickUpPlaces(value);
                         },
@@ -190,7 +282,9 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                             ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
                           hintText: "Pickup Location",
                           hintStyle: TextStyle(
                             color: hintColor,
@@ -200,6 +294,10 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                           suffixIcon: GestureDetector(
                             onTap: () {
                               getCurrentLocation();
+                              int currentPage =
+                                  widget.pageController.page?.round() ?? 0;
+                              print("index: ${widget.currentIndex}");
+                              widget.pickupController.text = currentAddress;
                             },
                             child: Container(
                               color: transparentColor,
@@ -233,7 +331,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                                   subtitle:
                                       Text(prediction.formattedAddress ?? ''),
                                   onTap: () {
-                                    pickupController1.text =
+                                    widget.pickupController.text =
                                         prediction.formattedAddress!;
                                     final double lat =
                                         prediction.geometry!.location.lat;
@@ -255,8 +353,8 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                                     });
                                     // Move the map camera to the selected location
                                     mapController?.animateCamera(
-                                        CameraUpdate.newLatLng(
-                                            selectedLocation!));
+                                      CameraUpdate.newLatLng(selectedLocation!),
+                                    );
                                   },
                                 );
                               },
@@ -285,6 +383,8 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                         onTap: () {
                           // destinationController.clear();
                           destinationPredictions.clear();
+                          print(
+                              "Pickup Controller Text: ${widget.pickupController.text}");
                         },
                         cursorColor: orangeColor,
                         keyboardType: TextInputType.text,

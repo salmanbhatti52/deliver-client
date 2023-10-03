@@ -363,11 +363,14 @@ class _NewScreenState extends State<NewScreen> {
       return; // Limit reached, do not add more pages
     }
     setState(() {
-      pages.add(
-        HomeTextFeilds(
-          currentIndex: currentIndex,
-        ),
-      );
+      pages.add(HomeTextFeilds(
+        currentIndex: currentIndex,
+        pageController: pageController,
+        pickupController: pickupControllers[currentIndex],
+        destinationController: destinationControllers[currentIndex],
+        receiversNameController: receiversNameControllers[currentIndex],
+        receiversNumberController: receiversNumberControllers[currentIndex],
+      ));
     });
   }
 
@@ -475,9 +478,30 @@ class _NewScreenState extends State<NewScreen> {
     getServiceTypes();
     getBookingsType();
     pages = [
-      HomeTextFeilds(currentIndex: currentIndex),
-      HomeTextFeilds(currentIndex: currentIndex),
+      HomeTextFeilds(
+        currentIndex: currentIndex,
+        pageController: pageController,
+        pickupController: pickupControllers[currentIndex],
+        destinationController: destinationControllers[currentIndex],
+        receiversNameController: receiversNameControllers[currentIndex],
+        receiversNumberController: receiversNumberControllers[currentIndex],
+      ),
+      HomeTextFeilds(
+        currentIndex: currentIndex,
+        pageController: pageController,
+        pickupController: pickupControllers[currentIndex],
+        destinationController: destinationControllers[currentIndex],
+        receiversNameController: receiversNameControllers[currentIndex],
+        receiversNumberController: receiversNumberControllers[currentIndex],
+      ),
     ];
+  }
+
+  @override
+  void dispose() {
+    pageController
+        .dispose(); // Don't forget to dispose the controller when done
+    super.dispose();
   }
 
   @override
@@ -559,6 +583,15 @@ class _NewScreenState extends State<NewScreen> {
       ),
     );
   }
+
+  List<TextEditingController> pickupControllers =
+      List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> destinationControllers =
+      List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> receiversNameControllers =
+      List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> receiversNumberControllers =
+      List.generate(5, (_) => TextEditingController());
 
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
@@ -983,20 +1016,30 @@ class _NewScreenState extends State<NewScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-        color: transparentColor,
-        height: size.height * 0.295,
-        child: PageView(
-          scrollDirection: Axis.horizontal,
-          controller: pageController,
-          onPageChanged: (value) {
-            setState(() {
-              currentIndex = value;
-              print('currentIndex: $currentIndex');
-            });
-          },
-          children: pages,
-        ),
-      ),
+          color: Colors.transparent,
+          height: size.height * 0.295,
+          child: PageView.builder(
+            scrollDirection: Axis.horizontal,
+            controller: pageController,
+            onPageChanged: (value) {
+              setState(() {
+                currentIndex = value;
+                print('currentIndex: $currentIndex');
+              });
+            },
+            itemCount: pages.length,
+            itemBuilder: (context, index) {
+              return HomeTextFeilds(
+                pageController: pageController,
+                currentIndex: currentIndex,
+                pickupController: pickupControllers[currentIndex],
+                destinationController: destinationControllers[currentIndex],
+                receiversNameController: receiversNameControllers[currentIndex],
+                receiversNumberController:
+                    receiversNumberControllers[currentIndex],
+              );
+            },
+          )),
     );
   }
 
@@ -1901,6 +1944,9 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
+                                  print(
+                                      "Pickup Controller Text: ${pickupController.text}");
+
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
