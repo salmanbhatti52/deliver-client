@@ -463,7 +463,9 @@ class _AppDrawerState extends State<AppDrawer> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const UpdateLocationScreen(),
+            builder: (context) => UpdateLocationScreen(
+              firstName: getProfileModel.data!.firstName,
+            ),
           ),
         );
 

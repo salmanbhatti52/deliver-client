@@ -16,7 +16,8 @@ import 'package:deliver_client/models/update_location_model.dart';
 String? userId;
 
 class UpdateLocationScreen extends StatefulWidget {
-  const UpdateLocationScreen({super.key});
+  final String? firstName;
+  const UpdateLocationScreen({super.key, this.firstName});
 
   @override
   State<UpdateLocationScreen> createState() => _UpdateLocationScreenState();
@@ -140,9 +141,19 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(height: size.height * 0.04),
+            SizedBox(height: size.height * 0.03),
             Text(
-              "Update your location to find nearby riders\nand ensure swift and convenient courier\ndeliveries.",
+              "Hi, there! ${widget.firstName}",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: orangeColor,
+                fontSize: 20,
+                fontFamily: 'Syne-SemiBold',
+              ),
+            ),
+            SizedBox(height: size.height * 0.02),
+            Text(
+              "Update your location to find nearby riders\nand ensure swift and convenient \ndeliveries.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: blackColor,
@@ -160,7 +171,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
                   ? buttonGradientWithLoader("Please Wait...", context)
                   : buttonGradient('Update Location', context),
             ),
-            SizedBox(height: size.height * 0.04),
+            SizedBox(height: size.height * 0.03),
           ],
         ),
       ),

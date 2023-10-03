@@ -28,7 +28,7 @@ class _DrawerAddressScreenState extends State<DrawerAddressScreen> {
   GetAddressesModel getAddressesModel = GetAddressesModel();
 
   getAddresses() async {
-    // try {
+    try {
       setState(() {
         isLoading = true;
       });
@@ -56,13 +56,13 @@ class _DrawerAddressScreenState extends State<DrawerAddressScreen> {
           isLoading = false;
         });
       }
-    // } catch (e) {
-    //   print('Something went wrong = ${e.toString()}');
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    //   return null;
-    // }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      setState(() {
+        isLoading = false;
+      });
+      return null;
+    }
   }
 
   DeleteAddressModel deleteAddressModel = DeleteAddressModel();

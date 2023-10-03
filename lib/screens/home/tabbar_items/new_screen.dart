@@ -14,10 +14,12 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:google_maps_webservice_ex/places.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/widgets/home_textfields.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/get_charges_model.dart';
 import 'package:deliver_client/models/get_vehicles_model.dart';
+import 'package:deliver_client/models/get_addresses_model.dart';
 import 'package:deliver_client/models/get_services_type_model.dart';
 import 'package:deliver_client/models/get_bookings_type_model.dart';
 import 'package:deliver_client/models/calculate_distance_model.dart';
@@ -25,6 +27,8 @@ import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/home/schedule_ride_screen.dart';
 import 'package:deliver_client/screens/confirm_single_details_screen.dart';
 import 'package:deliver_client/screens/confirm_multiple_details_screen.dart';
+
+String? userId;
 
 class NewScreen extends StatefulWidget {
   late double? location;
@@ -45,6 +49,8 @@ class _NewScreenState extends State<NewScreen> {
       DraggableScrollableController();
   Map addSingleData = {};
   Map addScheduledSingleData = {};
+  bool isSelectedAddress = false;
+  List<String> addresses = [];
   bool isSelectedBus = false;
   bool isSelectedCourier = true;
   String? totalDistance;
@@ -116,6 +122,49 @@ class _NewScreenState extends State<NewScreen> {
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  GetAddressesModel getAddressesModel = GetAddressesModel();
+
+  getAddresses() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
+      String apiUrl = "$baseUrl/get_addresses_customers";
+      print("apiUrl: $apiUrl");
+      print("userId: $userId");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "users_customers_id": userId,
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        getAddressesModel = getAddressesModelFromJson(responseString);
+        print('getAddressesModel status: ${getAddressesModel.status}');
+        for (int i = 0; i < getAddressesModel.data!.length; i++) {
+          addresses.add("${getAddressesModel.data?[i]}");
+        }
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      setState(() {
+        isLoading = false;
+      });
       return null;
     }
   }
@@ -475,6 +524,7 @@ class _NewScreenState extends State<NewScreen> {
     super.initState();
     loadCustomMarker();
     getAllSystemData();
+    getAddresses();
     getServiceTypes();
     getBookingsType();
     pages = [
@@ -618,10 +668,13 @@ class _NewScreenState extends State<NewScreen> {
                           TextFormField(
                             controller: pickupController,
                             onChanged: (value) {
-                              searchPickUpPlaces(value);
+                              isSelectedAddress == true
+                                  ? addresses.toList()
+                                  : searchPickUpPlaces(value);
                             },
                             onTap: () {
                               // pickupController.clear();
+                              addresses.clear();
                               pickUpPredictions.clear();
                             },
                             cursorColor: orangeColor,
@@ -688,63 +741,112 @@ class _NewScreenState extends State<NewScreen> {
                               ),
                             ),
                           ),
-                          if (pickUpPredictions.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: filledColor,
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                ),
-                                width: size.width * 0.8,
-                                height: size.height * 0.2,
-                                child: ListView.separated(
-                                  itemCount: pickUpPredictions.length,
-                                  itemBuilder: (context, index) {
-                                    final prediction = pickUpPredictions[index];
-                                    return ListTile(
-                                      title: Text(prediction.name),
-                                      subtitle: Text(
-                                          prediction.formattedAddress ?? ''),
-                                      onTap: () {
-                                        pickupController.text =
-                                            prediction.formattedAddress!;
-                                        final double lat =
-                                            prediction.geometry!.location.lat;
-                                        final double lng =
-                                            prediction.geometry!.location.lng;
-                                        const double zoomLevel = 15.0;
-                                        onPickUpLocationSelected(
-                                            LatLng(lat, lng), zoomLevel);
-                                        pickupLat = lat.toString();
-                                        pickupLng = lng.toString();
-                                        setState(() {
-                                          pickUpPredictions.clear();
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          print("pickupLat: $pickupLat");
-                                          print("pickupLng $pickupLng");
-                                          print(
-                                              "pickupLocation: ${prediction.formattedAddress}");
-                                        });
-                                        // Move the map camera to the selected location
-                                        mapController?.animateCamera(
-                                            CameraUpdate.newLatLng(
-                                                selectedLocation!));
-                                      },
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return Divider(
-                                      color: textHaveAccountColor,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                          if (addresses.isNotEmpty)
+                            isSelectedAddress == true
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 40),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: filledColor,
+                                        borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10),
+                                        ),
+                                      ),
+                                      width: size.width * 0.8,
+                                      height: size.height * 0.2,
+                                      child: ListView.separated(
+                                        itemCount:
+                                            getAddressesModel.data!.length,
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: (context, index) {
+                                          final addresses =
+                                              getAddressesModel.data![index];
+                                          return ListTile(
+                                            title: Text("${addresses.name}"),
+                                            subtitle:
+                                                Text("${addresses.address}"),
+                                            onTap: () {
+                                              pickupController.text =
+                                                  "${addresses.address}";
+                                            },
+                                          );
+                                        },
+                                        separatorBuilder: (context, index) {
+                                          return Divider(
+                                            color: textHaveAccountColor,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                : pickUpPredictions.isNotEmpty
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(top: 40),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: filledColor,
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10),
+                                            ),
+                                          ),
+                                          width: size.width * 0.8,
+                                          height: size.height * 0.2,
+                                          child: ListView.separated(
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: pickUpPredictions.length,
+                                            itemBuilder: (context, index) {
+                                              final prediction =
+                                                  pickUpPredictions[index];
+                                              return ListTile(
+                                                title: Text(prediction.name),
+                                                subtitle: Text(prediction
+                                                        .formattedAddress ??
+                                                    ''),
+                                                onTap: () {
+                                                  pickupController.text =
+                                                      prediction
+                                                          .formattedAddress!;
+                                                  final double lat = prediction
+                                                      .geometry!.location.lat;
+                                                  final double lng = prediction
+                                                      .geometry!.location.lng;
+                                                  const double zoomLevel = 15.0;
+                                                  onPickUpLocationSelected(
+                                                      LatLng(lat, lng),
+                                                      zoomLevel);
+                                                  pickupLat = lat.toString();
+                                                  pickupLng = lng.toString();
+                                                  setState(() {
+                                                    pickUpPredictions.clear();
+                                                    FocusManager
+                                                        .instance.primaryFocus
+                                                        ?.unfocus();
+                                                    print(
+                                                        "pickupLat: $pickupLat");
+                                                    print(
+                                                        "pickupLng $pickupLng");
+                                                    print(
+                                                        "pickupLocation: ${prediction.formattedAddress}");
+                                                  });
+                                                  // Move the map camera to the selected location
+                                                  mapController?.animateCamera(
+                                                      CameraUpdate.newLatLng(
+                                                          selectedLocation!));
+                                                },
+                                              );
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return Divider(
+                                                color: textHaveAccountColor,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
                         ],
                       ),
                     ),
@@ -829,6 +931,7 @@ class _NewScreenState extends State<NewScreen> {
                                 width: size.width * 0.8,
                                 height: size.height * 0.2,
                                 child: ListView.separated(
+                                  scrollDirection: Axis.vertical,
                                   itemCount: destinationPredictions.length,
                                   itemBuilder: (context, index) {
                                     final prediction =
@@ -1247,6 +1350,42 @@ class _NewScreenState extends State<NewScreen> {
                                 fontFamily: 'Syne-Bold',
                               ),
                             ),
+                            if (selectedRadio == 1)
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isSelectedAddress = true;
+                                      });
+                                    },
+                                    child: isSelectedAddress == true
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isSelectedAddress = false;
+                                              });
+                                            },
+                                            child: SvgPicture.asset(
+                                              'assets/images/checkmark-icon.svg',
+                                            ),
+                                          )
+                                        : SvgPicture.asset(
+                                            'assets/images/uncheckmark-icon.svg',
+                                          ),
+                                  ),
+                                  SizedBox(width: size.width * 0.01),
+                                  Text(
+                                    "Saved Addresses",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 12,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                ],
+                              ),
                             if (selectedRadio == 2)
                               Row(
                                 children: [

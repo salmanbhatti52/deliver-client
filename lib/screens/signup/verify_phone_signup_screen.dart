@@ -25,7 +25,6 @@ class VerifyPhoneSignUpScreen extends StatefulWidget {
 
 class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   TextEditingController otpController = TextEditingController();
-  final GlobalKey<FormState> otpPhoneFormKey = GlobalKey<FormState>();
 
   bool isLoading = false;
 
@@ -51,12 +50,17 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
         checkNumberModel = checkNumberModelFromJson(responseString);
         print('checkNumberModel status: ${checkNumberModel.status}');
         SharedPreferences sharedPref = await SharedPreferences.getInstance();
-        await sharedPref.setString('userId', "${checkNumberModel.data?.usersCustomersId.toString()}");
+        await sharedPref.setString(
+            'userId', "${checkNumberModel.data?.usersCustomersId.toString()}");
         await sharedPref.setString('email', "${checkNumberModel.data?.email}");
-        await sharedPref.setString('firstName', "${checkNumberModel.data?.firstName}");
-        await sharedPref.setString('lastName', "${checkNumberModel.data?.lastName}");
-        await sharedPref.setString('phoneNumber', "${checkNumberModel.data?.phone}");
-        print("sharedPref userId: ${checkNumberModel.data!.usersCustomersId.toString()}");
+        await sharedPref.setString(
+            'firstName', "${checkNumberModel.data?.firstName}");
+        await sharedPref.setString(
+            'lastName', "${checkNumberModel.data?.lastName}");
+        await sharedPref.setString(
+            'phoneNumber', "${checkNumberModel.data?.phone}");
+        print(
+            "sharedPref userId: ${checkNumberModel.data!.usersCustomersId.toString()}");
         print("sharedPref email: ${checkNumberModel.data!.email}");
         print("sharedPref firstName: ${checkNumberModel.data!.firstName}");
         print("sharedPref lastName: ${checkNumberModel.data!.lastName}");
