@@ -1119,30 +1119,47 @@ class _NewScreenState extends State<NewScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
-          color: Colors.transparent,
-          height: size.height * 0.295,
-          child: PageView.builder(
-            scrollDirection: Axis.horizontal,
-            controller: pageController,
-            onPageChanged: (value) {
-              setState(() {
-                currentIndex = value;
-                print('currentIndex: $currentIndex');
-              });
-            },
-            itemCount: pages.length,
-            itemBuilder: (context, index) {
-              return HomeTextFeilds(
-                pageController: pageController,
-                currentIndex: currentIndex,
-                pickupController: pickupControllers[currentIndex],
-                destinationController: destinationControllers[currentIndex],
-                receiversNameController: receiversNameControllers[currentIndex],
-                receiversNumberController:
-                    receiversNumberControllers[currentIndex],
-              );
-            },
-          )),
+        color: Colors.transparent,
+        height: size.height * 0.295,
+        child: PageView.builder(
+          scrollDirection: Axis.horizontal,
+          controller: pageController,
+          onPageChanged: (value) {
+            setState(() {
+              currentIndex = value;
+              print('currentIndex: $currentIndex');
+            });
+          },
+          itemCount: pages.length,
+          itemBuilder: (context, index) {
+            // Access the controllers for the current page
+            TextEditingController pickupController = pickupControllers[index];
+            TextEditingController destinationController =
+                destinationControllers[index];
+            TextEditingController receiversNameController =
+                receiversNameControllers[index];
+            TextEditingController receiversNumberController =
+                receiversNumberControllers[index];
+
+            // Print the text from the controllers
+            print('Page $index:');
+            print('Pickup Controller: ${pickupController.text}');
+            print('Destination Controller: ${destinationController.text}');
+            print('Receivers Name Controller: ${receiversNameController.text}');
+            print(
+                'Receivers Number Controller: ${receiversNumberController.text}');
+
+            return HomeTextFeilds(
+              pageController: pageController,
+              currentIndex: currentIndex,
+              pickupController: pickupController,
+              destinationController: destinationController,
+              receiversNameController: receiversNameController,
+              receiversNumberController: receiversNumberController,
+            );
+          },
+        ),
+      ),
     );
   }
 
