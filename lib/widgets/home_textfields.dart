@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -15,6 +13,7 @@ class HomeTextFeilds extends StatefulWidget {
   final TextEditingController destinationController;
   final TextEditingController receiversNameController;
   final TextEditingController receiversNumberController;
+  
   const HomeTextFeilds(
       {super.key,
       this.currentIndex,
@@ -378,15 +377,15 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                   child: Stack(
                     children: [
                       TextFormField(
-                        controller: destinationController1,
+                        controller: widget.destinationController,
                         onChanged: (value) {
                           searchDestinationPlaces(value);
                         },
                         onTap: () {
                           // destinationController.clear();
                           destinationPredictions.clear();
-                          print(
-                              "Pickup Controller Text: ${widget.pickupController.text}");
+                          print("Pickup Controller Text: ${widget.pickupController.text}");
+
                         },
                         cursorColor: orangeColor,
                         keyboardType: TextInputType.text,
@@ -463,7 +462,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                                   subtitle:
                                       Text(prediction.formattedAddress ?? ''),
                                   onTap: () {
-                                    destinationController1.text =
+                                    widget.destinationController.text =
                                         prediction.formattedAddress!;
                                     final double lat =
                                         prediction.geometry!.location.lat;
@@ -499,7 +498,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                   color: transparentColor,
                   width: size.width * 0.8,
                   child: TextFormField(
-                    controller: receiversNameController1,
+                    controller: widget.receiversNameController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.text,
                     style: TextStyle(
@@ -564,7 +563,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                   color: transparentColor,
                   width: size.width * 0.8,
                   child: TextFormField(
-                    controller: receiversNumberController1,
+                    controller: widget.receiversNumberController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.phone,
                     style: TextStyle(
