@@ -282,10 +282,6 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                           .toString(),
                       "delivery_time":
                           DateFormat('h:mm').format(selectedTime!).toString(),
-                      // "total_vat_charges": roundedTotalVatAmount.toString(),
-                      // "total_charges": totalPrice.toString(),
-                      // "total_discount": "0.00",
-                      // "total_discounted_charges": "0.00",
                     });
                     Navigator.push(
                       context,

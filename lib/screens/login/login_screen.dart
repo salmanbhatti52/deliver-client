@@ -284,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   child: isLoading
-                      ? buttonGradientWithLoader("Pleasw Wait...", context)
+                      ? buttonGradientWithLoader("Please Wait...", context)
                       : buttonGradient("LOGIN", context),
                 ),
                 SizedBox(height: size.height * 0.04),
