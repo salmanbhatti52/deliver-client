@@ -15,7 +15,11 @@
 			<string>com.googleusercontent.apps.861823949799-vc35cprkp249096uujjn0vvnmcvjppkn</string>
 		</array>
 	</dict>
-</array>
+    </array>
+    <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>tel</string>
+        </array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

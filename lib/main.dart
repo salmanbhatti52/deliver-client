@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/screens/splash_screen.dart';
 import 'package:deliver_client/utils/firebase_options.dart';
-import 'package:deliver_client/utils/remove_scroll_glow.dart';
+import 'package:deliver_client/utils/remove_scroll_glow.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
