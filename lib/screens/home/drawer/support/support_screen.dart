@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +14,6 @@ import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/models/start_support_chat_model.dart';
 import 'package:deliver_client/models/get_support_message_model.dart';
 import 'package:deliver_client/models/send_support_message_model.dart';
-import 'package:deliver_client/screens/home/drawer/support/call_screen.dart';
 
 String? userId;
 
@@ -39,6 +38,7 @@ class SupportScreen extends StatefulWidget {
 class _SupportScreenState extends State<SupportScreen> {
   TextEditingController messageController = TextEditingController();
 
+  Timer? timer;
   bool isLoading = false;
 
   StartSupportChatModel startSupportChatModel = StartSupportChatModel();
@@ -104,10 +104,8 @@ class _SupportScreenState extends State<SupportScreen> {
       print("status Code getSupportMessageModel: ${response.statusCode}");
       if (response.statusCode == 200) {
         getSupportMessageModel = getSupportMessageModelFromJson(responseString);
-        print(
-            'getSupportMessageModel status: ${getSupportMessageModel.status}');
-        print(
-            'getSupportMessageModel message: ${getSupportMessageModel.data?[0].message}');
+        print('getSupportMessageModel status: ${getSupportMessageModel.status}');
+        print('getSupportMessageModel message: ${getSupportMessageModel.data?[0].message}');
         setState(() {
           isLoading = false;
         });
@@ -160,11 +158,36 @@ class _SupportScreenState extends State<SupportScreen> {
     }
   }
 
+  void startTimer() {
+    // Start the timer and call getMessageApi() every 1 second
+    timer = Timer.periodic(const Duration(seconds: 2), (Timer t) {
+      getSupportMessage();
+    });
+  }
+
+  void cancelTimer() {
+    // Cancel the timer if it's active
+    timer?.cancel();
+  }
+
+  // Call this function when the user enters the page
+  void onPageEnter() {
+    // Start the timer to call getMessageApi() every 1 second
+    startTimer();
+  }
+
+// Call this function when the user leaves the page
+  void onPageExit() {
+    // Cancel the timer to stop calling getMessageApi()
+    cancelTimer();
+  }
+
   @override
   void initState() {
     super.initState();
     startSupportChat();
     getSupportMessage();
+    onPageEnter();
     print("getAdminId: ${widget.getAdminId}");
     print("getAdminName: ${widget.getAdminName}");
     print("getAdminImage: ${widget.getAdminImage}");
@@ -308,23 +331,23 @@ class _SupportScreenState extends State<SupportScreen> {
                                 ),
                               ],
                             ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SupportCallScreen(
-                                      getAdminName: widget.getAdminName,
-                                      getAdminImage: widget.getAdminImage,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: SvgPicture.asset(
-                                'assets/images/call-icon.svg',
-                              ),
-                            ),
+                            // const Spacer(),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => SupportCallScreen(
+                            //           getAdminName: widget.getAdminName,
+                            //           getAdminImage: widget.getAdminImage,
+                            //         ),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: SvgPicture.asset(
+                            //     'assets/images/call-icon.svg',
+                            //   ),
+                            // ),
                           ],
                         ),
                         Divider(
@@ -337,264 +360,73 @@ class _SupportScreenState extends State<SupportScreen> {
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        isLoading
-                            ? Container(
-                                color: transparentColor,
-                                height: size.height * 0.7,
-                                child: Center(
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    color: transparentColor,
-                                    child: Lottie.asset(
-                                      'assets/images/loading-icon.json',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : getSupportMessageModel.data != null
+                        getSupportMessageModel.data != null
                                 ? Container(
                                     color: transparentColor,
                                     height: size.height * 0.7,
-                                    child: RefreshIndicator(
-                                      onRefresh: () async {
-                                        await getSupportMessage();
-                                      },
-                                      child: ListView.builder(
-                                        reverse: true,
-                                        physics:
-                                            const AlwaysScrollableScrollPhysics(),
-                                        itemCount:
-                                            getSupportMessageModel.data?.length,
-                                        padding:
-                                            const EdgeInsets.only(bottom: 10),
-                                        itemBuilder: (context, index) {
-                                          int reverseIndex =
-                                              getSupportMessageModel
-                                                      .data!.length -
-                                                  1 -
-                                                  index;
-                                          String inputTime =
-                                              "${getSupportMessageModel.data?[reverseIndex].sendTime}";
-                                          DateFormat inputFormat =
-                                              DateFormat("H:mm:ss");
-                                          DateFormat outputFormat =
-                                              DateFormat("h:mm a");
-                                          DateTime dateTime =
-                                              inputFormat.parse(inputTime);
-                                          String formattedTime =
-                                              outputFormat.format(dateTime);
-                                          return getSupportMessageModel
-                                                          .data?[reverseIndex]
-                                                          .receiverType !=
-                                                      "Customers" &&
-                                                  getSupportMessageModel
-                                                          .data?[reverseIndex]
-                                                          .messageType ==
-                                                      "text"
-                                              ? Column(
-                                                  children: [
-                                                    SizedBox(
-                                                        height: size.height *
-                                                            0.015),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 84),
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          ClipRRect(
-                                                            borderRadius:
-                                                                const BorderRadius
-                                                                    .only(
-                                                              topLeft: Radius
-                                                                  .circular(10),
-                                                              topRight: Radius
-                                                                  .circular(10),
-                                                              bottomLeft: Radius
-                                                                  .circular(10),
-                                                            ),
-                                                            child: Container(
-                                                              color:
-                                                                  orangeColor,
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        10),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .end,
-                                                                  children: [
-                                                                    Container(
-                                                                      color:
-                                                                          transparentColor,
-                                                                      width: size
-                                                                              .width *
-                                                                          0.6,
-                                                                      child:
-                                                                          Text(
-                                                                        "${getSupportMessageModel.data?[reverseIndex].message}",
-                                                                        textAlign:
-                                                                            TextAlign.left,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              whiteColor,
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontFamily:
-                                                                              'Inter-Regular',
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                    Row(
-                                                                      children: [
-                                                                        SvgPicture
-                                                                            .asset(
-                                                                          'assets/images/clock-white-message-icon.svg',
-                                                                        ),
-                                                                        SizedBox(
-                                                                            width:
-                                                                                size.width * 0.01),
-                                                                        Text(
-                                                                          formattedTime,
-                                                                          textAlign:
-                                                                              TextAlign.left,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                whiteColor,
-                                                                            fontSize:
-                                                                                8,
-                                                                            fontFamily:
-                                                                                'Inter-Regular',
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : Column(
-                                                  children: [
-                                                    SizedBox(
-                                                        height: size.height *
-                                                            0.015),
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                    child: ListView.builder(
+                                      reverse: true,
+                                      physics: const BouncingScrollPhysics(),
+                                      itemCount: getSupportMessageModel.data?.length,
+                                      padding: const EdgeInsets.only(bottom: 10),
+                                      itemBuilder: (context, index) {
+                                        int reverseIndex = getSupportMessageModel.data!.length - 1 - index;
+                                        String inputTime = "${getSupportMessageModel.data?[reverseIndex].sendTime}";
+                                        DateFormat inputFormat = DateFormat("H:mm:ss");
+                                        DateFormat outputFormat = DateFormat("h:mm a");
+                                        DateTime dateTime = inputFormat.parse(inputTime);
+                                        String formattedTime = outputFormat.format(dateTime);
+                                        return getSupportMessageModel.data?[reverseIndex].receiverType != "Customers" &&
+                                                getSupportMessageModel.data?[reverseIndex].messageType == "text"
+                                            ? Column(
+                                                children: [
+                                                  SizedBox(height: size.height * 0.015),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left: 84),
+                                                    child: Row(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         ClipRRect(
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                          child: Container(
-                                                            width: 25.6,
-                                                            height: 25.5,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  transparentColor,
-                                                            ),
-                                                            child: FadeInImage(
-                                                              placeholder:
-                                                                  const AssetImage(
-                                                                "assets/images/user-profile.png",
-                                                              ),
-                                                              image:
-                                                                  NetworkImage(
-                                                                '$imageUrl${widget.getAdminImage}',
-                                                              ),
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                            width: size.width *
-                                                                0.02),
-                                                        ClipRRect(
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .only(
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10),
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    10),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    10),
+                                                              const BorderRadius.only(
+                                                            topLeft: Radius.circular(10),
+                                                            topRight: Radius.circular(10),
+                                                            bottomLeft: Radius.circular(10),
                                                           ),
                                                           child: Container(
-                                                            color: dividerColor,
+                                                            color: orangeColor,
                                                             child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(10),
+                                                              padding: const EdgeInsets.all(10),
                                                               child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
+                                                                crossAxisAlignment: CrossAxisAlignment.end,
                                                                 children: [
                                                                   Container(
-                                                                    color:
-                                                                        transparentColor,
-                                                                    width:
-                                                                        size.width *
-                                                                            0.6,
-                                                                    child: Text(
+                                                                    color: transparentColor,
+                                                                    width: size.width * 0.6,
+                                                                    child:
+                                                                        Text(
                                                                       "${getSupportMessageModel.data?[reverseIndex].message}",
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .left,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color:
-                                                                            drawerTextColor,
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontFamily:
-                                                                            'Inter-Regular',
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        color: whiteColor,
+                                                                        fontSize: 12,
+                                                                        fontFamily: 'Inter-Regular',
                                                                       ),
                                                                     ),
                                                                   ),
                                                                   Row(
                                                                     children: [
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                        'assets/images/clock-message-icon.svg',
+                                                                      SvgPicture.asset(
+                                                                        'assets/images/clock-white-message-icon.svg',
                                                                       ),
-                                                                      SizedBox(
-                                                                          width:
-                                                                              size.width * 0.01),
+                                                                      SizedBox(width: size.width * 0.01),
                                                                       Text(
                                                                         formattedTime,
-                                                                        textAlign:
-                                                                            TextAlign.left,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              textHaveAccountColor,
-                                                                          fontSize:
-                                                                              8,
-                                                                          fontFamily:
-                                                                              'Inter-Regular',
+                                                                        textAlign: TextAlign.left,
+                                                                        style: TextStyle(
+                                                                          color: whiteColor,
+                                                                          fontSize: 8,
+                                                                          fontFamily: 'Inter-Regular',
                                                                         ),
                                                                       ),
                                                                     ],
@@ -606,38 +438,95 @@ class _SupportScreenState extends State<SupportScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                  ],
-                                                );
-                                        },
-                                      ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Column(
+                                                children: [
+                                                  SizedBox(height: size.height * 0.015),
+                                                  Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(100),
+                                                        child: Container(
+                                                          width: 25.6,
+                                                          height: 25.5,
+                                                          decoration: BoxDecoration(
+                                                            color: transparentColor,
+                                                          ),
+                                                          child: FadeInImage(
+                                                            placeholder: const AssetImage(
+                                                              "assets/images/user-profile.png",
+                                                            ),
+                                                            image: NetworkImage(
+                                                              '$imageUrl${widget.getAdminImage}',
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: size.width * 0.02),
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            const BorderRadius.only(
+                                                              topRight: Radius.circular(10),
+                                                              bottomLeft: Radius.circular(10),
+                                                              bottomRight: Radius.circular(10),
+                                                        ),
+                                                        child: Container(
+                                                          color: dividerColor,
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.all(10),
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                                              children: [
+                                                                Container(
+                                                                  color: transparentColor,
+                                                                  width: size.width * 0.6,
+                                                                  child: Text(
+                                                                    "${getSupportMessageModel.data?[reverseIndex].message}",
+                                                                    textAlign: TextAlign.left,
+                                                                    style: TextStyle(
+                                                                      color: drawerTextColor,
+                                                                      fontSize: 12,
+                                                                      fontFamily: 'Inter-Regular',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Row(
+                                                                  children: [
+                                                                    SvgPicture.asset(
+                                                                      'assets/images/clock-message-icon.svg',
+                                                                    ),
+                                                                    SizedBox(width: size.width * 0.01),
+                                                                    Text(
+                                                                      formattedTime,
+                                                                      textAlign: TextAlign.left,
+                                                                      style: TextStyle(
+                                                                        color: textHaveAccountColor,
+                                                                        fontSize: 8,
+                                                                        fontFamily: 'Inter-Regular',
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              );
+                                      },
                                     ),
                                   )
                                 : Container(
                                     color: transparentColor,
                                     height: size.height * 0.7,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/no-chat-icon.svg',
-                                          width: 80,
-                                          height: 80,
-                                        ),
-                                        SizedBox(height: size.height * 0.04),
-                                        Text(
-                                          "No Chat History",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: textHaveAccountColor,
-                                            fontSize: 24,
-                                            fontFamily: 'Syne-SemiBold',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
                       ],
                     ),
@@ -730,8 +619,7 @@ class _SupportScreenState extends State<SupportScreen> {
                           child: FloatingActionButton(
                             onPressed: () async {
                               if (messageController.text.isNotEmpty) {
-                                await sendSupportMessage(
-                                    messageController.text);
+                                sendSupportMessage(messageController.text);
                                 setState(() {
                                   messageController.clear();
                                   FocusManager.instance.primaryFocus?.unfocus();

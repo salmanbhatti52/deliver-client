@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:speech_balloon/speech_balloon.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
@@ -43,18 +44,44 @@ class _ConfirmMultipleDetailsScreenState
                 ),
               ),
             ),
-            // Positioned(
-            //   top: 40,
-            //   right: 20,
-            //   child: SvgPicture.asset(
-            //     'assets/images/home-search-icon.svg',
-            //     fit: BoxFit.scaleDown,
-            //   ),
-            // ),
+            Positioned(
+              top: 240,
+              right: 120,
+              child: Image.asset(
+                'assets/images/bike-icon.png',
+                width: 100,
+                height: 100,
+              ),
+            ),
             Positioned(
               top: 101,
               right: 4,
               child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
+            ),
+            Positioned(
+              top: 225,
+              right: 135,
+              child: SpeechBalloon(
+                nipLocation: NipLocation.bottom,
+                nipHeight: 12,
+                color: orangeColor,
+                borderColor: borderColor,
+                width: size.width * 0.3,
+                height: size.height * 0.05,
+                borderRadius: 10,
+                offset: const Offset(10, 0),
+                child: Center(
+                  child: Text(
+                    "4 hours 5 mins",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontSize: 12,
+                      fontFamily: 'Syne-SemiBold',
+                    ),
+                  ),
+                ),
+              ),
             ),
             Positioned(
               left: 20,
@@ -184,7 +211,8 @@ class _ConfirmMultipleDetailsScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SvgPicture.asset(
-                                  'assets/images/orange-location-big-icon.svg'),
+                                  'assets/images/orange-location-big-icon.svg',
+                              ),
                               SizedBox(width: size.width * 0.04),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

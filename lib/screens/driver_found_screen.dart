@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/utils/baseurl.dart';
@@ -14,7 +15,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:deliver_client/screens/chat_screen.dart';
-import 'package:deliver_client/screens/call_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
@@ -289,6 +289,20 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     Share.share('Your passcode is: $passcode');
   }
 
+  Future<void> makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      updateBookingStatus();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -305,13 +319,12 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     print("riderLat: $riderLat");
     print("riderLng: $riderLng");
     print("currentBookingId: ${widget.currentBookingId}");
-    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
-      updateBookingStatus();
-    });
+    startTimer();
   }
 
   @override
   void dispose() {
+    timer?.cancel();
     super.dispose();
   }
 
@@ -603,16 +616,13 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       ChatScreen(
-                                                    riderId: widget
-                                                        .riderData!.usersFleetId
-                                                        .toString(),
-                                                    name:
-                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                    address: widget
-                                                        .riderData!.address,
-                                                    image: widget
-                                                        .riderData!.profilePic,
-                                                  ),
+                                                        callbackFunction: startTimer,
+                                                        riderId: widget.riderData!.usersFleetId.toString(),
+                                                        name: "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                        image: widget.riderData!.profilePic,
+                                                        phone: widget.riderData!.phone,
+                                                        address: widget.riderData!.address,
+                                                      ),
                                                 ),
                                               );
                                             },
@@ -623,19 +633,20 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                           SizedBox(width: size.width * 0.02),
                                           GestureDetector(
                                             onTap: () {
-                                              timer?.cancel();
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CallScreen(
-                                                    name:
-                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                    image: widget
-                                                        .riderData!.profilePic,
-                                                  ),
-                                                ),
-                                              );
+                                              makePhoneCall("${widget.riderData!.phone}");
+                                              // timer?.cancel();
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) =>
+                                              //         CallScreen(
+                                              //       name:
+                                              //           "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                              //       image: widget
+                                              //           .riderData!.profilePic,
+                                              //     ),
+                                              //   ),
+                                              // );
                                             },
                                             child: SvgPicture.asset(
                                               'assets/images/call-icon.svg',

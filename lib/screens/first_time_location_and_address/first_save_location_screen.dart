@@ -46,8 +46,7 @@ class _FirstSaveLocationScreenState extends State<FirstSaveLocationScreen> {
   String? addressLng;
   List<PlacesSearchResult> addressPredictions = [];
   BitmapDescriptor? customMarkerIcon;
-  final places =
-      GoogleMapsPlaces(apiKey: 'AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw');
+  final places = GoogleMapsPlaces(apiKey: mapsKey);
   GoogleMapController? mapController;
   MarkerId? selectedMarker;
   LatLng? selectedLocation;
