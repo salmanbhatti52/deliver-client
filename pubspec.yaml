@@ -44,21 +44,20 @@ dependencies:
   geolocator: ^9.0.2
   share_plus: ^7.1.0
   flutter_svg: ^2.0.7
-  searchfield: ^0.8.3
+  searchfield: ^0.8.4
   file_picker: ^5.5.0
   fluttertoast: ^8.2.2
   image_picker: ^0.8.9
   bottom_sheet: ^4.0.0
+  url_launcher: ^6.1.14
   firebase_auth: ^4.9.0
   firebase_core: ^2.15.1
-  device_preview: ^1.1.0
   flutter_switch: ^0.3.2
   auto_size_text: ^3.0.0
   speech_balloon: ^0.0.4
   dots_indicator: ^3.0.0
   gradient_borders: ^1.0.0
   animated_text_kit: ^4.2.2
-  sliding_up_panel: ^2.0.0+1
   shared_preferences: ^2.2.0
   flutter_rating_bar: ^4.0.1
   google_maps_flutter: ^2.4.0

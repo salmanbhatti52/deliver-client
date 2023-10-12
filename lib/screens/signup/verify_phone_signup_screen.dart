@@ -16,7 +16,14 @@ import 'package:deliver_client/screens/login/login_profile_screen.dart';
 
 class VerifyPhoneSignUpScreen extends StatefulWidget {
   final String? phoneNumber;
-  const VerifyPhoneSignUpScreen({super.key, this.phoneNumber});
+  final String? lat;
+  final String? lng;
+  const VerifyPhoneSignUpScreen({
+    super.key,
+    this.phoneNumber,
+    this.lat,
+    this.lng,
+  });
 
   @override
   State<VerifyPhoneSignUpScreen> createState() =>
@@ -34,13 +41,18 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     try {
       String apiUrl = "$baseUrl/check_phone_exist_customers";
       print("contactNumber: ${widget.phoneNumber}");
+      print("lat: ${widget.lat}");
+      print("lng: ${widget.lng}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Accept': 'application/json',
         },
         body: {
+          "one_signal_id": "123",
           "phone": widget.phoneNumber,
+          "latitude": widget.lat,
+          "longitude": widget.lng
         },
       );
       final responseString = response.body;
@@ -107,6 +119,9 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   }
 
   Future<void> verifyOTPCode() async {
+    setState(() {
+      isLoading = true;
+    });
     print("verificationId: $verifyId");
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verifyId,
@@ -115,9 +130,6 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     await auth.signInWithCredential(credential).then((value) async {
       print('User Login In Successful ${value.user}');
       await checkNumber();
-      setState(() {
-        isLoading = true;
-      });
       if (checkNumberModel.status == "success") {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
@@ -165,6 +177,8 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     super.initState();
     startTimer();
     verifyPhoneNumber();
+    print("lat: ${widget.lat}");
+    print("lng: ${widget.lng}");
     print("phoneNumber: ${widget.phoneNumber}");
   }
 
@@ -402,7 +416,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                   timer?.cancel();
                 },
                 child: isLoading
-                    ? buttonGradientWithLoader("Pleasw Wait...", context)
+                    ? buttonGradientWithLoader("Please Wait...", context)
                     : buttonGradient("Next", context),
               ),
               SizedBox(height: size.height * 0.02),

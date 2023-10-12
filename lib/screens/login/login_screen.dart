@@ -275,6 +275,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (context) => VerifyPhoneSignUpScreen(
                             phoneNumber: countryCode!.dialCode +
                                 contactNumberController.text,
+                            lat: currentLat,
+                            lng: currentLng,
                           ),
                         ),
                       );

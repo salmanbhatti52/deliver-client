@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/drawer/payment_screen.dart';
 import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
 
 class AmountToPayEditScreen extends StatefulWidget {
-  const AmountToPayEditScreen({super.key});
+  final Map? singleData;
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  const AmountToPayEditScreen({super.key, this.singleData, this.currentBookingId, this.riderData});
 
   @override
   State<AmountToPayEditScreen> createState() => _AmountToPayEditScreenState();

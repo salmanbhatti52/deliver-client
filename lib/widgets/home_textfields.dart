@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:deliver_client/utils/baseurl.dart';
 import 'package:google_maps_webservice_ex/places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -79,8 +80,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
 
   List<PlacesSearchResult> pickUpPredictions = [];
   List<PlacesSearchResult> destinationPredictions = [];
-  final places =
-      GoogleMapsPlaces(apiKey: 'AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw');
+  final places = GoogleMapsPlaces(apiKey: mapsKey);
   GoogleMapController? mapController;
   MarkerId? selectedMarker;
   LatLng? selectedLocation;
