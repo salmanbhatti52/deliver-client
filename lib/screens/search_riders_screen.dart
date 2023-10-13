@@ -23,11 +23,7 @@ class SearchRidersScreen extends StatefulWidget {
 }
 
 class _SearchRidersScreenState extends State<SearchRidersScreen> {
-  String? fleetId;
   String? bookingId;
-  double? distanceMeters;
-  String? distanceFormatted;
-  double? distanceKm = 0.0;
   bool isLoading = false;
 
   SearchRiderModel searchRiderModel = SearchRiderModel();
@@ -62,17 +58,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           searchRiderModel = searchRiderModelFromJson(responseString);
           print('searchRiderModel status: ${searchRiderModel.status}');
           print('searchRiderModel length: ${searchRiderModel.data!.length}');
-          for (int i = 0; i < searchRiderModel.data!.length; i++) {
-            fleetId = "${searchRiderModel.data?[i].usersFleetId}";
-            print('fleetId: $fleetId');
-            distanceKm = double.parse("${searchRiderModel.data?[i].distance}");
-            if (distanceKm! <= 10.00) {
-              print('distanceKm: $distanceKm');
-              distanceMeters = distanceKm! * 100;
-              distanceFormatted = distanceMeters!.toStringAsFixed(0);
-              print('distanceFormatted: $distanceFormatted');
-            }
-          }
           setState(() {
             isLoading = false;
           });
@@ -192,10 +177,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                                 singleData: widget.singleData,
                                                 searchRider: searchRiderModel
                                                     .data?[index],
-                                                fleetId: fleetId,
-                                                distanceKm: distanceKm,
-                                                distanceFormatted:
-                                                    distanceFormatted,
                                               )
                                             : Container(
                                                 color: transparentColor,

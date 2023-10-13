@@ -1,8 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +13,7 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/utils/baseurl.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/report_boxes.dart';
+import 'package:deliver_client/models/report_rider_model.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
@@ -52,7 +56,7 @@ class _ReportScreenState extends State<ReportScreen> {
         // Convert the bytes to a Base64 encoded string
         base64ImageString = base64Encode(bytes);
         print("Selected image file path: ${file.path}");
-        print("base64ImageString: $base64AudioString");
+        print("base64ImageString: $base64ImageString");
 
         return base64ImageString;
       } else {
@@ -155,109 +159,50 @@ class _ReportScreenState extends State<ReportScreen> {
     return null; // Return null if no valid file was selected
   }
 
-  // Future<void> pickImage() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //     type: FileType.custom,
-  //     allowedExtensions: ['jpg', 'jpeg', 'png'],
-  //   );
+  ReportRiderModel reportRiderModel = ReportRiderModel();
 
-  //   if (result != null) {
-  //     PlatformFile file = result.files.first;
-
-  //     if (file.extension == 'jpg' ||
-  //         file.extension == 'jpeg' ||
-  //         file.extension == 'png') {
-  //       // Handle the selected image file
-  //       // Read the file as bytes
-  //       print("Selected image file path: ${file.path}");
-  //       final Uint8List bytes = File(file.path!).readAsBytesSync();
-  //       // Convert the bytes to a Base64 encoded string
-  //       String? base64ImageString = base64Encode(bytes);
-  //       return base64ImageString;
-  //     } else {
-  //       // Handle unsupported file type
-  //       Fluttertoast.showToast(
-  //         msg: "Unspported file format!",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 2,
-  //         backgroundColor: toastColor,
-  //         textColor: whiteColor,
-  //         fontSize: 12,
-  //       );
-  //     }
-  //   } else {
-  //     // User canceled the file picker
-  //     return;
-  //   }
-  // }
-
-  // Future<void> pickVideo() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //     type: FileType.custom,
-  //     allowedExtensions: ['mp4', 'mkv', 'mov', 'avi'],
-  //   );
-
-  //   if (result != null) {
-  //     PlatformFile file = result.files.first;
-
-  //     if (file.extension == 'mp4' ||
-  //         file.extension == 'mkv' ||
-  //         file.extension == 'mov' ||
-  //         file.extension == 'avi') {
-  //       // Handle the selected video file
-  //       // You can display the video thumbnail or do any other processing here
-  //       print("Selected video file path: ${file.path}");
-  //     } else {
-  //       // Handle unsupported file type
-  //       Fluttertoast.showToast(
-  //         msg: "Unspported file format!",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 2,
-  //         backgroundColor: toastColor,
-  //         textColor: whiteColor,
-  //         fontSize: 12,
-  //       );
-  //     }
-  //   } else {
-  //     // User canceled the file picker
-  //     return;
-  //   }
-  // }
-
-  // Future<void> pickAudio() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //     type: FileType.custom,
-  //     allowedExtensions: ['mp3', 'm4a', 'wav'],
-  //   );
-
-  //   if (result != null) {
-  //     PlatformFile file = result.files.first;
-
-  //     if (file.extension == 'mp3' ||
-  //         file.extension == 'm4a' ||
-  //         file.extension == 'wav') {
-  //       // Handle the selected audio file
-  //       // You can play the audio or do any other processing here
-  //       print("Selected audio file path: ${file.path}");
-  //     } else {
-  //       // Handle unsupported file type
-  //       Fluttertoast.showToast(
-  //         msg: "Unspported file format!",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         timeInSecForIosWeb: 2,
-  //         backgroundColor: toastColor,
-  //         textColor: whiteColor,
-  //         fontSize: 12,
-  //       );
-  //     }
-  //   } else {
-  //     // User canceled the file picker
-  //     return;
-  //   }
-  // }
+  reportRider() async {
+    try {
+      String apiUrl = "$baseUrl/report_rider";
+      print("apiUrl: $apiUrl");
+      // print("userId: $");
+      // print("fleetId: ${}");
+      // print("bookingId: ${}");
+      // print("bookingsDestinationsId: ${}");
+      // print("reportsReasonsId: $");
+      // print("otherReasons: $");
+      // print("evidenceImage: $");
+      // print("evidenceAudio: $");
+      // print("evidenceVideo: $");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "users_customers_id": "21",
+          "users_fleet_id": "61",
+          "bookings_id": "375",
+          "bookings_destinations_id": "503",
+          "bookings_reports_reasons_id": "1",
+          "other_reason": "test other reason",
+          "evidence_image": "",
+          "evidence_audio": "",
+          "evidence_video": "",
+      },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        print('reportRiderModel status: ${reportRiderModel.status}');
+        setState(() {});
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

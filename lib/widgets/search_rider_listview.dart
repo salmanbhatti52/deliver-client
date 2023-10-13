@@ -16,21 +16,16 @@ import 'package:deliver_client/models/schedule_booking_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
+double? distanceKm = 0.0;
 
 class RidersList extends StatefulWidget {
   final Map? singleData;
   final SearchRiderData? searchRider;
-  final String? fleetId;
-  final double? distanceKm;
-  final String? distanceFormatted;
 
   const RidersList({
     super.key,
     this.singleData,
     this.searchRider,
-    this.fleetId,
-    this.distanceKm,
-    this.distanceFormatted,
   });
 
   @override
@@ -41,6 +36,8 @@ class _RidersListState extends State<RidersList> {
   bool isLoading = false;
   bool isExpanded = false;
   String? currentBookingId;
+  double? distanceMeters;
+  String? distanceFormatted;
 
   CreateBookingModel createBookingModel = CreateBookingModel();
 
@@ -52,7 +49,7 @@ class _RidersListState extends State<RidersList> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       final Map<String, dynamic> requestData = {
-        "users_fleet_id": widget.fleetId,
+        "users_fleet_id": widget.searchRider?.usersFleetId,
         "vehicles_id": widget.singleData?["vehicles_id"],
         "users_customers_id": userId,
         "bookings_types_id": widget.singleData?["bookings_types_id"],
@@ -128,7 +125,7 @@ class _RidersListState extends State<RidersList> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       final Map<String, dynamic> requestData = {
-        "users_fleet_id": widget.fleetId,
+        "users_fleet_id": widget.searchRider?.usersFleetId,
         "vehicles_id": widget.singleData?["vehicles_id"],
         "users_customers_id": userId,
         "bookings_types_id": widget.singleData?["bookings_types_id"],
@@ -199,6 +196,13 @@ class _RidersListState extends State<RidersList> {
   @override
   initState() {
     super.initState();
+    distanceKm = double.parse("${widget.searchRider?.distance}");
+    print('distanceKm: $distanceKm');
+    if (distanceKm! <= 10.00) {
+      distanceMeters = distanceKm! * 100;
+      distanceFormatted = distanceMeters!.toStringAsFixed(0);
+      print('distanceFormatted: $distanceFormatted');
+    }
     print('singleData: ${widget.singleData}');
   }
 
@@ -264,7 +268,7 @@ class _RidersListState extends State<RidersList> {
                             ),
                           ),
                           Text(
-                            "Drive  ${widget.distanceFormatted} m",
+                            "Drive  $distanceFormatted m",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: textHaveAccountColor,
@@ -288,16 +292,11 @@ class _RidersListState extends State<RidersList> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DriverFoundScreen(
-                                  bookingId: createBookingModel.data?.bookingsId
-                                      .toString(),
-                                  fleetId: widget.fleetId,
+                                  bookingId: createBookingModel.data?.bookingsId.toString(),
+                                  fleetId: "${widget.searchRider?.usersFleetId}",
                                   currentBookingId: currentBookingId,
-                                  passCode: createBookingModel
-                                      .data
-                                      ?.bookingsFleet?[0]
-                                      .bookingsDestinations
-                                      ?.passcode,
-                                  distance: widget.distanceKm,
+                                  passCode: createBookingModel.data?.bookingsFleet?[0].bookingsDestinations?.passcode,
+                                  distance: distanceKm,
                                   singleData: widget.singleData,
                                   riderData: widget.searchRider,
                                 ),
