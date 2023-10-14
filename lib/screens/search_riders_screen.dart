@@ -172,40 +172,42 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                       itemCount: searchRiderModel.data?.length,
                                       itemBuilder:
                                           (BuildContext context, int index) {
-                                        return distanceKm! <= 10.00
-                                            ? RidersList(
+                                        return
+                                          // distanceKm! <= 10.00
+                                          //   ?
+                                          RidersList(
                                                 singleData: widget.singleData,
                                                 searchRider: searchRiderModel
                                                     .data?[index],
-                                              )
-                                            : Container(
-                                                color: transparentColor,
-                                                height: size.height * 0.48,
-                                                child: Stack(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      'assets/images/searching_circle-icon.svg',
-                                                    ),
-                                                    Positioned(
-                                                      left: 0,
-                                                      right: 0,
-                                                      bottom: 0,
-                                                      child: Text(
-                                                        "No Riders Available",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color:
-                                                              textHaveAccountColor,
-                                                          fontSize: 24,
-                                                          fontFamily:
-                                                              'Syne-SemiBold',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
                                               );
+                                            // : Container(
+                                            //     color: transparentColor,
+                                            //     height: size.height * 0.48,
+                                            //     child: Stack(
+                                            //       children: [
+                                            //         SvgPicture.asset(
+                                            //           'assets/images/searching_circle-icon.svg',
+                                            //         ),
+                                            //         Positioned(
+                                            //           left: 0,
+                                            //           right: 0,
+                                            //           bottom: 0,
+                                            //           child: Text(
+                                            //             "No Riders Available",
+                                            //             textAlign:
+                                            //                 TextAlign.center,
+                                            //             style: TextStyle(
+                                            //               color:
+                                            //                   textHaveAccountColor,
+                                            //               fontSize: 24,
+                                            //               fontFamily:
+                                            //                   'Syne-SemiBold',
+                                            //             ),
+                                            //           ),
+                                            //         ),
+                                            //       ],
+                                            //     ),
+                                            //   );
                                       },
                                     ),
                                   ],

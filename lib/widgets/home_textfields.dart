@@ -296,8 +296,8 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
                           suffixIcon: GestureDetector(
                             onTap: () {
                               getCurrentLocation();
-                              int currentPage =
-                                  widget.pageController.page?.round() ?? 0;
+                              // int currentPage =
+                              //     widget.pageController.page?.round() ?? 0;
                               print("index: ${widget.currentIndex}");
                               widget.pickupController.text = currentAddress;
                             },

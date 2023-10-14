@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -73,7 +73,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
         print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print('getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+        print(
+            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
@@ -90,7 +91,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     }
   }
 
-  UpdateBookingStatusModel updateBookingStatusModel = UpdateBookingStatusModel();
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
 
   updateBookingStatus() async {
     try {
@@ -110,8 +112,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       print("response: $responseString");
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
-        updateBookingStatusModel = updateBookingStatusModelFromJson(responseString);
-        print('updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        updateBookingStatusModel =
+            updateBookingStatusModelFromJson(responseString);
+        print(
+            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         if (updateBookingStatusModel.data?.status == "Parcel Delivered" ||
             updateBookingStatusModel.data?.status == "Parcel Lost" ||
             updateBookingStatusModel.data?.status == "Parcel Damaged" ||
@@ -214,7 +218,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   startTimer() {
-    if(updateBookingStatusModel.data != null) {
+    if (updateBookingStatusModel.data != null) {
       timer = Timer.periodic(const Duration(seconds: 10), (timer) {
         updateBookingStatus();
       });

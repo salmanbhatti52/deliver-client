@@ -16,7 +16,6 @@ import 'package:deliver_client/models/schedule_booking_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
-double? distanceKm = 0.0;
 
 class RidersList extends StatefulWidget {
   final Map? singleData;
@@ -35,8 +34,9 @@ class RidersList extends StatefulWidget {
 class _RidersListState extends State<RidersList> {
   bool isLoading = false;
   bool isExpanded = false;
-  String? currentBookingId;
   double? distanceMeters;
+  double? distanceKm = 0.0;
+  String? currentBookingId;
   String? distanceFormatted;
 
   CreateBookingModel createBookingModel = CreateBookingModel();
@@ -193,9 +193,7 @@ class _RidersListState extends State<RidersList> {
     }
   }
 
-  @override
-  initState() {
-    super.initState();
+  calculateDistance() {
     distanceKm = double.parse("${widget.searchRider?.distance}");
     print('distanceKm: $distanceKm');
     if (distanceKm! <= 10.00) {
@@ -203,6 +201,12 @@ class _RidersListState extends State<RidersList> {
       distanceFormatted = distanceMeters!.toStringAsFixed(0);
       print('distanceFormatted: $distanceFormatted');
     }
+  }
+
+  @override
+  initState() {
+    super.initState();
+    calculateDistance();
     print('singleData: ${widget.singleData}');
   }
 
