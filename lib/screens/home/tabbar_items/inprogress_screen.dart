@@ -24,12 +24,15 @@ class InProgressHomeScreen extends StatefulWidget {
   final String? passCode;
   final String? currentBookingId;
   final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+
   const InProgressHomeScreen({
     super.key,
     this.singleData,
     this.passCode,
     this.currentBookingId,
     this.riderData,
+    this.bookingDestinationId,
   });
 
   @override
@@ -73,8 +76,6 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
         print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
-            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
@@ -112,6 +113,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       print("response: $responseString");
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
+        setState(() {});
         updateBookingStatusModel =
             updateBookingStatusModelFromJson(responseString);
         print(
@@ -142,11 +144,11 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                 singleData: widget.singleData,
                 riderData: widget.riderData!,
                 currentBookingId: widget.currentBookingId,
+                bookingDestinationId: widget.bookingDestinationId,
               ),
             ),
           );
         }
-        setState(() {});
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
@@ -192,6 +194,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   List<LatLng> polylineCoordinates = [];
+
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     if (riderLat != null &&
@@ -218,13 +221,9 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   startTimer() {
-    if (updateBookingStatusModel.data != null) {
-      timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-        updateBookingStatus();
-      });
-    } else {
-      print("No Rider Data");
-    }
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      updateBookingStatus();
+    });
   }
 
   @override
@@ -235,14 +234,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     loadCustomDestMarker();
     getLocation();
     getPolyPoints();
-    isLoading = true;
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
     startTimer();
-    print("passCode: ${widget.passCode}");
   }
 
   @override
@@ -700,6 +692,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                             widget.riderData,
                                                         currentBookingId: widget
                                                             .currentBookingId,
+                                                        bookingDestinationId: widget
+                                                            .bookingDestinationId,
                                                       ),
                                                     ),
                                                   );

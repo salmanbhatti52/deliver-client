@@ -25,6 +25,7 @@ class BookingAcceptedScreen extends StatefulWidget {
   final String? passCode;
   final String? currentBookingId;
   final SearchRiderData? riderData;
+  final String? bookingDestinationId;
   const BookingAcceptedScreen({
     super.key,
     this.distance,
@@ -32,6 +33,7 @@ class BookingAcceptedScreen extends StatefulWidget {
     this.passCode,
     this.currentBookingId,
     this.riderData,
+    this.bookingDestinationId,
   });
 
   @override
@@ -211,6 +213,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
           passCode: widget.passCode,
           riderData: widget.riderData!,
           currentBookingId: widget.currentBookingId,
+          bookingDestinationId: widget.bookingDestinationId,
         ),
       ),
     );

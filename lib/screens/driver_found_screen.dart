@@ -34,6 +34,7 @@ class DriverFoundScreen extends StatefulWidget {
   final double? distance;
   final Map? singleData;
   final SearchRiderData? riderData;
+  final String? bookingDestinationId;
   const DriverFoundScreen({
     super.key,
     this.bookingId,
@@ -43,6 +44,7 @@ class DriverFoundScreen extends StatefulWidget {
     this.distance,
     this.singleData,
     this.riderData,
+    this.bookingDestinationId,
   });
 
   @override
@@ -140,8 +142,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     }
   }
 
-  UpdateBookingStatusModel updateBookingStatusModel =
-      UpdateBookingStatusModel();
+  UpdateBookingStatusModel updateBookingStatusModel = UpdateBookingStatusModel();
 
   updateBookingStatus() async {
     try {
@@ -161,10 +162,8 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
       print("response: $responseString");
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
-        updateBookingStatusModel =
-            updateBookingStatusModelFromJson(responseString);
-        print(
-            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        updateBookingStatusModel = updateBookingStatusModelFromJson(responseString);
+        print('updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         if (updateBookingStatusModel.data?.status == "Accepted" ||
             updateBookingStatusModel.data?.status == "Ongoing") {
           timer?.cancel();
@@ -177,6 +176,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                 passCode: widget.passCode,
                 riderData: widget.riderData!,
                 currentBookingId: widget.currentBookingId,
+                bookingDestinationId: widget.bookingDestinationId,
               ),
             ),
           );
@@ -298,7 +298,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       updateBookingStatus();
     });
   }
@@ -319,6 +319,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     print("riderLat: $riderLat");
     print("riderLng: $riderLng");
     print("currentBookingId: ${widget.currentBookingId}");
+    print("bookingDestinationId;: ${widget.bookingDestinationId}");
     startTimer();
   }
 

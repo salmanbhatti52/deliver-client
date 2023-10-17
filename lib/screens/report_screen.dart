@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:io';
 import 'dart:convert';
@@ -12,18 +12,23 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/utils/baseurl.dart';
 import 'package:deliver_client/widgets/buttons.dart';
-import 'package:deliver_client/widgets/report_boxes.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:deliver_client/models/get_reason_model.dart';
 import 'package:deliver_client/models/report_rider_model.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
-import 'package:deliver_client/screens/home/home_page_screen.dart';
+
+String? userId;
 
 class ReportScreen extends StatefulWidget {
   final SearchRiderData? riderData;
   final String? currentBookingId;
+  final String? bookingDestinationId;
   const ReportScreen({
     super.key,
     this.riderData,
     this.currentBookingId,
+    this.bookingDestinationId,
   });
 
   @override
@@ -33,9 +38,15 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   TextEditingController otherController = TextEditingController();
 
+  bool isLoading = false;
+  bool isLoading2 = false;
+  String? selectedReasonId;
   String? base64ImageString;
   String? base64VideoString;
   String? base64AudioString;
+  bool isVideoSelected = false;
+  Uint8List? videoThumbnailBytes;
+  String svgImagePath = 'assets/images/evidence-recording-icon.svg'; // Initial SVG image
 
   Future<String?> pickImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -62,7 +73,7 @@ class _ReportScreenState extends State<ReportScreen> {
       } else {
         // Handle unsupported file type
         Fluttertoast.showToast(
-          msg: "Unspported file format!",
+          msg: "Unsupported file format!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -78,7 +89,7 @@ class _ReportScreenState extends State<ReportScreen> {
     return null; // Return null if no valid file was selected
   }
 
-  Future<String?> pickVideo() async {
+  Future<void> pickVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp4', 'mkv', 'mov', 'avi'],
@@ -91,19 +102,27 @@ class _ReportScreenState extends State<ReportScreen> {
           file.extension == 'mkv' ||
           file.extension == 'mov' ||
           file.extension == 'avi') {
-        // Read the file as bytes
-        final Uint8List bytes = File(file.path!).readAsBytesSync();
+        final thumbnailPath = await VideoThumbnail.thumbnailFile(
+          video: file.path!,
+          imageFormat: ImageFormat.JPEG,
+          maxWidth: 200, // Adjust the thumbnail dimensions as needed
+          quality: 50,
+        );
 
-        // Convert the bytes to a Base64 encoded string
+        final Uint8List bytes = await File("$thumbnailPath").readAsBytes();
         base64VideoString = base64Encode(bytes);
+
+        setState(() {
+          videoThumbnailBytes = bytes;
+          isVideoSelected = true;
+        });
+
         print("Selected video file path: ${file.path}");
         print("base64VideoString: $base64VideoString");
-
-        return base64VideoString;
       } else {
         // Handle unsupported file type
         Fluttertoast.showToast(
-          msg: "Unspported file format!",
+          msg: "Unsupported file format!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -114,10 +133,9 @@ class _ReportScreenState extends State<ReportScreen> {
       }
     } else {
       // User canceled the file picker
-      return null;
     }
-    return null; // Return null if no valid file was selected
   }
+
 
   Future<String?> pickAudio() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -143,7 +161,7 @@ class _ReportScreenState extends State<ReportScreen> {
       } else {
         // Handle unsupported file type
         Fluttertoast.showToast(
-          msg: "Unspported file format!",
+          msg: "Unsupported file format!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 2,
@@ -159,49 +177,105 @@ class _ReportScreenState extends State<ReportScreen> {
     return null; // Return null if no valid file was selected
   }
 
+  Future<void> pickAndSetAudio() async {
+    String? pickedAudio = await pickAudio();
+    if (pickedAudio != null) {
+      // Audio file picked, update the SVG image path
+      setState(() {
+        svgImagePath = 'assets/images/evidence-recording-picked-icon.svg';
+      });
+    }
+  }
+
+  GetReasonModel getReasonModel = GetReasonModel();
+
+  getReason() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      String apiUrl = "$baseUrl/get_bookings_reports_reasons";
+      print("apiUrl: $apiUrl");
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        getReasonModel = getReasonModelFromJson(responseString);
+        print('getReasonModel status: ${getReasonModel.status}');
+        print('getReasonModel length: ${getReasonModel.data!.length}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
   ReportRiderModel reportRiderModel = ReportRiderModel();
 
   reportRider() async {
     try {
+      setState(() {
+        isLoading2 = true;
+      });
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/report_rider";
       print("apiUrl: $apiUrl");
-      // print("userId: $");
-      // print("fleetId: ${}");
-      // print("bookingId: ${}");
-      // print("bookingsDestinationsId: ${}");
-      // print("reportsReasonsId: $");
-      // print("otherReasons: $");
-      // print("evidenceImage: $");
-      // print("evidenceAudio: $");
-      // print("evidenceVideo: $");
+      print("userId: $userId");
+      print("fleetId: ${widget.riderData!.usersFleetId}");
+      print("bookingId: ${widget.currentBookingId}");
+      print("bookingsDestinationsId: ${widget.bookingDestinationId}");
+      print("reportsReasonsId: $selectedReasonId");
+      print("otherReasons: ${otherController.text}");
+      print("evidenceImage: $base64ImageString");
+      print("evidenceAudio: $base64AudioString");
+      print("evidenceVideo: $base64VideoString");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Accept': 'application/json',
         },
         body: {
-          "users_customers_id": "21",
-          "users_fleet_id": "61",
-          "bookings_id": "375",
-          "bookings_destinations_id": "503",
-          "bookings_reports_reasons_id": "1",
-          "other_reason": "test other reason",
-          "evidence_image": "",
-          "evidence_audio": "",
-          "evidence_video": "",
+          "users_customers_id": userId,
+          "users_fleet_id": widget.riderData!.usersFleetId.toString(),
+          "bookings_id": widget.currentBookingId,
+          "bookings_destinations_id": widget.bookingDestinationId,
+          "bookings_reports_reasons_id": selectedReasonId,
+          "other_reason": otherController.text,
+          if (base64ImageString != null) "evidence_image": base64ImageString,
+          if (base64AudioString != null) "evidence_audio": base64AudioString,
+          if (base64VideoString != null) "evidence_video": base64VideoString,
       },
       );
       final responseString = response.body;
       print("response: $responseString");
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
+        reportRiderModel = reportRiderModelFromJson(responseString);
         print('reportRiderModel status: ${reportRiderModel.status}');
-        setState(() {});
+        setState(() {
+          isLoading2 = false;
+        });
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
       return null;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getReason();
   }
 
   @override
@@ -361,7 +435,99 @@ class _ReportScreenState extends State<ReportScreen> {
                           ),
                         ),
                         SizedBox(height: size.height * 0.02),
-                        const ReportBoxes(),
+                      isLoading
+                          ? Center(
+                        child: Container(
+                          width: 60,
+                          height: 60,
+                          color: transparentColor,
+                          child: Lottie.asset(
+                            'assets/images/loading-icon.json',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                          : getReasonModel.data != null
+                          ? Column(
+                        children: [
+                          ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: getReasonModel.data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedReasonId = getReasonModel.data![index].bookingsReportsReasonsId.toString();
+                                    print("selectedReasonId: $selectedReasonId, ${getReasonModel.data![index].reason}");
+                                  });
+                                },
+                                child: Card(
+                                  color: whiteColor,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Container(
+                                    color: transparentColor,
+                                    width: size.width,
+                                    height: size.height * 0.07,
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 20),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.65,
+                                            child: Text(
+                                              "${getReasonModel.data![index].reason}",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: drawerTextColor,
+                                                fontSize: 16,
+                                                fontFamily: 'Syne-Medium',
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const Spacer(),
+                                          if (selectedReasonId == getReasonModel.data![index].bookingsReportsReasonsId.toString())
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  // Deselect the item when the checkmark is tapped again
+                                                  selectedReasonId = null;
+                                                });
+                                              },
+                                              child: SvgPicture.asset(
+                                                'assets/images/round-checkmark-icon.svg',
+                                                fit: BoxFit.scaleDown,
+                                              ),
+                                            )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                          : Center(
+                        child: Text(
+                          "No Reason Available",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: textHaveAccountColor,
+                            fontSize: 24,
+                            fontFamily: 'Syne-SemiBold',
+                          ),
+                        ),
+                      ),
                         SizedBox(height: size.height * 0.02),
                         Container(
                           height: size.height * 0.15,
@@ -453,8 +619,13 @@ class _ReportScreenState extends State<ReportScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                pickImage();
+                              onTap: () async {
+                                String? newImage = await pickImage();
+                                if (newImage != null) {
+                                  setState(() {
+                                    base64ImageString = newImage;
+                                  });
+                                }
                               },
                               child: Card(
                                 color: whiteColor,
@@ -462,13 +633,22 @@ class _ReportScreenState extends State<ReportScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Container(
-                                  color: transparentColor,
-                                  width: size.width * 0.25,
-                                  height: size.height * 0.12,
-                                  child: SvgPicture.asset(
-                                    'assets/images/evidence-picture-icon.svg',
-                                    fit: BoxFit.scaleDown,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    color: transparentColor,
+                                    width: size.width * 0.25,
+                                    height: size.height * 0.12,
+                                    child:base64ImageString != null
+                                        ? Image.memory(
+                                      // Display the selected image if available
+                                      base64Decode(base64ImageString!),
+                                      fit: BoxFit.cover,
+                                    )
+                                        : SvgPicture.asset(
+                                      'assets/images/evidence-picture-icon.svg',
+                                      fit: BoxFit.scaleDown,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -483,20 +663,28 @@ class _ReportScreenState extends State<ReportScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Container(
-                                  color: transparentColor,
-                                  width: size.width * 0.25,
-                                  height: size.height * 0.12,
-                                  child: SvgPicture.asset(
-                                    'assets/images/evidence-video-icon.svg',
-                                    fit: BoxFit.scaleDown,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    color: transparentColor,
+                                    width: size.width * 0.25,
+                                    height: size.height * 0.12,
+                                    child: isVideoSelected
+                                        ? Image.memory(
+                                      videoThumbnailBytes!,
+                                      fit: BoxFit.cover, // You can adjust the fit as needed
+                                    )
+                                        : SvgPicture.asset(
+                                      'assets/images/evidence-video-icon.svg', // Replace with your default image
+                                      fit: BoxFit.scaleDown,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                             GestureDetector(
                               onTap: () {
-                                pickAudio();
+                                pickAndSetAudio();
                               },
                               child: Card(
                                 color: whiteColor,
@@ -504,13 +692,16 @@ class _ReportScreenState extends State<ReportScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Container(
-                                  color: transparentColor,
-                                  width: size.width * 0.25,
-                                  height: size.height * 0.12,
-                                  child: SvgPicture.asset(
-                                    'assets/images/evidence-recording-icon.svg',
-                                    fit: BoxFit.scaleDown,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    color: transparentColor,
+                                    width: size.width * 0.25,
+                                    height: size.height * 0.12,
+                                    child: SvgPicture.asset(
+                                      svgImagePath, // Use the dynamic image path
+                                      fit: BoxFit.scaleDown,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -519,14 +710,29 @@ class _ReportScreenState extends State<ReportScreen> {
                         ),
                         SizedBox(height: size.height * 0.04),
                         GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) => confirmDialog(),
-                            );
+                          onTap: () async {
+                            await reportRider();
+                            if(reportRiderModel.status == 'success') {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => confirmDialog(),
+                              );
+                            } else {
+                              Fluttertoast.showToast(
+                                msg: "Something went wrong. Please try again later!",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 2,
+                                backgroundColor: toastColor,
+                                textColor: whiteColor,
+                                fontSize: 12,
+                              );
+                            }
                           },
-                          child: buttonGradient("SUBMIT", context),
+                          child: isLoading2
+                              ? buttonGradientWithLoader("Please Wait...", context)
+                              : buttonGradient("SUBMIT", context),
                         ),
                         SizedBox(height: size.height * 0.02),
                       ],
@@ -599,10 +805,12 @@ class _ReportScreenState extends State<ReportScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => const HomePageScreen()),
-                        (Route<dynamic> route) => false);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    // Navigator.of(context).pushAndRemoveUntil(
+                    //     MaterialPageRoute(
+                    //         builder: (context) => const HomePageScreen()),
+                    //     (Route<dynamic> route) => false);
                   },
                   child: buttonGradient('OK', context),
                 ),

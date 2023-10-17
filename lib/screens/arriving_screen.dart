@@ -26,6 +26,7 @@ class ArrivingScreen extends StatefulWidget {
   final String? passCode;
   final String? currentBookingId;
   final SearchRiderData? riderData;
+  final String? bookingDestinationId;
   const ArrivingScreen({
     super.key,
     this.distance,
@@ -33,6 +34,7 @@ class ArrivingScreen extends StatefulWidget {
     this.passCode,
     this.currentBookingId,
     this.riderData,
+    this.bookingDestinationId,
   });
 
   @override
@@ -122,11 +124,12 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomePageScreen(
-                index: 1,
-                singleData: widget.singleData,
-                passCode: widget.passCode,
-                currentBookingId: widget.currentBookingId,
-                riderData: widget.riderData!,
+              index: 1,
+              singleData: widget.singleData,
+              passCode: widget.passCode,
+              currentBookingId: widget.currentBookingId,
+              riderData: widget.riderData!,
+              bookingDestinationId: widget.bookingDestinationId,
               ),
             ),
           );
@@ -141,6 +144,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                 singleData: widget.singleData,
                 riderData: widget.riderData!,
                 currentBookingId: widget.currentBookingId,
+                bookingDestinationId: widget.bookingDestinationId,
               ),
             ),
           );

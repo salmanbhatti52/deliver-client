@@ -13,6 +13,7 @@ class HomePageScreen extends StatefulWidget {
   final String? passCode;
   final String? currentBookingId;
   final SearchRiderData? riderData;
+  final String? bookingDestinationId;
   const HomePageScreen({
     super.key,
     this.index,
@@ -20,6 +21,7 @@ class HomePageScreen extends StatefulWidget {
     this.passCode,
     this.currentBookingId,
     this.riderData,
+    this.bookingDestinationId,
   });
 
   @override
@@ -156,6 +158,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                             passCode: widget.passCode,
                             currentBookingId: widget.currentBookingId,
                             riderData: widget.riderData,
+                            bookingDestinationId: widget.bookingDestinationId,
                           ),
                         ],
                       ),

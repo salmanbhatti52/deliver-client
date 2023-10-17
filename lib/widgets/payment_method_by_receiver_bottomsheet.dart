@@ -44,14 +44,11 @@ class _PaymentMethodByReceiverSheetState
       if (response.statusCode == 200) {
         getPaymentGatewaysModel =
             getPaymentGatewaysModelFromJson(responseString);
-        print(
-            'getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
-        print(
-            'getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
+        print('getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
+        print('getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
         for (int i = 0; i < getPaymentGatewaysModel.data!.length; i++) {
           if (getPaymentGatewaysModel.data?[i].name == "Cash") {
             cashId = "${getPaymentGatewaysModel.data?[i].paymentGatewaysId}";
-            print("cashId: $cashId");
           }
           setState(() {});
         }
@@ -65,7 +62,7 @@ class _PaymentMethodByReceiverSheetState
   @override
   void initState() {
     super.initState();
-    getPaymentGateways();
+    isSelectedCash = false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       paymentMethodByReceiverSheet(
         context,
@@ -75,8 +72,8 @@ class _PaymentMethodByReceiverSheetState
         imageCash: "assets/images/pay-cash-icon.svg",
         select: "Select",
       );
-      print(widget.singleData);
     });
+    print(widget.singleData);
   }
 
   @override
@@ -135,7 +132,8 @@ class _PaymentMethodByReceiverSheetState
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         // GestureDetector(
-                        //   onTap: () {
+                        //   onTap: () async {
+                        //     await getPaymentGateways();
                         //     setState(() {
                         //       isSelectedBank = true;
                         //       isSelectedCash = false;
@@ -203,11 +201,12 @@ class _PaymentMethodByReceiverSheetState
                         //   ),
                         // ),
                         GestureDetector(
-                          onTap: () {
+                          onTap: ()  async {
+                            await getPaymentGateways();
                             setState(() {
-                              getPaymentGateways();
                               // isSelectedBank = false;
                               isSelectedCash = true;
+                              print("cashId: $cashId");
                             });
                           },
                           child: Stack(

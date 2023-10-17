@@ -16,6 +16,7 @@ import 'package:deliver_client/models/schedule_booking_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
+double? distanceKm = 0.0;
 
 class RidersList extends StatefulWidget {
   final Map? singleData;
@@ -35,7 +36,6 @@ class _RidersListState extends State<RidersList> {
   bool isLoading = false;
   bool isExpanded = false;
   double? distanceMeters;
-  double? distanceKm = 0.0;
   String? currentBookingId;
   String? distanceFormatted;
 
@@ -195,9 +195,12 @@ class _RidersListState extends State<RidersList> {
 
   calculateDistance() {
     distanceKm = double.parse("${widget.searchRider?.distance}");
-    print('distanceKm: $distanceKm');
-    if (distanceKm! <= 10.00) {
-      distanceMeters = distanceKm! * 100;
+    print('distanceKm in calculated: $distanceKm');
+
+    if (distanceKm! > 10.00) {
+      distanceKm = null; // Set distanceKm to null or another sentinel value
+    } else {
+      distanceMeters = distanceKm! * 1000;
       distanceFormatted = distanceMeters!.toStringAsFixed(0);
       print('distanceFormatted: $distanceFormatted');
     }
@@ -303,6 +306,7 @@ class _RidersListState extends State<RidersList> {
                                   distance: distanceKm,
                                   singleData: widget.singleData,
                                   riderData: widget.searchRider,
+                                  bookingDestinationId: createBookingModel.data?.bookingsFleet?[0].bookingsDestinationsId.toString(),
                                 ),
                               ),
                             );

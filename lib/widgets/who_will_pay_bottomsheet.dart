@@ -7,7 +7,7 @@ import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/payment_method_by_sender_bottomsheet.dart';
 import 'package:deliver_client/widgets/payment_method_by_receiver_bottomsheet.dart';
 
-bool isSelectedPayNow = true;
+bool isSelectedPayNow = false;
 bool isSelectedPayLater = false;
 
 class WhoWillPaySheet extends StatefulWidget {
@@ -22,6 +22,8 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
   @override
   void initState() {
     super.initState();
+    isSelectedPayNow = false;
+    isSelectedPayLater = false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       whoWillPaySheet(
         context,
@@ -32,8 +34,8 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
         imagepayLater: "assets/images/pay-later-icon.svg",
         receiver: "Receiver",
       );
-      print("mapData: ${widget.singleData}");
     });
+    print("mapData: ${widget.singleData}");
   }
 
   @override
