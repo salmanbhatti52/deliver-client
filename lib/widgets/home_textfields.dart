@@ -31,36 +31,11 @@ class HomeTextFeilds extends StatefulWidget {
 }
 
 class _HomeTextFeildsState extends State<HomeTextFeilds> {
-  TextEditingController pickupController1 = TextEditingController();
-  TextEditingController destinationController1 = TextEditingController();
-  TextEditingController receiversNameController1 = TextEditingController();
-  TextEditingController receiversNumberController1 = TextEditingController();
-  TextEditingController pickupController2 = TextEditingController();
-  TextEditingController destinationController2 = TextEditingController();
-  TextEditingController receiversNameController2 = TextEditingController();
-  TextEditingController receiversNumberController2 = TextEditingController();
-  TextEditingController pickupController3 = TextEditingController();
-  TextEditingController destinationController3 = TextEditingController();
-  TextEditingController receiversNameController3 = TextEditingController();
-  TextEditingController receiversNumberController3 = TextEditingController();
-  TextEditingController pickupController4 = TextEditingController();
-  TextEditingController destinationController4 = TextEditingController();
-  TextEditingController receiversNameController4 = TextEditingController();
-  TextEditingController receiversNumberController4 = TextEditingController();
-  TextEditingController pickupController5 = TextEditingController();
-  TextEditingController destinationController5 = TextEditingController();
-  TextEditingController receiversNameController5 = TextEditingController();
-  TextEditingController receiversNumberController5 = TextEditingController();
   final GlobalKey<FormState> homeNewFormKey = GlobalKey<FormState>();
   List<TextEditingController> pickupControllers = [];
   List<TextEditingController> destinationControllers = [];
   List<TextEditingController> receiversNameControllers = [];
   List<TextEditingController> receiversNumberControllers = [];
-
-//   List<TextEditingController> pickupControllers = List.generate(5, (index) => TextEditingController());
-// List<TextEditingController> destinationControllers = List.generate(5, (index) => TextEditingController());
-// List<TextEditingController> receiversNameControllers = List.generate(5, (index) => TextEditingController());
-// List<TextEditingController> receiversNumberControllers = List.generate(5, (index) => TextEditingController());
 
   late TextEditingController selectedPickupController =
       pickupControllers[widget.currentIndex!];
@@ -117,36 +92,21 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
       desiredAccuracy: LocationAccuracy.best,
     );
 
-    final List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-
+    final List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
-      currentAddress =
-          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
-
+      currentAddress = "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         selectedLocation = null; // Clear selected location
         selectedMarker = const MarkerId('currentLocation');
-        // (widget.currentIndex == 0)
-        //     ? pickupController1.text
-        //     : (widget.currentIndex == 1)
-        //         ? pickupController2.text
-        //         : (widget.currentIndex == 2)
-        //             ? pickupController3.text
-        //             : (widget.currentIndex == 3)
-        //                 ? pickupController4.text
-        //                 : pickupController5.text = currentAddress;
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
         print("currentLat: $currentLat");
         print("currentLng: $currentLng");
-        print("currentpickupLocation: $currentAddress");
+        print("currentPickupLocation: $currentAddress");
       });
-
-      mapController
-          ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
+      mapController?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
     }
   }
 
@@ -157,8 +117,7 @@ class _HomeTextFeildsState extends State<HomeTextFeilds> {
       selectedMarker = const MarkerId('selectedLocation');
     });
 
-    mapController?.animateCamera(
-        CameraUpdate.newLatLngZoom(selectedLocation!, zoomLevel));
+    mapController?.animateCamera(CameraUpdate.newLatLngZoom(selectedLocation!, zoomLevel));
   }
 
   List<List<TextEditingController>> allControllers = [

@@ -45,23 +45,24 @@ class _NewScreenState extends State<NewScreen> {
   TextEditingController destinationController = TextEditingController();
   TextEditingController receiversNameController = TextEditingController();
   TextEditingController receiversNumberController = TextEditingController();
-  GlobalKey<FormState> singleDeliveryFormKey = GlobalKey<FormState>();
-  final DraggableScrollableController dragController =
-      DraggableScrollableController();
+  final DraggableScrollableController dragController = DraggableScrollableController();
   Map addSingleData = {};
   Map addScheduledSingleData = {};
-  bool isSelectedAddress = false;
-  List<String> addresses = [];
   bool isSelectedBus = false;
   bool isSelectedCourier = true;
-  String? systemLat;
-  String? systemLng;
+  bool isSelectedAddress = false;
+  List<String> addresses = [];
+  bool addressesVisible = false;
   String? time;
+  double? doubleTime;
   double? doubleSystemLat;
   double? doubleSystemLng;
-  double? doubleTime;
+  String? systemLat;
+  String? systemLng;
   String? pickupLat;
   String? pickupLng;
+  String? addressLat;
+  String? addressLng;
   String? currentLat;
   String? currentLng;
   String? destinationLat;
@@ -107,8 +108,6 @@ class _NewScreenState extends State<NewScreen> {
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
         print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
-            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_latitude") {
             systemLat = "${getAllSystemDataModel.data?[i].description}";
@@ -167,9 +166,6 @@ class _NewScreenState extends State<NewScreen> {
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
-      setState(() {
-        isLoading = false;
-      });
       return null;
     }
   }
@@ -191,18 +187,14 @@ class _NewScreenState extends State<NewScreen> {
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getServiceTypesModel = getServiceTypesModelFromJson(responseString);
-        setState(() {});
         print('getServiceTypesModel status: ${getServiceTypesModel.status}');
-        print(
-            'getServiceTypesModel length: ${getServiceTypesModel.data!.length}');
+        setState(() {});
         for (int i = 0; i < getServiceTypesModel.data!.length; i++) {
           if (getServiceTypesModel.data?[i].name == "Deliver a Parcel") {
             courierId = "${getServiceTypesModel.data?[i].serviceTypesId}";
-            print("courierId: $courierId");
           }
           if (getServiceTypesModel.data?[i].name == "Book a Van") {
             otherId = "${getServiceTypesModel.data?[i].serviceTypesId}";
-            print("otherId: $otherId");
             getVehiclesByServiceType(courierId);
             setState(() {});
           }
@@ -240,8 +232,6 @@ class _NewScreenState extends State<NewScreen> {
         setState(() {});
         print(
             'getVehiclesByServiceTypeModel status: ${getVehiclesByServiceTypeModel.status}');
-        print(
-            'getVehiclesByServiceTypeModel length: ${getVehiclesByServiceTypeModel.data!.length}');
         for (int i = 0; i < getVehiclesByServiceTypeModel.data!.length; i++) {
           vehiclesType.add("${getVehiclesByServiceTypeModel.data?[i].name}");
         }
@@ -271,8 +261,6 @@ class _NewScreenState extends State<NewScreen> {
         getBookingsTypeModel = getBookingsTypeModelFromJson(responseString);
         setState(() {});
         print('getBookingsTypeModel status: ${getBookingsTypeModel.status}');
-        print(
-            'getBookingsTypeModel length: ${getBookingsTypeModel.data!.length}');
         for (int i = 0; i < getBookingsTypeModel.data!.length; i++) {
           bookingName = getBookingsTypeModel.data?[i].name;
           bookingType.add("$bookingName");
@@ -308,38 +296,15 @@ class _NewScreenState extends State<NewScreen> {
       if (response.statusCode == 200) {
         getChargesModel = getChargesModelFromJson(responseString);
         print('getChargesModel status: ${getChargesModel.status}');
-        fromKm = "${getChargesModel.data?.firstMilesFrom}";
         toKm = "${getChargesModel.data?.firstMilesTo}";
+        fromKm = "${getChargesModel.data?.firstMilesFrom}";
         perKmAmount = "${getChargesModel.data?.firstMilesAmount}";
-        print("fromKm: $fromKm");
-        print("toKm: $toKm");
-        print("perKmAmount: $perKmAmount");
         setState(() {});
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
       return null;
     }
-  }
-
-  String formatDecimalAsTime(double decimalValue) {
-    int hours = decimalValue.toInt();
-    int minutes = ((decimalValue - hours) * 60).toInt();
-    String result = "";
-    if (hours > 0) {
-      result += "$hours hour";
-      if (hours > 1) {
-        result += "s";
-      }
-      result += " ";
-    }
-    if (minutes > 0) {
-      result += "$minutes minute";
-      if (minutes > 1) {
-        result += "s";
-      }
-    }
-    return result;
   }
 
   calculateStandardAmount(
@@ -393,8 +358,9 @@ class _NewScreenState extends State<NewScreen> {
   final places = GoogleMapsPlaces(apiKey: mapsKey);
   GoogleMapController? mapController;
   MarkerId? selectedMarker;
-  LatLng? selectedLocation;
   LatLng? currentLocation;
+  LatLng? selectedLocation;
+  LatLng? selectedAddressLocation;
   BitmapDescriptor? customMarkerIcon;
 
   Future<void> searchPickUpPlaces(String input) async {
@@ -437,13 +403,14 @@ class _NewScreenState extends State<NewScreen> {
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         selectedLocation = null; // Clear selected location
+        selectedAddressLocation = null; // Clear address location
         selectedMarker = const MarkerId('currentLocation');
         pickupController.text = currentAddress;
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
         print("currentLat: $currentLat");
         print("currentLng: $currentLng");
-        print("currentpickupLocation: $currentAddress");
+        print("currentPickupLocation: $currentAddress");
       });
 
       mapController
@@ -455,11 +422,24 @@ class _NewScreenState extends State<NewScreen> {
     setState(() {
       selectedLocation = location;
       currentLocation = null; // Clear current location
+      selectedAddressLocation = null; // Clear address location
       selectedMarker = const MarkerId('selectedLocation');
     });
 
     mapController?.animateCamera(
         CameraUpdate.newLatLngZoom(selectedLocation!, zoomLevel));
+  }
+
+  void onPickUpLocationSavedAddresses(LatLng location, double zoomLevel) {
+    setState(() {
+      selectedAddressLocation = location;
+      currentLocation = null; // Clear current location
+      selectedLocation = null; // Clear address location
+      selectedMarker = const MarkerId('selectedAddressLocation');
+    });
+
+    mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(selectedAddressLocation!, zoomLevel));
   }
 
   Future<void> loadCustomMarker() async {
@@ -474,21 +454,19 @@ class _NewScreenState extends State<NewScreen> {
   }
 
   calculateDistanceTime() async {
-      final origin = '${pickupLat ?? currentLat},${pickupLng ?? currentLng}'; // Format coordinates as "latitude,longitude"
-      final destination = '$destinationLat,$destinationLng'; // Format coordinates as "latitude,longitude"
-      try {
-        final data = await api.getDistanceAndTime(origin, destination);
-        distance = data['rows'][0]['elements'][0]['distance']['text'];
-        duration = data['rows'][0]['elements'][0]['duration']['text'];
-        print("distance: $distance");
-        print("duration: $duration");
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-          ),
-        );
-      }
+    final origin =
+        '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
+    final destination =
+        '$destinationLat,$destinationLng'; // Format coordinates as "latitude,longitude"
+    try {
+      final data = await api.getDistanceAndTime(origin, destination);
+      distance = data['rows'][0]['elements'][0]['distance']['text'];
+      duration = data['rows'][0]['elements'][0]['duration']['text'];
+      print("distance: $distance");
+      print("duration: $duration");
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
@@ -545,8 +523,7 @@ class _NewScreenState extends State<NewScreen> {
                     Container(
                       color: transparentColor,
                       width: size.width,
-                      height:
-                          size.height * 0.631, // Adjust the height accordingly
+                      height: size.height * 0.631,
                       child: GoogleMap(
                         onMapCreated: (controller) {
                           mapController = controller;
@@ -567,8 +544,6 @@ class _NewScreenState extends State<NewScreen> {
                             Marker(
                               markerId: const MarkerId('currentLocation'),
                               position: currentLocation!,
-                              infoWindow:
-                                  const InfoWindow(title: 'My Location'),
                               icon: customMarkerIcon ??
                                   BitmapDescriptor.defaultMarker,
                             ),
@@ -576,8 +551,14 @@ class _NewScreenState extends State<NewScreen> {
                             Marker(
                               markerId: const MarkerId('selectedLocation'),
                               position: selectedLocation!,
-                              infoWindow:
-                                  const InfoWindow(title: 'My Location'),
+                              icon: customMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
+                            ),
+                          if (selectedAddressLocation != null)
+                            Marker(
+                              markerId:
+                                  const MarkerId('selectedAddressLocation'),
+                              position: selectedAddressLocation!,
                               icon: customMarkerIcon ??
                                   BitmapDescriptor.defaultMarker,
                             ),
@@ -619,612 +600,549 @@ class _NewScreenState extends State<NewScreen> {
     var size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Form(
-        key: singleDeliveryFormKey,
-        child: Container(
-          color: transparentColor,
-          height: size.height * 0.3,
-          child: Row(
-            children: [
-              SvgPicture.asset('assets/images/home-location-path-icon.svg'),
-              SizedBox(width: size.width * 0.02),
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    isSelectedAddress == true
-                        ? Container(
-                            color: transparentColor,
-                            width: size.width * 0.8,
-                            child: Stack(
-                              children: [
-                                // ButtonTheme(
-                                //   alignedDropdown: true,
-                                //   child: SearchField(
-                                //     controller: searchController,
-                                //     inputType: TextInputType.text,
-                                //     marginColor: orangeColor,
-                                //     searchInputDecoration: InputDecoration(
-                                //       // suffixIcon: GestureDetector(
-                                //       //   onTap: () {
-                                //       //     searchController.clear();
-                                //       //     setState(() {});
-                                //       //   },
-                                //       //   child: const Icon(
-                                //       //     Icons.close,
-                                //       //     size: 20,
-                                //       //     color: Color(0xFF6B7280),
-                                //       //   ),
-                                //       // ),
-                                //       filled: true,
-                                //       fillColor: filledColor,
-                                //       hintText: "Pickup Location",
-                                //       hintStyle: TextStyle(
-                                //         color: hintColor,
-                                //         fontSize: 12,
-                                //         fontFamily: 'Inter-Light',
-                                //       ),
-                                //       contentPadding:
-                                //           const EdgeInsets.symmetric(
-                                //               horizontal: 20, vertical: 10),
-                                //       errorStyle: TextStyle(
-                                //         color: redColor,
-                                //         fontSize: 10,
-                                //         fontFamily: 'Inter-Bold',
-                                //       ),
-                                //       border: const OutlineInputBorder(
-                                //         borderRadius: BorderRadius.all(
-                                //           Radius.circular(10),
-                                //         ),
-                                //         borderSide: BorderSide.none,
-                                //       ),
-                                //       enabledBorder: const OutlineInputBorder(
-                                //         borderRadius: BorderRadius.all(
-                                //           Radius.circular(10),
-                                //         ),
-                                //         borderSide: BorderSide.none,
-                                //       ),
-                                //       focusedBorder: const OutlineInputBorder(
-                                //         borderRadius: BorderRadius.all(
-                                //           Radius.circular(10),
-                                //         ),
-                                //         borderSide: BorderSide.none,
-                                //       ),
-                                //       errorBorder: OutlineInputBorder(
-                                //         borderRadius: const BorderRadius.all(
-                                //           Radius.circular(10),
-                                //         ),
-                                //         borderSide: BorderSide(
-                                //           color: redColor,
-                                //           width: 1,
-                                //         ),
-                                //       ),
-                                //     ),
-                                //     itemHeight: 40,
-                                //     maxSuggestionsInViewPort: 4,
-                                //     suggestionItemDecoration: BoxDecoration(
-                                //       color: blackColor,
-                                //     ),
-                                //     suggestions: addresses
-                                //         .map((e) =>
-                                //             SearchFieldListItem<String>(e))
-                                //         .toList(),
-                                //     // suggestionStyle: const TextStyle(
-                                //     //   color: Color(0xFF6B7280),
-                                //     //   fontSize: 16,
-                                //     //   fontFamily: 'Poppins-Regular',
-                                //     //   fontWeight: FontWeight.w400,
-                                //     // ),
-                                //     searchStyle: TextStyle(
-                                //       color: blackColor,
-                                //       fontSize: 14,
-                                //       fontFamily: 'Inter-Regular',
-                                //     ),
-                                //   ),
-                                // ),
-                                TextFormField(
-                                  controller: pickupController,
-                                  onChanged: (value) {
-                                    addresses.toList();
-                                  },
-                                  onTap: () {
-                                    // pickupController.clear();
-                                    addresses.clear();
-                                  },
-                                  cursorColor: orangeColor,
-                                  keyboardType: TextInputType.text,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Regular',
+      child: Container(
+        color: transparentColor,
+        height: size.height * 0.3,
+        child: Row(
+          children: [
+            SvgPicture.asset('assets/images/home-location-path-icon.svg'),
+            SizedBox(width: size.width * 0.02),
+            SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  isSelectedAddress == true
+                      ? Container(
+                          color: transparentColor,
+                          width: size.width * 0.8,
+                          child: Stack(
+                            children: [
+                              TextFormField(
+                                controller: pickupController,
+                                onChanged: (value) {
+                                  addresses.toList();
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    addressesVisible =
+                                        true; // Show the list when the text field is tapped.
+                                  });
+                                },
+                                cursorColor: orangeColor,
+                                keyboardType: TextInputType.text,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Inter-Regular',
+                                ),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: filledColor,
+                                  errorStyle: TextStyle(
+                                    color: redColor,
+                                    fontSize: 10,
+                                    fontFamily: 'Inter-Bold',
                                   ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: filledColor,
-                                    errorStyle: TextStyle(
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide(
                                       color: redColor,
-                                      fontSize: 10,
-                                      fontFamily: 'Inter-Bold',
+                                      width: 1,
                                     ),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    focusedBorder: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide(
-                                        color: redColor,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    hintText: "Pickup Location",
-                                    hintStyle: TextStyle(
-                                      color: hintColor,
-                                      fontSize: 12,
-                                      fontFamily: 'Inter-Light',
-                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  hintText: "Pickup Location",
+                                  hintStyle: TextStyle(
+                                    color: hintColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter-Light',
                                   ),
                                 ),
-                                if (addresses.isNotEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 40),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: filledColor,
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      width: size.width * 0.8,
-                                      height: size.height * 0.2,
-                                      child: ListView.separated(
-                                        itemCount:
-                                            getAddressesModel.data!.length,
-                                        scrollDirection: Axis.vertical,
-                                        itemBuilder: (context, index) {
-                                          final addresses =
-                                              getAddressesModel.data![index];
-                                          return ListTile(
-                                            title: Text("${addresses.name}"),
-                                            subtitle:
-                                                Text("${addresses.address}"),
-                                            onTap: () {
-                                              pickupController.text =
-                                                  "${addresses.address}";
-                                            },
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) {
-                                          return Divider(
-                                            color: textHaveAccountColor,
-                                          );
-                                        },
+                              ),
+                              if (addressesVisible)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 40),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: filledColor,
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            color: transparentColor,
-                            width: size.width * 0.8,
-                            child: Stack(
-                              children: [
-                                TextFormField(
-                                  controller: pickupController,
-                                  onChanged: (value) {
-                                    searchPickUpPlaces(value);
-                                  },
-                                  onTap: () {
-                                    // pickupController.clear();
-                                    pickUpPredictions.clear();
-                                  },
-                                  cursorColor: orangeColor,
-                                  keyboardType: TextInputType.text,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Regular',
-                                  ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: filledColor,
-                                    errorStyle: TextStyle(
-                                      color: redColor,
-                                      fontSize: 10,
-                                      fontFamily: 'Inter-Bold',
-                                    ),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    focusedBorder: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    errorBorder: OutlineInputBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      borderSide: BorderSide(
-                                        color: redColor,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    hintText: "Pickup Location",
-                                    hintStyle: TextStyle(
-                                      color: hintColor,
-                                      fontSize: 12,
-                                      fontFamily: 'Inter-Light',
-                                    ),
-                                    suffixIcon: GestureDetector(
-                                      onTap: () {
-                                        getCurrentLocation();
+                                    width: size.width * 0.8,
+                                    height: size.height * 0.2,
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: getAddressesModel.data!.length,
+                                      itemBuilder: (context, index) {
+                                        final addresses =
+                                            getAddressesModel.data![index];
+                                        return ListTile(
+                                          title: Text("${addresses.name}"),
+                                          subtitle:
+                                              Text(addresses.address ?? ''),
+                                          onTap: () {
+                                            addressesVisible = false;
+                                            pickupController.text =
+                                                "${addresses.address}";
+                                            final double savedLat =
+                                                double.parse(
+                                                    "${addresses.latitude}");
+                                            final double savedLng =
+                                                double.parse(
+                                                    "${addresses.longitude}");
+                                            const double zoomLevel = 15.0;
+                                            onPickUpLocationSavedAddresses(
+                                                LatLng(savedLat, savedLng),
+                                                zoomLevel);
+                                            addressLat = savedLat.toString();
+                                            addressLng = savedLng.toString();
+                                            setState(() {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              print("addressLat: $addressLat");
+                                              print("addressLng $addressLng");
+                                              print(
+                                                  "addressLocation: ${addresses.address}");
+                                            });
+                                            // Move the map camera to the selected location
+                                            mapController?.animateCamera(
+                                                CameraUpdate.newLatLng(
+                                                    selectedAddressLocation!));
+                                          },
+                                        );
                                       },
-                                      child: Container(
-                                        color: transparentColor,
-                                        child: SvgPicture.asset(
-                                          'assets/images/gps-icon.svg',
-                                          fit: BoxFit.scaleDown,
-                                        ),
+                                      separatorBuilder: (context, index) {
+                                        return Divider(
+                                          color: textHaveAccountColor,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          color: transparentColor,
+                          width: size.width * 0.8,
+                          child: Stack(
+                            children: [
+                              TextFormField(
+                                controller: pickupController,
+                                onChanged: (value) {
+                                  searchPickUpPlaces(value);
+                                },
+                                onTap: () {
+                                  // pickupController.clear();
+                                  pickUpPredictions.clear();
+                                },
+                                cursorColor: orangeColor,
+                                keyboardType: TextInputType.text,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Inter-Regular',
+                                ),
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: filledColor,
+                                  errorStyle: TextStyle(
+                                    color: redColor,
+                                    fontSize: 10,
+                                    fontFamily: 'Inter-Bold',
+                                  ),
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: redColor,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  hintText: "Pickup Location",
+                                  hintStyle: TextStyle(
+                                    color: hintColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter-Light',
+                                  ),
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      getCurrentLocation();
+                                    },
+                                    child: Container(
+                                      color: transparentColor,
+                                      child: SvgPicture.asset(
+                                        'assets/images/gps-icon.svg',
+                                        fit: BoxFit.scaleDown,
                                       ),
                                     ),
                                   ),
                                 ),
-                                if (pickUpPredictions.isNotEmpty)
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 40),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: filledColor,
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      width: size.width * 0.8,
-                                      height: size.height * 0.2,
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: pickUpPredictions.length,
-                                        itemBuilder: (context, index) {
-                                          final prediction =
-                                              pickUpPredictions[index];
-                                          return ListTile(
-                                            title: Text(prediction.name),
-                                            subtitle: Text(
-                                                prediction.formattedAddress ??
-                                                    ''),
-                                            onTap: () {
-                                              pickupController.text =
-                                                  prediction.formattedAddress!;
-                                              final double lat = prediction
-                                                  .geometry!.location.lat;
-                                              final double lng = prediction
-                                                  .geometry!.location.lng;
-                                              const double zoomLevel = 15.0;
-                                              onPickUpLocationSelected(
-                                                  LatLng(lat, lng), zoomLevel);
-                                              pickupLat = lat.toString();
-                                              pickupLng = lng.toString();
-                                              setState(() {
-                                                pickUpPredictions.clear();
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-                                                print("pickupLat: $pickupLat");
-                                                print("pickupLng $pickupLng");
-                                                print(
-                                                    "pickupLocation: ${prediction.formattedAddress}");
-                                              });
-                                              // Move the map camera to the selected location
-                                              mapController?.animateCamera(
-                                                  CameraUpdate.newLatLng(
-                                                      selectedLocation!));
-                                            },
-                                          );
-                                        },
-                                        separatorBuilder: (context, index) {
-                                          return Divider(
-                                            color: textHaveAccountColor,
-                                          );
-                                        },
+                              ),
+                              if (pickUpPredictions.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 40),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: filledColor,
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
                                       ),
                                     ),
+                                    width: size.width * 0.8,
+                                    height: size.height * 0.2,
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: pickUpPredictions.length,
+                                      itemBuilder: (context, index) {
+                                        final prediction =
+                                            pickUpPredictions[index];
+                                        return ListTile(
+                                          title: Text(prediction.name),
+                                          subtitle: Text(
+                                              prediction.formattedAddress ??
+                                                  ''),
+                                          onTap: () {
+                                            pickupController.text =
+                                                prediction.formattedAddress!;
+                                            final double lat = prediction
+                                                .geometry!.location.lat;
+                                            final double lng = prediction
+                                                .geometry!.location.lng;
+                                            const double zoomLevel = 15.0;
+                                            onPickUpLocationSelected(
+                                                LatLng(lat, lng), zoomLevel);
+                                            pickupLat = lat.toString();
+                                            pickupLng = lng.toString();
+                                            setState(() {
+                                              pickUpPredictions.clear();
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                              print("pickupLat: $pickupLat");
+                                              print("pickupLng $pickupLng");
+                                              print(
+                                                  "pickupLocation: ${prediction.formattedAddress}");
+                                            });
+                                            // Move the map camera to the selected location
+                                            mapController?.animateCamera(
+                                                CameraUpdate.newLatLng(
+                                                    selectedLocation!));
+                                          },
+                                        );
+                                      },
+                                      separatorBuilder: (context, index) {
+                                        return Divider(
+                                          color: textHaveAccountColor,
+                                        );
+                                      },
+                                    ),
                                   ),
-                              ],
-                            ),
+                                ),
+                            ],
                           ),
-                    SizedBox(height: size.height * 0.015),
-                    Container(
-                      color: transparentColor,
-                      width: size.width * 0.8,
-                      child: Stack(
-                        children: [
-                          TextFormField(
-                            controller: destinationController,
-                            onChanged: (value) {
-                              searchDestinationPlaces(value);
-                            },
-                            onTap: () {
-                              // destinationController.clear();
-                              destinationPredictions.clear();
-                            },
-                            cursorColor: orangeColor,
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(
-                              color: blackColor,
-                              fontSize: 14,
-                              fontFamily: 'Inter-Regular',
+                        ),
+                  SizedBox(height: size.height * 0.015),
+                  Container(
+                    color: transparentColor,
+                    width: size.width * 0.8,
+                    child: Stack(
+                      children: [
+                        TextFormField(
+                          controller: destinationController,
+                          onChanged: (value) {
+                            searchDestinationPlaces(value);
+                          },
+                          onTap: () {
+                            // destinationController.clear();
+                            destinationPredictions.clear();
+                          },
+                          cursorColor: orangeColor,
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: filledColor,
+                            errorStyle: TextStyle(
+                              color: redColor,
+                              fontSize: 10,
+                              fontFamily: 'Inter-Bold',
                             ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: filledColor,
-                              errorStyle: TextStyle(
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide(
                                 color: redColor,
-                                fontSize: 10,
-                                fontFamily: 'Inter-Bold',
+                                width: 1,
                               ),
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  color: redColor,
-                                  width: 1,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            hintText: "Destination",
+                            hintStyle: TextStyle(
+                              color: hintColor,
+                              fontSize: 12,
+                              fontFamily: 'Inter-Light',
+                            ),
+                          ),
+                        ),
+                        if (destinationPredictions.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: filledColor,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
                                 ),
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              hintText: "Destination",
-                              hintStyle: TextStyle(
-                                color: hintColor,
-                                fontSize: 12,
-                                fontFamily: 'Inter-Light',
+                              width: size.width * 0.8,
+                              height: size.height * 0.2,
+                              child: ListView.separated(
+                                scrollDirection: Axis.vertical,
+                                itemCount: destinationPredictions.length,
+                                itemBuilder: (context, index) {
+                                  final prediction =
+                                      destinationPredictions[index];
+                                  return ListTile(
+                                    title: Text(prediction.name),
+                                    subtitle:
+                                        Text(prediction.formattedAddress ?? ''),
+                                    onTap: () {
+                                      destinationController.text =
+                                          prediction.formattedAddress!;
+                                      final double lat =
+                                          prediction.geometry!.location.lat;
+                                      final double lng =
+                                          prediction.geometry!.location.lng;
+                                      destinationLat = lat.toString();
+                                      destinationLng = lng.toString();
+                                      setState(() {
+                                        destinationPredictions.clear();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        print(
+                                            "destinationLat: $destinationLat");
+                                        print("destinationLng $destinationLng");
+                                        print(
+                                            "destinationLocation: ${prediction.formattedAddress}");
+                                      });
+                                    },
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    color: textHaveAccountColor,
+                                  );
+                                },
                               ),
                             ),
                           ),
-                          if (destinationPredictions.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: filledColor,
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10),
-                                  ),
-                                ),
-                                width: size.width * 0.8,
-                                height: size.height * 0.2,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: destinationPredictions.length,
-                                  itemBuilder: (context, index) {
-                                    final prediction =
-                                        destinationPredictions[index];
-                                    return ListTile(
-                                      title: Text(prediction.name),
-                                      subtitle: Text(
-                                          prediction.formattedAddress ?? ''),
-                                      onTap: () {
-                                        destinationController.text =
-                                            prediction.formattedAddress!;
-                                        final double lat =
-                                            prediction.geometry!.location.lat;
-                                        final double lng =
-                                            prediction.geometry!.location.lng;
-                                        destinationLat = lat.toString();
-                                        destinationLng = lng.toString();
-                                        setState(() {
-                                          destinationPredictions.clear();
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          print(
-                                              "destinationLat: $destinationLat");
-                                          print(
-                                              "destinationLng $destinationLng");
-                                          print(
-                                              "destinationLocation: ${prediction.formattedAddress}");
-                                        });
-                                      },
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return Divider(
-                                      color: textHaveAccountColor,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
+                      ],
                     ),
-                    SizedBox(height: size.height * 0.015),
-                    Container(
-                      color: transparentColor,
-                      width: size.width * 0.8,
-                      child: TextFormField(
-                        controller: receiversNameController,
-                        cursorColor: orangeColor,
-                        keyboardType: TextInputType.text,
-                        style: TextStyle(
-                          color: blackColor,
-                          fontSize: 14,
-                          fontFamily: 'Inter-Regular',
+                  ),
+                  SizedBox(height: size.height * 0.015),
+                  Container(
+                    color: transparentColor,
+                    width: size.width * 0.8,
+                    child: TextFormField(
+                      controller: receiversNameController,
+                      cursorColor: orangeColor,
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        color: blackColor,
+                        fontSize: 14,
+                        fontFamily: 'Inter-Regular',
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: filledColor,
+                        errorStyle: TextStyle(
+                          color: redColor,
+                          fontSize: 10,
+                          fontFamily: 'Inter-Bold',
                         ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: filledColor,
-                          errorStyle: TextStyle(
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedErrorBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide(
                             color: redColor,
-                            fontSize: 10,
-                            fontFamily: 'Inter-Bold',
+                            width: 1,
                           ),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedErrorBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide(
-                              color: redColor,
-                              width: 1,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          hintText: "Receiver's Name",
-                          hintStyle: TextStyle(
-                            color: hintColor,
-                            fontSize: 12,
-                            fontFamily: 'Inter-Light',
-                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        hintText: "Receiver's Name",
+                        hintStyle: TextStyle(
+                          color: hintColor,
+                          fontSize: 12,
+                          fontFamily: 'Inter-Light',
                         ),
                       ),
                     ),
-                    SizedBox(height: size.height * 0.015),
-                    Container(
-                      color: transparentColor,
-                      width: size.width * 0.8,
-                      child: TextFormField(
-                        controller: receiversNumberController,
-                        cursorColor: orangeColor,
-                        keyboardType: TextInputType.phone,
-                        style: TextStyle(
-                          color: blackColor,
-                          fontSize: 14,
-                          fontFamily: 'Inter-Regular',
+                  ),
+                  SizedBox(height: size.height * 0.015),
+                  Container(
+                    color: transparentColor,
+                    width: size.width * 0.8,
+                    child: TextFormField(
+                      controller: receiversNumberController,
+                      cursorColor: orangeColor,
+                      keyboardType: TextInputType.phone,
+                      style: TextStyle(
+                        color: blackColor,
+                        fontSize: 14,
+                        fontFamily: 'Inter-Regular',
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: filledColor,
+                        errorStyle: TextStyle(
+                          color: redColor,
+                          fontSize: 10,
+                          fontFamily: 'Inter-Bold',
                         ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: filledColor,
-                          errorStyle: TextStyle(
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedErrorBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide(
                             color: redColor,
-                            fontSize: 10,
-                            fontFamily: 'Inter-Bold',
+                            width: 1,
                           ),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedErrorBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide.none,
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            borderSide: BorderSide(
-                              color: redColor,
-                              width: 1,
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          hintText: "Receiver's Phone Number",
-                          hintStyle: TextStyle(
-                            color: hintColor,
-                            fontSize: 12,
-                            fontFamily: 'Inter-Light',
-                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        hintText: "Receiver's Phone Number",
+                        hintStyle: TextStyle(
+                          color: hintColor,
+                          fontSize: 12,
+                          fontFamily: 'Inter-Light',
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -1349,6 +1267,7 @@ class _NewScreenState extends State<NewScreen> {
                                 setState(() {
                                   isSelectedBus = false;
                                   isSelectedCourier = true;
+                                  print("courierId: $courierId");
                                 });
                               },
                               child: Stack(
@@ -1411,6 +1330,7 @@ class _NewScreenState extends State<NewScreen> {
                                 setState(() {
                                   isSelectedBus = true;
                                   isSelectedCourier = false;
+                                  print("otherId: $otherId");
                                 });
                               },
                               child: Stack(
@@ -1541,6 +1461,38 @@ class _NewScreenState extends State<NewScreen> {
                                       'assets/images/add-icon.svg',
                                     ),
                                   ),
+                                  SizedBox(width: size.width * 0.03),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isSelectedAddress = true;
+                                      });
+                                    },
+                                    child: isSelectedAddress == true
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isSelectedAddress = false;
+                                              });
+                                            },
+                                            child: SvgPicture.asset(
+                                              'assets/images/checkmark-icon.svg',
+                                            ),
+                                          )
+                                        : SvgPicture.asset(
+                                            'assets/images/uncheckmark-icon.svg',
+                                          ),
+                                  ),
+                                  SizedBox(width: size.width * 0.01),
+                                  Text(
+                                    "Saved\nAddresses",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 10,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
                                 ],
                               ),
                           ],
@@ -1603,8 +1555,7 @@ class _NewScreenState extends State<NewScreen> {
                       SizedBox(height: size.height * 0.015),
                       if (selectedRadio == 1) singleTextField(),
                       if (selectedRadio == 2) multiPageView(),
-                      SizedBox(height: size.height * 0.01),
-                      if (selectedRadio == 1) SizedBox(height: size.height * 0),
+                      SizedBox(height: size.height * 0.012),
                       Row(
                         children: [
                           Padding(
@@ -1727,7 +1678,7 @@ class _NewScreenState extends State<NewScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: size.height * 0.01),
+                      SizedBox(height: size.height * 0.015),
                       Row(
                         children: [
                           Padding(
@@ -1832,28 +1783,24 @@ class _NewScreenState extends State<NewScreen> {
                                                 getBookingsTypeModel
                                                     .data?[i].bookingsTypesId
                                                     .toString();
-                                            // await distanceCalculator();
-                                            await calculateDistanceTime();
-                                            await getCharges(bookingsTypeId);
                                             print(
                                                 'bookingsTypeId: $bookingsTypeId');
-                                            if (bookingsTypeId == "1") {
-                                              print("fromKm: $fromKm");
-                                              print("toKm: $toKm");
-                                              print(
-                                                  "perKmAmount: $perKmAmount");
-                                              print(
-                                                  "totalDistance: $distance");
-                                              calculateStandardAmount(
-                                                double.parse(fromKm!),
-                                                toKm != "null"
-                                                    ? double.parse(toKm!)
-                                                    : 0.0,
-                                                double.parse(perKmAmount!),
-                                                  double.parse(distance!.split(" ")[0]),
-                                                // double.parse(distance!),
-                                              );
-                                            }
+                                            // await calculateDistanceTime();
+                                            // await getCharges(bookingsTypeId);
+                                            // if (bookingsTypeId == "1") {
+                                            //   print("fromKm: $fromKm");
+                                            //   print("toKm: $toKm");
+                                            //   print("perKmAmount: $perKmAmount");
+                                            //   print("totalDistance: $distance");
+                                            //   calculateStandardAmount(
+                                            //     double.parse(fromKm!),
+                                            //     toKm != "null"
+                                            //         ? double.parse(toKm!)
+                                            //         : 0.0,
+                                            //     double.parse(perKmAmount!),
+                                            //     double.parse(distance!.split(" ")[0]),
+                                            //   );
+                                            // }
                                           }
                                         }
                                       }
@@ -1896,8 +1843,7 @@ class _NewScreenState extends State<NewScreen> {
                                     color: dotsColor, // Inactive color
                                     activeColor: orangeColor,
                                     spacing: const EdgeInsets.symmetric(
-                                      horizontal: 3,
-                                    ),
+                                        horizontal: 3),
                                   ),
                                   onTap: (index) {
                                     pageController.animateToPage(
@@ -1938,7 +1884,6 @@ class _NewScreenState extends State<NewScreen> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                // calculateTime();
                                 if (pickupController.text.isEmpty ||
                                     destinationController.text.isEmpty ||
                                     receiversNameController.text.isEmpty ||
@@ -2013,24 +1958,20 @@ class _NewScreenState extends State<NewScreen> {
                                   setState(() {
                                     isLoading2 = true;
                                   });
-                                  // await distanceCalculator();
                                   await calculateDistanceTime();
                                   await getCharges(bookingsTypeId);
-                                  print('bookingsTypeId: $bookingsTypeId');
                                   if (bookingsTypeId == "1") {
                                     print("fromKm: $fromKm");
                                     print("toKm: $toKm");
                                     print("perKmAmount: $perKmAmount");
                                     print("totalDistance: $distance");
                                     calculateStandardAmount(
-                                      double.parse(fromKm!),
-                                      toKm != "null"
-                                          ? double.parse(toKm!)
-                                          : 0.0,
-                                      double.parse(perKmAmount!),
-                                        double.parse(distance!.split(" ")[0])
-                                      // double.parse(distance!),
-                                    );
+                                        double.parse(fromKm!),
+                                        toKm != "null"
+                                            ? double.parse(toKm!)
+                                            : 0.0,
+                                        double.parse(perKmAmount!),
+                                        double.parse(distance!.split(" ")[0]));
                                   }
                                   addSingleData = {
                                     "type": "schedule",
@@ -2040,8 +1981,10 @@ class _NewScreenState extends State<NewScreen> {
                                         ? "Single"
                                         : "Multiple",
                                     "pickup_address": pickupController.text,
-                                    "pickup_latitude": pickupLat ?? currentLat,
-                                    "pickup_longitude": pickupLng ?? currentLng,
+                                    "pickup_latitude":
+                                        pickupLat ?? currentLat ?? addressLat,
+                                    "pickup_longitude":
+                                        pickupLng ?? currentLng ?? addressLng,
                                     "destin_address":
                                         destinationController.text,
                                     "destin_latitude": destinationLat,
@@ -2084,7 +2027,6 @@ class _NewScreenState extends State<NewScreen> {
                             GestureDetector(
                               onTap: () async {
                                 if (selectedRadio == 1) {
-                                  // calculateTime();
                                   if (pickupController.text.isEmpty ||
                                       destinationController.text.isEmpty ||
                                       receiversNameController.text.isEmpty ||
@@ -2159,24 +2101,21 @@ class _NewScreenState extends State<NewScreen> {
                                     setState(() {
                                       isLoading = true;
                                     });
-                                    // await distanceCalculator();
                                     await calculateDistanceTime();
                                     await getCharges(bookingsTypeId);
-                                    print('bookingsTypeId: $bookingsTypeId');
                                     if (bookingsTypeId == "1") {
                                       print("fromKm: $fromKm");
                                       print("toKm: $toKm");
                                       print("perKmAmount: $perKmAmount");
                                       print("totalDistance: $distance");
                                       calculateStandardAmount(
-                                        double.parse(fromKm!),
-                                        toKm != "null"
-                                            ? double.parse(toKm!)
-                                            : 0.0,
-                                        double.parse(perKmAmount!),
-                                          double.parse(distance!.split(" ")[0])
-                                        // double.parse(distance!),
-                                      );
+                                          double.parse(fromKm!),
+                                          toKm != "null"
+                                              ? double.parse(toKm!)
+                                              : 0.0,
+                                          double.parse(perKmAmount!),
+                                          double.parse(
+                                              distance!.split(" ")[0]));
                                     }
                                     addSingleData = {
                                       "type": "booking",
@@ -2187,14 +2126,15 @@ class _NewScreenState extends State<NewScreen> {
                                           : "Multiple",
                                       "pickup_address": pickupController.text,
                                       "pickup_latitude":
-                                          pickupLat ?? currentLat,
+                                          pickupLat ?? currentLat ?? addressLat,
                                       "pickup_longitude":
-                                          pickupLng ?? currentLng,
+                                          pickupLng ?? currentLng ?? addressLng,
                                       "destin_address":
                                           destinationController.text,
                                       "destin_latitude": destinationLat,
                                       "destin_longitude": destinationLng,
-                                      "destin_distance": distance!.split(" ")[0],
+                                      "destin_distance":
+                                          distance!.split(" ")[0],
                                       "destin_time": duration,
                                       "destin_delivery_charges":
                                           roundedTotalAmount ?? "0.00",
@@ -2222,9 +2162,6 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
-                                  print(
-                                      "Pickup Controller Text: ${pickupController.text}");
-
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
