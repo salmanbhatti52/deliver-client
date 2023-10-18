@@ -46,15 +46,15 @@ class _NewScreenState extends State<NewScreen> {
   TextEditingController receiversNameController = TextEditingController();
   TextEditingController receiversNumberController = TextEditingController();
   final DraggableScrollableController dragController = DraggableScrollableController();
+  int selectedRadio = 1;
   Map addSingleData = {};
+
   Map addScheduledSingleData = {};
   bool isSelectedBus = false;
   bool isSelectedCourier = true;
   bool addressesVisible = false;
   bool isSelectedAddress = false;
   List<String> addresses = [];
-  String? time;
-  double? doubleTime;
   double? doubleSystemLat;
   double? doubleSystemLng;
   String? systemLat;
@@ -116,10 +116,6 @@ class _NewScreenState extends State<NewScreen> {
           if (getAllSystemDataModel.data?[i].type == "system_longitude") {
             systemLng = "${getAllSystemDataModel.data?[i].description}";
             doubleSystemLng = double.parse(systemLng!);
-          }
-          if (getAllSystemDataModel.data?[i].type == "per_km_time") {
-            time = "${getAllSystemDataModel.data?[i].description}";
-            doubleTime = double.parse(time!);
           }
           setState(() {});
         }
@@ -321,32 +317,41 @@ class _NewScreenState extends State<NewScreen> {
     print("roundedTotalAmount: $roundedTotalAmount");
   }
 
-  int selectedRadio = 1;
-
-  PageController pageController = PageController();
   int currentIndex = 0;
   late List<Widget> pages;
+  PageController pageController = PageController();
 
   void addPage() {
     if (pages.length >= 5) {
       return; // Limit reached, do not add more pages
     }
     setState(() {
-      pages.add(HomeTextFields(
-        currentIndex: currentIndex,
-        pageController: pageController,
-        isSelectedAddress: isSelectedAddress,
-        pickupController: pickupControllers[currentIndex],
-        destinationController: destinationControllers[currentIndex],
-        receiversNameController: receiversNameControllers[currentIndex],
-        receiversNumberController: receiversNumberControllers[currentIndex],
-      ));
+      pages.add(
+          HomeTextFields(
+            currentIndex: currentIndex,
+            pageController: pageController,
+            isSelectedAddress: isSelectedAddress,
+            // distances: distances[currentIndex],
+            // durations: durations[currentIndex],
+            // pickupLats: pickupLats[currentIndex],
+            // pickupLngs: pickupLngs[currentIndex],
+            // addressLats: addressLats[currentIndex],
+            // addressLngs: addressLngs[currentIndex],
+            // currentLats: currentLats[currentIndex],
+            // currentLngs: currentLngs[currentIndex],
+            // destinationLats: destinationLats[currentIndex],
+            // destinationLngs: destinationLngs[currentIndex],
+            pickupController: pickupControllers[currentIndex],
+            destinationController: destinationControllers[currentIndex],
+            receiversNameController: receiversNameControllers[currentIndex],
+            receiversNumberController: receiversNumberControllers[currentIndex],
+          ));
     });
   }
 
   void removePage() {
     if (pages.length <= 2) {
-      return; // Limit reached, do not add more pages
+      return; // Limit reached, do not remove more pages
     }
     pages.removeAt(currentIndex);
     setState(() {
@@ -472,16 +477,26 @@ class _NewScreenState extends State<NewScreen> {
   @override
   void initState() {
     super.initState();
-    loadCustomMarker();
-    getAllSystemData();
     getAddresses();
     getServiceTypes();
     getBookingsType();
+    loadCustomMarker();
+    getAllSystemData();
     pages = [
       HomeTextFields(
         currentIndex: currentIndex,
         pageController: pageController,
         isSelectedAddress: isSelectedAddress,
+        // distances: distances[currentIndex],
+        // durations: durations[currentIndex],
+        // pickupLats: pickupLats[currentIndex],
+        // pickupLngs: pickupLngs[currentIndex],
+        // addressLats: addressLats[currentIndex],
+        // addressLngs: addressLngs[currentIndex],
+        // currentLats: currentLats[currentIndex],
+        // currentLngs: currentLngs[currentIndex],
+        // destinationLats: destinationLats[currentIndex],
+        // destinationLngs: destinationLngs[currentIndex],
         pickupController: pickupControllers[currentIndex],
         destinationController: destinationControllers[currentIndex],
         receiversNameController: receiversNameControllers[currentIndex],
@@ -491,6 +506,16 @@ class _NewScreenState extends State<NewScreen> {
         currentIndex: currentIndex,
         pageController: pageController,
         isSelectedAddress: isSelectedAddress,
+        // distances: distances[currentIndex],
+        // durations: durations[currentIndex],
+        // pickupLats: pickupLats[currentIndex],
+        // pickupLngs: pickupLngs[currentIndex],
+        // addressLats: addressLats[currentIndex],
+        // addressLngs: addressLngs[currentIndex],
+        // currentLats: currentLats[currentIndex],
+        // currentLngs: currentLngs[currentIndex],
+        // destinationLats: destinationLats[currentIndex],
+        // destinationLngs: destinationLngs[currentIndex],
         pickupController: pickupControllers[currentIndex],
         destinationController: destinationControllers[currentIndex],
         receiversNameController: receiversNameControllers[currentIndex],
@@ -501,8 +526,7 @@ class _NewScreenState extends State<NewScreen> {
 
   @override
   void dispose() {
-    pageController
-        .dispose(); // Don't forget to dispose the controller when done
+    pageController.dispose(); // Don't forget to dispose the controller
     super.dispose();
   }
 
@@ -589,14 +613,20 @@ class _NewScreenState extends State<NewScreen> {
     );
   }
 
-  List<TextEditingController> pickupControllers =
-      List.generate(5, (_) => TextEditingController());
-  List<TextEditingController> destinationControllers =
-      List.generate(5, (_) => TextEditingController());
-  List<TextEditingController> receiversNameControllers =
-      List.generate(5, (_) => TextEditingController());
-  List<TextEditingController> receiversNumberControllers =
-      List.generate(5, (_) => TextEditingController());
+  // List<String> distances = List.generate(5, (_) => "");
+  // List<String> durations = List.generate(5, (_) => "");
+  // List<String> pickupLats = List.generate(5, (_) => "");
+  // List<String> pickupLngs = List.generate(5, (_) => "");
+  // List<String> addressLats = List.generate(5, (_) => "");
+  // List<String> addressLngs = List.generate(5, (_) => "");
+  // List<String> currentLats = List.generate(5, (_) => "");
+  // List<String> currentLngs = List.generate(5, (_) => "");
+  // List<String> destinationLats = List.generate(5, (_) => "");
+  // List<String> destinationLngs = List.generate(5, (_) => "");
+  List<TextEditingController> pickupControllers = List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> destinationControllers = List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> receiversNameControllers = List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> receiversNumberControllers = List.generate(5, (_) => TextEditingController());
 
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
@@ -989,13 +1019,10 @@ class _NewScreenState extends State<NewScreen> {
                                       destinationLng = lng.toString();
                                       setState(() {
                                         destinationPredictions.clear();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                        print(
-                                            "destinationLat: $destinationLat");
+                                        FocusManager.instance.primaryFocus?.unfocus();
+                                        print("destinationLat: $destinationLat");
                                         print("destinationLng $destinationLng");
-                                        print(
-                                            "destinationLocation: ${prediction.formattedAddress}");
+                                        print("destinationLocation: ${prediction.formattedAddress}");
                                       });
                                     },
                                   );
@@ -1158,8 +1185,8 @@ class _NewScreenState extends State<NewScreen> {
         color: Colors.transparent,
         height: size.height * 0.295,
         child: PageView.builder(
-          scrollDirection: Axis.horizontal,
           controller: pageController,
+          scrollDirection: Axis.horizontal,
           onPageChanged: (value) {
             setState(() {
               currentIndex = value;
@@ -1169,26 +1196,53 @@ class _NewScreenState extends State<NewScreen> {
           itemCount: pages.length,
           itemBuilder: (context, index) {
             // Access the controllers for the current page
+            // String distance = distances[index];
+            // String duration = durations[index];
+            // String pickupLat = pickupLats[index];
+            // String pickupLng = pickupLngs[index];
+            // String addressLat = addressLats[index];
+            // String addressLng = addressLngs[index];
+            // String currentLat = currentLats[index];
+            // String currentLng = currentLngs[index];
+            // String destinationLat = destinationLats[index];
+            // String destinationLng = destinationLngs[index];
             TextEditingController pickupController = pickupControllers[index];
-            TextEditingController destinationController =
-                destinationControllers[index];
-            TextEditingController receiversNameController =
-                receiversNameControllers[index];
-            TextEditingController receiversNumberController =
-                receiversNumberControllers[index];
+            TextEditingController destinationController = destinationControllers[index];
+            TextEditingController receiversNameController = receiversNameControllers[index];
+            TextEditingController receiversNumberController = receiversNumberControllers[index];
 
             // Print the text from the controllers
-            print('Page $index:');
+            print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
-            print('Pickup Controller: ${pickupController.text}');
-            print('Destination Controller: ${destinationController.text}');
-            print('Receivers Name Controller: ${receiversNameController.text}');
-            print('Receivers Number Controller: ${receiversNumberController.text}');
+            // print('distance: $distance');
+            // print('duration: $duration');
+            // print('pickupLat: $pickupLat');
+            // print('pickupLng: $pickupLng');
+            // print('addressLat: $addressLat');
+            // print('addressLng: $addressLng');
+            // print('currentLat: $currentLat');
+            // print('currentLng: $currentLng');
+            // print('destinationLat: $destinationLat');
+            // print('destinationLng: $destinationLng');
+            print('pickupController: ${pickupController.text}');
+            print('destinationController: ${destinationController.text}');
+            print('receiversNameController: ${receiversNameController.text}');
+            print('receiversNumberController: ${receiversNumberController.text}');
 
             return HomeTextFields(
               currentIndex: currentIndex,
               pageController: pageController,
               isSelectedAddress: isSelectedAddress,
+              // distances: distance,
+              // durations: duration,
+              // pickupLats: pickupLat,
+              // pickupLngs: pickupLng,
+              // addressLats: addressLat,
+              // addressLngs: addressLng,
+              // currentLats: currentLat,
+              // currentLngs: currentLng,
+              // destinationLats: destinationLat,
+              // destinationLngs: destinationLng,
               pickupController: pickupController,
               destinationController: destinationController,
               receiversNameController: receiversNameController,
