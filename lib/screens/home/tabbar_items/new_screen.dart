@@ -50,9 +50,9 @@ class _NewScreenState extends State<NewScreen> {
   Map addScheduledSingleData = {};
   bool isSelectedBus = false;
   bool isSelectedCourier = true;
+  bool addressesVisible = false;
   bool isSelectedAddress = false;
   List<String> addresses = [];
-  bool addressesVisible = false;
   String? time;
   double? doubleTime;
   double? doubleSystemLat;
@@ -332,9 +332,10 @@ class _NewScreenState extends State<NewScreen> {
       return; // Limit reached, do not add more pages
     }
     setState(() {
-      pages.add(HomeTextFeilds(
+      pages.add(HomeTextFields(
         currentIndex: currentIndex,
         pageController: pageController,
+        isSelectedAddress: isSelectedAddress,
         pickupController: pickupControllers[currentIndex],
         destinationController: destinationControllers[currentIndex],
         receiversNameController: receiversNameControllers[currentIndex],
@@ -397,8 +398,7 @@ class _NewScreenState extends State<NewScreen> {
 
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
-      final String currentAddress =
-          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
+      final String currentAddress = "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
 
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
@@ -478,17 +478,19 @@ class _NewScreenState extends State<NewScreen> {
     getServiceTypes();
     getBookingsType();
     pages = [
-      HomeTextFeilds(
+      HomeTextFields(
         currentIndex: currentIndex,
         pageController: pageController,
+        isSelectedAddress: isSelectedAddress,
         pickupController: pickupControllers[currentIndex],
         destinationController: destinationControllers[currentIndex],
         receiversNameController: receiversNameControllers[currentIndex],
         receiversNumberController: receiversNumberControllers[currentIndex],
       ),
-      HomeTextFeilds(
+      HomeTextFields(
         currentIndex: currentIndex,
         pageController: pageController,
+        isSelectedAddress: isSelectedAddress,
         pickupController: pickupControllers[currentIndex],
         destinationController: destinationControllers[currentIndex],
         receiversNameController: receiversNameControllers[currentIndex],
@@ -1177,15 +1179,16 @@ class _NewScreenState extends State<NewScreen> {
 
             // Print the text from the controllers
             print('Page $index:');
+            print('isSelectedAddress: $isSelectedAddress');
             print('Pickup Controller: ${pickupController.text}');
             print('Destination Controller: ${destinationController.text}');
             print('Receivers Name Controller: ${receiversNameController.text}');
-            print(
-                'Receivers Number Controller: ${receiversNumberController.text}');
+            print('Receivers Number Controller: ${receiversNumberController.text}');
 
-            return HomeTextFeilds(
-              pageController: pageController,
+            return HomeTextFields(
               currentIndex: currentIndex,
+              pageController: pageController,
+              isSelectedAddress: isSelectedAddress,
               pickupController: pickupController,
               destinationController: destinationController,
               receiversNameController: receiversNameController,
