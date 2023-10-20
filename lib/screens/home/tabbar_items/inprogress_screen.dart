@@ -7,13 +7,12 @@ import 'package:flutter/foundation.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:deliver_client/screens/report_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
-import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
@@ -54,6 +53,9 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
   BitmapDescriptor? customDestMarkerIcon;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? mapsKey = dotenv.env['MAPS_KEY'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -118,36 +120,33 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
             updateBookingStatusModelFromJson(responseString);
         print(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-        if (updateBookingStatusModel.data?.status == "Parcel Delivered" ||
-            updateBookingStatusModel.data?.status == "Parcel Lost" ||
-            updateBookingStatusModel.data?.status == "Parcel Damaged" ||
-            updateBookingStatusModel.data?.status == "Parcel Returned") {
+        if (updateBookingStatusModel.data?.status == "Completed") {
           timer?.cancel();
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => AmountToPayEditScreen(
-                singleData: widget.singleData,
-                riderData: widget.riderData!,
-                currentBookingId: widget.currentBookingId,
-              ),
-            ),
-          );
-        } else {
-          timer?.cancel();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePageScreen(
-                index: 1,
-                passCode: widget.passCode,
-                singleData: widget.singleData,
                 riderData: widget.riderData!,
                 currentBookingId: widget.currentBookingId,
                 bookingDestinationId: widget.bookingDestinationId,
               ),
             ),
           );
+        } else {
+          // timer?.cancel();
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => HomePageScreen(
+          //       index: 1,
+          //       passCode: widget.passCode,
+          //       singleData: widget.singleData,
+          //       riderData: widget.riderData!,
+          //       currentBookingId: widget.currentBookingId,
+          //       bookingDestinationId: widget.bookingDestinationId,
+          //     ),
+          //   ),
+          // );
         }
       }
     } catch (e) {
@@ -202,7 +201,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         destLat != null &&
         destLng != null) {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        mapsKey, // Your Google Map Key
+        "$mapsKey",
         PointLatLng(riderLat!, riderLng!),
         PointLatLng(destLat!, destLng!),
       );
@@ -806,7 +805,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                       lottie.Lottie.asset('assets/images/no-data-icon.json'),
                       SizedBox(height: size.height * 0.04),
                       Text(
-                        "No Ride Inprogress",
+                        "No Ride In Progress",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: textHaveAccountColor,

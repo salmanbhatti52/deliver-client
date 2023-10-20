@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
@@ -40,6 +40,8 @@ class _SupportScreenState extends State<SupportScreen> {
 
   Timer? timer;
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   StartSupportChatModel startSupportChatModel = StartSupportChatModel();
 

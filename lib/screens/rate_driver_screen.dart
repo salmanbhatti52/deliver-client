@@ -1,15 +1,31 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:deliver_client/screens/pay_tip_screen.dart';
+import 'package:deliver_client/models/rate_rider_model.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
+
+String? userId;
 
 class RateDriverScreen extends StatefulWidget {
-  const RateDriverScreen({super.key});
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+
+  const RateDriverScreen({
+    super.key,
+    this.riderData,
+    this.currentBookingId,
+    this.bookingDestinationId,
+  });
 
   @override
   State<RateDriverScreen> createState() => _RateDriverScreenState();
@@ -17,8 +33,61 @@ class RateDriverScreen extends StatefulWidget {
 
 class _RateDriverScreenState extends State<RateDriverScreen> {
   TextEditingController additionalCommentsController = TextEditingController();
-  final GlobalKey<FormState> rateingFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> ratingFormKey = GlobalKey<FormState>();
+
   double? ratingValue;
+  bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
+
+  RateRiderModel rateRiderModel = RateRiderModel();
+
+  rateRider() async {
+    try {
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
+      String apiUrl = "$baseUrl/rate_booking";
+      print("apiUrl: $apiUrl");
+      print("userId: $userId");
+      print("fleetId: ${widget.riderData!.usersFleetId.toString()}");
+      print("bookingId: ${widget.currentBookingId}");
+      print("bookingDestinationId: ${widget.bookingDestinationId}");
+      print("rating: ${ratingValue.toString()}");
+      print("comment: ${additionalCommentsController.text}");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "rated_by": "Customers",
+          "users_customers_id": userId,
+          "users_fleet_id": widget.riderData!.usersFleetId.toString(),
+          "bookings_id": widget.currentBookingId,
+          "bookings_destinations_id": widget.bookingDestinationId,
+          "rating": ratingValue.toString(),
+          "comment": additionalCommentsController.text,
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        rateRiderModel = rateRiderModelFromJson(responseString);
+        print('rateRiderModel status: ${rateRiderModel.status}');
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("widget.currentBookingId: ${widget.currentBookingId}");
+    print("widget.bookingDestinationId: ${widget.bookingDestinationId}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,28 +143,37 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                             nipLocation: NipLocation.bottom,
                             nipHeight: 12,
                             borderColor: borderColor,
-                            width: size.width * 0.32,
+                            width: size.width * 0.4,
                             height: size.height * 0.07,
                             borderRadius: 10,
                             offset: const Offset(10, 0),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
-                                  child: Image.asset(
-                                    'assets/images/user-profile.png',
-                                    width: 35,
-                                    height: 35,
-                                    fit: BoxFit.cover,
+                                  child: Container(
+                                    color: transparentColor,
+                                    width: 40,
+                                    height: 40,
+                                    child: FadeInImage(
+                                      placeholder: const AssetImage(
+                                        "assets/images/user-profile.png",
+                                      ),
+                                      image: NetworkImage(
+                                        '$imageUrl${widget.riderData!.profilePic}',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
+                                SizedBox(width: size.width * 0.02),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Jannie",
+                                      "${widget.riderData!.firstName}",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: blackColor,
@@ -104,7 +182,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "Drive",
+                                      "Rider",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: textHaveAccountColor,
@@ -244,15 +322,34 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                           ),
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const PayTipScreen(),
-                                ),
-                              );
+                            onTap: () async {
+                              await rateRider();
+                              if (rateRiderModel.status == "success") {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PayTipScreen(
+                                      riderData: widget.riderData!,
+                                    ),
+                                  ),
+                                );
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                print("Something went wrong!");
+                              }
                             },
-                            child: buttonGradient("SUBMIT", context),
+                            child: isLoading
+                                ? buttonGradientWithLoader(
+                                    "Please Wait...", context)
+                                : buttonGradient("SUBMIT", context),
                           ),
                           SizedBox(height: size.height * 0.02),
                           GestureDetector(
@@ -260,7 +357,6 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
-                                // barrierColor: sheetBarrierColor,
                                 builder: (context) => rebookRide(context),
                               );
                             },

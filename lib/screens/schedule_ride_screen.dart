@@ -14,6 +14,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
 class ScheduleRideScreen extends StatefulWidget {
   final Map? scheduledSingleData;
   final int? selectedRadio;
+
   const ScheduleRideScreen(
       {super.key, this.scheduledSingleData, this.selectedRadio});
 

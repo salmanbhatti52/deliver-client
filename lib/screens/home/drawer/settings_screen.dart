@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
@@ -22,6 +22,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool switchStatus = true;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
   checkSwitch() async {
     if (switchStatus == true) {

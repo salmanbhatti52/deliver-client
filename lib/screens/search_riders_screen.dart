@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
@@ -15,6 +15,7 @@ import 'package:deliver_client/models/get_all_system_data_model.dart';
 
 class SearchRidersScreen extends StatefulWidget {
   final Map? singleData;
+
   const SearchRidersScreen({super.key, this.singleData});
 
   @override
@@ -22,9 +23,9 @@ class SearchRidersScreen extends StatefulWidget {
 }
 
 class _SearchRidersScreenState extends State<SearchRidersScreen> {
-  String? bookingId;
   String? userRadius;
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
   SearchRiderModel searchRiderModel = SearchRiderModel();
 
@@ -112,7 +113,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
 // Create a function to check if riders are within the radius
   bool areRidersWithinRadius(String? userRadius, double radiusThreshold) {
     if (userRadius != null) {
-      double parsedRadius = double.tryParse(userRadius) ?? 0.0; // Parse the userRadius to a double
+      double parsedRadius = double.tryParse(userRadius) ??
+          0.0; // Parse the userRadius to a double
       return parsedRadius <= radiusThreshold;
     }
     return false; // Handle cases where userRadius is null
@@ -204,79 +206,84 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                         padding: const EdgeInsets.only(top: 120),
                         child: searchRiderModel.data != null
                             ? areRidersWithinRadius(userRadius, 10.0)
-                            ? Container(
-                          color: transparentColor,
-                          height: size.height * 0.48,
-                          child: Stack(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/searching_circle-icon.svg',
-                              ),
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: searchRiderModel.data?.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  print("length: ${searchRiderModel.data?.length}");
-                                  return RidersList(
-                                    singleData: widget.singleData,
-                                    searchRider: searchRiderModel.data?[index],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        )
+                                ? Container(
+                                    color: transparentColor,
+                                    height: size.height * 0.48,
+                                    child: Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/images/searching_circle-icon.svg',
+                                        ),
+                                        ListView.builder(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              searchRiderModel.data?.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            print(
+                                                "length: ${searchRiderModel.data?.length}");
+                                            return RidersList(
+                                              singleData: widget.singleData,
+                                              searchRider:
+                                                  searchRiderModel.data?[index],
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(
+                                    color: transparentColor,
+                                    height: size.height * 0.48,
+                                    child: Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/images/searching_circle-icon.svg',
+                                        ),
+                                        Positioned(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Text(
+                                            "No Riders Available",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: textHaveAccountColor,
+                                              fontSize: 24,
+                                              fontFamily: 'Syne-SemiBold',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                             : Container(
-                          color: transparentColor,
-                          height: size.height * 0.48,
-                          child: Stack(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/searching_circle-icon.svg',
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Text(
-                                  "No Riders Available",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: textHaveAccountColor,
-                                    fontSize: 24,
-                                    fontFamily: 'Syne-SemiBold',
-                                  ),
+                                color: transparentColor,
+                                height: size.height * 0.48,
+                                child: Stack(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/images/searching_circle-icon.svg',
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      right: 0,
+                                      bottom: 0,
+                                      child: Text(
+                                        "No Riders Available",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: textHaveAccountColor,
+                                          fontSize: 24,
+                                          fontFamily: 'Syne-SemiBold',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        )
-                            : Container(
-                          color: transparentColor,
-                          height: size.height * 0.48,
-                          child: Stack(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/searching_circle-icon.svg',
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Text(
-                                  "No Riders Available",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: textHaveAccountColor,
-                                    fontSize: 24,
-                                    fontFamily: 'Syne-SemiBold',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                       const Spacer(),
                       GestureDetector(

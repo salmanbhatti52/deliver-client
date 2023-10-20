@@ -1,17 +1,86 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/rate_driver_screen.dart';
 
 class AmountToPayScreen extends StatefulWidget {
-  const AmountToPayScreen({super.key});
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+
+  const AmountToPayScreen({
+    super.key,
+    this.riderData,
+    this.currentBookingId,
+    this.bookingDestinationId,
+  });
 
   @override
   State<AmountToPayScreen> createState() => _AmountToPayScreenState();
 }
 
 class _AmountToPayScreenState extends State<AmountToPayScreen> {
+
+  final int amount = 100000;
+  final String reference = "unique_transaction_ref_${Random().nextInt(1000000)}";
+  final payStackClient = PaystackPlugin();
+
+  void startPayStack () {
+    String? publicKey = dotenv.env['PAYSTACK_PUBLIC_KEY'];
+    payStackClient.initialize(publicKey: publicKey!);
+  }
+
+  void makePayment() async {
+    final Charge charge = Charge()
+      ..email = 'paystackcustomer@qa.team'
+      ..amount = amount
+      ..reference = reference;
+
+    final CheckoutResponse response = await payStackClient.checkout(context,
+        charge: charge, method: CheckoutMethod.card);
+
+    if (response.status && response.reference == reference) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RateDriverScreen(
+            riderData: widget.riderData!,
+            currentBookingId: widget.currentBookingId,
+            bookingDestinationId:
+                widget.bookingDestinationId,
+          ),
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: orangeColor,
+          content: const Text('Transaction Successful!'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: orangeColor,
+          content: const Text('Transaction Failed!'),
+        ),
+      );
+    }
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    startPayStack();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -146,12 +215,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                         SizedBox(height: size.height * 0.04),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RateDriverScreen(),
-                              ),
-                            );
+                            makePayment();
                           },
                           child: buttonGradient("NEXT", context),
                         ),

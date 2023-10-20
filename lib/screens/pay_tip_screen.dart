@@ -2,19 +2,26 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/pay_tips_boxes.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 class PayTipScreen extends StatefulWidget {
-  const PayTipScreen({super.key});
+  final SearchRiderData? riderData;
+
+  const PayTipScreen({super.key, this.riderData});
 
   @override
   State<PayTipScreen> createState() => _PayTipScreenState();
 }
 
 class _PayTipScreenState extends State<PayTipScreen> {
+
+  String? imageUrl = dotenv.env['IMAGE_URL'];
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -65,28 +72,37 @@ class _PayTipScreenState extends State<PayTipScreen> {
                           nipLocation: NipLocation.bottom,
                           nipHeight: 12,
                           borderColor: borderColor,
-                          width: size.width * 0.32,
+                          width: size.width * 0.4,
                           height: size.height * 0.07,
                           borderRadius: 10,
                           offset: const Offset(10, 0),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: Image.asset(
-                                  'assets/images/user-profile.png',
-                                  width: 35,
-                                  height: 35,
-                                  fit: BoxFit.cover,
+                                child: Container(
+                                  color: transparentColor,
+                                  width: 40,
+                                  height: 40,
+                                  child: FadeInImage(
+                                    placeholder: const AssetImage(
+                                      "assets/images/user-profile.png",
+                                    ),
+                                    image: NetworkImage(
+                                      '$imageUrl${widget.riderData!.profilePic}',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
+                              SizedBox(width: size.width * 0.02),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Jannie",
+                                    "${widget.riderData!.firstName}",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -95,7 +111,7 @@ class _PayTipScreenState extends State<PayTipScreen> {
                                     ),
                                   ),
                                   Text(
-                                    "Drive",
+                                    "Rider",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: textHaveAccountColor,

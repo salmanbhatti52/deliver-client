@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:google_maps_webservice_ex/places.dart';
@@ -47,9 +47,15 @@ class _NewScreenState extends State<NewScreen> {
   TextEditingController receiversNumberController = TextEditingController();
   final DraggableScrollableController dragController =
       DraggableScrollableController();
+<<<<<<< Updated upstream
+=======
+
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? mapsKey = dotenv.env['MAPS_KEY'];
+
+>>>>>>> Stashed changes
   int selectedRadio = 1;
   Map addSingleData = {};
-
   Map addScheduledSingleData = {};
   bool isSelectedBus = false;
   bool isSelectedCourier = true;
@@ -86,7 +92,6 @@ class _NewScreenState extends State<NewScreen> {
   LatLng? destination;
   String? distance;
   String? duration;
-  final api = DistanceMatrixAPI(mapsKey);
 
   bool isLoading = false;
   bool isLoading2 = false;
@@ -366,9 +371,9 @@ class _NewScreenState extends State<NewScreen> {
     });
   }
 
+  var places;
   List<PlacesSearchResult> pickUpPredictions = [];
   List<PlacesSearchResult> destinationPredictions = [];
-  final places = GoogleMapsPlaces(apiKey: mapsKey);
   GoogleMapController? mapController;
   MarkerId? selectedMarker;
   LatLng? currentLocation;
@@ -466,6 +471,7 @@ class _NewScreenState extends State<NewScreen> {
     setState(() {});
   }
 
+  var api;
   calculateDistanceTime() async {
     final origin =
         '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
@@ -490,6 +496,8 @@ class _NewScreenState extends State<NewScreen> {
     getBookingsType();
     loadCustomMarker();
     getAllSystemData();
+    api = DistanceMatrixAPI("$mapsKey");
+    places = GoogleMapsPlaces(apiKey: mapsKey);
     pages = [
       HomeTextFields(
         currentIndex: currentIndex,
@@ -1230,6 +1238,7 @@ class _NewScreenState extends State<NewScreen> {
             print('receiversNameController: ${receiversNameController.text}');
             print(
                 'receiversNumberController: ${receiversNumberController.text}');
+<<<<<<< Updated upstream
 
             // Calculate the distance for the current page
             String distance = "";
@@ -1241,6 +1250,8 @@ class _NewScreenState extends State<NewScreen> {
 
             // Print the calculated distance
             print('Calculated Distance: $distance');
+=======
+>>>>>>> Stashed changes
 
             return HomeTextFields(
               currentIndex: currentIndex,
@@ -1946,127 +1957,143 @@ class _NewScreenState extends State<NewScreen> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                if (pickupController.text.isEmpty ||
-                                    destinationController.text.isEmpty ||
-                                    receiversNameController.text.isEmpty ||
-                                    receiversNumberController.text.isEmpty ||
-                                    selectedVehicle == null ||
-                                    selectedBookingType == null) {
-                                  if (pickupController.text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill pickup address!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (destinationController
-                                      .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill destination address!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (receiversNameController
-                                      .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill receiver's name!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (receiversNumberController
-                                      .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill receiver's number!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (selectedVehicle == null) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please select a vehicle!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (selectedBookingType == null) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please select booking type!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
+                                if (selectedRadio == 1) {
+                                  if (pickupController.text.isEmpty ||
+                                      destinationController.text.isEmpty ||
+                                      receiversNameController.text.isEmpty ||
+                                      receiversNumberController.text.isEmpty ||
+                                      selectedVehicle == null ||
+                                      selectedBookingType == null) {
+                                    if (pickupController.text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill pickup address!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (destinationController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill destination address!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (receiversNameController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill receiver's name!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (receiversNumberController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill receiver's number!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (selectedVehicle == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please select a vehicle!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (selectedBookingType == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please select booking type!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isLoading2 = true;
+                                    });
+                                    await calculateDistanceTime();
+                                    await getCharges(bookingsTypeId);
+                                    if (bookingsTypeId == "1") {
+                                      print("fromKm: $fromKm");
+                                      print("toKm: $toKm");
+                                      print("perKmAmount: $perKmAmount");
+                                      print("totalDistance: $distance");
+                                      calculateStandardAmount(
+                                          double.parse(fromKm!),
+                                          toKm != "null"
+                                              ? double.parse(toKm!)
+                                              : 0.0,
+                                          double.parse(perKmAmount!),
+                                          double.parse(
+                                              distance!.split(" ")[0]));
+                                    }
+                                    addSingleData = {
+                                      "type": "schedule",
+                                      "vehicles_id": vehicleId,
+                                      "bookings_types_id": bookingsTypeId,
+                                      "delivery_type": selectedRadio == 1
+                                          ? "Single"
+                                          : "Multiple",
+                                      "pickup_address": pickupController.text,
+                                      "pickup_latitude":
+                                          pickupLat ?? currentLat ?? addressLat,
+                                      "pickup_longitude":
+                                          pickupLng ?? currentLng ?? addressLng,
+                                      "destin_address":
+                                          destinationController.text,
+                                      "destin_latitude": destinationLat,
+                                      "destin_longitude": destinationLng,
+                                      "destin_distance":
+                                          distance!.split(" ")[0],
+                                      "destin_time": duration,
+                                      "destin_delivery_charges":
+                                          roundedTotalAmount ?? "0.00",
+                                      "destin_vat_charges": "0.00",
+                                      "destin_total_charges": "0.00",
+                                      "destin_discount": "0.00",
+                                      "destin_discounted_charges": "0.00",
+                                      "receiver_name":
+                                          receiversNameController.text,
+                                      "receiver_phone":
+                                          receiversNumberController.text,
+                                    };
+                                    setState(() {
+                                      isLoading2 = false;
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ScheduleRideScreen(
+                                          selectedRadio: selectedRadio,
+                                          scheduledSingleData: addSingleData,
+                                        ),
+                                      ),
                                     );
                                   }
-                                } else {
-                                  setState(() {
-                                    isLoading2 = true;
-                                  });
-                                  await calculateDistanceTime();
-                                  await getCharges(bookingsTypeId);
-                                  if (bookingsTypeId == "1") {
-                                    print("fromKm: $fromKm");
-                                    print("toKm: $toKm");
-                                    print("perKmAmount: $perKmAmount");
-                                    print("totalDistance: $distance");
-                                    calculateStandardAmount(
-                                        double.parse(fromKm!),
-                                        toKm != "null"
-                                            ? double.parse(toKm!)
-                                            : 0.0,
-                                        double.parse(perKmAmount!),
-                                        double.parse(distance!.split(" ")[0]));
-                                  }
-                                  addSingleData = {
-                                    "type": "schedule",
-                                    "vehicles_id": vehicleId,
-                                    "bookings_types_id": bookingsTypeId,
-                                    "delivery_type": selectedRadio == 1
-                                        ? "Single"
-                                        : "Multiple",
-                                    "pickup_address": pickupController.text,
-                                    "pickup_latitude":
-                                        pickupLat ?? currentLat ?? addressLat,
-                                    "pickup_longitude":
-                                        pickupLng ?? currentLng ?? addressLng,
-                                    "destin_address":
-                                        destinationController.text,
-                                    "destin_latitude": destinationLat,
-                                    "destin_longitude": destinationLng,
-                                    "destin_distance": distance!.split(" ")[0],
-                                    "destin_time": duration,
-                                    "destin_delivery_charges":
-                                        roundedTotalAmount ?? "0.00",
-                                    "destin_vat_charges": "0.00",
-                                    "destin_total_charges": "0.00",
-                                    "destin_discount": "0.00",
-                                    "destin_discounted_charges": "0.00",
-                                    "receiver_name":
-                                        receiversNameController.text,
-                                    "receiver_phone":
-                                        receiversNumberController.text,
-                                  };
-                                  setState(() {
-                                    isLoading2 = false;
-                                  });
+                                }
+                                if (selectedRadio == 2) {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

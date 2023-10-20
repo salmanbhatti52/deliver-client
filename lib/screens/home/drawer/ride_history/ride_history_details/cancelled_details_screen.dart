@@ -3,12 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/models/cancelled_ride_model.dart';
 
 class RideHistoryCancelledDetailsScreen extends StatefulWidget {
   final Datum? cancelledRideModel;
+
   const RideHistoryCancelledDetailsScreen({
     super.key,
     this.cancelledRideModel,
@@ -21,6 +22,8 @@ class RideHistoryCancelledDetailsScreen extends StatefulWidget {
 
 class _RideHistoryCancelledDetailsScreenState
     extends State<RideHistoryCancelledDetailsScreen> {
+  String? imageUrl = dotenv.env['IMAGE_URL'];
+
   @override
   void initState() {
     super.initState();

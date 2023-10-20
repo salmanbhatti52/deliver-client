@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,12 +29,13 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  final GlobalKey<FormState> createProfileImageFormKey = GlobalKey<FormState>();
   final countryPicker = const FlCountryCodePicker();
   CountryCode? countryCode =
       const CountryCode(name: 'Nigeria', code: 'NG', dialCode: '+234');
 
-  final GlobalKey<FormState> createPofileImageFormKey = GlobalKey<FormState>();
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
   CreateProfileModel createProfileModel = CreateProfileModel();
 
@@ -175,7 +176,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
               child: Form(
-                key: createPofileImageFormKey,
+                key: createProfileImageFormKey,
                 child: Column(
                   children: [
                     SizedBox(
@@ -434,7 +435,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        if (createPofileImageFormKey.currentState!.validate()) {
+                        if (createProfileImageFormKey.currentState!.validate()) {
                           if (base64imgGallery == null) {
                             final snackBar = SnackBar(
                               elevation: 0,

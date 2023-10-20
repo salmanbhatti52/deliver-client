@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,6 +17,7 @@ String? userId;
 
 class UpdateLocationScreen extends StatefulWidget {
   final String? firstName;
+
   const UpdateLocationScreen({super.key, this.firstName});
 
   @override
@@ -28,6 +29,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
   String? currentLng;
   bool isLoading = false;
   LatLng? currentLocation;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
   Future<void> getCurrentLocation() async {
     final Position position = await Geolocator.getCurrentPosition(

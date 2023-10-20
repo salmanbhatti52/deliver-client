@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +20,7 @@ String? userId;
 
 class ScheduledRideDetailScreen extends StatefulWidget {
   final Datum? getScheduledBookingModel;
+
   const ScheduledRideDetailScreen({super.key, this.getScheduledBookingModel});
 
   @override
@@ -31,6 +32,8 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
   String? currencyUnit;
   String? distanceUnit;
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   systemdata.GetAllSystemDataModel getAllSystemDataModel =
       systemdata.GetAllSystemDataModel();

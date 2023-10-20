@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:deliver_client/models/get_payment_getaways_model.dart';
@@ -15,6 +15,7 @@ bool isSelectedCash = false;
 
 class PaymentMethodByReceiverSheet extends StatefulWidget {
   final Map? singleData;
+
   const PaymentMethodByReceiverSheet({super.key, this.singleData});
 
   @override
@@ -25,6 +26,8 @@ class PaymentMethodByReceiverSheet extends StatefulWidget {
 class _PaymentMethodByReceiverSheetState
     extends State<PaymentMethodByReceiverSheet> {
   String? cashId;
+  String? baseUrl = dotenv.env['BASE_URL'];
+
   GetPaymentGatewaysModel getPaymentGatewaysModel = GetPaymentGatewaysModel();
 
   getPaymentGateways() async {
@@ -44,8 +47,10 @@ class _PaymentMethodByReceiverSheetState
       if (response.statusCode == 200) {
         getPaymentGatewaysModel =
             getPaymentGatewaysModelFromJson(responseString);
-        print('getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
-        print('getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
+        print(
+            'getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
+        print(
+            'getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
         for (int i = 0; i < getPaymentGatewaysModel.data!.length; i++) {
           if (getPaymentGatewaysModel.data?[i].name == "Cash") {
             cashId = "${getPaymentGatewaysModel.data?[i].paymentGatewaysId}";
@@ -201,7 +206,7 @@ class _PaymentMethodByReceiverSheetState
                         //   ),
                         // ),
                         GestureDetector(
-                          onTap: ()  async {
+                          onTap: () async {
                             await getPaymentGateways();
                             setState(() {
                               // isSelectedBank = false;
@@ -292,14 +297,16 @@ class _PaymentMethodByReceiverSheetState
                         updatedData.addAll({
                           "payment_gateways_id": cashId,
                         });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchRidersScreen(
-                              singleData: updatedData,
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchRidersScreen(
+                                singleData: updatedData,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       }
                     },
                     child: bottomSheetButtonGradientBig("NEXT", context),

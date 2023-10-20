@@ -211,7 +211,7 @@ class _ConfirmMultipleDetailsScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SvgPicture.asset(
-                                  'assets/images/orange-location-big-icon.svg',
+                                'assets/images/orange-location-big-icon.svg',
                               ),
                               SizedBox(width: size.width * 0.04),
                               Column(

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/check_number_model.dart';
@@ -34,6 +34,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   TextEditingController otpController = TextEditingController();
 
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
   CheckNumberModel checkNumberModel = CheckNumberModel();
 

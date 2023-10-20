@@ -225,76 +225,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: size.height * 0.03),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextFormField(
-                      controller: cardNumberController,
-                      cursorColor: orangeColor,
-                      keyboardType: TextInputType.text,
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Card Number field is required!';
-                      //   }
-                      //   return null;
-                      // },
-                      style: TextStyle(
-                        color: blackColor,
-                        fontSize: 14,
-                        fontFamily: 'Inter-Regular',
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: filledColor,
-                        errorStyle: TextStyle(
-                          color: redColor,
-                          fontSize: 12,
-                          fontFamily: 'Inter-Bold',
-                        ),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedErrorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide(
-                            color: redColor,
-                            width: 1,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        hintText: "Card Number",
-                        hintStyle: TextStyle(
-                          color: hintColor,
-                          fontSize: 12,
-                          fontFamily: 'Inter-Light',
-                        ),
-                      ),
-                    ),
-                  ),
                   SizedBox(height: size.height * 0.02),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -357,6 +287,76 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
                         hintText: "Name on Card",
+                        hintStyle: TextStyle(
+                          color: hintColor,
+                          fontSize: 12,
+                          fontFamily: 'Inter-Light',
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.03),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: TextFormField(
+                      controller: cardNumberController,
+                      cursorColor: orangeColor,
+                      keyboardType: TextInputType.text,
+                      // validator: (value) {
+                      //   if (value == null || value.isEmpty) {
+                      //     return 'Card Number field is required!';
+                      //   }
+                      //   return null;
+                      // },
+                      style: TextStyle(
+                        color: blackColor,
+                        fontSize: 14,
+                        fontFamily: 'Inter-Regular',
+                      ),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: filledColor,
+                        errorStyle: TextStyle(
+                          color: redColor,
+                          fontSize: 12,
+                          fontFamily: 'Inter-Bold',
+                        ),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedErrorBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                          borderSide: BorderSide(
+                            color: redColor,
+                            width: 1,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        hintText: "Card Number",
                         hintStyle: TextStyle(
                           color: hintColor,
                           fontSize: 12,
@@ -526,7 +526,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 }
-
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -831,76 +830,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 //                       ],
 //                     ),
 //                   ),
-//                   SizedBox(height: size.height * 0.03),
-//                   Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 20),
-//                     child: TextFormField(
-//                       controller: cardNumberController,
-//                       cursorColor: orangeColor,
-//                       keyboardType: TextInputType.text,
-//                       // validator: (value) {
-//                       //   if (value == null || value.isEmpty) {
-//                       //     return 'Card Number field is required!';
-//                       //   }
-//                       //   return null;
-//                       // },
-//                       style: TextStyle(
-//                         color: blackColor,
-//                         fontSize: 14,
-//                         fontFamily: 'Inter-Regular',
-//                       ),
-//                       decoration: InputDecoration(
-//                         filled: true,
-//                         fillColor: filledColor,
-//                         errorStyle: TextStyle(
-//                           color: redColor,
-//                           fontSize: 12,
-//                           fontFamily: 'Inter-Bold',
-//                         ),
-//                         border: const OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(
-//                             Radius.circular(10),
-//                           ),
-//                           borderSide: BorderSide.none,
-//                         ),
-//                         enabledBorder: const OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(
-//                             Radius.circular(10),
-//                           ),
-//                           borderSide: BorderSide.none,
-//                         ),
-//                         focusedBorder: const OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(
-//                             Radius.circular(10),
-//                           ),
-//                           borderSide: BorderSide.none,
-//                         ),
-//                         focusedErrorBorder: const OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(
-//                             Radius.circular(10),
-//                           ),
-//                           borderSide: BorderSide.none,
-//                         ),
-//                         errorBorder: OutlineInputBorder(
-//                           borderRadius: const BorderRadius.all(
-//                             Radius.circular(10),
-//                           ),
-//                           borderSide: BorderSide(
-//                             color: redColor,
-//                             width: 1,
-//                           ),
-//                         ),
-//                         contentPadding: const EdgeInsets.symmetric(
-//                             horizontal: 20, vertical: 10),
-//                         hintText: "Card Number",
-//                         hintStyle: TextStyle(
-//                           color: hintColor,
-//                           fontSize: 12,
-//                           fontFamily: 'Inter-Light',
-//                         ),
-//                       ),
-//                     ),
-//                   ),
 //                   SizedBox(height: size.height * 0.02),
 //                   Padding(
 //                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -963,6 +892,76 @@ class _PaymentScreenState extends State<PaymentScreen> {
 //                         contentPadding: const EdgeInsets.symmetric(
 //                             horizontal: 20, vertical: 10),
 //                         hintText: "Name on Card",
+//                         hintStyle: TextStyle(
+//                           color: hintColor,
+//                           fontSize: 12,
+//                           fontFamily: 'Inter-Light',
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   SizedBox(height: size.height * 0.03),
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 20),
+//                     child: TextFormField(
+//                       controller: cardNumberController,
+//                       cursorColor: orangeColor,
+//                       keyboardType: TextInputType.text,
+//                       // validator: (value) {
+//                       //   if (value == null || value.isEmpty) {
+//                       //     return 'Card Number field is required!';
+//                       //   }
+//                       //   return null;
+//                       // },
+//                       style: TextStyle(
+//                         color: blackColor,
+//                         fontSize: 14,
+//                         fontFamily: 'Inter-Regular',
+//                       ),
+//                       decoration: InputDecoration(
+//                         filled: true,
+//                         fillColor: filledColor,
+//                         errorStyle: TextStyle(
+//                           color: redColor,
+//                           fontSize: 12,
+//                           fontFamily: 'Inter-Bold',
+//                         ),
+//                         border: const OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(
+//                             Radius.circular(10),
+//                           ),
+//                           borderSide: BorderSide.none,
+//                         ),
+//                         enabledBorder: const OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(
+//                             Radius.circular(10),
+//                           ),
+//                           borderSide: BorderSide.none,
+//                         ),
+//                         focusedBorder: const OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(
+//                             Radius.circular(10),
+//                           ),
+//                           borderSide: BorderSide.none,
+//                         ),
+//                         focusedErrorBorder: const OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(
+//                             Radius.circular(10),
+//                           ),
+//                           borderSide: BorderSide.none,
+//                         ),
+//                         errorBorder: OutlineInputBorder(
+//                           borderRadius: const BorderRadius.all(
+//                             Radius.circular(10),
+//                           ),
+//                           borderSide: BorderSide(
+//                             color: redColor,
+//                             width: 1,
+//                           ),
+//                         ),
+//                         contentPadding: const EdgeInsets.symmetric(
+//                             horizontal: 20, vertical: 10),
+//                         hintText: "Card Number",
 //                         hintStyle: TextStyle(
 //                           color: hintColor,
 //                           fontSize: 12,

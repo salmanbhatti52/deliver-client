@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/get_profile_model.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
@@ -32,6 +32,8 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   GetProfileModel getProfileModel = GetProfileModel();
 

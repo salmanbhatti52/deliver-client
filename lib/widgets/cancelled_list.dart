@@ -4,7 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +22,8 @@ class CancelledList extends StatefulWidget {
 
 class _CancelledListState extends State<CancelledList> {
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   CancelledRideModel cancelledRideModel = CancelledRideModel();
 

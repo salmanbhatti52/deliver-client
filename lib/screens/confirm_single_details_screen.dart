@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
-
 class ConfirmSingleDetailsScreen extends StatefulWidget {
   final Map? singleData;
+
   const ConfirmSingleDetailsScreen({super.key, this.singleData});
 
   @override
@@ -34,6 +34,7 @@ class _ConfirmSingleDetailsScreenState
   double? roundedtotalPrice;
 
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -135,9 +136,9 @@ class _ConfirmSingleDetailsScreenState
                     top: 240,
                     right: 120,
                     child: Image.asset(
-                        'assets/images/bike-icon.png',
-                        width: 100,
-                        height: 100,
+                      'assets/images/bike-icon.png',
+                      width: 100,
+                      height: 100,
                     ),
                   ),
                   Positioned(

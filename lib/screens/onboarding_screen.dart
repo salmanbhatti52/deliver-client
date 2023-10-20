@@ -3,7 +3,6 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/onboarding_list.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
-// import 'package:deliver_client/screens/signup/signup_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});

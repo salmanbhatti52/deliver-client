@@ -8,6 +8,7 @@ import 'package:deliver_client/screens/search_riders_screen.dart';
 
 class PayViaCardScreen extends StatefulWidget {
   final Map? singleData;
+
   const PayViaCardScreen({super.key, this.singleData});
 
   @override
@@ -440,14 +441,16 @@ class _PayViaCardScreenState extends State<PayViaCardScreen> {
                 SizedBox(height: size.height * 0.135),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchRidersScreen(
-                          singleData: widget.singleData,
+                    Future.delayed(const Duration(seconds: 2), () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchRidersScreen(
+                            singleData: widget.singleData,
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    });
                   },
                   child: buttonGradient('NEXT', context),
                 ),

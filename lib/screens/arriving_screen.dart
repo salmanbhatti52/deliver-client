@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -27,6 +27,7 @@ class ArrivingScreen extends StatefulWidget {
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
+
   const ArrivingScreen({
     super.key,
     this.distance,
@@ -53,6 +54,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
   String? distanceUnit;
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -97,7 +100,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     }
   }
 
-  UpdateBookingStatusModel updateBookingStatusModel = UpdateBookingStatusModel();
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
 
   updateBookingStatus() async {
     try {
@@ -117,37 +121,42 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
       print("response: $responseString");
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
-        updateBookingStatusModel = updateBookingStatusModelFromJson(responseString);
-        print('updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-        if (updateBookingStatusModel.data?.bookingsFleet?[0].bookingsDestinations?.bookingsDestinationsStatus?.name == "Start Ride") {
-          timer?.cancel();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePageScreen(
-              index: 1,
-              singleData: widget.singleData,
-              passCode: widget.passCode,
-              currentBookingId: widget.currentBookingId,
-              riderData: widget.riderData!,
-              bookingDestinationId: widget.bookingDestinationId,
-              ),
-            ),
-          );
-        } else {
+        updateBookingStatusModel =
+            updateBookingStatusModelFromJson(responseString);
+        print(
+            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        if (updateBookingStatusModel.data?.bookingsFleet?[0]
+                .bookingsDestinations?.bookingsDestinationsStatus?.name ==
+            "Start Ride") {
           timer?.cancel();
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => ArrivingScreen(
-                distance: widget.distance,
-                passCode: widget.passCode,
+              builder: (context) => HomePageScreen(
+                index: 1,
                 singleData: widget.singleData,
-                riderData: widget.riderData!,
+                passCode: widget.passCode,
                 currentBookingId: widget.currentBookingId,
+                riderData: widget.riderData!,
                 bookingDestinationId: widget.bookingDestinationId,
               ),
             ),
           );
+        } else {
+          // timer?.cancel();
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => ArrivingScreen(
+          //       distance: widget.distance,
+          //       passCode: widget.passCode,
+          //       singleData: widget.singleData,
+          //       riderData: widget.riderData!,
+          //       currentBookingId: widget.currentBookingId,
+          //       bookingDestinationId: widget.bookingDestinationId,
+          //     ),
+          //   ),
+          // );
         }
         setState(() {});
       }
@@ -265,7 +274,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       updateBookingStatus();
     });
   }
@@ -339,7 +348,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                 riderLat != null ? riderLat! : 0.0,
                                 riderLng != null ? riderLng! : 0.0,
                               ),
-                              icon: customMarkerIcon ?? BitmapDescriptor.defaultMarker,
+                              icon: customMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
                             ),
                           },
                         ),
@@ -442,7 +452,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                                 'assets/images/star-with-container-icon.svg',
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 1.5, left: 24),
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.5, left: 24),
                                                 child: Text(
                                                   "${widget.riderData!.bookingsRatings}",
                                                   textAlign: TextAlign.center,
@@ -486,11 +497,17 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       ChatScreen(
-                                                        callbackFunction: startTimer,
-                                                        riderId: widget.riderData!.usersFleetId.toString(),
-                                                        name: "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                        address: widget.riderData!.address,
-                                                        image: widget.riderData!.profilePic,
+                                                    callbackFunction:
+                                                        startTimer,
+                                                    riderId: widget
+                                                        .riderData!.usersFleetId
+                                                        .toString(),
+                                                    name:
+                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                    address: widget
+                                                        .riderData!.address,
+                                                    image: widget
+                                                        .riderData!.profilePic,
                                                   ),
                                                 ),
                                               );
@@ -502,7 +519,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                           SizedBox(width: size.width * 0.02),
                                           GestureDetector(
                                             onTap: () {
-                                              makePhoneCall("${widget.riderData!.phone}");
+                                              makePhoneCall(
+                                                  "${widget.riderData!.phone}");
                                             },
                                             child: SvgPicture.asset(
                                               'assets/images/call-icon.svg',
@@ -514,7 +532,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                   ),
                                   SizedBox(height: size.height * 0.03),
                                   Tooltip(
-                                    message: "${widget.singleData?["destin_address"]}",
+                                    message:
+                                        "${widget.singleData?["destin_address"]}",
                                     child: Text(
                                       "${widget.singleData?["destin_address"]}",
                                       textAlign: TextAlign.left,
@@ -539,7 +558,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                           ),
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
-                                            message: "${widget.distance} $distanceUnit",
+                                            message:
+                                                "${widget.distance} $distanceUnit",
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.18,
@@ -563,11 +583,12 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                       Column(
                                         children: [
                                           SvgPicture.asset(
-                                              'assets/images/black-clock-icon.svg',
+                                            'assets/images/black-clock-icon.svg',
                                           ),
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
-                                            message: "${widget.singleData?["destin_time"]}",
+                                            message:
+                                                "${widget.singleData?["destin_time"]}",
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.38,
@@ -595,7 +616,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                           ),
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
-                                            message: "$currencyUnit${widget.singleData?["total_charges"]}",
+                                            message:
+                                                "$currencyUnit${widget.singleData?["total_charges"]}",
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.2,

@@ -7,10 +7,16 @@ import 'package:deliver_client/screens/home/drawer/payment_screen.dart';
 import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
 
 class AmountToPayEditScreen extends StatefulWidget {
-  final Map? singleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
-  const AmountToPayEditScreen({super.key, this.singleData, this.currentBookingId, this.riderData});
+  final String? bookingDestinationId;
+
+  const AmountToPayEditScreen({
+    super.key,
+    this.riderData,
+    this.currentBookingId,
+    this.bookingDestinationId,
+  });
 
   @override
   State<AmountToPayEditScreen> createState() => _AmountToPayEditScreenState();
@@ -172,7 +178,12 @@ class _AmountToPayEditScreenState extends State<AmountToPayEditScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const AmountToPayScreen(),
+                                builder: (context) => AmountToPayScreen(
+                                  riderData: widget.riderData!,
+                                  currentBookingId: widget.currentBookingId,
+                                  bookingDestinationId:
+                                      widget.bookingDestinationId,
+                                ),
                               ),
                             );
                           },
@@ -185,19 +196,19 @@ class _AmountToPayEditScreenState extends State<AmountToPayEditScreen> {
               ),
             ),
           ),
-          Positioned(
-            top: 40,
-            left: 20,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: SvgPicture.asset(
-                'assets/images/back-icon.svg',
-                fit: BoxFit.scaleDown,
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 40,
+          //   left: 20,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //     },
+          //     child: SvgPicture.asset(
+          //       'assets/images/back-icon.svg',
+          //       fit: BoxFit.scaleDown,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

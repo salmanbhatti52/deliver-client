@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -26,6 +26,7 @@ class BookingAcceptedScreen extends StatefulWidget {
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
+
   const BookingAcceptedScreen({
     super.key,
     this.distance,
@@ -52,6 +53,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
   String? distanceUnit;
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -74,7 +77,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
         print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print('getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+        print(
+            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
@@ -220,7 +224,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       route();
     });
   }
@@ -294,7 +298,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                 riderLat != null ? riderLat! : 0.0,
                                 riderLng != null ? riderLng! : 0.0,
                               ),
-                              icon: customMarkerIcon ?? BitmapDescriptor.defaultMarker,
+                              icon: customMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
                             ),
                           },
                         ),
@@ -327,13 +332,15 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                               color: whiteColor,
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: size.height * 0.04),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Booking Accepted",
@@ -344,7 +351,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           fontFamily: 'Syne-Bold',
                                         ),
                                       ),
-                                      statusButtonSmall("Accepted", greenStatusButtonColor, context),
+                                      statusButtonSmall("Accepted",
+                                          greenStatusButtonColor, context),
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.02),
@@ -360,7 +368,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                             placeholder: const AssetImage(
                                               "assets/images/user-profile.png",
                                             ),
-                                            image: NetworkImage('$imageUrl${widget.riderData!.profilePic}',
+                                            image: NetworkImage(
+                                              '$imageUrl${widget.riderData!.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -368,7 +377,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                       ),
                                       SizedBox(width: size.width * 0.03),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Container(
                                             color: transparentColor,
@@ -394,7 +404,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                 'assets/images/star-with-container-icon.svg',
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 1.5, left: 24),
+                                                padding: const EdgeInsets.only(
+                                                    top: 1.5, left: 24),
                                                 child: Text(
                                                   "${widget.riderData!.bookingsRatings}",
                                                   textAlign: TextAlign.center,
@@ -438,11 +449,17 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       ChatScreen(
-                                                        callbackFunction: startTimer,
-                                                        riderId: widget.riderData!.usersFleetId.toString(),
-                                                        name: "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                        address: widget.riderData!.address,
-                                                        image: widget.riderData!.profilePic,
+                                                    callbackFunction:
+                                                        startTimer,
+                                                    riderId: widget
+                                                        .riderData!.usersFleetId
+                                                        .toString(),
+                                                    name:
+                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                    address: widget
+                                                        .riderData!.address,
+                                                    image: widget
+                                                        .riderData!.profilePic,
                                                   ),
                                                 ),
                                               );
@@ -454,7 +471,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           SizedBox(width: size.width * 0.02),
                                           GestureDetector(
                                             onTap: () {
-                                              makePhoneCall("${widget.riderData!.phone}");
+                                              makePhoneCall(
+                                                  "${widget.riderData!.phone}");
                                             },
                                             child: SvgPicture.asset(
                                               'assets/images/call-icon.svg',
@@ -466,7 +484,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                   ),
                                   SizedBox(height: size.height * 0.03),
                                   Tooltip(
-                                    message: "${widget.singleData?["destin_address"]}",
+                                    message:
+                                        "${widget.singleData?["destin_address"]}",
                                     child: Text(
                                       "${widget.singleData?["destin_address"]}",
                                       textAlign: TextAlign.left,
@@ -481,7 +500,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                   ),
                                   SizedBox(height: size.height * 0.03),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
@@ -490,7 +510,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           ),
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
-                                            message: "${widget.distance} $distanceUnit",
+                                            message:
+                                                "${widget.distance} $distanceUnit",
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.18,
@@ -518,7 +539,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           ),
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
-                                            message: "${widget.singleData?["destin_time"]}",
+                                            message:
+                                                "${widget.singleData?["destin_time"]}",
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.38,
@@ -546,7 +568,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           ),
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
-                                            message: "$currencyUnit${widget.singleData?["total_charges"]}",
+                                            message:
+                                                "$currencyUnit${widget.singleData?["total_charges"]}",
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.2,

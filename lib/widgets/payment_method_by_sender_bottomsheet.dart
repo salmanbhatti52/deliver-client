@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:deliver_client/models/get_payment_getaways_model.dart';
@@ -15,6 +15,7 @@ bool isSelectedCash = false;
 
 class PaymentMethodBySenderSheet extends StatefulWidget {
   final Map? singleData;
+
   const PaymentMethodBySenderSheet({super.key, this.singleData});
 
   @override
@@ -26,6 +27,8 @@ class _PaymentMethodBySenderSheetState
     extends State<PaymentMethodBySenderSheet> {
   String? cardId;
   String? cashId;
+  String? baseUrl = dotenv.env['BASE_URL'];
+
   GetPaymentGatewaysModel getPaymentGatewaysModel = GetPaymentGatewaysModel();
 
   getPaymentGateways() async {
@@ -311,14 +314,16 @@ class _PaymentMethodBySenderSheetState
                         updatedData.addAll({
                           "payment_gateways_id": cashId,
                         });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchRidersScreen(
-                              singleData: updatedData,
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchRidersScreen(
+                                singleData: updatedData,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       }
                     },
                     child: bottomSheetButtonGradientBig("NEXT", context),

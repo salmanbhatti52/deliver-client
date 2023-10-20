@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, must_be_immutable, use_build_context_synchronously
+// ignore_for_file: avoid_print, must_be_immutable, use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -8,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:google_maps_webservice_ex/places.dart';
@@ -35,18 +35,21 @@ class _FirstSaveLocationScreenState extends State<FirstSaveLocationScreen> {
   final GlobalKey<FormState> nameLocationFormKey = GlobalKey<FormState>();
 
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? mapsKey = dotenv.env['MAPS_KEY'];
 
   String? systemLat;
   String? systemLng;
-  double? doubleSystemLat;
-  double? doubleSystemLng;
   String? currentLat;
   String? currentLng;
   String? addressLat;
   String? addressLng;
+  double? doubleSystemLat;
+  double? doubleSystemLng;
+
+  var places;
   List<PlacesSearchResult> addressPredictions = [];
   BitmapDescriptor? customMarkerIcon;
-  final places = GoogleMapsPlaces(apiKey: mapsKey);
   GoogleMapController? mapController;
   MarkerId? selectedMarker;
   LatLng? selectedLocation;
@@ -201,6 +204,7 @@ class _FirstSaveLocationScreenState extends State<FirstSaveLocationScreen> {
     super.initState();
     loadCustomMarker();
     getAllSystemData();
+    places = GoogleMapsPlaces(apiKey: mapsKey);
   }
 
   @override

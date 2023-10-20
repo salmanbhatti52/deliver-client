@@ -10,7 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -35,6 +35,7 @@ class DriverFoundScreen extends StatefulWidget {
   final Map? singleData;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
+
   const DriverFoundScreen({
     super.key,
     this.bookingId,
@@ -63,6 +64,8 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   double? riderLng;
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -142,7 +145,8 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     }
   }
 
-  UpdateBookingStatusModel updateBookingStatusModel = UpdateBookingStatusModel();
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
 
   updateBookingStatus() async {
     try {
@@ -162,8 +166,10 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
       print("response: $responseString");
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
-        updateBookingStatusModel = updateBookingStatusModelFromJson(responseString);
-        print('updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        updateBookingStatusModel =
+            updateBookingStatusModelFromJson(responseString);
+        print(
+            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         if (updateBookingStatusModel.data?.status == "Accepted" ||
             updateBookingStatusModel.data?.status == "Ongoing") {
           timer?.cancel();
@@ -617,13 +623,20 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                 MaterialPageRoute(
                                                   builder: (context) =>
                                                       ChatScreen(
-                                                        callbackFunction: startTimer,
-                                                        riderId: widget.riderData!.usersFleetId.toString(),
-                                                        name: "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                        image: widget.riderData!.profilePic,
-                                                        phone: widget.riderData!.phone,
-                                                        address: widget.riderData!.address,
-                                                      ),
+                                                    callbackFunction:
+                                                        startTimer,
+                                                    riderId: widget
+                                                        .riderData!.usersFleetId
+                                                        .toString(),
+                                                    name:
+                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                    image: widget
+                                                        .riderData!.profilePic,
+                                                    phone:
+                                                        widget.riderData!.phone,
+                                                    address: widget
+                                                        .riderData!.address,
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -634,7 +647,8 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                           SizedBox(width: size.width * 0.02),
                                           GestureDetector(
                                             onTap: () {
-                                              makePhoneCall("${widget.riderData!.phone}");
+                                              makePhoneCall(
+                                                  "${widget.riderData!.phone}");
                                               // timer?.cancel();
                                               // Navigator.push(
                                               //   context,

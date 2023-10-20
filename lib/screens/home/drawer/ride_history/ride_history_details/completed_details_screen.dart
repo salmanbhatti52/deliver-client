@@ -5,15 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/completed_ride_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart'
-    as systemdata;
+    as system_data;
 
 class RideHistoryCompletedDetailsScreen extends StatefulWidget {
   final Datum? completedRideModel;
+
   const RideHistoryCompletedDetailsScreen({
     super.key,
     this.completedRideModel,
@@ -29,9 +30,11 @@ class _RideHistoryCompletedDetailsScreenState
   String? currencyUnit;
   String? distanceUnit;
   bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
-  systemdata.GetAllSystemDataModel getAllSystemDataModel =
-      systemdata.GetAllSystemDataModel();
+  system_data.GetAllSystemDataModel getAllSystemDataModel =
+      system_data.GetAllSystemDataModel();
 
   getAllSystemData() async {
     try {
@@ -51,7 +54,7 @@ class _RideHistoryCompletedDetailsScreenState
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel =
-            systemdata.getAllSystemDataModelFromJson(responseString);
+            system_data.getAllSystemDataModelFromJson(responseString);
         print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         print(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');

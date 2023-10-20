@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +38,8 @@ class _RidersListState extends State<RidersList> {
   double? distanceMeters;
   String? currentBookingId;
   String? distanceFormatted;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? imageUrl = dotenv.env['IMAGE_URL'];
 
   CreateBookingModel createBookingModel = CreateBookingModel();
 
@@ -299,14 +301,22 @@ class _RidersListState extends State<RidersList> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DriverFoundScreen(
-                                  bookingId: createBookingModel.data?.bookingsId.toString(),
-                                  fleetId: "${widget.searchRider?.usersFleetId}",
+                                  bookingId: createBookingModel.data?.bookingsId
+                                      .toString(),
+                                  fleetId:
+                                      "${widget.searchRider?.usersFleetId}",
                                   currentBookingId: currentBookingId,
-                                  passCode: createBookingModel.data?.bookingsFleet?[0].bookingsDestinations?.passcode,
+                                  passCode: createBookingModel
+                                      .data
+                                      ?.bookingsFleet?[0]
+                                      .bookingsDestinations
+                                      ?.passcode,
                                   distance: distanceKm,
                                   singleData: widget.singleData,
                                   riderData: widget.searchRider,
-                                  bookingDestinationId: createBookingModel.data?.bookingsFleet?[0].bookingsDestinationsId.toString(),
+                                  bookingDestinationId: createBookingModel.data
+                                      ?.bookingsFleet?[0].bookingsDestinationsId
+                                      .toString(),
                                 ),
                               ),
                             );

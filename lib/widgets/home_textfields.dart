@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -6,7 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/utils/baseurl.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_webservice_ex/places.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -72,11 +72,12 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   String? destinationLng;
   List<String> addresses = [];
   bool addressesVisible = false;
-  final api = DistanceMatrixAPI(mapsKey);
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? mapsKey = dotenv.env['MAPS_KEY'];
 
+  var places;
   List<PlacesSearchResult> pickUpPredictions = [];
   List<PlacesSearchResult> destinationPredictions = [];
-  final places = GoogleMapsPlaces(apiKey: mapsKey);
   GoogleMapController? mapController;
   MarkerId? selectedMarker;
   LatLng? currentLocation;
@@ -165,6 +166,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         CameraUpdate.newLatLngZoom(selectedAddressLocation!, zoomLevel));
   }
 
+<<<<<<< Updated upstream
   Future<void> calculateDistanceTime(
       String pickupCoordinates, String destinationCoordinates) async {
     final origin = pickupCoordinates;
@@ -190,6 +192,10 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   }
 
   calculateDistanceTime1() async {
+=======
+  var api;
+  calculateDistanceTime() async {
+>>>>>>> Stashed changes
     final origin =
         '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
     // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
@@ -331,6 +337,8 @@ onPickUpLocationSavedAddresses03(
   void initState() {
     super.initState();
     getAddresses();
+    api = DistanceMatrixAPI("$mapsKey");
+    places = GoogleMapsPlaces(apiKey: mapsKey);
     for (int i = 0; i < 5; i++) {
       // distances.add("");
       // durations.add("");
