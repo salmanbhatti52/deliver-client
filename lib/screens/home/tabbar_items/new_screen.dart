@@ -45,7 +45,8 @@ class _NewScreenState extends State<NewScreen> {
   TextEditingController destinationController = TextEditingController();
   TextEditingController receiversNameController = TextEditingController();
   TextEditingController receiversNumberController = TextEditingController();
-  final DraggableScrollableController dragController = DraggableScrollableController();
+  final DraggableScrollableController dragController =
+      DraggableScrollableController();
   int selectedRadio = 1;
   Map addSingleData = {};
 
@@ -326,29 +327,35 @@ class _NewScreenState extends State<NewScreen> {
       return; // Limit reached, do not add more pages
     }
     setState(() {
-      pages.add(
-          HomeTextFields(
-            currentIndex: currentIndex,
-            pageController: pageController,
-            isSelectedAddress: isSelectedAddress,
-            // distances: distances[currentIndex],
-            // durations: durations[currentIndex],
-            // pickupLats: pickupLats[currentIndex],
-            // pickupLngs: pickupLngs[currentIndex],
-            // addressLats: addressLats[currentIndex],
-            // addressLngs: addressLngs[currentIndex],
-            // currentLats: currentLats[currentIndex],
-            // currentLngs: currentLngs[currentIndex],
-            // destinationLats: destinationLats[currentIndex],
-            // destinationLngs: destinationLngs[currentIndex],
-            pickupController: pickupControllers[currentIndex],
-            destinationController: destinationControllers[currentIndex],
-            receiversNameController: receiversNameControllers[currentIndex],
-            receiversNumberController: receiversNumberControllers[currentIndex],
-          ));
+      pages.add(HomeTextFields(
+        currentIndex: currentIndex,
+        pageController: pageController,
+        isSelectedAddress: isSelectedAddress,
+        // distances: distances[currentIndex],
+        // durations: durations[currentIndex],
+        // pickupLats: pickupLats[currentIndex],
+        // pickupLngs: pickupLngs[currentIndex],
+        // addressLats: addressLats[currentIndex],
+        // addressLngs: addressLngs[currentIndex],
+        // currentLats: currentLats[currentIndex],
+        // currentLngs: currentLngs[currentIndex],
+        // destinationLats: destinationLats[currentIndex],
+        // destinationLngs: destinationLngs[currentIndex],
+        pickupController: pickupControllers[currentIndex],
+        destinationController: destinationControllers[currentIndex],
+        receiversNameController: receiversNameControllers[currentIndex],
+        receiversNumberController: receiversNumberControllers[currentIndex],
+      ));
     });
   }
 
+  // void onCoordinatesEntered(int index) {
+  //   final pickupCoordinates = pickupControllers[index].text;
+  //   final destinationCoordinates = destinationControllers[index].text;
+  //   if (pickupCoordinates.isNotEmpty && destinationCoordinates.isNotEmpty) {
+  //     calculateDistanceTime(pickupCoordinates, destinationCoordinates);
+  //   }
+  // }
   void removePage() {
     if (pages.length <= 2) {
       return; // Limit reached, do not remove more pages
@@ -403,7 +410,8 @@ class _NewScreenState extends State<NewScreen> {
 
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
-      final String currentAddress = "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
+      final String currentAddress =
+          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
 
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
@@ -623,10 +631,14 @@ class _NewScreenState extends State<NewScreen> {
   // List<String> currentLngs = List.generate(5, (_) => "");
   // List<String> destinationLats = List.generate(5, (_) => "");
   // List<String> destinationLngs = List.generate(5, (_) => "");
-  List<TextEditingController> pickupControllers = List.generate(5, (_) => TextEditingController());
-  List<TextEditingController> destinationControllers = List.generate(5, (_) => TextEditingController());
-  List<TextEditingController> receiversNameControllers = List.generate(5, (_) => TextEditingController());
-  List<TextEditingController> receiversNumberControllers = List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> pickupControllers =
+      List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> destinationControllers =
+      List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> receiversNameControllers =
+      List.generate(5, (_) => TextEditingController());
+  List<TextEditingController> receiversNumberControllers =
+      List.generate(5, (_) => TextEditingController());
 
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
@@ -1019,10 +1031,13 @@ class _NewScreenState extends State<NewScreen> {
                                       destinationLng = lng.toString();
                                       setState(() {
                                         destinationPredictions.clear();
-                                        FocusManager.instance.primaryFocus?.unfocus();
-                                        print("destinationLat: $destinationLat");
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        print(
+                                            "destinationLat: $destinationLat");
                                         print("destinationLng $destinationLng");
-                                        print("destinationLocation: ${prediction.formattedAddress}");
+                                        print(
+                                            "destinationLocation: ${prediction.formattedAddress}");
                                       });
                                     },
                                   );
@@ -1179,6 +1194,9 @@ class _NewScreenState extends State<NewScreen> {
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
+
+    List<List<String>> distances = List.generate(pages.length, (_) => []);
+    List<List<String>> durations = List.generate(pages.length, (_) => []);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -1195,54 +1213,41 @@ class _NewScreenState extends State<NewScreen> {
           },
           itemCount: pages.length,
           itemBuilder: (context, index) {
-            // Access the controllers for the current page
-            // String distance = distances[index];
-            // String duration = durations[index];
-            // String pickupLat = pickupLats[index];
-            // String pickupLng = pickupLngs[index];
-            // String addressLat = addressLats[index];
-            // String addressLng = addressLngs[index];
-            // String currentLat = currentLats[index];
-            // String currentLng = currentLngs[index];
-            // String destinationLat = destinationLats[index];
-            // String destinationLng = destinationLngs[index];
             TextEditingController pickupController = pickupControllers[index];
-            TextEditingController destinationController = destinationControllers[index];
-            TextEditingController receiversNameController = receiversNameControllers[index];
-            TextEditingController receiversNumberController = receiversNumberControllers[index];
+            TextEditingController destinationController =
+                destinationControllers[index];
+            TextEditingController receiversNameController =
+                receiversNameControllers[index];
+            TextEditingController receiversNumberController =
+                receiversNumberControllers[index];
 
             // Print the text from the controllers
             print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
-            // print('distance: $distance');
-            // print('duration: $duration');
-            // print('pickupLat: $pickupLat');
-            // print('pickupLng: $pickupLng');
-            // print('addressLat: $addressLat');
-            // print('addressLng: $addressLng');
-            // print('currentLat: $currentLat');
-            // print('currentLng: $currentLng');
-            // print('destinationLat: $destinationLat');
-            // print('destinationLng: $destinationLng');
+
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
-            print('receiversNumberController: ${receiversNumberController.text}');
+            print(
+                'receiversNumberController: ${receiversNumberController.text}');
+
+            // Calculate the distance for the current page
+            String distance = "";
+            if (distances.length > index && distances[index].isNotEmpty) {
+              if (distances[index].isNotEmpty) {
+                distance = distances[index][0];
+              }
+            }
+
+            // Print the calculated distance
+            print('Calculated Distance: $distance');
 
             return HomeTextFields(
               currentIndex: currentIndex,
               pageController: pageController,
               isSelectedAddress: isSelectedAddress,
-              // distances: distance,
-              // durations: duration,
-              // pickupLats: pickupLat,
-              // pickupLngs: pickupLng,
-              // addressLats: addressLat,
-              // addressLngs: addressLng,
-              // currentLats: currentLat,
-              // currentLngs: currentLng,
-              // destinationLats: destinationLat,
-              // destinationLngs: destinationLng,
+              distances: distances[index],
+              durations: durations[index],
               pickupController: pickupController,
               destinationController: destinationController,
               receiversNameController: receiversNameController,

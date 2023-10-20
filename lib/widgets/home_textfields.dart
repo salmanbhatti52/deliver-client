@@ -16,17 +16,10 @@ import 'package:deliver_client/models/get_addresses_model.dart';
 String? userId;
 
 class HomeTextFields extends StatefulWidget {
+  // final void Function(String, String) calculateDistanceTimeFunction;
   final int? currentIndex;
-  // String? distances;
-  // String? durations;
-  // String? pickupLats;
-  // String? pickupLngs;
-  // String? addressLats;
-  // String? addressLngs;
-  // String? currentLats;
-  // String? currentLngs;
-  // String? destinationLats;
-  // String? destinationLngs;
+  final List<String>? distances;
+  final List<String>? durations;
   final bool? isSelectedAddress;
   final PageController pageController;
   final TextEditingController pickupController;
@@ -35,25 +28,18 @@ class HomeTextFields extends StatefulWidget {
   final TextEditingController receiversNumberController;
 
   const HomeTextFields({
-    super.key,
+    Key? key,
     this.currentIndex,
     this.isSelectedAddress,
-    // this.distances,
-    // this.durations,
-    // this.pickupLats,
-    // this.pickupLngs,
-    // this.addressLats,
-    // this.addressLngs,
-    // this.currentLats,
-    // this.currentLngs,
-    // this.destinationLats,
-    // this.destinationLngs,
     required this.pageController,
     required this.pickupController,
     required this.destinationController,
     required this.receiversNameController,
     required this.receiversNumberController,
-  });
+    // required this.calculateDistanceTimeFunction,
+    this.distances = const [], // Default to an empty list
+    this.durations = const [], // Correct location
+  }) : super(key: key);
 
   @override
   State<HomeTextFields> createState() => _HomeTextFieldsState();
@@ -61,34 +47,18 @@ class HomeTextFields extends StatefulWidget {
 
 class _HomeTextFieldsState extends State<HomeTextFields> {
   bool isLoading = false;
-
-  // List<String> distances = [];
-  // List<String> durations = [];
-  // List<String> pickupLats = [];
-  // List<String> pickupLngs = [];
-  // List<String> addressLats = [];
-  // List<String> addressLngs = [];
-  // List<String> currentLats = [];
-  // List<String> currentLngs = [];
-  // List<String> destinationLats = [];
-  // List<String> destinationLngs = [];
   List<TextEditingController> pickupControllers = [];
   List<TextEditingController> destinationControllers = [];
   List<TextEditingController> receiversNameControllers = [];
   List<TextEditingController> receiversNumberControllers = [];
-
-  // late String? selectedPickupLat = pickupLats[widget.currentIndex!];
-  // late String? selectedPickupLng = pickupLngs[widget.currentIndex!];
-  // late String? selectedAddressLat = addressLats[widget.currentIndex!];
-  // late String? selectedAddressLng = addressLngs[widget.currentIndex!];
-  // late String? selectedCurrentLat = currentLats[widget.currentIndex!];
-  // late String? selectedCurrentLng = currentLngs[widget.currentIndex!];
-  // late String? selectedDestinationLat = destinationLats[widget.currentIndex!];
-  // late String? selectedDestinationLng = destinationLngs[widget.currentIndex!];
-  late TextEditingController selectedPickupController = pickupControllers[widget.currentIndex!];
-  late TextEditingController selectedDestinationController = destinationControllers[widget.currentIndex!];
-  late TextEditingController selectedReceiversNameController = receiversNameControllers[widget.currentIndex!];
-  late TextEditingController selectedReceiversNumberController = receiversNumberControllers[widget.currentIndex!];
+  late TextEditingController selectedPickupController =
+      pickupControllers[widget.currentIndex!];
+  late TextEditingController selectedDestinationController =
+      destinationControllers[widget.currentIndex!];
+  late TextEditingController selectedReceiversNameController =
+      receiversNameControllers[widget.currentIndex!];
+  late TextEditingController selectedReceiversNumberController =
+      receiversNumberControllers[widget.currentIndex!];
 
   String? distance;
   String? duration;
@@ -149,7 +119,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
-      currentAddress = "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
+      currentAddress =
+          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         selectedLocation = null; // Clear selected location
@@ -194,13 +165,37 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         CameraUpdate.newLatLngZoom(selectedAddressLocation!, zoomLevel));
   }
 
-  calculateDistanceTime() async {
+  Future<void> calculateDistanceTime(
+      String pickupCoordinates, String destinationCoordinates) async {
+    final origin = pickupCoordinates;
+    final destination = destinationCoordinates;
+
+    try {
+      final data = await api.getDistanceAndTime(origin, destination);
+      widget.distances!.add(data['rows'][0]['elements'][0]['distance']['text']);
+      widget.durations!.add(data['rows'][0]['elements'][0]['duration']['text']);
+    } catch (e) {
+      print("Error: $e");
+      widget.distances!.add(""); // Handle the error case
+      widget.durations!.add(""); // Handle the error case
+    }
+  }
+
+  void calculateDistanceTimeOnCoordinatesEntered() {
+    final pickupCoordinates = widget.pickupController.text;
+    final destinationCoordinates = widget.destinationController.text;
+    if (pickupCoordinates.isNotEmpty && destinationCoordinates.isNotEmpty) {
+      calculateDistanceTime(pickupCoordinates, destinationCoordinates);
+    }
+  }
+
+  calculateDistanceTime1() async {
     final origin =
         '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
-        // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
+    // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
     final destination =
         '$destinationLat,$destinationLng'; // Format coordinates as "latitude,longitude"
-        // '${widget.destinationLats},${widget.destinationLngs}'; // Format coordinates as "latitude,longitude"
+    // '${widget.destinationLats},${widget.destinationLngs}'; // Format coordinates as "latitude,longitude"
     try {
       final data = await api.getDistanceAndTime(origin, destination);
       distance = data['rows'][0]['elements'][0]['distance']['text'];
@@ -215,6 +210,82 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
       print("Error: $e");
     }
   }
+
+  List<String> pickupLatList = [];
+  List<String> pickupLngList = [];
+  List<String> addressLatList = [];
+  List<String> addressLngList = [];
+  List<String> currentLatList = [];
+  List<String> currentLngList = [];
+  List<String> destinationLatList = [];
+  List<String> destinationLngList = [];
+
+  onPickUpLocationSelected01(LatLng location, double zoomLevel, int index) {
+    pickupControllers[index].text =
+        "${location.latitude}, ${location.longitude}";
+    pickupLatList[index] = location.latitude.toString();
+    pickupLngList[index] = location.longitude.toString();
+    // Update other variables as needed
+  }
+
+  onPickUpLocationSavedAddresses01(
+      LatLng location, double zoomLevel, int index) {
+    pickupControllers[index].text =
+        "${location.latitude}, ${location.longitude}";
+    addressLatList[index] = location.latitude.toString();
+    addressLngList[index] = location.longitude.toString();
+    // Update other variables as needed
+  }
+
+  Future<void> calculateDistanceTime01() async {
+    for (int i = 0; i < pickupLatList.length; i++) {
+      final origin =
+          '${pickupLatList[i] ?? currentLatList[i] ?? addressLatList[i]},${pickupLngList[i] ?? currentLngList[i] ?? addressLngList[i]}';
+      final destination = '${destinationLatList[i]},${destinationLngList[i]}';
+
+      try {
+        final data = await api.getDistanceAndTime(origin, destination);
+        String distance = data['rows'][0]['elements'][0]['distance']['text'];
+        String duration = data['rows'][0]['elements'][0]['duration']['text'];
+        print("Distance for pair $i: $distance");
+        print("Duration for pair $i: $duration");
+        // You can store or process the distance and duration as needed
+      } catch (e) {
+        print("Error: $e");
+        // Handle the error case if necessary
+      }
+    }
+  }
+
+  onPickUpLocationSavedAddresses02(
+      LatLng location, double zoomLevel, int index) {
+    pickupControllers[index].text =
+        "${location.latitude}, ${location.longitude}";
+    pickupLatList[index] = location.latitude.toString();
+    pickupLngList[index] = location.longitude.toString();
+    // Update other variables as needed
+  }
+
+
+onPickUpLocationSelected03(LatLng location, double zoomLevel, int index) {
+    pickupControllers[index].text =
+        "${location.latitude}, ${location.longitude}";
+    pickupLatList[index] = location.latitude.toString();
+    pickupLngList[index] = location.longitude.toString();
+    // Update other variables as needed
+}
+
+onPickUpLocationSavedAddresses03(
+    LatLng location, double zoomLevel, int index) {
+    pickupControllers[index].text =
+        "${location.latitude}, ${location.longitude}";
+    addressLatList[index] = location.latitude.toString();
+    addressLngList[index] = location.longitude.toString();
+    // Update other variables as needed
+}
+
+
+
 
   GetAddressesModel getAddressesModel = GetAddressesModel();
 
@@ -276,6 +347,13 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
       receiversNameControllers.add(TextEditingController());
       receiversNumberControllers.add(TextEditingController());
     }
+
+    for (int i = 0; i < 5; i++) {
+      pickupControllers.add(TextEditingController());
+      destinationControllers.add(TextEditingController());
+    }
+
+
   }
 
   @override
@@ -397,6 +475,10 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                               zoomLevel);
                                           addressLat = savedLat.toString();
                                           addressLng = savedLng.toString();
+                                          onPickUpLocationSavedAddresses02(
+                                              LatLng(savedLat, savedLng),
+                                              zoomLevel,
+                                              index);
                                           // widget.addressLats = savedLat.toString();
                                           // widget.addressLngs = savedLng.toString();
                                           setState(() {
@@ -406,7 +488,15 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                             print("addressLng $addressLng");
                                             // print("addressLat: ${widget.addressLats}");
                                             // print("addressLng ${widget.addressLngs}");
-                                            print("addressLocation: ${addresses.address}");
+                                            print(
+                                                "addressLocation: ${addresses.address}");
+
+                                            print(
+                                                "addressLat: ${addressLatList[index]}");
+                                            print(
+                                                "addressLng: ${addressLngList[index]}");
+                                            print(
+                                                "addressLocation: ${addresses.address}");
                                           });
                                           // Move the map camera to the selected location
                                           mapController?.animateCamera(
@@ -496,7 +586,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                   onTap: () {
                                     getCurrentLocation();
                                     print("index: ${widget.currentIndex}");
-                                    widget.pickupController.text = currentAddress;
+                                    widget.pickupController.text =
+                                        currentAddress;
                                   },
                                   child: Container(
                                     color: transparentColor,
@@ -525,31 +616,41 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                     scrollDirection: Axis.vertical,
                                     itemCount: pickUpPredictions.length,
                                     itemBuilder: (context, index) {
-                                      final prediction = pickUpPredictions[index];
+                                      final prediction =
+                                          pickUpPredictions[index];
                                       return ListTile(
                                         title: Text(prediction.name),
-                                        subtitle: Text(prediction.formattedAddress ?? ''),
+                                        subtitle: Text(
+                                            prediction.formattedAddress ?? ''),
                                         onTap: () {
-                                          widget.pickupController.text = prediction.formattedAddress!;
-                                          final double lat = prediction.geometry!.location.lat;
-                                          final double lng = prediction.geometry!.location.lng;
+                                          widget.pickupController.text =
+                                              prediction.formattedAddress!;
+                                          final double lat =
+                                              prediction.geometry!.location.lat;
+                                          final double lng =
+                                              prediction.geometry!.location.lng;
                                           const double zoomLevel = 15.0;
-                                          onPickUpLocationSelected(LatLng(lat, lng), zoomLevel);
+                                          onPickUpLocationSelected(
+                                              LatLng(lat, lng), zoomLevel);
                                           pickupLat = lat.toString();
                                           pickupLng = lng.toString();
                                           // widget.pickupLats = lat.toString();
                                           // widget.pickupLngs = lng.toString();
                                           setState(() {
                                             pickUpPredictions.clear();
-                                            FocusManager.instance.primaryFocus?.unfocus();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
                                             print("pickupLat: $pickupLat");
                                             print("pickupLng $pickupLng");
                                             // print("pickupLat: ${widget.pickupLats}");
                                             // print("pickupLng ${widget.pickupLngs}");
-                                            print("pickupLocation: ${prediction.formattedAddress}");
+                                            print(
+                                                "pickupLocation: ${prediction.formattedAddress}");
                                           });
                                           // Move the map camera to the selected location
-                                          mapController?.animateCamera(CameraUpdate.newLatLng(selectedLocation!),
+                                          mapController?.animateCamera(
+                                            CameraUpdate.newLatLng(
+                                                selectedLocation!),
                                           );
                                         },
                                       );
@@ -574,6 +675,14 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                       TextFormField(
                         controller: widget.destinationController,
                         onChanged: (value) {
+                          final pickupCoordinates =
+                              widget.pickupController.text;
+                          final destinationCoordinates =
+                              value; // Use the new destination value
+                          if (pickupCoordinates.isNotEmpty &&
+                              destinationCoordinates.isNotEmpty) {
+                            calculateDistanceTimeOnCoordinatesEntered();
+                          }
                           searchDestinationPlaces(value);
                         },
                         onTap: () {
@@ -649,26 +758,33 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                               scrollDirection: Axis.vertical,
                               itemCount: destinationPredictions.length,
                               itemBuilder: (context, index) {
-                                final prediction = destinationPredictions[index];
+                                final prediction =
+                                    destinationPredictions[index];
                                 return ListTile(
                                   title: Text(prediction.name),
-                                  subtitle: Text(prediction.formattedAddress ?? ''),
+                                  subtitle:
+                                      Text(prediction.formattedAddress ?? ''),
                                   onTap: () {
-                                    widget.destinationController.text = prediction.formattedAddress!;
-                                    final double lat = prediction.geometry!.location.lat;
-                                    final double lng = prediction.geometry!.location.lng;
+                                    widget.destinationController.text =
+                                        prediction.formattedAddress!;
+                                    final double lat =
+                                        prediction.geometry!.location.lat;
+                                    final double lng =
+                                        prediction.geometry!.location.lng;
                                     destinationLat = lat.toString();
                                     destinationLng = lng.toString();
                                     // widget.destinationLats = lat.toString();
                                     // widget.destinationLngs = lng.toString();
                                     setState(() {
                                       destinationPredictions.clear();
-                                      FocusManager.instance.primaryFocus?.unfocus();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                       print("destinationLat: $destinationLat");
                                       print("destinationLng $destinationLng");
                                       // print("destinationLat: ${widget.destinationLats}");
                                       // print("destinationLng ${widget.destinationLngs}");
-                                      print("destinationLocation: ${prediction.formattedAddress}");
+                                      print(
+                                          "destinationLocation: ${prediction.formattedAddress}");
                                     });
                                   },
                                 );
