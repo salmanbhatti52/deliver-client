@@ -46,19 +46,22 @@ class HomeTextFields extends StatefulWidget {
 }
 
 class _HomeTextFieldsState extends State<HomeTextFields> {
-  bool isLoading = false;
   List<TextEditingController> pickupControllers = [];
   List<TextEditingController> destinationControllers = [];
   List<TextEditingController> receiversNameControllers = [];
   List<TextEditingController> receiversNumberControllers = [];
   late TextEditingController selectedPickupController =
-      pickupControllers[widget.currentIndex!];
+  pickupControllers[widget.currentIndex!];
   late TextEditingController selectedDestinationController =
-      destinationControllers[widget.currentIndex!];
+  destinationControllers[widget.currentIndex!];
   late TextEditingController selectedReceiversNameController =
-      receiversNameControllers[widget.currentIndex!];
+  receiversNameControllers[widget.currentIndex!];
   late TextEditingController selectedReceiversNumberController =
-      receiversNumberControllers[widget.currentIndex!];
+  receiversNumberControllers[widget.currentIndex!];
+
+  bool isLoading = false;
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? mapsKey = dotenv.env['MAPS_KEY'];
 
   String? distance;
   String? duration;
@@ -72,8 +75,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   String? destinationLng;
   List<String> addresses = [];
   bool addressesVisible = false;
-  String? baseUrl = dotenv.env['BASE_URL'];
-  String? mapsKey = dotenv.env['MAPS_KEY'];
 
   var places;
   List<PlacesSearchResult> pickUpPredictions = [];
@@ -117,11 +118,11 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
     );
 
     final List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    await placemarkFromCoordinates(position.latitude, position.longitude);
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
       currentAddress =
-          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
+      "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         selectedLocation = null; // Clear selected location
@@ -166,7 +167,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         CameraUpdate.newLatLngZoom(selectedAddressLocation!, zoomLevel));
   }
 
-<<<<<<< Updated upstream
   Future<void> calculateDistanceTime(
       String pickupCoordinates, String destinationCoordinates) async {
     final origin = pickupCoordinates;
@@ -191,11 +191,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
     }
   }
 
-  calculateDistanceTime1() async {
-=======
   var api;
-  calculateDistanceTime() async {
->>>>>>> Stashed changes
+  calculateDistanceTime1() async {
     final origin =
         '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
     // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
@@ -228,7 +225,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
 
   onPickUpLocationSelected01(LatLng location, double zoomLevel, int index) {
     pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
+    "${location.latitude}, ${location.longitude}";
     pickupLatList[index] = location.latitude.toString();
     pickupLngList[index] = location.longitude.toString();
     // Update other variables as needed
@@ -237,7 +234,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   onPickUpLocationSavedAddresses01(
       LatLng location, double zoomLevel, int index) {
     pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
+    "${location.latitude}, ${location.longitude}";
     addressLatList[index] = location.latitude.toString();
     addressLngList[index] = location.longitude.toString();
     // Update other variables as needed
@@ -266,29 +263,29 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   onPickUpLocationSavedAddresses02(
       LatLng location, double zoomLevel, int index) {
     pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
+    "${location.latitude}, ${location.longitude}";
     pickupLatList[index] = location.latitude.toString();
     pickupLngList[index] = location.longitude.toString();
     // Update other variables as needed
   }
 
 
-onPickUpLocationSelected03(LatLng location, double zoomLevel, int index) {
+  onPickUpLocationSelected03(LatLng location, double zoomLevel, int index) {
     pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
+    "${location.latitude}, ${location.longitude}";
     pickupLatList[index] = location.latitude.toString();
     pickupLngList[index] = location.longitude.toString();
     // Update other variables as needed
-}
+  }
 
-onPickUpLocationSavedAddresses03(
-    LatLng location, double zoomLevel, int index) {
+  onPickUpLocationSavedAddresses03(
+      LatLng location, double zoomLevel, int index) {
     pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
+    "${location.latitude}, ${location.longitude}";
     addressLatList[index] = location.latitude.toString();
     addressLngList[index] = location.longitude.toString();
     // Update other variables as needed
-}
+  }
 
 
 
@@ -340,28 +337,11 @@ onPickUpLocationSavedAddresses03(
     api = DistanceMatrixAPI("$mapsKey");
     places = GoogleMapsPlaces(apiKey: mapsKey);
     for (int i = 0; i < 5; i++) {
-      // distances.add("");
-      // durations.add("");
-      // pickupLats.add("");
-      // pickupLngs.add("");
-      // addressLats.add("");
-      // addressLngs.add("");
-      // currentLats.add("");
-      // currentLngs.add("");
-      // destinationLats.add(widget.destinationLngs ?? "");
-      // destinationLngs.add(widget.destinationLngs ?? "");
       pickupControllers.add(TextEditingController());
       destinationControllers.add(TextEditingController());
       receiversNameControllers.add(TextEditingController());
       receiversNumberControllers.add(TextEditingController());
     }
-
-    for (int i = 0; i < 5; i++) {
-      pickupControllers.add(TextEditingController());
-      destinationControllers.add(TextEditingController());
-    }
-
-
   }
 
   @override
@@ -380,300 +360,300 @@ onPickUpLocationSavedAddresses03(
               children: [
                 widget.isSelectedAddress == true
                     ? Container(
-                        color: transparentColor,
-                        width: size.width * 0.8,
-                        child: Stack(
-                          children: [
-                            TextFormField(
-                              controller: widget.pickupController,
-                              onChanged: (value) {
-                                addresses.toList();
-                              },
-                              onTap: () {
-                                setState(() {
-                                  addressesVisible =
-                                      true; // Show the list when the text field is tapped.
-                                });
-                              },
-                              cursorColor: orangeColor,
-                              keyboardType: TextInputType.text,
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 14,
-                                fontFamily: 'Inter-Regular',
-                              ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: filledColor,
-                                errorStyle: TextStyle(
-                                  color: redColor,
-                                  fontSize: 10,
-                                  fontFamily: 'Inter-Bold',
-                                ),
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide(
-                                    color: redColor,
-                                    width: 1,
-                                  ),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                hintText: "Pickup Location",
-                                hintStyle: TextStyle(
-                                  color: hintColor,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter-Light',
-                                ),
-                              ),
-                            ),
-                            if (addressesVisible)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 40),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: filledColor,
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
-                                    ),
-                                  ),
-                                  width: size.width * 0.8,
-                                  height: size.height * 0.2,
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: getAddressesModel.data!.length,
-                                    itemBuilder: (context, index) {
-                                      final addresses =
-                                          getAddressesModel.data![index];
-                                      return ListTile(
-                                        title: Text("${addresses.name}"),
-                                        subtitle: Text(addresses.address ?? ''),
-                                        onTap: () {
-                                          addressesVisible = false;
-                                          widget.pickupController.text =
-                                              "${addresses.address}";
-                                          final double savedLat = double.parse(
-                                              "${addresses.latitude}");
-                                          final double savedLng = double.parse(
-                                              "${addresses.longitude}");
-                                          const double zoomLevel = 15.0;
-                                          onPickUpLocationSavedAddresses(
-                                              LatLng(savedLat, savedLng),
-                                              zoomLevel);
-                                          addressLat = savedLat.toString();
-                                          addressLng = savedLng.toString();
-                                          onPickUpLocationSavedAddresses02(
-                                              LatLng(savedLat, savedLng),
-                                              zoomLevel,
-                                              index);
-                                          // widget.addressLats = savedLat.toString();
-                                          // widget.addressLngs = savedLng.toString();
-                                          setState(() {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            print("addressLat: $addressLat");
-                                            print("addressLng $addressLng");
-                                            // print("addressLat: ${widget.addressLats}");
-                                            // print("addressLng ${widget.addressLngs}");
-                                            print(
-                                                "addressLocation: ${addresses.address}");
-
-                                            print(
-                                                "addressLat: ${addressLatList[index]}");
-                                            print(
-                                                "addressLng: ${addressLngList[index]}");
-                                            print(
-                                                "addressLocation: ${addresses.address}");
-                                          });
-                                          // Move the map camera to the selected location
-                                          mapController?.animateCamera(
-                                              CameraUpdate.newLatLng(
-                                                  selectedAddressLocation!));
-                                        },
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return Divider(
-                                        color: textHaveAccountColor,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                          ],
+                  color: transparentColor,
+                  width: size.width * 0.8,
+                  child: Stack(
+                    children: [
+                      TextFormField(
+                        controller: widget.pickupController,
+                        onChanged: (value) {
+                          addresses.toList();
+                        },
+                        onTap: () {
+                          setState(() {
+                            addressesVisible =
+                            true; // Show the list when the text field is tapped.
+                          });
+                        },
+                        cursorColor: orangeColor,
+                        keyboardType: TextInputType.text,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 14,
+                          fontFamily: 'Inter-Regular',
                         ),
-                      )
-                    : Container(
-                        color: transparentColor,
-                        width: size.width * 0.8,
-                        child: Stack(
-                          children: [
-                            TextFormField(
-                              controller: widget.pickupController,
-                              onChanged: (value) {
-                                searchPickUpPlaces(value);
-                              },
-                              onTap: () {
-                                // pickupController.clear();
-                                pickUpPredictions.clear();
-                              },
-                              cursorColor: orangeColor,
-                              keyboardType: TextInputType.text,
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 14,
-                                fontFamily: 'Inter-Regular',
-                              ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: filledColor,
-                                errorStyle: TextStyle(
-                                  color: redColor,
-                                  fontSize: 10,
-                                  fontFamily: 'Inter-Bold',
-                                ),
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide(
-                                    color: redColor,
-                                    width: 1,
-                                  ),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 10,
-                                ),
-                                hintText: "Pickup Location",
-                                hintStyle: TextStyle(
-                                  color: hintColor,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter-Light',
-                                ),
-                                suffixIcon: GestureDetector(
-                                  onTap: () {
-                                    getCurrentLocation();
-                                    print("index: ${widget.currentIndex}");
-                                    widget.pickupController.text =
-                                        currentAddress;
-                                  },
-                                  child: Container(
-                                    color: transparentColor,
-                                    child: SvgPicture.asset(
-                                      'assets/images/gps-icon.svg',
-                                      fit: BoxFit.scaleDown,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: filledColor,
+                          errorStyle: TextStyle(
+                            color: redColor,
+                            fontSize: 10,
+                            fontFamily: 'Inter-Bold',
+                          ),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
                             ),
-                            if (pickUpPredictions.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 40),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: filledColor,
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
-                                    ),
-                                  ),
-                                  width: size.width * 0.8,
-                                  height: size.height * 0.2,
-                                  child: ListView.separated(
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: pickUpPredictions.length,
-                                    itemBuilder: (context, index) {
-                                      final prediction =
-                                          pickUpPredictions[index];
-                                      return ListTile(
-                                        title: Text(prediction.name),
-                                        subtitle: Text(
-                                            prediction.formattedAddress ?? ''),
-                                        onTap: () {
-                                          widget.pickupController.text =
-                                              prediction.formattedAddress!;
-                                          final double lat =
-                                              prediction.geometry!.location.lat;
-                                          final double lng =
-                                              prediction.geometry!.location.lng;
-                                          const double zoomLevel = 15.0;
-                                          onPickUpLocationSelected(
-                                              LatLng(lat, lng), zoomLevel);
-                                          pickupLat = lat.toString();
-                                          pickupLng = lng.toString();
-                                          // widget.pickupLats = lat.toString();
-                                          // widget.pickupLngs = lng.toString();
-                                          setState(() {
-                                            pickUpPredictions.clear();
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            print("pickupLat: $pickupLat");
-                                            print("pickupLng $pickupLng");
-                                            // print("pickupLat: ${widget.pickupLats}");
-                                            // print("pickupLng ${widget.pickupLngs}");
-                                            print(
-                                                "pickupLocation: ${prediction.formattedAddress}");
-                                          });
-                                          // Move the map camera to the selected location
-                                          mapController?.animateCamera(
-                                            CameraUpdate.newLatLng(
-                                                selectedLocation!),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return Divider(
-                                        color: textHaveAccountColor,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                          ],
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide(
+                              color: redColor,
+                              width: 1,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          hintText: "Pickup Location",
+                          hintStyle: TextStyle(
+                            color: hintColor,
+                            fontSize: 12,
+                            fontFamily: 'Inter-Light',
+                          ),
                         ),
                       ),
+                      if (addressesVisible)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: filledColor,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                              ),
+                            ),
+                            width: size.width * 0.8,
+                            height: size.height * 0.2,
+                            child: ListView.separated(
+                              scrollDirection: Axis.vertical,
+                              itemCount: getAddressesModel.data!.length,
+                              itemBuilder: (context, index) {
+                                final addresses =
+                                getAddressesModel.data![index];
+                                return ListTile(
+                                  title: Text("${addresses.name}"),
+                                  subtitle: Text(addresses.address ?? ''),
+                                  onTap: () {
+                                    addressesVisible = false;
+                                    widget.pickupController.text =
+                                    "${addresses.address}";
+                                    final double savedLat = double.parse(
+                                        "${addresses.latitude}");
+                                    final double savedLng = double.parse(
+                                        "${addresses.longitude}");
+                                    const double zoomLevel = 15.0;
+                                    onPickUpLocationSavedAddresses(
+                                        LatLng(savedLat, savedLng),
+                                        zoomLevel);
+                                    addressLat = savedLat.toString();
+                                    addressLng = savedLng.toString();
+                                    onPickUpLocationSavedAddresses02(
+                                        LatLng(savedLat, savedLng),
+                                        zoomLevel,
+                                        index);
+                                    // widget.addressLats = savedLat.toString();
+                                    // widget.addressLngs = savedLng.toString();
+                                    setState(() {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      print("addressLat: $addressLat");
+                                      print("addressLng $addressLng");
+                                      // print("addressLat: ${widget.addressLats}");
+                                      // print("addressLng ${widget.addressLngs}");
+                                      print(
+                                          "addressLocation: ${addresses.address}");
+
+                                      print(
+                                          "addressLat: ${addressLatList[index]}");
+                                      print(
+                                          "addressLng: ${addressLngList[index]}");
+                                      print(
+                                          "addressLocation: ${addresses.address}");
+                                    });
+                                    // Move the map camera to the selected location
+                                    mapController?.animateCamera(
+                                        CameraUpdate.newLatLng(
+                                            selectedAddressLocation!));
+                                  },
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  color: textHaveAccountColor,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+                    : Container(
+                  color: transparentColor,
+                  width: size.width * 0.8,
+                  child: Stack(
+                    children: [
+                      TextFormField(
+                        controller: widget.pickupController,
+                        onChanged: (value) {
+                          searchPickUpPlaces(value);
+                        },
+                        onTap: () {
+                          // pickupController.clear();
+                          pickUpPredictions.clear();
+                        },
+                        cursorColor: orangeColor,
+                        keyboardType: TextInputType.text,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 14,
+                          fontFamily: 'Inter-Regular',
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: filledColor,
+                          errorStyle: TextStyle(
+                            color: redColor,
+                            fontSize: 10,
+                            fontFamily: 'Inter-Bold',
+                          ),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide(
+                              color: redColor,
+                              width: 1,
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          hintText: "Pickup Location",
+                          hintStyle: TextStyle(
+                            color: hintColor,
+                            fontSize: 12,
+                            fontFamily: 'Inter-Light',
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              getCurrentLocation();
+                              print("index: ${widget.currentIndex}");
+                              widget.pickupController.text =
+                                  currentAddress;
+                            },
+                            child: Container(
+                              color: transparentColor,
+                              child: SvgPicture.asset(
+                                'assets/images/gps-icon.svg',
+                                fit: BoxFit.scaleDown,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (pickUpPredictions.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: filledColor,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
+                              ),
+                            ),
+                            width: size.width * 0.8,
+                            height: size.height * 0.2,
+                            child: ListView.separated(
+                              scrollDirection: Axis.vertical,
+                              itemCount: pickUpPredictions.length,
+                              itemBuilder: (context, index) {
+                                final prediction =
+                                pickUpPredictions[index];
+                                return ListTile(
+                                  title: Text(prediction.name),
+                                  subtitle: Text(
+                                      prediction.formattedAddress ?? ''),
+                                  onTap: () {
+                                    widget.pickupController.text =
+                                    prediction.formattedAddress!;
+                                    final double lat =
+                                        prediction.geometry!.location.lat;
+                                    final double lng =
+                                        prediction.geometry!.location.lng;
+                                    const double zoomLevel = 15.0;
+                                    onPickUpLocationSelected(
+                                        LatLng(lat, lng), zoomLevel);
+                                    pickupLat = lat.toString();
+                                    pickupLng = lng.toString();
+                                    // widget.pickupLats = lat.toString();
+                                    // widget.pickupLngs = lng.toString();
+                                    setState(() {
+                                      pickUpPredictions.clear();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      print("pickupLat: $pickupLat");
+                                      print("pickupLng $pickupLng");
+                                      // print("pickupLat: ${widget.pickupLats}");
+                                      // print("pickupLng ${widget.pickupLngs}");
+                                      print(
+                                          "pickupLocation: ${prediction.formattedAddress}");
+                                    });
+                                    // Move the map camera to the selected location
+                                    mapController?.animateCamera(
+                                      CameraUpdate.newLatLng(
+                                          selectedLocation!),
+                                    );
+                                  },
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  color: textHaveAccountColor,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
                 SizedBox(height: size.height * 0.015),
                 Container(
                   color: transparentColor,
@@ -767,14 +747,14 @@ onPickUpLocationSavedAddresses03(
                               itemCount: destinationPredictions.length,
                               itemBuilder: (context, index) {
                                 final prediction =
-                                    destinationPredictions[index];
+                                destinationPredictions[index];
                                 return ListTile(
                                   title: Text(prediction.name),
                                   subtitle:
-                                      Text(prediction.formattedAddress ?? ''),
+                                  Text(prediction.formattedAddress ?? ''),
                                   onTap: () {
                                     widget.destinationController.text =
-                                        prediction.formattedAddress!;
+                                    prediction.formattedAddress!;
                                     final double lat =
                                         prediction.geometry!.location.lat;
                                     final double lng =

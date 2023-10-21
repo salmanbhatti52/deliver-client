@@ -46,14 +46,11 @@ class _NewScreenState extends State<NewScreen> {
   TextEditingController receiversNameController = TextEditingController();
   TextEditingController receiversNumberController = TextEditingController();
   final DraggableScrollableController dragController =
-      DraggableScrollableController();
-<<<<<<< Updated upstream
-=======
+  DraggableScrollableController();
 
   String? baseUrl = dotenv.env['BASE_URL'];
   String? mapsKey = dotenv.env['MAPS_KEY'];
 
->>>>>>> Stashed changes
   int selectedRadio = 1;
   Map addSingleData = {};
   Map addScheduledSingleData = {};
@@ -209,7 +206,7 @@ class _NewScreenState extends State<NewScreen> {
   }
 
   GetVehiclesByServiceTypeModel getVehiclesByServiceTypeModel =
-      GetVehiclesByServiceTypeModel();
+  GetVehiclesByServiceTypeModel();
 
   getVehiclesByServiceType(String? serviceId) async {
     try {
@@ -411,7 +408,7 @@ class _NewScreenState extends State<NewScreen> {
     );
 
     final List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    await placemarkFromCoordinates(position.latitude, position.longitude);
 
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
@@ -557,74 +554,74 @@ class _NewScreenState extends State<NewScreen> {
         backgroundColor: bgColor,
         body: doubleSystemLat != null
             ? Container(
+          color: transparentColor,
+          width: size.width,
+          height: size.height,
+          child: Stack(
+            children: [
+              Container(
                 color: transparentColor,
                 width: size.width,
-                height: size.height,
-                child: Stack(
-                  children: [
-                    Container(
-                      color: transparentColor,
-                      width: size.width,
-                      height: size.height * 0.631,
-                      child: GoogleMap(
-                        onMapCreated: (controller) {
-                          mapController = controller;
-                        },
-                        mapType: MapType.normal,
-                        myLocationEnabled: true,
-                        zoomControlsEnabled: false,
-                        padding: const EdgeInsets.only(top: 410, right: 10),
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            doubleSystemLat != null ? doubleSystemLat! : 0.0,
-                            doubleSystemLng != null ? doubleSystemLng! : 0.0,
-                          ),
-                          zoom: 6,
-                        ),
-                        markers: {
-                          if (currentLocation != null)
-                            Marker(
-                              markerId: const MarkerId('currentLocation'),
-                              position: currentLocation!,
-                              icon: customMarkerIcon ??
-                                  BitmapDescriptor.defaultMarker,
-                            ),
-                          if (selectedLocation != null)
-                            Marker(
-                              markerId: const MarkerId('selectedLocation'),
-                              position: selectedLocation!,
-                              icon: customMarkerIcon ??
-                                  BitmapDescriptor.defaultMarker,
-                            ),
-                          if (selectedAddressLocation != null)
-                            Marker(
-                              markerId:
-                                  const MarkerId('selectedAddressLocation'),
-                              position: selectedAddressLocation!,
-                              icon: customMarkerIcon ??
-                                  BitmapDescriptor.defaultMarker,
-                            ),
-                        },
-                      ),
+                height: size.height * 0.631,
+                child: GoogleMap(
+                  onMapCreated: (controller) {
+                    mapController = controller;
+                  },
+                  mapType: MapType.normal,
+                  myLocationEnabled: true,
+                  zoomControlsEnabled: false,
+                  padding: const EdgeInsets.only(top: 410, right: 10),
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      doubleSystemLat != null ? doubleSystemLat! : 0.0,
+                      doubleSystemLng != null ? doubleSystemLng! : 0.0,
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: bottomDetailsSheet(), // Add the bottom sheet here
-                    ),
-                  ],
-                ),
-              )
-            : Center(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: transparentColor,
-                  child: lottie.Lottie.asset(
-                    'assets/images/loading-icon.json',
-                    fit: BoxFit.cover,
+                    zoom: 6,
                   ),
+                  markers: {
+                    if (currentLocation != null)
+                      Marker(
+                        markerId: const MarkerId('currentLocation'),
+                        position: currentLocation!,
+                        icon: customMarkerIcon ??
+                            BitmapDescriptor.defaultMarker,
+                      ),
+                    if (selectedLocation != null)
+                      Marker(
+                        markerId: const MarkerId('selectedLocation'),
+                        position: selectedLocation!,
+                        icon: customMarkerIcon ??
+                            BitmapDescriptor.defaultMarker,
+                      ),
+                    if (selectedAddressLocation != null)
+                      Marker(
+                        markerId:
+                        const MarkerId('selectedAddressLocation'),
+                        position: selectedAddressLocation!,
+                        icon: customMarkerIcon ??
+                            BitmapDescriptor.defaultMarker,
+                      ),
+                  },
                 ),
               ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: bottomDetailsSheet(), // Add the bottom sheet here
+              ),
+            ],
+          ),
+        )
+            : Center(
+          child: Container(
+            width: 100,
+            height: 100,
+            color: transparentColor,
+            child: lottie.Lottie.asset(
+              'assets/images/loading-icon.json',
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -640,13 +637,13 @@ class _NewScreenState extends State<NewScreen> {
   // List<String> destinationLats = List.generate(5, (_) => "");
   // List<String> destinationLngs = List.generate(5, (_) => "");
   List<TextEditingController> pickupControllers =
-      List.generate(5, (_) => TextEditingController());
+  List.generate(5, (_) => TextEditingController());
   List<TextEditingController> destinationControllers =
-      List.generate(5, (_) => TextEditingController());
+  List.generate(5, (_) => TextEditingController());
   List<TextEditingController> receiversNameControllers =
-      List.generate(5, (_) => TextEditingController());
+  List.generate(5, (_) => TextEditingController());
   List<TextEditingController> receiversNumberControllers =
-      List.generate(5, (_) => TextEditingController());
+  List.generate(5, (_) => TextEditingController());
 
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
@@ -665,279 +662,279 @@ class _NewScreenState extends State<NewScreen> {
                 children: [
                   isSelectedAddress == true
                       ? Container(
-                          color: transparentColor,
-                          width: size.width * 0.8,
-                          child: Stack(
-                            children: [
-                              TextFormField(
-                                controller: pickupController,
-                                onChanged: (value) {
-                                  addresses.toList();
-                                },
-                                onTap: () {
-                                  setState(() {
-                                    addressesVisible =
-                                        true; // Show the list when the text field is tapped.
-                                  });
-                                },
-                                cursorColor: orangeColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter-Regular',
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: filledColor,
-                                  errorStyle: TextStyle(
-                                    color: redColor,
-                                    fontSize: 10,
-                                    fontFamily: 'Inter-Bold',
-                                  ),
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: redColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  hintText: "Pickup Location",
-                                  hintStyle: TextStyle(
-                                    color: hintColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Light',
-                                  ),
-                                ),
-                              ),
-                              if (addressesVisible)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 40),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: filledColor,
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    width: size.width * 0.8,
-                                    height: size.height * 0.2,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: getAddressesModel.data!.length,
-                                      itemBuilder: (context, index) {
-                                        final addresses =
-                                            getAddressesModel.data![index];
-                                        return ListTile(
-                                          title: Text("${addresses.name}"),
-                                          subtitle:
-                                              Text(addresses.address ?? ''),
-                                          onTap: () {
-                                            addressesVisible = false;
-                                            pickupController.text =
-                                                "${addresses.address}";
-                                            final double savedLat =
-                                                double.parse(
-                                                    "${addresses.latitude}");
-                                            final double savedLng =
-                                                double.parse(
-                                                    "${addresses.longitude}");
-                                            const double zoomLevel = 15.0;
-                                            onPickUpLocationSavedAddresses(
-                                                LatLng(savedLat, savedLng),
-                                                zoomLevel);
-                                            addressLat = savedLat.toString();
-                                            addressLng = savedLng.toString();
-                                            setState(() {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              print("addressLat: $addressLat");
-                                              print("addressLng $addressLng");
-                                              print(
-                                                  "addressLocation: ${addresses.address}");
-                                            });
-                                            // Move the map camera to the selected location
-                                            mapController?.animateCamera(
-                                                CameraUpdate.newLatLng(
-                                                    selectedAddressLocation!));
-                                          },
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return Divider(
-                                          color: textHaveAccountColor,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                            ],
+                    color: transparentColor,
+                    width: size.width * 0.8,
+                    child: Stack(
+                      children: [
+                        TextFormField(
+                          controller: pickupController,
+                          onChanged: (value) {
+                            addresses.toList();
+                          },
+                          onTap: () {
+                            setState(() {
+                              addressesVisible =
+                              true; // Show the list when the text field is tapped.
+                            });
+                          },
+                          cursorColor: orangeColor,
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
                           ),
-                        )
-                      : Container(
-                          color: transparentColor,
-                          width: size.width * 0.8,
-                          child: Stack(
-                            children: [
-                              TextFormField(
-                                controller: pickupController,
-                                onChanged: (value) {
-                                  searchPickUpPlaces(value);
-                                },
-                                onTap: () {
-                                  // pickupController.clear();
-                                  pickUpPredictions.clear();
-                                },
-                                cursorColor: orangeColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter-Regular',
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: filledColor,
-                                  errorStyle: TextStyle(
-                                    color: redColor,
-                                    fontSize: 10,
-                                    fontFamily: 'Inter-Bold',
-                                  ),
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: redColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  hintText: "Pickup Location",
-                                  hintStyle: TextStyle(
-                                    color: hintColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Light',
-                                  ),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      getCurrentLocation();
-                                    },
-                                    child: Container(
-                                      color: transparentColor,
-                                      child: SvgPicture.asset(
-                                        'assets/images/gps-icon.svg',
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: filledColor,
+                            errorStyle: TextStyle(
+                              color: redColor,
+                              fontSize: 10,
+                              fontFamily: 'Inter-Bold',
+                            ),
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
                               ),
-                              if (pickUpPredictions.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 40),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: filledColor,
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    width: size.width * 0.8,
-                                    height: size.height * 0.2,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: pickUpPredictions.length,
-                                      itemBuilder: (context, index) {
-                                        final prediction =
-                                            pickUpPredictions[index];
-                                        return ListTile(
-                                          title: Text(prediction.name),
-                                          subtitle: Text(
-                                              prediction.formattedAddress ??
-                                                  ''),
-                                          onTap: () {
-                                            pickupController.text =
-                                                prediction.formattedAddress!;
-                                            final double lat = prediction
-                                                .geometry!.location.lat;
-                                            final double lng = prediction
-                                                .geometry!.location.lng;
-                                            const double zoomLevel = 15.0;
-                                            onPickUpLocationSelected(
-                                                LatLng(lat, lng), zoomLevel);
-                                            pickupLat = lat.toString();
-                                            pickupLng = lng.toString();
-                                            setState(() {
-                                              pickUpPredictions.clear();
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              print("pickupLat: $pickupLat");
-                                              print("pickupLng $pickupLng");
-                                              print(
-                                                  "pickupLocation: ${prediction.formattedAddress}");
-                                            });
-                                            // Move the map camera to the selected location
-                                            mapController?.animateCamera(
-                                                CameraUpdate.newLatLng(
-                                                    selectedLocation!));
-                                          },
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return Divider(
-                                          color: textHaveAccountColor,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                            ],
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide(
+                                color: redColor,
+                                width: 1,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            hintText: "Pickup Location",
+                            hintStyle: TextStyle(
+                              color: hintColor,
+                              fontSize: 12,
+                              fontFamily: 'Inter-Light',
+                            ),
                           ),
                         ),
+                        if (addressesVisible)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: filledColor,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                              ),
+                              width: size.width * 0.8,
+                              height: size.height * 0.2,
+                              child: ListView.separated(
+                                scrollDirection: Axis.vertical,
+                                itemCount: getAddressesModel.data!.length,
+                                itemBuilder: (context, index) {
+                                  final addresses =
+                                  getAddressesModel.data![index];
+                                  return ListTile(
+                                    title: Text("${addresses.name}"),
+                                    subtitle:
+                                    Text(addresses.address ?? ''),
+                                    onTap: () {
+                                      addressesVisible = false;
+                                      pickupController.text =
+                                      "${addresses.address}";
+                                      final double savedLat =
+                                      double.parse(
+                                          "${addresses.latitude}");
+                                      final double savedLng =
+                                      double.parse(
+                                          "${addresses.longitude}");
+                                      const double zoomLevel = 15.0;
+                                      onPickUpLocationSavedAddresses(
+                                          LatLng(savedLat, savedLng),
+                                          zoomLevel);
+                                      addressLat = savedLat.toString();
+                                      addressLng = savedLng.toString();
+                                      setState(() {
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        print("addressLat: $addressLat");
+                                        print("addressLng $addressLng");
+                                        print(
+                                            "addressLocation: ${addresses.address}");
+                                      });
+                                      // Move the map camera to the selected location
+                                      mapController?.animateCamera(
+                                          CameraUpdate.newLatLng(
+                                              selectedAddressLocation!));
+                                    },
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    color: textHaveAccountColor,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  )
+                      : Container(
+                    color: transparentColor,
+                    width: size.width * 0.8,
+                    child: Stack(
+                      children: [
+                        TextFormField(
+                          controller: pickupController,
+                          onChanged: (value) {
+                            searchPickUpPlaces(value);
+                          },
+                          onTap: () {
+                            // pickupController.clear();
+                            pickUpPredictions.clear();
+                          },
+                          cursorColor: orangeColor,
+                          keyboardType: TextInputType.text,
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: filledColor,
+                            errorStyle: TextStyle(
+                              color: redColor,
+                              fontSize: 10,
+                              fontFamily: 'Inter-Bold',
+                            ),
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              borderSide: BorderSide(
+                                color: redColor,
+                                width: 1,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            hintText: "Pickup Location",
+                            hintStyle: TextStyle(
+                              color: hintColor,
+                              fontSize: 12,
+                              fontFamily: 'Inter-Light',
+                            ),
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                getCurrentLocation();
+                              },
+                              child: Container(
+                                color: transparentColor,
+                                child: SvgPicture.asset(
+                                  'assets/images/gps-icon.svg',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (pickUpPredictions.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: filledColor,
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                              ),
+                              width: size.width * 0.8,
+                              height: size.height * 0.2,
+                              child: ListView.separated(
+                                scrollDirection: Axis.vertical,
+                                itemCount: pickUpPredictions.length,
+                                itemBuilder: (context, index) {
+                                  final prediction =
+                                  pickUpPredictions[index];
+                                  return ListTile(
+                                    title: Text(prediction.name),
+                                    subtitle: Text(
+                                        prediction.formattedAddress ??
+                                            ''),
+                                    onTap: () {
+                                      pickupController.text =
+                                      prediction.formattedAddress!;
+                                      final double lat = prediction
+                                          .geometry!.location.lat;
+                                      final double lng = prediction
+                                          .geometry!.location.lng;
+                                      const double zoomLevel = 15.0;
+                                      onPickUpLocationSelected(
+                                          LatLng(lat, lng), zoomLevel);
+                                      pickupLat = lat.toString();
+                                      pickupLng = lng.toString();
+                                      setState(() {
+                                        pickUpPredictions.clear();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        print("pickupLat: $pickupLat");
+                                        print("pickupLng $pickupLng");
+                                        print(
+                                            "pickupLocation: ${prediction.formattedAddress}");
+                                      });
+                                      // Move the map camera to the selected location
+                                      mapController?.animateCamera(
+                                          CameraUpdate.newLatLng(
+                                              selectedLocation!));
+                                    },
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Divider(
+                                    color: textHaveAccountColor,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: size.height * 0.015),
                   Container(
                     color: transparentColor,
@@ -1023,14 +1020,14 @@ class _NewScreenState extends State<NewScreen> {
                                 itemCount: destinationPredictions.length,
                                 itemBuilder: (context, index) {
                                   final prediction =
-                                      destinationPredictions[index];
+                                  destinationPredictions[index];
                                   return ListTile(
                                     title: Text(prediction.name),
                                     subtitle:
-                                        Text(prediction.formattedAddress ?? ''),
+                                    Text(prediction.formattedAddress ?? ''),
                                     onTap: () {
                                       destinationController.text =
-                                          prediction.formattedAddress!;
+                                      prediction.formattedAddress!;
                                       final double lat =
                                           prediction.geometry!.location.lat;
                                       final double lng =
@@ -1223,11 +1220,11 @@ class _NewScreenState extends State<NewScreen> {
           itemBuilder: (context, index) {
             TextEditingController pickupController = pickupControllers[index];
             TextEditingController destinationController =
-                destinationControllers[index];
+            destinationControllers[index];
             TextEditingController receiversNameController =
-                receiversNameControllers[index];
+            receiversNameControllers[index];
             TextEditingController receiversNumberController =
-                receiversNumberControllers[index];
+            receiversNumberControllers[index];
 
             // Print the text from the controllers
             print('pageIndex: $index');
@@ -1238,7 +1235,6 @@ class _NewScreenState extends State<NewScreen> {
             print('receiversNameController: ${receiversNameController.text}');
             print(
                 'receiversNumberController: ${receiversNumberController.text}');
-<<<<<<< Updated upstream
 
             // Calculate the distance for the current page
             String distance = "";
@@ -1250,8 +1246,6 @@ class _NewScreenState extends State<NewScreen> {
 
             // Print the calculated distance
             print('Calculated Distance: $distance');
-=======
->>>>>>> Stashed changes
 
             return HomeTextFields(
               currentIndex: currentIndex,
@@ -1358,8 +1352,8 @@ class _NewScreenState extends State<NewScreen> {
                                       width: MediaQuery.of(context).size.width *
                                           0.43,
                                       height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
+                                      MediaQuery.of(context).size.height *
+                                          0.1,
                                       decoration: BoxDecoration(
                                         color: isSelectedCourier == true
                                             ? orangeColor
@@ -1421,8 +1415,8 @@ class _NewScreenState extends State<NewScreen> {
                                       width: MediaQuery.of(context).size.width *
                                           0.43,
                                       height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
+                                      MediaQuery.of(context).size.height *
+                                          0.1,
                                       decoration: BoxDecoration(
                                         color: isSelectedBus == true
                                             ? orangeColor
@@ -1487,18 +1481,18 @@ class _NewScreenState extends State<NewScreen> {
                                     },
                                     child: isSelectedAddress == true
                                         ? GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelectedAddress = false;
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/images/checkmark-icon.svg',
-                                            ),
-                                          )
+                                      onTap: () {
+                                        setState(() {
+                                          isSelectedAddress = false;
+                                        });
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/images/checkmark-icon.svg',
+                                      ),
+                                    )
                                         : SvgPicture.asset(
-                                            'assets/images/uncheckmark-icon.svg',
-                                          ),
+                                      'assets/images/uncheckmark-icon.svg',
+                                    ),
                                   ),
                                   SizedBox(width: size.width * 0.01),
                                   Text(
@@ -1543,18 +1537,18 @@ class _NewScreenState extends State<NewScreen> {
                                     },
                                     child: isSelectedAddress == true
                                         ? GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelectedAddress = false;
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/images/checkmark-icon.svg',
-                                            ),
-                                          )
+                                      onTap: () {
+                                        setState(() {
+                                          isSelectedAddress = false;
+                                        });
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/images/checkmark-icon.svg',
+                                      ),
+                                    )
                                         : SvgPicture.asset(
-                                            'assets/images/uncheckmark-icon.svg',
-                                          ),
+                                      'assets/images/uncheckmark-icon.svg',
+                                    ),
                                   ),
                                   SizedBox(width: size.width * 0.01),
                                   Text(
@@ -1641,7 +1635,7 @@ class _NewScreenState extends State<NewScreen> {
                           Expanded(
                             child: Padding(
                               padding:
-                                  const EdgeInsets.only(left: 1.5, right: 16),
+                              const EdgeInsets.only(left: 1.5, right: 16),
                               child: ButtonTheme(
                                 alignedDropdown: true,
                                 child: DropdownButtonHideUnderline(
@@ -1686,8 +1680,8 @@ class _NewScreenState extends State<NewScreen> {
                                         ),
                                       ),
                                       contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
+                                      const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
                                       hintText: 'Select Vehicle',
                                       hintStyle: TextStyle(
                                         color: hintColor,
@@ -1705,17 +1699,17 @@ class _NewScreenState extends State<NewScreen> {
                                     items: vehiclesType
                                         .map(
                                           (item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
-                                              style: TextStyle(
-                                                color: blackColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                            ),
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Regular',
                                           ),
-                                        )
+                                        ),
+                                      ),
+                                    )
                                         .toList(),
                                     value: selectedVehicle,
                                     onChanged: (value) {
@@ -1723,15 +1717,15 @@ class _NewScreenState extends State<NewScreen> {
                                         selectedVehicle = value;
                                         print("selectedVehicle: $value");
                                         if (getVehiclesByServiceTypeModel
-                                                .data !=
+                                            .data !=
                                             null) {
                                           for (int i = 0;
-                                              i <
-                                                  getVehiclesByServiceTypeModel
-                                                      .data!.length;
-                                              i++) {
+                                          i <
+                                              getVehiclesByServiceTypeModel
+                                                  .data!.length;
+                                          i++) {
                                             if (getVehiclesByServiceTypeModel
-                                                    .data?[i].name ==
+                                                .data?[i].name ==
                                                 value) {
                                               vehicleId =
                                                   getVehiclesByServiceTypeModel
@@ -1764,7 +1758,7 @@ class _NewScreenState extends State<NewScreen> {
                           Expanded(
                             child: Padding(
                               padding:
-                                  const EdgeInsets.only(left: 1.5, right: 16),
+                              const EdgeInsets.only(left: 1.5, right: 16),
                               child: ButtonTheme(
                                 alignedDropdown: true,
                                 child: DropdownButtonHideUnderline(
@@ -1809,8 +1803,8 @@ class _NewScreenState extends State<NewScreen> {
                                         ),
                                       ),
                                       contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
+                                      const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
                                       hintText: 'Select Booking Type',
                                       hintStyle: TextStyle(
                                         color: hintColor,
@@ -1828,17 +1822,17 @@ class _NewScreenState extends State<NewScreen> {
                                     items: bookingType
                                         .map(
                                           (item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
-                                              style: TextStyle(
-                                                color: blackColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                            ),
+                                        value: item,
+                                        child: Text(
+                                          item,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Regular',
                                           ),
-                                        )
+                                        ),
+                                      ),
+                                    )
                                         .toList(),
                                     value: selectedBookingType,
                                     onChanged: (value) async {
@@ -1846,10 +1840,10 @@ class _NewScreenState extends State<NewScreen> {
                                       print("selectedBookingType: $value");
                                       if (getBookingsTypeModel.data != null) {
                                         for (int i = 0;
-                                            i <
-                                                getBookingsTypeModel
-                                                    .data!.length;
-                                            i++) {
+                                        i <
+                                            getBookingsTypeModel
+                                                .data!.length;
+                                        i++) {
                                           if ("${getBookingsTypeModel.data?[i].name}" ==
                                               value) {
                                             bookingsTypeId =
@@ -1957,143 +1951,127 @@ class _NewScreenState extends State<NewScreen> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                if (selectedRadio == 1) {
-                                  if (pickupController.text.isEmpty ||
-                                      destinationController.text.isEmpty ||
-                                      receiversNameController.text.isEmpty ||
-                                      receiversNumberController.text.isEmpty ||
-                                      selectedVehicle == null ||
-                                      selectedBookingType == null) {
-                                    if (pickupController.text.isEmpty) {
-                                      Fluttertoast.showToast(
-                                        msg: "Please fill pickup address!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: toastColor,
-                                        textColor: whiteColor,
-                                        fontSize: 12,
-                                      );
-                                    } else if (destinationController
-                                        .text.isEmpty) {
-                                      Fluttertoast.showToast(
-                                        msg: "Please fill destination address!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: toastColor,
-                                        textColor: whiteColor,
-                                        fontSize: 12,
-                                      );
-                                    } else if (receiversNameController
-                                        .text.isEmpty) {
-                                      Fluttertoast.showToast(
-                                        msg: "Please fill receiver's name!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: toastColor,
-                                        textColor: whiteColor,
-                                        fontSize: 12,
-                                      );
-                                    } else if (receiversNumberController
-                                        .text.isEmpty) {
-                                      Fluttertoast.showToast(
-                                        msg: "Please fill receiver's number!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: toastColor,
-                                        textColor: whiteColor,
-                                        fontSize: 12,
-                                      );
-                                    } else if (selectedVehicle == null) {
-                                      Fluttertoast.showToast(
-                                        msg: "Please select a vehicle!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: toastColor,
-                                        textColor: whiteColor,
-                                        fontSize: 12,
-                                      );
-                                    } else if (selectedBookingType == null) {
-                                      Fluttertoast.showToast(
-                                        msg: "Please select booking type!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: toastColor,
-                                        textColor: whiteColor,
-                                        fontSize: 12,
-                                      );
-                                    }
-                                  } else {
-                                    setState(() {
-                                      isLoading2 = true;
-                                    });
-                                    await calculateDistanceTime();
-                                    await getCharges(bookingsTypeId);
-                                    if (bookingsTypeId == "1") {
-                                      print("fromKm: $fromKm");
-                                      print("toKm: $toKm");
-                                      print("perKmAmount: $perKmAmount");
-                                      print("totalDistance: $distance");
-                                      calculateStandardAmount(
-                                          double.parse(fromKm!),
-                                          toKm != "null"
-                                              ? double.parse(toKm!)
-                                              : 0.0,
-                                          double.parse(perKmAmount!),
-                                          double.parse(
-                                              distance!.split(" ")[0]));
-                                    }
-                                    addSingleData = {
-                                      "type": "schedule",
-                                      "vehicles_id": vehicleId,
-                                      "bookings_types_id": bookingsTypeId,
-                                      "delivery_type": selectedRadio == 1
-                                          ? "Single"
-                                          : "Multiple",
-                                      "pickup_address": pickupController.text,
-                                      "pickup_latitude":
-                                          pickupLat ?? currentLat ?? addressLat,
-                                      "pickup_longitude":
-                                          pickupLng ?? currentLng ?? addressLng,
-                                      "destin_address":
-                                          destinationController.text,
-                                      "destin_latitude": destinationLat,
-                                      "destin_longitude": destinationLng,
-                                      "destin_distance":
-                                          distance!.split(" ")[0],
-                                      "destin_time": duration,
-                                      "destin_delivery_charges":
-                                          roundedTotalAmount ?? "0.00",
-                                      "destin_vat_charges": "0.00",
-                                      "destin_total_charges": "0.00",
-                                      "destin_discount": "0.00",
-                                      "destin_discounted_charges": "0.00",
-                                      "receiver_name":
-                                          receiversNameController.text,
-                                      "receiver_phone":
-                                          receiversNumberController.text,
-                                    };
-                                    setState(() {
-                                      isLoading2 = false;
-                                    });
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ScheduleRideScreen(
-                                          selectedRadio: selectedRadio,
-                                          scheduledSingleData: addSingleData,
-                                        ),
-                                      ),
+                                if (pickupController.text.isEmpty ||
+                                    destinationController.text.isEmpty ||
+                                    receiversNameController.text.isEmpty ||
+                                    receiversNumberController.text.isEmpty ||
+                                    selectedVehicle == null ||
+                                    selectedBookingType == null) {
+                                  if (pickupController.text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill pickup address!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (destinationController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill destination address!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (receiversNameController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill receiver's name!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (receiversNumberController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please fill receiver's number!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (selectedVehicle == null) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please select a vehicle!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (selectedBookingType == null) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please select booking type!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
                                     );
                                   }
-                                }
-                                if (selectedRadio == 2) {
+                                } else {
+                                  setState(() {
+                                    isLoading2 = true;
+                                  });
+                                  await calculateDistanceTime();
+                                  await getCharges(bookingsTypeId);
+                                  if (bookingsTypeId == "1") {
+                                    print("fromKm: $fromKm");
+                                    print("toKm: $toKm");
+                                    print("perKmAmount: $perKmAmount");
+                                    print("totalDistance: $distance");
+                                    calculateStandardAmount(
+                                        double.parse(fromKm!),
+                                        toKm != "null"
+                                            ? double.parse(toKm!)
+                                            : 0.0,
+                                        double.parse(perKmAmount!),
+                                        double.parse(distance!.split(" ")[0]));
+                                  }
+                                  addSingleData = {
+                                    "type": "schedule",
+                                    "vehicles_id": vehicleId,
+                                    "bookings_types_id": bookingsTypeId,
+                                    "delivery_type": selectedRadio == 1
+                                        ? "Single"
+                                        : "Multiple",
+                                    "pickup_address": pickupController.text,
+                                    "pickup_latitude":
+                                    pickupLat ?? currentLat ?? addressLat,
+                                    "pickup_longitude":
+                                    pickupLng ?? currentLng ?? addressLng,
+                                    "destin_address":
+                                    destinationController.text,
+                                    "destin_latitude": destinationLat,
+                                    "destin_longitude": destinationLng,
+                                    "destin_distance": distance!.split(" ")[0],
+                                    "destin_time": duration,
+                                    "destin_delivery_charges":
+                                    roundedTotalAmount ?? "0.00",
+                                    "destin_vat_charges": "0.00",
+                                    "destin_total_charges": "0.00",
+                                    "destin_discount": "0.00",
+                                    "destin_discounted_charges": "0.00",
+                                    "receiver_name":
+                                    receiversNameController.text,
+                                    "receiver_phone":
+                                    receiversNumberController.text,
+                                  };
+                                  setState(() {
+                                    isLoading2 = false;
+                                  });
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -2107,11 +2085,11 @@ class _NewScreenState extends State<NewScreen> {
                               },
                               child: isLoading2
                                   ? buttonTransparentGradientSmallWithLoader(
-                                      "Please Wait...", context)
+                                  "Please Wait...", context)
                                   : buttonTransparentGradientSmall(
-                                      "SCHEDULE RIDE",
-                                      context,
-                                    ),
+                                "SCHEDULE RIDE",
+                                context,
+                              ),
                             ),
                             GestureDetector(
                               onTap: () async {
@@ -2215,26 +2193,26 @@ class _NewScreenState extends State<NewScreen> {
                                           : "Multiple",
                                       "pickup_address": pickupController.text,
                                       "pickup_latitude":
-                                          pickupLat ?? currentLat ?? addressLat,
+                                      pickupLat ?? currentLat ?? addressLat,
                                       "pickup_longitude":
-                                          pickupLng ?? currentLng ?? addressLng,
+                                      pickupLng ?? currentLng ?? addressLng,
                                       "destin_address":
-                                          destinationController.text,
+                                      destinationController.text,
                                       "destin_latitude": destinationLat,
                                       "destin_longitude": destinationLng,
                                       "destin_distance":
-                                          distance!.split(" ")[0],
+                                      distance!.split(" ")[0],
                                       "destin_time": duration,
                                       "destin_delivery_charges":
-                                          roundedTotalAmount ?? "0.00",
+                                      roundedTotalAmount ?? "0.00",
                                       "destin_vat_charges": "0.00",
                                       "destin_total_charges": "0.00",
                                       "destin_discount": "0.00",
                                       "destin_discounted_charges": "0.00",
                                       "receiver_name":
-                                          receiversNameController.text,
+                                      receiversNameController.text,
                                       "receiver_phone":
-                                          receiversNumberController.text,
+                                      receiversNumberController.text,
                                     };
                                     setState(() {
                                       isLoading = false;
@@ -2244,8 +2222,8 @@ class _NewScreenState extends State<NewScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             ConfirmSingleDetailsScreen(
-                                          singleData: addSingleData,
-                                        ),
+                                              singleData: addSingleData,
+                                            ),
                                       ),
                                     );
                                   }
@@ -2255,20 +2233,20 @@ class _NewScreenState extends State<NewScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const ConfirmMultipleDetailsScreen(),
+                                      const ConfirmMultipleDetailsScreen(),
                                     ),
                                   );
                                 }
                               },
                               child: isLoading
                                   ? buttonGradientSmallWithLoader(
-                                      "Please Wait...",
-                                      context,
-                                    )
+                                "Please Wait...",
+                                context,
+                              )
                                   : buttonGradientSmall(
-                                      "FIND RIDER",
-                                      context,
-                                    ),
+                                "FIND RIDER",
+                                context,
+                              ),
                             ),
                           ],
                         ),
