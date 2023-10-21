@@ -1,4 +1,4 @@
-package com.deliver.client
+package com.deliverbygfl.client
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:747855898697:android:95f8c6ab386bc7cbe6f798",
         "android_client_info": {
-          "package_name": "com.deliver.client"
+          "package_name": "com.deliverbygfl.client"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "747855898697-9cn3kts9v518s7s3jt67b7nk3f16qa5q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.deliver.client",
+            "package_name": "com.deliverbygfl.client",
             "certificate_hash": "6eb7b9c8c347348af580c98234295dce8dee19ad"
           }
         },
