@@ -308,6 +308,15 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
             ),
           ),
           Positioned(
+            top: 240,
+            right: 120,
+            child: Image.asset(
+              'assets/images/bike-icon.png',
+              width: 100,
+              height: 100,
+            ),
+          ),
+          Positioned(
             top: 101,
             right: 4,
             child: SvgPicture.asset('assets/images/bike-path-icon.svg'),

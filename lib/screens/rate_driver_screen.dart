@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
@@ -85,8 +86,8 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
   @override
   void initState() {
     super.initState();
-    print("widget.currentBookingId: ${widget.currentBookingId}");
-    print("widget.bookingDestinationId: ${widget.bookingDestinationId}");
+    print("currentBookingId: ${widget.currentBookingId}");
+    print("bookingDestinationId: ${widget.bookingDestinationId}");
   }
 
   @override
@@ -323,27 +324,53 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              await rateRider();
-                              if (rateRiderModel.status == "success") {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PayTipScreen(
-                                      riderData: widget.riderData!,
-                                    ),
-                                  ),
-                                );
-                                setState(() {
-                                  isLoading = false;
-                                });
+                              if (additionalCommentsController.text.isEmpty ||
+                                  ratingValue == null) {
+                                if (ratingValue == null) {
+                                  Fluttertoast.showToast(
+                                    msg: "Please rate the rider!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: toastColor,
+                                    textColor: whiteColor,
+                                    fontSize: 12,
+                                  );
+                                } else if (additionalCommentsController
+                                    .text.isEmpty) {
+                                  Fluttertoast.showToast(
+                                    msg: "Please add a comment!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: toastColor,
+                                    textColor: whiteColor,
+                                    fontSize: 12,
+                                  );
+                                }
                               } else {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                print("Something went wrong!");
+                                await rateRider();
+                                if (rateRiderModel.status == "success") {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PayTipScreen(
+                                        riderData: widget.riderData!,
+                                      ),
+                                    ),
+                                  );
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  print("Something went wrong!");
+                                }
                               }
                             },
                             child: isLoading

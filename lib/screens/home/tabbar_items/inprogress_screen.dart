@@ -127,6 +127,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
             MaterialPageRoute(
               builder: (context) => AmountToPayEditScreen(
                 riderData: widget.riderData!,
+                singleData: widget.singleData,
                 currentBookingId: widget.currentBookingId,
                 bookingDestinationId: widget.bookingDestinationId,
               ),

@@ -1,4 +1,4 @@
-package com.deliver_client.apps
+package com.deliver.client
 
 import io.flutter.embedding.android.FlutterActivity
 

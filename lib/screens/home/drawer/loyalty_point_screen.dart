@@ -4,6 +4,8 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/loyalty_point_list.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
+String? userEmail;
+
 class LoyaltyPointScreen extends StatefulWidget {
   const LoyaltyPointScreen({super.key});
 

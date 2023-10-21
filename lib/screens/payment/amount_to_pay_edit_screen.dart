@@ -7,6 +7,7 @@ import 'package:deliver_client/screens/home/drawer/payment_screen.dart';
 import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
 
 class AmountToPayEditScreen extends StatefulWidget {
+  final Map? singleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
@@ -14,6 +15,7 @@ class AmountToPayEditScreen extends StatefulWidget {
   const AmountToPayEditScreen({
     super.key,
     this.riderData,
+    this.singleData,
     this.currentBookingId,
     this.bookingDestinationId,
   });
@@ -83,7 +85,7 @@ class _AmountToPayEditScreenState extends State<AmountToPayEditScreen> {
                           overflow: TextOverflow.clip,
                           textAlign: TextAlign.center,
                           text: TextSpan(
-                            text: "2600",
+                            text: "${widget.singleData!['total_charges']}",
                             style: TextStyle(
                               color: orangeColor,
                               fontSize: 26,
@@ -180,9 +182,9 @@ class _AmountToPayEditScreenState extends State<AmountToPayEditScreen> {
                               MaterialPageRoute(
                                 builder: (context) => AmountToPayScreen(
                                   riderData: widget.riderData!,
+                                  singleData: widget.singleData,
                                   currentBookingId: widget.currentBookingId,
-                                  bookingDestinationId:
-                                      widget.bookingDestinationId,
+                                  bookingDestinationId: widget.bookingDestinationId,
                                 ),
                               ),
                             );

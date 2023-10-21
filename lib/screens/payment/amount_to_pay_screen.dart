@@ -1,16 +1,23 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/rate_driver_screen.dart';
+import 'package:deliver_client/models/get_all_system_data_model.dart';
+
+String? userEmail;
 
 class AmountToPayScreen extends StatefulWidget {
+  final Map? singleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
@@ -18,6 +25,7 @@ class AmountToPayScreen extends StatefulWidget {
   const AmountToPayScreen({
     super.key,
     this.riderData,
+    this.singleData,
     this.currentBookingId,
     this.bookingDestinationId,
   });
@@ -26,66 +34,126 @@ class AmountToPayScreen extends StatefulWidget {
   State<AmountToPayScreen> createState() => _AmountToPayScreenState();
 }
 
+// widget.singleData!['total_charges']
+
 class _AmountToPayScreenState extends State<AmountToPayScreen> {
-
+  String? currencyUnit;
   final int amount = 100000;
-  final String reference = "unique_transaction_ref_${Random().nextInt(1000000)}";
+  int? totalAmount;
   final payStackClient = PaystackPlugin();
+  final String reference = "unique_transaction_ref_${Random().nextInt(1000000)}";
 
-  void startPayStack () {
-    String? publicKey = dotenv.env['PAYSTACK_PUBLIC_KEY'];
+  String? baseUrl = dotenv.env['BASE_URL'];
+  String? publicKey = dotenv.env['PAYSTACK_PUBLIC_KEY'];
+
+  sharedPref() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    userEmail = sharedPref.getString('email');
+  }
+
+  void startPayStack() {
     payStackClient.initialize(publicKey: publicKey!);
   }
 
   void makePayment() async {
     final Charge charge = Charge()
-      ..email = 'paystackcustomer@qa.team'
-      ..amount = amount
+      ..amount = totalAmount! * 100
+      ..currency = 'NGN'
+      ..email = userEmail
       ..reference = reference;
 
-    final CheckoutResponse response = await payStackClient.checkout(context,
-        charge: charge, method: CheckoutMethod.card);
+    final CheckoutResponse response = await payStackClient.checkout(
+      context,
+      charge: charge,
+      method: CheckoutMethod.card,
+      logo: SvgPicture.asset(
+        'assets/images/logo-paystack-icon.svg',
+      ),
+    );
 
     if (response.status && response.reference == reference) {
+      print("response: $response");
+      Fluttertoast.showToast(
+        msg: "Transaction Successful!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: toastColor,
+        textColor: whiteColor,
+        fontSize: 12,
+      );
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => RateDriverScreen(
             riderData: widget.riderData!,
             currentBookingId: widget.currentBookingId,
-            bookingDestinationId:
-                widget.bookingDestinationId,
+            bookingDestinationId: widget.bookingDestinationId,
           ),
         ),
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: orangeColor,
-          content: const Text('Transaction Successful!'),
-        ),
-      );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: orangeColor,
-          content: const Text('Transaction Failed!'),
-        ),
+      Fluttertoast.showToast(
+        msg: "Transaction Failed!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: toastColor,
+        textColor: whiteColor,
+        fontSize: 12,
       );
     }
   }
 
+  GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
+
+  getAllSystemData() async {
+    try {
+      String apiUrl = "$baseUrl/get_all_system_data";
+      print("apiUrl: $apiUrl");
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
+        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        print(
+            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+        for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
+          if (getAllSystemDataModel.data?[i].type == "system_currency") {
+            currencyUnit = "${getAllSystemDataModel.data?[i].description}";
+            print("currencyUnit: $currencyUnit");
+          }
+        }
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    sharedPref();
     startPayStack();
+    double parsedValue = double.parse(widget.singleData!['total_charges']);
+    totalAmount = (parsedValue + 0.5).round();
+    print("Rounded Integer: $totalAmount");
+    // getAllSystemData();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: transparentColor,
+      backgroundColor: bgColor,
       body: Stack(
         children: [
           Image.asset(
@@ -141,7 +209,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                           overflow: TextOverflow.clip,
                           textAlign: TextAlign.center,
                           text: TextSpan(
-                            text: "2600",
+                            text: "${widget.singleData!['total_charges']}",
                             style: TextStyle(
                               color: orangeColor,
                               fontSize: 26,
