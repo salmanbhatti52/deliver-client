@@ -232,11 +232,15 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                   GestureDetector(
                     onTap: () {
                       if (isSelectedPayNow == true) {
+                        Map? updatedData = Map.from(widget.singleData!);
+                        updatedData.addAll({
+                          "payment_by": "Sender",
+                        });
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PaymentMethodBySenderSheet(
-                              singleData: widget.singleData,
+                              singleData: updatedData,
                             ),
                           ),
                         );
@@ -260,11 +264,15 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                         //   select: "Select",
                         //   context,
                         // );
+                        Map? updatedData = Map.from(widget.singleData!);
+                        updatedData.addAll({
+                          "payment_by": "Receiver",
+                        });
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PaymentMethodByReceiverSheet(
-                              singleData: widget.singleData,
+                              singleData: updatedData,
                             ),
                           ),
                         );

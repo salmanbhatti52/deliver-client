@@ -84,9 +84,7 @@ class _RidersListState extends State<RidersList> {
         "total_discounted_charges":
             widget.singleData?["total_discounted_charges"],
         "payment_gateways_id": widget.singleData?["payment_gateways_id"],
-        "payment_by": widget.singleData?["payment_gateways_id"] == "1"
-            ? "Receiver"
-            : "Sender",
+        "payment_by": widget.singleData?["payment_by"],
         "payment_status": "Unpaid"
       };
       String apiUrl = "$baseUrl/send_request_booking";

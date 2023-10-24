@@ -1,18 +1,18 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:deliver_client/screens/pay_tip_screen.dart';
 import 'package:deliver_client/models/rate_rider_model.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
+import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
 
@@ -354,14 +354,19 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PayTipScreen(
-                                        riderData: widget.riderData!,
-                                      ),
-                                    ),
-                                  );
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePageScreen()),
+                                      (Route<dynamic> route) => false);
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => PayTipScreen(
+                                  //       riderData: widget.riderData!,
+                                  //     ),
+                                  //   ),
+                                  // );
                                   setState(() {
                                     isLoading = false;
                                   });

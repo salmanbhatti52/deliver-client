@@ -29,10 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
   bool status = false;
   String? currentLat;
   String? currentLng;
-  bool isLoading = false;
   LatLng? currentLocation;
 
-  void locationPremission() async {
+  void locationPermission() async {
     PermissionStatus status = await Permission.location.request();
 
     if (status.isGranted) {
@@ -85,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
         currentLng = position.longitude.toString();
         print("currentLat: $currentLat");
         print("currentLng: $currentLng");
-        print("currentpickupLocation: $currentAddress");
+        print("currentPickupLocation: $currentAddress");
       });
     }
   }
@@ -93,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    locationPremission();
+    locationPermission();
   }
 
   @override
@@ -265,9 +264,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (logInFormKey.currentState!.validate()) {
-                      setState(() {
-                        isLoading = true;
-                      });
                       await getCurrentLocation();
                       Navigator.push(
                         context,
@@ -280,14 +276,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       );
-                      setState(() {
-                        isLoading = false;
-                      });
                     }
                   },
-                  child: isLoading
-                      ? buttonGradientWithLoader("Please Wait...", context)
-                      : buttonGradient("LOGIN", context),
+                  child: buttonGradient("LOGIN", context),
                 ),
                 SizedBox(height: size.height * 0.04),
                 SvgPicture.asset('assets/images/fingerprint-icon.svg'),
@@ -487,7 +478,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //     }
 //   }
 
-//   void locationPremission() async {
+//   void locationPermission() async {
 //     PermissionStatus status = await Permission.location.request();
 
 //     if (status.isGranted) {
@@ -540,7 +531,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //         currentLng = position.longitude.toString();
 //         print("currentLat: $currentLat");
 //         print("currentLng: $currentLng");
-//         print("currentpickupLocation: $currentAddress");
+//         print("currentPickupLocation: $currentAddress");
 //       });
 //     }
 //   }
@@ -548,7 +539,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //   @override
 //   void initState() {
 //     super.initState();
-//     locationPremission();
+//     locationPermission();
 //   }
 
 //   @override

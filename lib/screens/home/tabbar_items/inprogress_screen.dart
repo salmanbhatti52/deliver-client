@@ -15,8 +15,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
+import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
-import 'package:deliver_client/screens/payment/amount_to_pay_edit_screen.dart';
+import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
 
 class InProgressHomeScreen extends StatefulWidget {
   final Map? singleData;
@@ -120,34 +121,66 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
             updateBookingStatusModelFromJson(responseString);
         print(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-        if (updateBookingStatusModel.data?.status == "Completed") {
-          timer?.cancel();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AmountToPayEditScreen(
-                riderData: widget.riderData!,
-                singleData: widget.singleData,
-                currentBookingId: widget.currentBookingId,
-                bookingDestinationId: widget.bookingDestinationId,
+        if (widget.singleData?["payment_gateways_id"] == "1") {
+          if (updateBookingStatusModel.data?.status == "Completed") {
+            timer?.cancel();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AmountPaidScreen(
+                  riderData: widget.riderData!,
+                  singleData: widget.singleData,
+                  currentBookingId: widget.currentBookingId,
+                  bookingDestinationId: widget.bookingDestinationId,
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            // timer?.cancel();
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => HomePageScreen(
+            //       index: 1,
+            //       passCode: widget.passCode,
+            //       singleData: widget.singleData,
+            //       riderData: widget.riderData!,
+            //       currentBookingId: widget.currentBookingId,
+            //       bookingDestinationId: widget.bookingDestinationId,
+            //     ),
+            //   ),
+            // );
+          }
         } else {
-          // timer?.cancel();
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => HomePageScreen(
-          //       index: 1,
-          //       passCode: widget.passCode,
-          //       singleData: widget.singleData,
-          //       riderData: widget.riderData!,
-          //       currentBookingId: widget.currentBookingId,
-          //       bookingDestinationId: widget.bookingDestinationId,
-          //     ),
-          //   ),
-          // );
+          if (updateBookingStatusModel.data?.status == "Completed") {
+            timer?.cancel();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AmountToPayScreen(
+                  riderData: widget.riderData!,
+                  singleData: widget.singleData,
+                  currentBookingId: widget.currentBookingId,
+                  bookingDestinationId: widget.bookingDestinationId,
+                ),
+              ),
+            );
+          } else {
+            // timer?.cancel();
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => HomePageScreen(
+            //       index: 1,
+            //       passCode: widget.passCode,
+            //       singleData: widget.singleData,
+            //       riderData: widget.riderData!,
+            //       currentBookingId: widget.currentBookingId,
+            //       bookingDestinationId: widget.bookingDestinationId,
+            //     ),
+            //   ),
+            // );
+          }
         }
       }
     } catch (e) {

@@ -8,7 +8,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:deliver_client/models/get_payment_getaways_model.dart';
-import 'package:deliver_client/screens/payment/pay_via_card_screen.dart';
 
 bool isSelectedCard = false;
 bool isSelectedCash = false;
@@ -299,15 +298,24 @@ class _PaymentMethodBySenderSheetState
                         updatedData.addAll({
                           "payment_gateways_id": cardId,
                         });
-                        setState(() {});
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PayViaCardScreen(
-                              singleData: updatedData,
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchRidersScreen(
+                                singleData: updatedData,
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => PayViaCardScreen(
+                        //       singleData: updatedData,
+                        //     ),
+                        //   ),
+                        // );
                       }
                       if (isSelectedCash == true) {
                         Map? updatedData = Map.from(widget.singleData!);
