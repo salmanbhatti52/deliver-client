@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/cancelled_screen.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/completed_screen.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/inprogress_screen.dart';
 
 class TabbarRideHistory extends StatefulWidget {
-  const TabbarRideHistory({super.key});
+  final int? index;
+  final Map? singleData;
+  final String? passCode;
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+  const TabbarRideHistory({
+    super.key,
+    this.index,
+    this.singleData,
+    this.passCode,
+    this.currentBookingId,
+    this.riderData,
+    this.bookingDestinationId,
+});
 
   @override
   State<TabbarRideHistory> createState() => _TabbarRideHistoryState();
@@ -74,10 +89,16 @@ class _TabbarRideHistoryState extends State<TabbarRideHistory>
           height: MediaQuery.of(context).size.height * 0.80,
           child: TabBarView(
             controller: tabController,
-            children: const [
-              InProgressHistoryScreen(),
-              CompletedHistoryScreen(),
-              CancelledHistoryScreen(),
+            children: [
+              InProgressHistoryScreen(
+                singleData: widget.singleData,
+                passCode: widget.passCode,
+                currentBookingId: widget.currentBookingId,
+                riderData: widget.riderData,
+                bookingDestinationId: widget.bookingDestinationId,
+              ),
+              const CompletedHistoryScreen(),
+              const CancelledHistoryScreen(),
             ],
           ),
         ),

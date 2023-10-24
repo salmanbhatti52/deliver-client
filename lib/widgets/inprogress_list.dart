@@ -9,12 +9,29 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/inprogress_ride_model.dart';
+import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
 
 class InProgressList extends StatefulWidget {
-  const InProgressList({super.key});
+  final int? index;
+  final Map? singleData;
+  final String? passCode;
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+
+  const InProgressList({
+    super.key,
+    this.index,
+    this.singleData,
+    this.passCode,
+    this.currentBookingId,
+    this.riderData,
+    this.bookingDestinationId,
+  });
 
   @override
   State<InProgressList> createState() => _InProgressListState();
@@ -244,8 +261,27 @@ class _InProgressListState extends State<InProgressList> {
                                       fontFamily: 'Inter-Regular',
                                     ),
                                   ),
-                                  detailButtonGradientSmall(
-                                      "See detail", context),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => HomePageScreen(
+                                            index: 1,
+                                            passCode: widget.passCode,
+                                            singleData: widget.singleData,
+                                            riderData: widget.riderData,
+                                            currentBookingId:
+                                                widget.currentBookingId,
+                                            bookingDestinationId:
+                                                widget.bookingDestinationId,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: detailButtonGradientSmall(
+                                        "See detail", context),
+                                  ),
                                 ],
                               ),
                             ],

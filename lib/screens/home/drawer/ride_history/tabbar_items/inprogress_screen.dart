@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/inprogress_list.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 
 class InProgressHistoryScreen extends StatefulWidget {
-  const InProgressHistoryScreen({super.key});
+  final int? index;
+  final Map? singleData;
+  final String? passCode;
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+  const InProgressHistoryScreen({
+    super.key,
+    this.index,
+    this.singleData,
+    this.passCode,
+    this.currentBookingId,
+    this.riderData,
+    this.bookingDestinationId,
+});
 
   @override
   State<InProgressHistoryScreen> createState() =>
@@ -20,7 +35,13 @@ class _InProgressHistoryScreenState extends State<InProgressHistoryScreen> {
         Container(
           color: transparentColor,
           height: size.height * 0.78,
-          child: const InProgressList(),
+          child: InProgressList(
+            singleData: widget.singleData,
+            passCode: widget.passCode,
+            currentBookingId: widget.currentBookingId,
+            riderData: widget.riderData,
+            bookingDestinationId: widget.bookingDestinationId,
+          ),
         ),
       ],
     );

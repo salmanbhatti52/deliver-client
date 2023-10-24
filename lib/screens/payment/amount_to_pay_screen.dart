@@ -196,7 +196,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                       children: [
                         SizedBox(height: size.height * 0.04),
                         Text(
-                          "Amount to Pay",
+                          "Amount Paid",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: blackColor,

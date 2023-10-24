@@ -7,9 +7,9 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/get_profile_model.dart';
+import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/models/get_support_admin_model.dart';
-import 'package:deliver_client/screens/home/drawer/payment_screen.dart';
 import 'package:deliver_client/screens/home/drawer/settings_screen.dart';
 import 'package:deliver_client/screens/home/drawer/loyalty_point_screen.dart';
 import 'package:deliver_client/screens/home/drawer/profile/profile_screen.dart';
@@ -24,7 +24,21 @@ String? firstName;
 String? lastName;
 
 class AppDrawer extends StatefulWidget {
-  const AppDrawer({super.key});
+  final int? index;
+  final Map? singleData;
+  final String? passCode;
+  final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final String? bookingDestinationId;
+  const AppDrawer({
+    super.key,
+    this.index,
+    this.singleData,
+    this.passCode,
+    this.currentBookingId,
+    this.riderData,
+    this.bookingDestinationId,
+  });
 
   @override
   State<AppDrawer> createState() => _AppDrawerState();
@@ -181,28 +195,28 @@ class _AppDrawerState extends State<AppDrawer> {
                             title: 'Profile',
                             image: 'assets/images/drawer-profile-icon.svg',
                             onTap: () {
-                              selecteditem(context, 0);
+                              selectedItem(context, 0);
                             },
                           ),
                           buildMenuItem(
                             title: 'Ride History',
                             image: 'assets/images/drawer-history-icon.svg',
                             onTap: () {
-                              selecteditem(context, 1);
+                              selectedItem(context, 1);
                             },
                           ),
                           buildMenuItem(
                             title: 'Scheduled Rides',
                             image: 'assets/images/drawer-history-icon.svg',
                             onTap: () {
-                              selecteditem(context, 2);
+                              selectedItem(context, 2);
                             },
                           ),
                           buildMenuItem(
                             title: 'Addresses',
                             image: 'assets/images/drawer-address-icon.svg',
                             onTap: () {
-                              selecteditem(context, 3);
+                              selectedItem(context, 3);
                             },
                           ),
                           buildMenuItem(
@@ -210,28 +224,28 @@ class _AppDrawerState extends State<AppDrawer> {
                             image:
                                 'assets/images/drawer-update-location-icon.svg',
                             onTap: () {
-                              selecteditem(context, 4);
+                              selectedItem(context, 4);
                             },
                           ),
                           buildMenuItem(
                             title: 'Settings',
                             image: 'assets/images/drawer-setting-icon.svg',
                             onTap: () {
-                              selecteditem(context, 5);
+                              selectedItem(context, 5);
                             },
                           ),
-                          buildMenuItem(
-                            title: 'Payment',
-                            image: 'assets/images/drawer-payment-icon.svg',
-                            onTap: () {
-                              selecteditem(context, 6);
-                            },
-                          ),
+                          // buildMenuItem(
+                          //   title: 'Payment',
+                          //   image: 'assets/images/drawer-payment-icon.svg',
+                          //   onTap: () {
+                          //     selectedItem(context, 6);
+                          //   },
+                          // ),
                           buildMenuItem(
                             title: 'Loyalty Points',
                             image: 'assets/images/drawer-points-icon.svg',
                             onTap: () {
-                              selecteditem(context, 7);
+                              selectedItem(context, 6);
                             },
                           ),
                           buildMenuItem(
@@ -239,22 +253,22 @@ class _AppDrawerState extends State<AppDrawer> {
                             image: 'assets/images/drawer-support-icon.svg',
                             onTap: () async {
                               await getSupportAdmin();
-                              selecteditem(context, 8);
+                              selectedItem(context, 7);
                             },
                           ),
                           buildMenuItem(
                             title: 'Legel',
                             image: 'assets/images/drawer-legel-icon.svg',
                             onTap: () {
-                              selecteditem(context, 9);
+                              selectedItem(context, 8);
                             },
                           ),
-                          // SizedBox(height: size.height * 0.04),
+                          SizedBox(height: size.height * 0.06),
                           buildMenuItem(
                             title: 'Logout',
                             image: 'assets/images/drawer-logout-icon.svg',
                             onTap: () {
-                              selecteditem(context, 10);
+                              selectedItem(context, 9);
                             },
                           ),
                         ],
@@ -317,28 +331,28 @@ class _AppDrawerState extends State<AppDrawer> {
                               title: 'Profile',
                               image: 'assets/images/drawer-profile-icon.svg',
                               onTap: () {
-                                selecteditem(context, 0);
+                                selectedItem(context, 0);
                               },
                             ),
                             buildMenuItem(
                               title: 'Ride History',
                               image: 'assets/images/drawer-history-icon.svg',
                               onTap: () {
-                                selecteditem(context, 1);
+                                selectedItem(context, 1);
                               },
                             ),
                             buildMenuItem(
                               title: 'Scheduled Rides',
                               image: 'assets/images/drawer-history-icon.svg',
                               onTap: () {
-                                selecteditem(context, 2);
+                                selectedItem(context, 2);
                               },
                             ),
                             buildMenuItem(
                               title: 'Addresses',
                               image: 'assets/images/drawer-address-icon.svg',
                               onTap: () {
-                                selecteditem(context, 3);
+                                selectedItem(context, 3);
                               },
                             ),
                             buildMenuItem(
@@ -346,28 +360,28 @@ class _AppDrawerState extends State<AppDrawer> {
                               image:
                                   'assets/images/drawer-update-location-icon.svg',
                               onTap: () {
-                                selecteditem(context, 4);
+                                selectedItem(context, 4);
                               },
                             ),
                             buildMenuItem(
                               title: 'Settings',
                               image: 'assets/images/drawer-setting-icon.svg',
                               onTap: () {
-                                selecteditem(context, 5);
+                                selectedItem(context, 5);
                               },
                             ),
-                            buildMenuItem(
-                              title: 'Payment',
-                              image: 'assets/images/drawer-payment-icon.svg',
-                              onTap: () {
-                                selecteditem(context, 6);
-                              },
-                            ),
+                            // buildMenuItem(
+                            //   title: 'Payment',
+                            //   image: 'assets/images/drawer-payment-icon.svg',
+                            //   onTap: () {
+                            //     selectedItem(context, 6);
+                            //   },
+                            // ),
                             buildMenuItem(
                               title: 'Loyalty Points',
                               image: 'assets/images/drawer-points-icon.svg',
                               onTap: () {
-                                selecteditem(context, 7);
+                                selectedItem(context, 6);
                               },
                             ),
                             buildMenuItem(
@@ -379,15 +393,15 @@ class _AppDrawerState extends State<AppDrawer> {
                               title: 'Legel',
                               image: 'assets/images/drawer-legel-icon.svg',
                               onTap: () {
-                                selecteditem(context, 9);
+                                selectedItem(context, 8);
                               },
                             ),
-                            // SizedBox(height: size.height * 0.04),
+                            SizedBox(height: size.height * 0.06),
                             buildMenuItem(
                               title: 'Logout',
                               image: 'assets/images/drawer-logout-icon.svg',
                               onTap: () {
-                                selecteditem(context, 10);
+                                selectedItem(context, 9);
                               },
                             ),
                           ],
@@ -425,7 +439,7 @@ class _AppDrawerState extends State<AppDrawer> {
     );
   }
 
-  selecteditem(BuildContext context, int index) {
+  selectedItem(BuildContext context, int index) {
     Navigator.pop(context);
 
     switch (index) {
@@ -441,7 +455,13 @@ class _AppDrawerState extends State<AppDrawer> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const RideHistoryScreen(),
+            builder: (context) => RideHistoryScreen(
+              singleData: widget.singleData,
+              passCode: widget.passCode,
+              currentBookingId: widget.currentBookingId,
+              riderData: widget.riderData,
+              bookingDestinationId: widget.bookingDestinationId,
+            ),
           ),
         );
         break;
@@ -480,15 +500,15 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
         );
         break;
+      // case 6:
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => const PaymentScreen(),
+      //     ),
+      //   );
+      //   break;
       case 6:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const PaymentScreen(),
-          ),
-        );
-        break;
-      case 7:
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -496,7 +516,7 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
         );
         break;
-      case 8:
+      case 7:
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -509,9 +529,9 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
         );
         break;
-      case 9:
+      case 8:
         break;
-      case 10:
+      case 9:
         removeDataFormSharedPreferences();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const LoginScreen()),

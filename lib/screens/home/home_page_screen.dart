@@ -14,6 +14,7 @@ class HomePageScreen extends StatefulWidget {
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
+
   const HomePageScreen({
     super.key,
     this.index,
@@ -35,7 +36,8 @@ class _HomePageScreenState extends State<HomePageScreen>
 
   Future<bool> onExitApp() {
     DateTime now = DateTime.now();
-    if (currentBackPressTime == null || now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       Fluttertoast.showToast(
         msg: "Tap again to exit",
@@ -73,7 +75,13 @@ class _HomePageScreenState extends State<HomePageScreen>
         initialIndex: widget.index ?? 0,
         child: Scaffold(
           backgroundColor: bgColor,
-          drawer: const AppDrawer(),
+          drawer: AppDrawer(
+            singleData: widget.singleData,
+            passCode: widget.passCode,
+            currentBookingId: widget.currentBookingId,
+            riderData: widget.riderData,
+            bookingDestinationId: widget.bookingDestinationId,
+          ),
           body: Stack(
             children: [
               Positioned(
@@ -108,7 +116,8 @@ class _HomePageScreenState extends State<HomePageScreen>
                             ),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 3, vertical: 3),
                             child: TabBar(
                               // controller: tabController,
                               indicator: BoxDecoration(
@@ -124,7 +133,8 @@ class _HomePageScreenState extends State<HomePageScreen>
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               isScrollable: true,
-                              labelPadding: const EdgeInsets.symmetric(horizontal: 12),
+                              labelPadding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
                               labelColor: whiteColor,
                               labelStyle: TextStyle(
                                 color: whiteColor,
