@@ -197,6 +197,12 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   @override
+  void dispose() {
+    onPageExit();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return WillPopScope(
