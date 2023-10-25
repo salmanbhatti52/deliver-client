@@ -17,6 +17,7 @@ import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
 
@@ -48,13 +49,21 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
   String? lat;
   String? lng;
   Timer? timer;
+  String? latPickup;
+  String? lngPickup;
+  String? latRider;
+  String? lngRider;
+  double? pickupLat;
+  double? pickupLng;
   double? riderLat;
   double? riderLng;
   String? currencyUnit;
   String? distanceUnit;
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
+  BitmapDescriptor? customPickupMarkerIcon;
   String? baseUrl = dotenv.env['BASE_URL'];
+  String? mapsKey = dotenv.env['MAPS_KEY'];
   String? imageUrl = dotenv.env['IMAGE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
@@ -166,6 +175,25 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     }
   }
 
+  getLocation() {
+    if (widget.singleData != null) {
+      latPickup = "${widget.singleData!['pickup_latitude']}";
+      lngPickup = "${widget.singleData!['pickup_longitude']}";
+      pickupLat = double.parse(latPickup!);
+      pickupLng = double.parse(lngPickup!);
+      print("pickupLat: $pickupLat");
+      print("pickupLng: $pickupLng");
+      latRider = "${widget.riderData!.latitude}";
+      lngRider = "${widget.riderData!.longitude}";
+      riderLat = double.parse(latRider!);
+      riderLng = double.parse(lngRider!);
+      print("riderLat: $riderLat");
+      print("riderLng: $riderLng");
+    } else {
+      print("No LatLng Data");
+    }
+  }
+
   Future<void> loadCustomMarker() async {
     final ByteData bytes = await rootBundle.load(
       'assets/images/rider-marker-icon.png',
@@ -173,6 +201,42 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     final Uint8List list = bytes.buffer.asUint8List();
     customMarkerIcon = BitmapDescriptor.fromBytes(list);
     setState(() {});
+  }
+
+  Future<void> loadCustomPickupMarker() async {
+    final ByteData bytes = await rootBundle.load(
+      'assets/images/custom-pickup-icon.png',
+    );
+    final Uint8List list = bytes.buffer.asUint8List();
+    customPickupMarkerIcon = BitmapDescriptor.fromBytes(list);
+    setState(() {});
+  }
+
+  List<LatLng> polylineCoordinates = [];
+
+  void getPolyPoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    if (riderLat != null &&
+        riderLng != null &&
+        pickupLat != null &&
+        pickupLng != null) {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        "$mapsKey",
+        PointLatLng(riderLat!, riderLng!),
+        PointLatLng(pickupLat!, pickupLng!),
+      );
+      if (result.points.isNotEmpty) {
+        print("polylineCoordinates: $polylineCoordinates");
+        for (var point in result.points) {
+          polylineCoordinates.add(
+            LatLng(point.latitude, point.longitude),
+          );
+        }
+        setState(() {});
+      }
+    } else {
+      print("No Polyline Data");
+    }
   }
 
   void showPasscodeDialog() {
@@ -284,12 +348,9 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
-    lat = "${widget.riderData!.latitude}";
-    lng = "${widget.riderData!.longitude}";
-    riderLat = double.parse(lat!);
-    riderLng = double.parse(lng!);
-    print("riderLat: $riderLat");
-    print("riderLng: $riderLng");
+    loadCustomPickupMarker();
+    getLocation();
+    getPolyPoints();
     startTimer();
   }
 
@@ -350,6 +411,28 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                               ),
                               icon: customMarkerIcon ??
                                   BitmapDescriptor.defaultMarker,
+                            ),
+                            Marker(
+                              markerId: const MarkerId('pickupMarker'),
+                              position: LatLng(
+                                pickupLat != null ? pickupLat! : 0.0,
+                                pickupLng != null ? pickupLng! : 0.0,
+                              ),
+                              icon: customPickupMarkerIcon ??
+                                  BitmapDescriptor.defaultMarker,
+                            ),
+                          },
+                          polylines: {
+                            Polyline(
+                              polylineId: const PolylineId("polyline"),
+                              points: polylineCoordinates,
+                              color: orangeColor,
+                              geodesic: true,
+                              patterns: [
+                                PatternItem.dash(40),
+                                PatternItem.gap(10),
+                              ],
+                              width: 6,
                             ),
                           },
                         ),

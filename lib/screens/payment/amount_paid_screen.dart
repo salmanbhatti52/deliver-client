@@ -1,6 +1,11 @@
+// ignore_for_file: avoid_print
+
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/rate_driver_screen.dart';
 
@@ -25,6 +30,42 @@ class AmountPaidScreen extends StatefulWidget {
 }
 
 class _AmountPaidScreenState extends State<AmountPaidScreen> {
+  String? latDest;
+  String? lngDest;
+  double? destLat;
+  double? destLng;
+  GoogleMapController? mapController;
+  BitmapDescriptor? customMarkerIcon;
+
+  getLocation() {
+    if (widget.singleData != null) {
+      latDest = "${widget.singleData!['destin_latitude']}";
+      lngDest = "${widget.singleData!['destin_longitude']}";
+      destLat = double.parse(latDest!);
+      destLng = double.parse(lngDest!);
+      print("destLat: $destLat");
+      print("destLng: $destLng");
+    } else {
+      print("No LatLng Data");
+    }
+  }
+
+  Future<void> loadCustomMarker() async {
+    final ByteData bytes = await rootBundle.load(
+      'assets/images/custom-dest-icon.png',
+    );
+    final Uint8List list = bytes.buffer.asUint8List();
+    customMarkerIcon = BitmapDescriptor.fromBytes(list);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+    loadCustomMarker();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -36,11 +77,35 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
         backgroundColor: bgColor,
         body: Stack(
           children: [
-            Image.asset(
-              'assets/images/payment-location-background.png',
+            Container(
+              color: transparentColor,
               width: size.width,
-              height: size.height,
-              fit: BoxFit.cover,
+              height: size.height * 1,
+              child: GoogleMap(
+                onMapCreated: (controller) {
+                  mapController = controller;
+                },
+                mapType: MapType.normal,
+                myLocationEnabled: false,
+                zoomControlsEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    destLat != null ? destLat! : 0.0,
+                    destLng != null ? destLng! : 0.0,
+                  ),
+                  zoom: 15,
+                ),
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('destMarker'),
+                    position: LatLng(
+                      destLat != null ? destLat! : 0.0,
+                      destLng != null ? destLng! : 0.0,
+                    ),
+                    icon: customMarkerIcon ?? BitmapDescriptor.defaultMarker,
+                  ),
+                },
+              ),
             ),
             Positioned(
               top: 50,
@@ -148,7 +213,8 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                                   ),
                                   SizedBox(width: size.width * 0.085),
                                   Text(
-                                    widget.singleData!["payment_gateways_id"] == '1'
+                                    widget.singleData!["payment_gateways_id"] ==
+                                            '1'
                                         ? "Cash"
                                         : "Card",
                                     textAlign: TextAlign.left,

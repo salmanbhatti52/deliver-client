@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,8 +9,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
@@ -33,12 +36,19 @@ class AmountToPayScreen extends StatefulWidget {
 }
 
 class _AmountToPayScreenState extends State<AmountToPayScreen> {
-
   String? currencyUnit;
   final int amount = 100000;
   int? totalAmount;
   final payStackClient = PaystackPlugin();
-  final String reference = "unique_transaction_ref_${Random().nextInt(1000000)}";
+  final String reference =
+      "unique_transaction_ref_${Random().nextInt(1000000)}";
+
+  String? latDest;
+  String? lngDest;
+  double? destLat;
+  double? destLng;
+  GoogleMapController? mapController;
+  BitmapDescriptor? customMarkerIcon;
 
   String? baseUrl = dotenv.env['BASE_URL'];
   String? publicKey = dotenv.env['PAYSTACK_PUBLIC_KEY'];
@@ -136,11 +146,35 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
     }
   }
 
+  getLocation() {
+    if (widget.singleData != null) {
+      latDest = "${widget.singleData!['destin_latitude']}";
+      lngDest = "${widget.singleData!['destin_longitude']}";
+      destLat = double.parse(latDest!);
+      destLng = double.parse(lngDest!);
+      print("destLat: $destLat");
+      print("destLng: $destLng");
+    } else {
+      print("No LatLng Data");
+    }
+  }
+
+  Future<void> loadCustomMarker() async {
+    final ByteData bytes = await rootBundle.load(
+      'assets/images/custom-dest-icon.png',
+    );
+    final Uint8List list = bytes.buffer.asUint8List();
+    customMarkerIcon = BitmapDescriptor.fromBytes(list);
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     sharedPref();
+    getLocation();
     startPayStack();
+    loadCustomMarker();
     double parsedValue = double.parse(widget.singleData!['total_charges']);
     totalAmount = (parsedValue + 0.5).floor();
     print("Rounded Integer: $totalAmount");
@@ -158,11 +192,35 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
         backgroundColor: transparentColor,
         body: Stack(
           children: [
-            Image.asset(
-              'assets/images/payment-location-background.png',
+            Container(
+              color: transparentColor,
               width: size.width,
-              height: size.height,
-              fit: BoxFit.cover,
+              height: size.height * 1,
+              child: GoogleMap(
+                onMapCreated: (controller) {
+                  mapController = controller;
+                },
+                mapType: MapType.normal,
+                myLocationEnabled: false,
+                zoomControlsEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    destLat != null ? destLat! : 0.0,
+                    destLng != null ? destLng! : 0.0,
+                  ),
+                  zoom: 15,
+                ),
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('destMarker'),
+                    position: LatLng(
+                      destLat != null ? destLat! : 0.0,
+                      destLng != null ? destLng! : 0.0,
+                    ),
+                    icon: customMarkerIcon ?? BitmapDescriptor.defaultMarker,
+                  ),
+                },
+              ),
             ),
             Positioned(
               top: 50,
@@ -273,7 +331,11 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                                       ),
                                       SizedBox(width: size.width * 0.085),
                                       Text(
-                                        "Card",
+                                        widget.singleData![
+                                                    "payment_gateways_id"] ==
+                                                '1'
+                                            ? "Cash"
+                                            : "Card",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: orangeColor,
@@ -303,7 +365,23 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () {
-                              makePayment();
+                              if (widget.singleData!["payment_gateways_id"] ==
+                                  '1') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AmountPaidScreen(
+                                      riderData: widget.riderData!,
+                                      singleData: widget.singleData,
+                                      currentBookingId: widget.currentBookingId,
+                                      bookingDestinationId:
+                                          widget.bookingDestinationId,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                makePayment();
+                              }
                             },
                             child: buttonGradient("PAY", context),
                           ),
