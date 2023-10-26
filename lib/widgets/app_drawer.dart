@@ -10,6 +10,7 @@ import 'package:deliver_client/models/get_profile_model.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/models/get_support_admin_model.dart';
+import 'package:deliver_client/screens/home/drawer/legal_screen.dart';
 import 'package:deliver_client/screens/home/drawer/settings_screen.dart';
 import 'package:deliver_client/screens/home/drawer/loyalty_point_screen.dart';
 import 'package:deliver_client/screens/home/drawer/profile/profile_screen.dart';
@@ -30,6 +31,7 @@ class AppDrawer extends StatefulWidget {
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
+
   const AppDrawer({
     super.key,
     this.index,
@@ -530,6 +532,12 @@ class _AppDrawerState extends State<AppDrawer> {
         );
         break;
       case 8:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LegalScreen(),
+          ),
+        );
         break;
       case 9:
         removeDataFormSharedPreferences();

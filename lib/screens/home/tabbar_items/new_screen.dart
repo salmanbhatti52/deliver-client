@@ -53,7 +53,7 @@ class _NewScreenState extends State<NewScreen> {
 
   int selectedRadio = 1;
   Map addSingleData = {};
-  Map addScheduledSingleData = {};
+  Map addMultipleData = {};
   bool isSelectedBus = false;
   bool isSelectedCourier = true;
   bool addressesVisible = false;
@@ -92,6 +92,7 @@ class _NewScreenState extends State<NewScreen> {
 
   bool isLoading = false;
   bool isLoading2 = false;
+  TextEditingController? pickup01;
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -1168,15 +1169,14 @@ class _NewScreenState extends State<NewScreen> {
   }
 
 //-----------------#################### IN USE FUNCTION ###############--------------------//
-//change
 // Function to calculate distance and time for multiple deliveries
+  List<String> distances = [];
+  List<String> durations = [];
+
   Future<void> calculateDistanceTime01(
     List<Map<String, double>?> pickupCoordinates,
     List<Map<String, double>?> destinationCoordinates,
   ) async {
-    List<String> distances = [];
-    List<String> durations = [];
-
     for (int i = 0; i < pickupCoordinates.length; i++) {
       final pickupLatLng = pickupCoordinates[i];
       final destinationLatLng = destinationCoordinates[i];
@@ -1211,9 +1211,7 @@ class _NewScreenState extends State<NewScreen> {
     String origin,
     String destination,
   ) async {
-    // Replace 'YOUR_API_KEY' with your actual Google Maps API key.
     final apiKey = dotenv.env['MAPS_KEY'];
-
     final response = await http.get(
       Uri.parse(
         'https://maps.googleapis.com/maps/api/distancematrix/json'
@@ -1231,8 +1229,7 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
-  List<String> getAddressesFromControllers(
-      List<TextEditingController> controllers) {
+  List<String> getAddressesFromControllers(List<TextEditingController> controllers) {
     List<String> addresses = [];
     for (TextEditingController controller in controllers) {
       addresses.add(controller.text);
@@ -1338,10 +1335,12 @@ class _NewScreenState extends State<NewScreen> {
                 receiversNameControllers[index];
             TextEditingController receiversNumberController =
                 receiversNumberControllers[index];
-
+            // if(pickupControllers.isNotEmpty) {
+            //   pickup01=   pickupControllers[0];
+            // }
+            // print("pickup01: ${pickup01!.text}");
             print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
-
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
@@ -2330,6 +2329,34 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
+                                  addMultipleData = {
+                                    "type": "booking",
+                                    "vehicles_id": vehicleId,
+                                    "bookings_types_id": bookingsTypeId,
+                                    "delivery_type": selectedRadio == 1
+                                        ? "Single"
+                                        : "Multiple",
+                                    "pickup_address": pickupControllers.toString(),
+                                    "pickup_latitude": pickupLat ?? currentLat ?? addressLat,
+                                    "pickup_longitude": pickupLng ?? currentLng ?? addressLng,
+                                    "destin_address":
+                                    destinationController.text,
+                                    "destin_latitude": destinationLat,
+                                    "destin_longitude": destinationLng,
+                                    "destin_distance":
+                                    distance!.split(" ")[0],
+                                    "destin_time": duration,
+                                    "destin_delivery_charges":
+                                    roundedTotalAmount ?? "0.00",
+                                    "destin_vat_charges": "0.00",
+                                    "destin_total_charges": "0.00",
+                                    "destin_discount": "0.00",
+                                    "destin_discounted_charges": "0.00",
+                                    "receiver_name":
+                                    receiversNameController.text,
+                                    "receiver_phone":
+                                    receiversNumberController.text,
+                                  };
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
