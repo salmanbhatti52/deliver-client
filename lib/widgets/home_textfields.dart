@@ -16,9 +16,7 @@ import 'package:deliver_client/models/get_addresses_model.dart';
 String? userId;
 
 class HomeTextFields extends StatefulWidget {
-  // final void Function(String, String) calculateDistanceTimeFunction;
   final int? currentIndex;
-
   final bool? isSelectedAddress;
   final PageController pageController;
   final TextEditingController pickupController;
@@ -163,124 +161,29 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         CameraUpdate.newLatLngZoom(selectedAddressLocation!, zoomLevel));
   }
 
-  // Future<void> calculateDistanceTime(
-  //     String pickupCoordinates, String destinationCoordinates) async {
-  //   final origin = pickupCoordinates;
-  //   final destination = destinationCoordinates;
+  var api;
 
+  // calculateDistanceTime1() async {
+  //   final origin =
+  //       '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
+  //   // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
+  //   final destination =
+  //       '$destinationLat,$destinationLng'; // Format coordinates as "latitude,longitude"
+  //   // '${widget.destinationLats},${widget.destinationLngs}'; // Format coordinates as "latitude,longitude"
   //   try {
   //     final data = await api.getDistanceAndTime(origin, destination);
-  //     widget.distances!.add(data['rows'][0]['elements'][0]['distance']['text']);
-  //     widget.durations!.add(data['rows'][0]['elements'][0]['duration']['text']);
+  //     distance = data['rows'][0]['elements'][0]['distance']['text'];
+  //     duration = data['rows'][0]['elements'][0]['duration']['text'];
+  //     print("distance: $distance");
+  //     print("duration: $duration");
+  //     // widget.distances = data['rows'][0]['elements'][0]['distance']['text'];
+  //     // widget.durations = data['rows'][0]['elements'][0]['duration']['text'];
+  //     // print("distance: ${widget.distances}");
+  //     // print("duration: ${widget.durations}");
   //   } catch (e) {
   //     print("Error: $e");
-  //     widget.distances!.add(""); // Handle the error case
-  //     widget.durations!.add(""); // Handle the error case
   //   }
   // }
-
-  // void calculateDistanceTimeOnCoordinatesEntered() {
-  //   final pickupCoordinates = widget.pickupController.text;
-  //   final destinationCoordinates = widget.destinationController.text;
-  //   if (pickupCoordinates.isNotEmpty && destinationCoordinates.isNotEmpty) {
-  //     calculateDistanceTime(pickupCoordinates, destinationCoordinates);
-  //   }
-  // }
-
-  var api;
-  calculateDistanceTime1() async {
-    final origin =
-        '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
-    // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
-    final destination =
-        '$destinationLat,$destinationLng'; // Format coordinates as "latitude,longitude"
-    // '${widget.destinationLats},${widget.destinationLngs}'; // Format coordinates as "latitude,longitude"
-    try {
-      final data = await api.getDistanceAndTime(origin, destination);
-      distance = data['rows'][0]['elements'][0]['distance']['text'];
-      duration = data['rows'][0]['elements'][0]['duration']['text'];
-      print("distance: $distance");
-      print("duration: $duration");
-      // widget.distances = data['rows'][0]['elements'][0]['distance']['text'];
-      // widget.durations = data['rows'][0]['elements'][0]['duration']['text'];
-      // print("distance: ${widget.distances}");
-      // print("duration: ${widget.durations}");
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  List<String> pickupLatList = [];
-  List<String> pickupLngList = [];
-  List<String> addressLatList = [];
-  List<String> addressLngList = [];
-  List<String> currentLatList = [];
-  List<String> currentLngList = [];
-  List<String> destinationLatList = [];
-  List<String> destinationLngList = [];
-
-  onPickUpLocationSelected01(LatLng location, double zoomLevel, int index) {
-    pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
-    pickupLatList[index] = location.latitude.toString();
-    pickupLngList[index] = location.longitude.toString();
-    // Update other variables as needed
-  }
-
-  onPickUpLocationSavedAddresses01(
-      LatLng location, double zoomLevel, int index) {
-    pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
-    addressLatList[index] = location.latitude.toString();
-    addressLngList[index] = location.longitude.toString();
-    // Update other variables as needed
-  }
-
-  Future<void> calculateDistanceTime01() async {
-    for (int i = 0; i < pickupLatList.length; i++) {
-      final origin =
-          '${pickupLatList[i] ?? currentLatList[i] ?? addressLatList[i]},${pickupLngList[i] ?? currentLngList[i] ?? addressLngList[i]}';
-      final destination = '${destinationLatList[i]},${destinationLngList[i]}';
-
-      try {
-        final data = await api.getDistanceAndTime(origin, destination);
-        String distance = data['rows'][0]['elements'][0]['distance']['text'];
-        String duration = data['rows'][0]['elements'][0]['duration']['text'];
-        print("Distance for pair $i: $distance");
-        print("Duration for pair $i: $duration");
-        // You can store or process the distance and duration as needed
-      } catch (e) {
-        print("Error: $e");
-        // Handle the error case if necessary
-      }
-    }
-  }
-
-  onPickUpLocationSavedAddresses02(
-      LatLng location, double zoomLevel, int index) {
-    pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
-    pickupLatList[index] = location.latitude.toString();
-    pickupLngList[index] = location.longitude.toString();
-    // Update other variables as needed
-  }
-
-  onPickUpLocationSelected03(LatLng location, double zoomLevel, int index) {
-    pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
-    pickupLatList[index] = location.latitude.toString();
-    pickupLngList[index] = location.longitude.toString();
-    // Update other variables as needed
-  }
-
-  onPickUpLocationSavedAddresses03(
-      LatLng location, double zoomLevel, int index) {
-    pickupControllers[index].text =
-        "${location.latitude}, ${location.longitude}";
-    addressLatList[index] = location.latitude.toString();
-    addressLngList[index] = location.longitude.toString();
-    // Update other variables as needed
-  }
 
   GetAddressesModel getAddressesModel = GetAddressesModel();
 
@@ -455,26 +358,11 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                               zoomLevel);
                                           addressLat = savedLat.toString();
                                           addressLng = savedLng.toString();
-                                          onPickUpLocationSavedAddresses02(
-                                              LatLng(savedLat, savedLng),
-                                              zoomLevel,
-                                              index);
-                                          // widget.addressLats = savedLat.toString();
-                                          // widget.addressLngs = savedLng.toString();
                                           setState(() {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
                                             print("addressLat: $addressLat");
                                             print("addressLng $addressLng");
-                                            // print("addressLat: ${widget.addressLats}");
-                                            // print("addressLng ${widget.addressLngs}");
-                                            print(
-                                                "addressLocation: ${addresses.address}");
-
-                                            print(
-                                                "addressLat: ${addressLatList[index]}");
-                                            print(
-                                                "addressLng: ${addressLngList[index]}");
                                             print(
                                                 "addressLocation: ${addresses.address}");
                                           });
@@ -614,16 +502,12 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                               LatLng(lat, lng), zoomLevel);
                                           pickupLat = lat.toString();
                                           pickupLng = lng.toString();
-                                          // widget.pickupLats = lat.toString();
-                                          // widget.pickupLngs = lng.toString();
                                           setState(() {
                                             pickUpPredictions.clear();
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
                                             print("pickupLat: $pickupLat");
                                             print("pickupLng $pickupLng");
-                                            // print("pickupLat: ${widget.pickupLats}");
-                                            // print("pickupLng ${widget.pickupLngs}");
                                             print(
                                                 "pickupLocation: ${prediction.formattedAddress}");
                                           });
@@ -655,14 +539,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                       TextFormField(
                         controller: widget.destinationController,
                         onChanged: (value) {
-                          final pickupCoordinates =
-                              widget.pickupController.text;
-                          final destinationCoordinates =
-                              value; // Use the new destination value
-                          // if (pickupCoordinates.isNotEmpty &&
-                          //     destinationCoordinates.isNotEmpty) {
-                          //   calculateDistanceTimeOnCoordinatesEntered();
-                          // }
                           searchDestinationPlaces(value);
                         },
                         onTap: () {
