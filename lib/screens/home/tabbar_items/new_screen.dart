@@ -1261,6 +1261,8 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
+  List<String> receiversNames = [];
+  List<String> receiversPhones = [];
   List<String> pickupAddresses = [];
   List<String> destinationAddresses = [];
 
@@ -1364,12 +1366,38 @@ class _NewScreenState extends State<NewScreen> {
                 destinationAddresses.add(address);
               }
             }
-            String combineddestinationAddresses = destinationAddresses.join(", ");
+            String combinedDestinationAddresses = destinationAddresses.join(", ");
             print("destinationAddresses[0]: ${destinationAddresses[0]}");
             print("destinationAddresses[1]: ${destinationAddresses[1]}");
             print("destinationAddresses[2]: ${destinationAddresses[2]}");
             print("destinationAddresses[3]: ${destinationAddresses[3]}");
             print("destinationAddresses[4]: ${destinationAddresses[4]}");
+
+            for (TextEditingController receiversNameController in receiversNameControllers) {
+              String name = receiversNameController.text;
+              if (name.isNotEmpty && !receiversNames.contains(name)) {
+                receiversNames.add(name);
+              }
+            }
+            String combinedReceiversNames = receiversNames.join(", ");
+            print("receiversNames[0]: ${receiversNames[0]}");
+            print("receiversNames[1]: ${receiversNames[1]}");
+            print("receiversNames[2]: ${receiversNames[2]}");
+            print("receiversNames[3]: ${receiversNames[3]}");
+            print("receiversNames[4]: ${receiversNames[4]}");
+
+            for (TextEditingController receiversNumberController in receiversNumberControllers) {
+              String phone = receiversNumberController.text;
+              if (phone.isNotEmpty && !receiversPhones.contains(phone)) {
+                receiversPhones.add(phone);
+              }
+            }
+            String combinedReceiversPhones = receiversPhones.join(", ");
+            print("receiversPhones[0]: ${receiversPhones[0]}");
+            print("receiversPhones[1]: ${receiversPhones[1]}");
+            print("receiversPhones[2]: ${receiversPhones[2]}");
+            print("receiversPhones[3]: ${receiversPhones[3]}");
+            print("receiversPhones[4]: ${receiversPhones[4]}");
 
             addMultipleData = {
               "type": "schedule",
@@ -1379,7 +1407,7 @@ class _NewScreenState extends State<NewScreen> {
               "pickup_address": combinedPickupAddresses,
               "pickup_latitude": pickupLat ?? currentLat ?? addressLat,
               "pickup_longitude": pickupLng ?? currentLng ?? addressLng,
-              "destin_address": combineddestinationAddresses,
+              "destin_address": combinedDestinationAddresses,
               "destin_latitude": destinationLat,
               "destin_longitude": destinationLng,
               // "destin_distance": distance!.split(" ")[0],
@@ -1390,8 +1418,8 @@ class _NewScreenState extends State<NewScreen> {
               "destin_total_charges": "0.00",
               "destin_discount": "0.00",
               "destin_discounted_charges": "0.00",
-              "receiver_name": receiversNameController.text,
-              "receiver_phone": receiversNumberController.text,
+              "receiver_name": combinedReceiversNames,
+              "receiver_phone": combinedReceiversPhones,
             };
 
             return HomeTextFields(
