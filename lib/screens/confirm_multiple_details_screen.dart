@@ -7,7 +7,8 @@ import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
 class ConfirmMultipleDetailsScreen extends StatefulWidget {
-  const ConfirmMultipleDetailsScreen({super.key});
+  final Map? multipleData;
+  const ConfirmMultipleDetailsScreen({super.key, this.multipleData});
 
   @override
   State<ConfirmMultipleDetailsScreen> createState() =>
@@ -16,6 +17,12 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
 
 class _ConfirmMultipleDetailsScreenState
     extends State<ConfirmMultipleDetailsScreen> {
+  @override
+  initState() {
+    super.initState();
+    print("mapData: ${widget.multipleData}");
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

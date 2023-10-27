@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print, must_be_immutable, use_build_context_synchronously, prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -89,6 +90,10 @@ class _NewScreenState extends State<NewScreen> {
   LatLng? destination;
   String? distance;
   String? duration;
+  String? minPageLength;
+  String? maxPageLength;
+  int? minPageLen;
+  int? maxPageLen;
 
   bool isLoading = false;
   bool isLoading2 = false;
@@ -120,6 +125,14 @@ class _NewScreenState extends State<NewScreen> {
           if (getAllSystemDataModel.data?[i].type == "system_longitude") {
             systemLng = "${getAllSystemDataModel.data?[i].description}";
             doubleSystemLng = double.parse(systemLng!);
+          }
+          if (getAllSystemDataModel.data?[i].type == "min_multiple_delivery_parcel") {
+            minPageLength = "${getAllSystemDataModel.data?[i].description}";
+            minPageLen = int.parse(minPageLength!);
+          }
+          if (getAllSystemDataModel.data?[i].type == "max_multiple_delivery_parcel") {
+            maxPageLength = "${getAllSystemDataModel.data?[i].description}";
+            maxPageLen = int.parse(maxPageLength!);
           }
           setState(() {});
         }
@@ -326,7 +339,7 @@ class _NewScreenState extends State<NewScreen> {
   PageController pageController = PageController();
 
   void addPage() {
-    if (pages.length >= 5) {
+    if (pages.length >= maxPageLen!) {
       return; // Limit reached, do not add more pages
     }
     setState(() {
@@ -342,15 +355,8 @@ class _NewScreenState extends State<NewScreen> {
     });
   }
 
-  // void onCoordinatesEntered(int index) {
-  //   final pickupCoordinates = pickupControllers[index].text;
-  //   final destinationCoordinates = destinationControllers[index].text;
-  //   if (pickupCoordinates.isNotEmpty && destinationCoordinates.isNotEmpty) {
-  //     calculateDistanceTime(pickupCoordinates, destinationCoordinates);
-  //   }
-  // }
   void removePage() {
-    if (pages.length <= 2) {
+    if (pages.length <= minPageLen!) {
       return; // Limit reached, do not remove more pages
     }
     pages.removeAt(currentIndex);
@@ -597,16 +603,6 @@ class _NewScreenState extends State<NewScreen> {
     );
   }
 
-  // List<String> distances = List.generate(5, (_) => "");
-  // List<String> durations = List.generate(5, (_) => "");
-  // List<String> pickupLats = List.generate(5, (_) => "");
-  // List<String> pickupLngs = List.generate(5, (_) => "");
-  // List<String> addressLats = List.generate(5, (_) => "");
-  // List<String> addressLngs = List.generate(5, (_) => "");
-  // List<String> currentLats = List.generate(5, (_) => "");
-  // List<String> currentLngs = List.generate(5, (_) => "");
-  // List<String> destinationLats = List.generate(5, (_) => "");
-  // List<String> destinationLngs = List.generate(5, (_) => "");
   List<TextEditingController> pickupControllers =
       List.generate(5, (_) => TextEditingController());
   List<TextEditingController> destinationControllers =
@@ -1329,23 +1325,40 @@ class _NewScreenState extends State<NewScreen> {
           itemCount: pages.length,
           itemBuilder: (context, index) {
             TextEditingController pickupController = pickupControllers[index];
-            TextEditingController destinationController =
-                destinationControllers[index];
-            TextEditingController receiversNameController =
-                receiversNameControllers[index];
-            TextEditingController receiversNumberController =
-                receiversNumberControllers[index];
-            // if(pickupControllers.isNotEmpty) {
-            //   pickup01=   pickupControllers[0];
-            // }
-            // print("pickup01: ${pickup01!.text}");
+            TextEditingController destinationController = destinationControllers[index];
+            TextEditingController receiversNameController = receiversNameControllers[index];
+            TextEditingController receiversNumberController = receiversNumberControllers[index];
             print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
-            print(
-                'receiversNumberController: ${receiversNumberController.text}');
+            print('receiversNumberController: ${receiversNumberController.text}');
+
+            addMultipleData = {
+              "type": "schedule",
+              "vehicles_id": vehicleId,
+              "bookings_types_id": bookingsTypeId,
+              "delivery_type": selectedRadio == 1
+                  ? "Single"
+                  : "Multiple",
+              "pickup_address": pickupController.text,
+              "pickup_latitude": pickupLat ?? currentLat ?? addressLat,
+              "pickup_longitude": pickupLng ?? currentLng ?? addressLng,
+              "destin_address": destinationController.text,
+              "destin_latitude": destinationLat,
+              "destin_longitude": destinationLng,
+              // "destin_distance": distance!.split(" ")[0],
+              "destin_distance": "jkuk",
+              "destin_time": duration,
+              "destin_delivery_charges": roundedTotalAmount ?? "0.00",
+              "destin_vat_charges": "0.00",
+              "destin_total_charges": "0.00",
+              "destin_discount": "0.00",
+              "destin_discounted_charges": "0.00",
+              "receiver_name": receiversNameController.text,
+              "receiver_phone": receiversNumberController.text,
+            };
 
             return HomeTextFields(
               currentIndex: currentIndex,
@@ -2329,39 +2342,13 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
-                                  addMultipleData = {
-                                    "type": "booking",
-                                    "vehicles_id": vehicleId,
-                                    "bookings_types_id": bookingsTypeId,
-                                    "delivery_type": selectedRadio == 1
-                                        ? "Single"
-                                        : "Multiple",
-                                    "pickup_address": pickupControllers.toString(),
-                                    "pickup_latitude": pickupLat ?? currentLat ?? addressLat,
-                                    "pickup_longitude": pickupLng ?? currentLng ?? addressLng,
-                                    "destin_address":
-                                    destinationController.text,
-                                    "destin_latitude": destinationLat,
-                                    "destin_longitude": destinationLng,
-                                    "destin_distance":
-                                    distance!.split(" ")[0],
-                                    "destin_time": duration,
-                                    "destin_delivery_charges":
-                                    roundedTotalAmount ?? "0.00",
-                                    "destin_vat_charges": "0.00",
-                                    "destin_total_charges": "0.00",
-                                    "destin_discount": "0.00",
-                                    "destin_discounted_charges": "0.00",
-                                    "receiver_name":
-                                    receiversNameController.text,
-                                    "receiver_phone":
-                                    receiversNumberController.text,
-                                  };
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const ConfirmMultipleDetailsScreen(),
+                                          ConfirmMultipleDetailsScreen(
+                                            multipleData: addMultipleData,
+                                          ),
                                     ),
                                   );
                                 }

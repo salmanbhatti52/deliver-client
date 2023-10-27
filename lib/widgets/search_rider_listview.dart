@@ -56,11 +56,11 @@ class _RidersListState extends State<RidersList> {
         "users_customers_id": userId,
         "bookings_types_id": widget.singleData?["bookings_types_id"],
         "delivery_type": widget.singleData?["delivery_type"],
-        "pickup_address": widget.singleData?["pickup_address"],
-        "pickup_latitude": widget.singleData?["pickup_latitude"],
-        "pickup_longitude": widget.singleData?["pickup_longitude"],
         "bookings_destinations": [
           {
+            "pickup_address": widget.singleData?["pickup_address"],
+            "pickup_latitude": widget.singleData?["pickup_latitude"],
+            "pickup_longitude": widget.singleData?["pickup_longitude"],
             "destin_address": widget.singleData?["destin_address"],
             "destin_latitude": widget.singleData?["destin_latitude"],
             "destin_longitude": widget.singleData?["destin_longitude"],
@@ -130,11 +130,11 @@ class _RidersListState extends State<RidersList> {
         "users_customers_id": userId,
         "bookings_types_id": widget.singleData?["bookings_types_id"],
         "delivery_type": widget.singleData?["delivery_type"],
-        "pickup_address": widget.singleData?["pickup_address"],
-        "pickup_latitude": widget.singleData?["pickup_latitude"],
-        "pickup_longitude": widget.singleData?["pickup_longitude"],
         "bookings_destinations": [
           {
+            "pickup_address": widget.singleData?["pickup_address"],
+            "pickup_latitude": widget.singleData?["pickup_latitude"],
+            "pickup_longitude": widget.singleData?["pickup_longitude"],
             "destin_address": widget.singleData?["destin_address"],
             "destin_latitude": widget.singleData?["destin_latitude"],
             "destin_longitude": widget.singleData?["destin_longitude"],
@@ -165,7 +165,7 @@ class _RidersListState extends State<RidersList> {
             : "Sender",
         "payment_status": "Unpaid"
       };
-      String apiUrl = "$baseUrl/send_request_scheduled_booking";
+      String apiUrl = "$baseUrl/send_request_booking_scheduled";
       print("apiUrl: $apiUrl");
       final response = await http.post(
         Uri.parse(apiUrl),
