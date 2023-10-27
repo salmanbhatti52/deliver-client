@@ -8,7 +8,8 @@ import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
 class ConfirmMultipleDetailsScreen extends StatefulWidget {
   final Map? multipleData;
-  const ConfirmMultipleDetailsScreen({super.key, this.multipleData});
+  final List<String>? pickupAddresses;
+  const ConfirmMultipleDetailsScreen({super.key, this.multipleData, this.pickupAddresses});
 
   @override
   State<ConfirmMultipleDetailsScreen> createState() =>
@@ -17,10 +18,12 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
 
 class _ConfirmMultipleDetailsScreenState
     extends State<ConfirmMultipleDetailsScreen> {
+
   @override
   initState() {
     super.initState();
     print("mapData: ${widget.multipleData}");
+    print("pickupAddresses: ${widget.pickupAddresses!.length}");
   }
 
   @override

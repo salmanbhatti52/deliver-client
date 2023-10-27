@@ -126,11 +126,13 @@ class _NewScreenState extends State<NewScreen> {
             systemLng = "${getAllSystemDataModel.data?[i].description}";
             doubleSystemLng = double.parse(systemLng!);
           }
-          if (getAllSystemDataModel.data?[i].type == "min_multiple_delivery_parcel") {
+          if (getAllSystemDataModel.data?[i].type ==
+              "min_multiple_delivery_parcel") {
             minPageLength = "${getAllSystemDataModel.data?[i].description}";
             minPageLen = int.parse(minPageLength!);
           }
-          if (getAllSystemDataModel.data?[i].type == "max_multiple_delivery_parcel") {
+          if (getAllSystemDataModel.data?[i].type ==
+              "max_multiple_delivery_parcel") {
             maxPageLength = "${getAllSystemDataModel.data?[i].description}";
             maxPageLen = int.parse(maxPageLength!);
           }
@@ -466,6 +468,7 @@ class _NewScreenState extends State<NewScreen> {
   }
 
   var api;
+
   calculateDistanceTime() async {
     final origin =
         '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
@@ -1225,7 +1228,8 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
-  List<String> getAddressesFromControllers(List<TextEditingController> controllers) {
+  List<String> getAddressesFromControllers(
+      List<TextEditingController> controllers) {
     List<String> addresses = [];
     for (TextEditingController controller in controllers) {
       addresses.add(controller.text);
@@ -1256,6 +1260,9 @@ class _NewScreenState extends State<NewScreen> {
       return null;
     }
   }
+
+  List<String> pickupAddresses = [];
+  List<String> destinationAddresses = [];
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
@@ -1325,9 +1332,12 @@ class _NewScreenState extends State<NewScreen> {
           itemCount: pages.length,
           itemBuilder: (context, index) {
             TextEditingController pickupController = pickupControllers[index];
-            TextEditingController destinationController = destinationControllers[index];
-            TextEditingController receiversNameController = receiversNameControllers[index];
-            TextEditingController receiversNumberController = receiversNumberControllers[index];
+            TextEditingController destinationController =
+                destinationControllers[index];
+            TextEditingController receiversNameController =
+                receiversNameControllers[index];
+            TextEditingController receiversNumberController =
+                receiversNumberControllers[index];
             print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
             print('pickupController: ${pickupController.text}');
@@ -1335,17 +1345,41 @@ class _NewScreenState extends State<NewScreen> {
             print('receiversNameController: ${receiversNameController.text}');
             print('receiversNumberController: ${receiversNumberController.text}');
 
+            for (TextEditingController pickupController in pickupControllers) {
+              String address = pickupController.text;
+              if (address.isNotEmpty && !pickupAddresses.contains(address)) {
+                pickupAddresses.add(address);
+              }
+            }
+            String combinedPickupAddresses = pickupAddresses.join(", ");
+            print("pickupAddresses[0]: ${pickupAddresses[0]}");
+            print("pickupAddresses[1]: ${pickupAddresses[1]}");
+            print("pickupAddresses[2]: ${pickupAddresses[2]}");
+            print("pickupAddresses[3]: ${pickupAddresses[3]}");
+            print("pickupAddresses[4]: ${pickupAddresses[4]}");
+
+            for (TextEditingController destinationController in destinationControllers) {
+              String address = destinationController.text;
+              if (address.isNotEmpty && !destinationAddresses.contains(address)) {
+                destinationAddresses.add(address);
+              }
+            }
+            String combineddestinationAddresses = destinationAddresses.join(", ");
+            print("destinationAddresses[0]: ${destinationAddresses[0]}");
+            print("destinationAddresses[1]: ${destinationAddresses[1]}");
+            print("destinationAddresses[2]: ${destinationAddresses[2]}");
+            print("destinationAddresses[3]: ${destinationAddresses[3]}");
+            print("destinationAddresses[4]: ${destinationAddresses[4]}");
+
             addMultipleData = {
               "type": "schedule",
               "vehicles_id": vehicleId,
               "bookings_types_id": bookingsTypeId,
-              "delivery_type": selectedRadio == 1
-                  ? "Single"
-                  : "Multiple",
-              "pickup_address": pickupController.text,
+              "delivery_type": selectedRadio == 1 ? "Single" : "Multiple",
+              "pickup_address": combinedPickupAddresses,
               "pickup_latitude": pickupLat ?? currentLat ?? addressLat,
               "pickup_longitude": pickupLng ?? currentLng ?? addressLng,
-              "destin_address": destinationController.text,
+              "destin_address": combineddestinationAddresses,
               "destin_latitude": destinationLat,
               "destin_longitude": destinationLng,
               // "destin_distance": distance!.split(" ")[0],
@@ -2348,7 +2382,8 @@ class _NewScreenState extends State<NewScreen> {
                                       builder: (context) =>
                                           ConfirmMultipleDetailsScreen(
                                             multipleData: addMultipleData,
-                                          ),
+                                            pickupAddresses: pickupAddresses.toList(),
+                                      ),
                                     ),
                                   );
                                 }
