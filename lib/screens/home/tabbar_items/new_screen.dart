@@ -1171,7 +1171,7 @@ class _NewScreenState extends State<NewScreen> {
 // Function to calculate distance and time for multiple deliveries
   List<String> distances = [];
   List<String> durations = [];
-
+  Map<int, Map<String, dynamic>> dataByIndex = {};
   Future<void> calculateDistanceTime01(
     List<Map<String, double>?> pickupCoordinates,
     List<Map<String, double>?> destinationCoordinates,
@@ -1317,6 +1317,45 @@ class _NewScreenState extends State<NewScreen> {
       calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
     });
 
+    for (int index = 0; index < pickupAddresses.length; index++) {
+      // Create a map to store data for this index
+      Map<String, dynamic> indexData = {};
+
+      // Populate pickup and destination coordinates
+      indexData['pickupLatLng'] = pickupLatLngList[index];
+      indexData['destinationLatLng'] = destinationLatLngList[index];
+
+      // Populate controllers
+      indexData['pickupController'] = pickupControllers[index];
+      indexData['destinationController'] = destinationControllers[index];
+      indexData['receiversNameController'] = receiversNameControllers[index];
+      indexData['receiversNumberController'] =
+          receiversNumberControllers[index];
+
+      // Add the data to the map using the index as the key
+      dataByIndex[index] = indexData;
+
+      void printDataForIndex(int desiredIndex) {
+        Map<String, dynamic>? desiredData = dataByIndex[desiredIndex];
+        if (desiredData != null) {
+          // Print desired data here
+          print('Data for index $desiredIndex: $desiredData');
+        } else {
+          print('Desired data not found for index $desiredIndex');
+        }
+      }
+
+      void printAllData() {
+        for (int index = 0; index < dataByIndex.length; index++) {
+          printDataForIndex(index);
+        }
+      }
+    }
+
+// int desiredIndex = 0; // Change this to the index you want to access
+// Map<String, dynamic> desiredData = dataByIndex[desiredIndex];
+// printDataForIndex(desiredIndex);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -1345,7 +1384,8 @@ class _NewScreenState extends State<NewScreen> {
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
-            print('receiversNumberController: ${receiversNumberController.text}');
+            print(
+                'receiversNumberController: ${receiversNumberController.text}');
 
             for (TextEditingController pickupController in pickupControllers) {
               String address = pickupController.text;
@@ -1360,20 +1400,24 @@ class _NewScreenState extends State<NewScreen> {
             print("pickupAddresses[3]: ${pickupAddresses[3]}");
             print("pickupAddresses[4]: ${pickupAddresses[4]}");
 
-            for (TextEditingController destinationController in destinationControllers) {
+            for (TextEditingController destinationController
+                in destinationControllers) {
               String address = destinationController.text;
-              if (address.isNotEmpty && !destinationAddresses.contains(address)) {
+              if (address.isNotEmpty &&
+                  !destinationAddresses.contains(address)) {
                 destinationAddresses.add(address);
               }
             }
-            String combinedDestinationAddresses = destinationAddresses.join(", ");
+            String combinedDestinationAddresses =
+                destinationAddresses.join(", ");
             print("destinationAddresses[0]: ${destinationAddresses[0]}");
             print("destinationAddresses[1]: ${destinationAddresses[1]}");
             print("destinationAddresses[2]: ${destinationAddresses[2]}");
             print("destinationAddresses[3]: ${destinationAddresses[3]}");
             print("destinationAddresses[4]: ${destinationAddresses[4]}");
 
-            for (TextEditingController receiversNameController in receiversNameControllers) {
+            for (TextEditingController receiversNameController
+                in receiversNameControllers) {
               String name = receiversNameController.text;
               if (name.isNotEmpty && !receiversNames.contains(name)) {
                 receiversNames.add(name);
@@ -1386,7 +1430,8 @@ class _NewScreenState extends State<NewScreen> {
             print("receiversNames[3]: ${receiversNames[3]}");
             print("receiversNames[4]: ${receiversNames[4]}");
 
-            for (TextEditingController receiversNumberController in receiversNumberControllers) {
+            for (TextEditingController receiversNumberController
+                in receiversNumberControllers) {
               String phone = receiversNumberController.text;
               if (phone.isNotEmpty && !receiversPhones.contains(phone)) {
                 receiversPhones.add(phone);
@@ -2409,8 +2454,9 @@ class _NewScreenState extends State<NewScreen> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           ConfirmMultipleDetailsScreen(
-                                            multipleData: addMultipleData,
-                                            pickupAddresses: pickupAddresses.toList(),
+                                        multipleData: addMultipleData,
+                                        pickupAddresses:
+                                            pickupAddresses.toList(),
                                       ),
                                     ),
                                   );

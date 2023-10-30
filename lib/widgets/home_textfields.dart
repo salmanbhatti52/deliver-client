@@ -163,28 +163,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
 
   var api;
 
-  // calculateDistanceTime1() async {
-  //   final origin =
-  //       '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
-  //   // '${widget.pickupLats ?? widget.currentLats ?? widget.addressLats},${widget.pickupLngs ?? widget.currentLngs ?? widget.addressLngs}'; // Format coordinates as "latitude,longitude"
-  //   final destination =
-  //       '$destinationLat,$destinationLng'; // Format coordinates as "latitude,longitude"
-  //   // '${widget.destinationLats},${widget.destinationLngs}'; // Format coordinates as "latitude,longitude"
-  //   try {
-  //     final data = await api.getDistanceAndTime(origin, destination);
-  //     distance = data['rows'][0]['elements'][0]['distance']['text'];
-  //     duration = data['rows'][0]['elements'][0]['duration']['text'];
-  //     print("distance: $distance");
-  //     print("duration: $duration");
-  //     // widget.distances = data['rows'][0]['elements'][0]['distance']['text'];
-  //     // widget.durations = data['rows'][0]['elements'][0]['duration']['text'];
-  //     // print("distance: ${widget.distances}");
-  //     // print("duration: ${widget.durations}");
-  //   } catch (e) {
-  //     print("Error: $e");
-  //   }
-  // }
-
   GetAddressesModel getAddressesModel = GetAddressesModel();
 
   getAddresses() async {
