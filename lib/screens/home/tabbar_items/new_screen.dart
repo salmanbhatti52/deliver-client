@@ -1281,79 +1281,117 @@ class _NewScreenState extends State<NewScreen> {
 
     // Create a list to store all the geocoding futures
     List<Future> geocodingFutures = [];
+    List<Map<String, dynamic>> dataForIndexes = [];
 
     for (int index = 0; index < pickupAddresses.length; index++) {
       String pickupAddress = pickupAddresses[index];
       String destinationAddress = destinationAddresses[index];
+      Map<String, dynamic> data = {
+        'pickupController': pickupAddress,
+        'destinationController': destinationAddress,
+        'pickupLatLng': null,
+        'destinationLatLng': null,
+      };
 
       // Start the geocoding process and store the futures
       geocodingFutures
           .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
-        if (pickupLatLng != null) {
-          pickupLatLngList[index] = pickupLatLng;
-          print(
-              'Pickup Latitude for index $index: ${pickupLatLng['latitude']}');
-          print(
-              'Pickup Longitude for index $index: ${pickupLatLng['longitude']}');
-          // Store or use the pickup coordinates as needed
-        }
+        data['pickupLatLng'] = pickupLatLng;
+        print('Data for index $index: $data');
       }));
 
       geocodingFutures.add(
           getLatLongForAddress(destinationAddress).then((destinationLatLng) {
-        if (destinationLatLng != null) {
-          destinationLatLngList[index] = destinationLatLng;
-          print(
-              'Destination Latitude for index $index: ${destinationLatLng['latitude']}');
-          print(
-              'Destination Longitude for index $index: ${destinationLatLng['longitude']}');
-          // Store or use the destination coordinates as needed
-        }
+        data['destinationLatLng'] = destinationLatLng;
+        print('Data for index $index: $data');
       }));
+
+      // Store data in the list for the current index
+      dataForIndexes.add(data);
     }
+
+// After all geocoding tasks have completed, you can access the data in the dataForIndexes list.
+
+    // for (int index = 0; index < pickupAddresses.length; index++) {
+    //   String pickupAddress = pickupAddresses[index];
+    //   String destinationAddress = destinationAddresses[index];
+
+    //   // Start the geocoding process and store the futures
+    //   geocodingFutures
+    //       .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
+    //     if (pickupLatLng != null) {
+    //       pickupLatLngList[index] = pickupLatLng;
+    //       print(
+    //           'Pickup Latitude for index $index: ${pickupLatLng['latitude']}');
+    //       print(
+    //           'Pickup Longitude for index $index: ${pickupLatLng['longitude']}');
+    //       // Store or use the pickup coordinates as needed
+    //     }
+    //   }));
+
+    //   geocodingFutures.add(
+    //       getLatLongForAddress(destinationAddress).then((destinationLatLng) {
+    //     if (destinationLatLng != null) {
+    //       destinationLatLngList[index] = destinationLatLng;
+    //       print(
+    //           'Destination Latitude for index $index: ${destinationLatLng['latitude']}');
+    //       print(
+    //           'Destination Longitude for index $index: ${destinationLatLng['longitude']}');
+    //       // Store or use the destination coordinates as needed
+    //     }
+    //   }));
+    // }
 
     // Wait for all geocoding operations to complete before calculating distances and durations
     Future.wait(geocodingFutures).then((_) {
       calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
     });
 
-    for (int index = 0; index < pickupAddresses.length; index++) {
-      // Create a map to store data for this index
-      Map<String, dynamic> indexData = {};
+//     for (int index = 0; index < pickupAddresses.length; index++) {
+//       // Create a map to store data for this index
+//       Map<String, dynamic> indexData = {};
 
-      // Populate pickup and destination coordinates
-      indexData['pickupLatLng'] = pickupLatLngList[index];
-      indexData['destinationLatLng'] = destinationLatLngList[index];
+//       // Populate pickup and destination coordinates
+//       indexData['pickupLatLng'] = pickupLatLngList[index];
+//       indexData['destinationLatLng'] = destinationLatLngList[index];
 
-      // Populate controllers
-      indexData['pickupController'] = pickupControllers[index];
-      indexData['destinationController'] = destinationControllers[index];
-      indexData['receiversNameController'] = receiversNameControllers[index];
-      indexData['receiversNumberController'] = receiversNumberControllers[index];
+//       // Populate controllers
+//       indexData['pickupController'] = pickupControllers[index].text;
+//       indexData['destinationController'] = destinationControllers[index].text;
+//       indexData['receiversNameController'] =
+//           receiversNameControllers[index].text;
+//       indexData['receiversNumberController'] =
+//           receiversNumberControllers[index].text;
 
-      // Add the data to the map using the index as the key
-      dataByIndex[index] = indexData;
-    }
+//       // Add the data to the map using the index as the key
+//       dataByIndex[index] = indexData;
+//     }
 
-    void printDataForIndex(int desiredIndex) {
-      Map<String, dynamic>? desiredData = dataByIndex[desiredIndex];
-      if (desiredData != null) {
-        // Print desired data here
-        print('Data for index $desiredIndex: $desiredData');
-      } else {
-        print('Desired data not found for index $desiredIndex');
-      }
-    }
+//     void printDataForIndex(int desiredIndex) {
+//       Map<String, dynamic>? desiredData = dataByIndex[desiredIndex];
+//       if (desiredData != null) {
+//         // Print desired data here
+//         print('Data for index $desiredIndex: $desiredData');
+//       } else {
+//         print('Desired data not found for index $desiredIndex');
+//       }
+//     }
 
-    void printAllData() {
-      for (int index = 0; index < dataByIndex.length; index++) {
-        printDataForIndex(index);
-      }
-    }
+//     void printAllData() {
+//       for (int index = 0; index < dataByIndex.length; index++) {
+//         printDataForIndex(index);
+//       }
+//     }
 
-// int desiredIndex = 0; // Change this to the index you want to access
-// Map<String, dynamic> desiredData = dataByIndex[desiredIndex];
-// printDataForIndex(desiredIndex);
+// // int desiredIndex = 0; // Change this to the index you want to access
+// // Map<String, dynamic> desiredData = dataByIndex[desiredIndex];
+// // printDataForIndex(desiredIndex);
+
+//     int desiredIndex = 0; // Change this to the index you want to access
+//     printDataForIndex(desiredIndex);
+
+// // Call printAllData to print data for all indexes
+//     printAllData();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1383,9 +1421,10 @@ class _NewScreenState extends State<NewScreen> {
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
-            print('receiversNumberController: ${receiversNumberController.text}');
+            print(
+                'receiversNumberController: ${receiversNumberController.text}');
 
-            printAllData();
+            // printAllData();
 
             return HomeTextFields(
               currentIndex: currentIndex,
