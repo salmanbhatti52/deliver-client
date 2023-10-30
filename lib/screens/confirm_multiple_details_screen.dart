@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print,
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
@@ -7,9 +9,8 @@ import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
 class ConfirmMultipleDetailsScreen extends StatefulWidget {
-  final Map? multipleData;
-  final List<String>? pickupAddresses;
-  const ConfirmMultipleDetailsScreen({super.key, this.multipleData, this.pickupAddresses});
+  final List<Map<String, dynamic>>? dataForIndexes;
+  const ConfirmMultipleDetailsScreen({super.key, this.dataForIndexes});
 
   @override
   State<ConfirmMultipleDetailsScreen> createState() =>
@@ -22,8 +23,13 @@ class _ConfirmMultipleDetailsScreenState
   @override
   initState() {
     super.initState();
-    print("mapData: ${widget.multipleData}");
-    print("pickupAddresses: ${widget.pickupAddresses!.length}");
+    // print("Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
+    // print("Data: ${widget.dataForIndexes}");
+    print("Data for 0: ${widget.dataForIndexes![0]}");
+    print("Data for 1: ${widget.dataForIndexes![1]}");
+    print("Data for 2: ${widget.dataForIndexes![2]}");
+    print("Data for 3: ${widget.dataForIndexes![3]}");
+    print("Data for 4: ${widget.dataForIndexes![4]}");
   }
 
   @override
