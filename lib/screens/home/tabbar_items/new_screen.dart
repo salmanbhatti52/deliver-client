@@ -1329,26 +1329,25 @@ class _NewScreenState extends State<NewScreen> {
       indexData['pickupController'] = pickupControllers[index];
       indexData['destinationController'] = destinationControllers[index];
       indexData['receiversNameController'] = receiversNameControllers[index];
-      indexData['receiversNumberController'] =
-          receiversNumberControllers[index];
+      indexData['receiversNumberController'] = receiversNumberControllers[index];
 
       // Add the data to the map using the index as the key
       dataByIndex[index] = indexData;
+    }
 
-      void printDataForIndex(int desiredIndex) {
-        Map<String, dynamic>? desiredData = dataByIndex[desiredIndex];
-        if (desiredData != null) {
-          // Print desired data here
-          print('Data for index $desiredIndex: $desiredData');
-        } else {
-          print('Desired data not found for index $desiredIndex');
-        }
+    void printDataForIndex(int desiredIndex) {
+      Map<String, dynamic>? desiredData = dataByIndex[desiredIndex];
+      if (desiredData != null) {
+        // Print desired data here
+        print('Data for index $desiredIndex: $desiredData');
+      } else {
+        print('Desired data not found for index $desiredIndex');
       }
+    }
 
-      void printAllData() {
-        for (int index = 0; index < dataByIndex.length; index++) {
-          printDataForIndex(index);
-        }
+    void printAllData() {
+      for (int index = 0; index < dataByIndex.length; index++) {
+        printDataForIndex(index);
       }
     }
 
@@ -1384,88 +1383,9 @@ class _NewScreenState extends State<NewScreen> {
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
-            print(
-                'receiversNumberController: ${receiversNumberController.text}');
+            print('receiversNumberController: ${receiversNumberController.text}');
 
-            for (TextEditingController pickupController in pickupControllers) {
-              String address = pickupController.text;
-              if (address.isNotEmpty && !pickupAddresses.contains(address)) {
-                pickupAddresses.add(address);
-              }
-            }
-            String combinedPickupAddresses = pickupAddresses.join(", ");
-            print("pickupAddresses[0]: ${pickupAddresses[0]}");
-            print("pickupAddresses[1]: ${pickupAddresses[1]}");
-            print("pickupAddresses[2]: ${pickupAddresses[2]}");
-            print("pickupAddresses[3]: ${pickupAddresses[3]}");
-            print("pickupAddresses[4]: ${pickupAddresses[4]}");
-
-            for (TextEditingController destinationController
-                in destinationControllers) {
-              String address = destinationController.text;
-              if (address.isNotEmpty &&
-                  !destinationAddresses.contains(address)) {
-                destinationAddresses.add(address);
-              }
-            }
-            String combinedDestinationAddresses =
-                destinationAddresses.join(", ");
-            print("destinationAddresses[0]: ${destinationAddresses[0]}");
-            print("destinationAddresses[1]: ${destinationAddresses[1]}");
-            print("destinationAddresses[2]: ${destinationAddresses[2]}");
-            print("destinationAddresses[3]: ${destinationAddresses[3]}");
-            print("destinationAddresses[4]: ${destinationAddresses[4]}");
-
-            for (TextEditingController receiversNameController
-                in receiversNameControllers) {
-              String name = receiversNameController.text;
-              if (name.isNotEmpty && !receiversNames.contains(name)) {
-                receiversNames.add(name);
-              }
-            }
-            String combinedReceiversNames = receiversNames.join(", ");
-            print("receiversNames[0]: ${receiversNames[0]}");
-            print("receiversNames[1]: ${receiversNames[1]}");
-            print("receiversNames[2]: ${receiversNames[2]}");
-            print("receiversNames[3]: ${receiversNames[3]}");
-            print("receiversNames[4]: ${receiversNames[4]}");
-
-            for (TextEditingController receiversNumberController
-                in receiversNumberControllers) {
-              String phone = receiversNumberController.text;
-              if (phone.isNotEmpty && !receiversPhones.contains(phone)) {
-                receiversPhones.add(phone);
-              }
-            }
-            String combinedReceiversPhones = receiversPhones.join(", ");
-            print("receiversPhones[0]: ${receiversPhones[0]}");
-            print("receiversPhones[1]: ${receiversPhones[1]}");
-            print("receiversPhones[2]: ${receiversPhones[2]}");
-            print("receiversPhones[3]: ${receiversPhones[3]}");
-            print("receiversPhones[4]: ${receiversPhones[4]}");
-
-            addMultipleData = {
-              "type": "schedule",
-              "vehicles_id": vehicleId,
-              "bookings_types_id": bookingsTypeId,
-              "delivery_type": selectedRadio == 1 ? "Single" : "Multiple",
-              "pickup_address": combinedPickupAddresses,
-              "pickup_latitude": pickupLat ?? currentLat ?? addressLat,
-              "pickup_longitude": pickupLng ?? currentLng ?? addressLng,
-              "destin_address": combinedDestinationAddresses,
-              "destin_latitude": destinationLat,
-              "destin_longitude": destinationLng,
-              // "destin_distance": distance!.split(" ")[0],
-              "destin_distance": "jkuk",
-              "destin_time": duration,
-              "destin_delivery_charges": roundedTotalAmount ?? "0.00",
-              "destin_vat_charges": "0.00",
-              "destin_total_charges": "0.00",
-              "destin_discount": "0.00",
-              "destin_discounted_charges": "0.00",
-              "receiver_name": combinedReceiversNames,
-              "receiver_phone": combinedReceiversPhones,
-            };
+            printAllData();
 
             return HomeTextFields(
               currentIndex: currentIndex,
