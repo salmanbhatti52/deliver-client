@@ -1349,7 +1349,7 @@ class _NewScreenState extends State<NewScreen> {
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
 
-      calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+      await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
       print("filteredData $filteredData");
       // Start the geocoding process and store the futures
       //   geocodingFutures
@@ -2581,13 +2581,13 @@ class _NewScreenState extends State<NewScreen> {
                                                     null)
                                             .toList();
 
-                                    if (allDataForIndexes1.isNotEmpty) {
+                                    if (filteredData.isNotEmpty) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ConfirmMultipleDetailsScreen(
-                                            dataForIndexes: allDataForIndexes1,
+                                            dataForIndexes: filteredData,
                                           ),
                                         ),
                                       );

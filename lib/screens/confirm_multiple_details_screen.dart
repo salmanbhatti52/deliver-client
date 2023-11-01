@@ -28,19 +28,23 @@ class _ConfirmMultipleDetailsScreenState
     print("datalist  $datalist");
     // print(
     //     "Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
-    print("Data for 0: ${widget.dataForIndexes![0]}");
-    print("Data for 1: ${widget.dataForIndexes![1]}");
-    print("Data for 2: ${widget.dataForIndexes![2]}");
-    print("Data for 3: ${widget.dataForIndexes![3]}");
-    print("Data for 4: ${widget.dataForIndexes![4]}");
+     if (datalist != null) {
+      for (var i = 0; i < datalist!.length; i++) {
+        final dataForIndex = datalist![i];
+        final dataIndex = dataForIndex.keys.first; // Get the index
 
-    for (int index = 0; index < widget.dataForIndexes!.length; index++) {
-      final data = widget.dataForIndexes![index];
-      print("Data for Index $index:");
-      print('Pickup Controller: ${data['pickupController']}');
-      print('Destination Controller: ${data['destinationController']}');
-      // Add more fields as needed
+        print("Data for Index $dataIndex: ${dataForIndex[dataIndex]}");
+      }
     }
+    // print("Data for 0: ${widget.dataForIndexes![0]}");
+    // print("Data for 1: ${widget.dataForIndexes![1]}");
+    // print("Data for 2: ${widget.dataForIndexes![2]}");
+    // print("Data for 3: ${widget.dataForIndexes![3]}");
+    // print("Data for 4: ${widget.dataForIndexes![4]}");
+    // print("Data for 5: ${widget.dataForIndexes![5]}");
+    // print("Data for 6: ${widget.dataForIndexes![6]}");
+    // print("Data for 7: ${widget.dataForIndexes![7]}");
+    // print("Data for 8: ${widget.dataForIndexes![8]}");
   }
 
   @override
