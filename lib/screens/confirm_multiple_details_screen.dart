@@ -28,12 +28,19 @@ class _ConfirmMultipleDetailsScreenState
     print("datalist  $datalist");
     // print(
     //     "Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
-    print("Data: $dataForIndexes");
     print("Data for 0: ${widget.dataForIndexes![0]}");
     print("Data for 1: ${widget.dataForIndexes![1]}");
     print("Data for 2: ${widget.dataForIndexes![2]}");
     print("Data for 3: ${widget.dataForIndexes![3]}");
     print("Data for 4: ${widget.dataForIndexes![4]}");
+
+    for (int index = 0; index < widget.dataForIndexes!.length; index++) {
+      final data = widget.dataForIndexes![index];
+      print("Data for Index $index:");
+      print('Pickup Controller: ${data['pickupController']}');
+      print('Destination Controller: ${data['destinationController']}');
+      // Add more fields as needed
+    }
   }
 
   @override

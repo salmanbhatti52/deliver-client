@@ -1272,8 +1272,10 @@ class _NewScreenState extends State<NewScreen> {
   List<String> destinationAddresses = [];
   List<Map<String, dynamic>> dataForIndexes = [];
   List<List<Map<String, dynamic>>> allDataForIndexes = [];
-
+  List<Map<String, dynamic>> filteredData = [];
   List<Map<String, dynamic>> allDataForIndexes1 = [];
+
+  Map<int, Map<String, dynamic>> dataByIndex = {};
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
@@ -1295,6 +1297,8 @@ class _NewScreenState extends State<NewScreen> {
     // Create a list to store all the geocoding futures
 
     Future<void> fetchData() async {
+      allDataForIndexes1.clear();
+      filteredData.clear();
       // Create a list to hold all geocoding futures
       List<Future<void>> geocodingFutures = [];
 
@@ -1314,46 +1318,100 @@ class _NewScreenState extends State<NewScreen> {
           'receiversNumberController': receiverNumber,
         };
 
-        // Start the geocoding process and store the futures
-        geocodingFutures
-            .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
+        var pickupLatLngFuture = getLatLongForAddress(pickupAddress);
+        var destinationLatLngFuture = getLatLongForAddress(destinationAddress);
+
+        geocodingFutures.add(pickupLatLngFuture.then((pickupLatLng) {
           data['pickupLatLng'] = pickupLatLng;
           print('Data for index in pickup $index: $data');
         }));
 
-        geocodingFutures.add(
-            getLatLongForAddress(destinationAddress).then((destinationLatLng) {
+        geocodingFutures.add(destinationLatLngFuture.then((destinationLatLng) {
           data['destinationLatLng'] = destinationLatLng;
           print('Data for index in destination $index: $data');
         }));
 
-        geocodingFutures.add(Future.wait([
-          getLatLongForAddress(pickupAddress),
-          getLatLongForAddress(destinationAddress),
-        ]).then((List<dynamic> results) {
-          data['pickupLatLng'] = results[0];
-          data['destinationLatLng'] = results[1];
-          print('Big Data for index $index: $data');
+        // Wait for all geocoding futures to complete
+        await Future.wait([pickupLatLngFuture, destinationLatLngFuture]);
 
-          // Store the data in the list
-        }));
-
-        allDataForIndexes1.add(Map.from(data));
+        print("pickupControllerrrrrrrrr: ${data['pickupController']}");
+        print(
+            "destinationControllerrrrrrrrrrr: ${data['destinationController']}");
+        print("Data for index $index: $data");
+        // Store the data in the list
+        allDataForIndexes1.add({'$index': data});
         print(" allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
-
-        //  Wait for all geocoding futures to complete
-        Future.wait(geocodingFutures).then((_) {
-          calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
-        });
-        // dataForIndexes.add(data);
-        // print("DataForIndexes $dataForIndexes");
-        // dataForIndexes.add(data);
-        // allDataForIndexes.add(List.from(dataForIndexes));
-
-        print("allDataForIndexes $allDataForIndexes1");
-
-        // Store data in the list for the current index
       }
+
+      // Wait for all geocoding operations to complete before calculating distances and durations
+      await Future.wait(geocodingFutures);
+      filteredData = allDataForIndexes1
+          .where((entry) => entry.values.every((value) => value != null))
+          .toList();
+
+      calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+      print("filteredData $filteredData");
+      // Start the geocoding process and store the futures
+      //   geocodingFutures
+      //       .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
+      //     data['pickupLatLng'] = pickupLatLng;
+      //     print('Data for index in pickup $index: $data');
+      //   }));
+
+      //   geocodingFutures.add(
+      //       getLatLongForAddress(destinationAddress).then((destinationLatLng) {
+      //     data['destinationLatLng'] = destinationLatLng;
+      //     print('Data for index in destination $index: $data');
+      //   }));
+      //   geocodingFutures.add(Future.wait([
+      //     getLatLongForAddress(pickupAddress),
+      //     getLatLongForAddress(destinationAddress),
+      //   ]).then((List<dynamic> results) {
+      //     data['pickupLatLng'] = results[0];
+      //     data['destinationLatLng'] = results[1];
+      //     print('Big Data for index $index: $data');
+      //   }));
+
+      //   // Store the data in the list
+      //   allDataForIndexes1.add(Map.from(data));
+      // }
+
+      // // Wait for all geocoding futures to complete
+      // await Future.wait(geocodingFutures);
+
+      // // Now you can print the complete data
+      // print("allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
+
+      //   geocodingFutures.add(Future.wait([
+      //     getLatLongForAddress(pickupAddress),
+      //     getLatLongForAddress(destinationAddress),
+      //   ]).then((List<dynamic> results) {
+      //     data['pickupLatLng'] = results[0];
+      //     data['destinationLatLng'] = results[1];
+      //     print('Big Data for index $index: $data');
+
+      //     // Store the data in the list
+      //   }));
+
+      //   dataForIndexes.add(Map.from(data));
+      //   allDataForIndexes1.add(Map.from(data));
+      //   dataByIndex[index] = Map.from(data);
+
+      //   //  Wait for all geocoding futures to complete
+      //   Future.wait(geocodingFutures).then((_) {
+      //     calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+      //   });
+      //   // dataForIndexes.add(data);
+      //   // print("DataForIndexes $dataForIndexes");
+      //   // dataForIndexes.add(data);
+      //   // allDataForIndexes.add(List.from(dataForIndexes));
+
+      //   // Store data in the list for the current index
+      // }
+
+      // print("All Data For Indexes Big $dataForIndexes");
+      // print(" allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
+      // print(" dataByIndex Big $dataByIndex");
     }
 
     // for (int index = 0;
@@ -2488,36 +2546,72 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
-                                  if (dataForIndexes.isNotEmpty) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ConfirmMultipleDetailsScreen(
-                                          dataForIndexes: dataForIndexes,
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const AlertDialog(
+                                        title: Text('Loading Data'),
+                                        content: Text(
+                                            'Please wait while data is being loaded.'),
+                                      );
+                                    },
+                                  );
+
+                                  // Add a delay to ensure data is populated in allDataForIndexes1
+                                  Future.delayed(const Duration(seconds: 1),
+                                      () {
+                                    // Close the loading dialog
+                                    Navigator.of(context).pop();
+
+                                    // Filter the dataForIndexes list to exclude items with empty data or missing pickupLatLng
+                                    List<Map<String, dynamic>>
+                                        filteredDataForIndexes =
+                                        allDataForIndexes1
+                                            .where((data) =>
+                                                data['pickupController'] !=
+                                                    null &&
+                                                data['pickupLatLng'] != null &&
+                                                data['pickupLatLng']
+                                                        ['latitude'] !=
+                                                    null &&
+                                                data['pickupLatLng']
+                                                        ['longitude'] !=
+                                                    null &&
+                                                data['destinationController'] !=
+                                                    null)
+                                            .toList();
+
+                                    if (allDataForIndexes1.isNotEmpty) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ConfirmMultipleDetailsScreen(
+                                            dataForIndexes: allDataForIndexes1,
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Data Error'),
-                                          content: const Text(
-                                              'Please make sure data is available before proceeding.'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: const Text('OK'),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Data Error'),
+                                            content: const Text(
+                                                'Please make sure data is available before proceeding.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
+                                  });
                                 }
                               },
                               child: isLoading
