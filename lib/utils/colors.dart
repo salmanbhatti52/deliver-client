@@ -20,3 +20,6 @@ Color greenStatusButtonColor = const Color(0xFF0ED18F);
 Color pendingColor = const Color(0xFFFF0000);
 Color redColor = Colors.red;
 Color transparentColor = Colors.transparent;
+
+List<Map<String, dynamic>> dataForIndexes = [];
+List<List<Map<String, dynamic>>> allDataForIndexes = [];

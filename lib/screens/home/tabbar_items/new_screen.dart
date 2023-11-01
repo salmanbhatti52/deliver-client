@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, must_be_immutable, use_build_context_synchronously, prefer_typing_uninitialized_variables
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -94,7 +95,6 @@ class _NewScreenState extends State<NewScreen> {
   String? maxPageLength;
   int? minPageLen;
   int? maxPageLen;
-  List<Map<String, dynamic>> dataForIndexes = [];
 
   bool isLoading = false;
   bool isLoading2 = false;
@@ -221,6 +221,8 @@ class _NewScreenState extends State<NewScreen> {
       return null;
     }
   }
+
+  Timer? fetchDataTimer;
 
   GetVehiclesByServiceTypeModel getVehiclesByServiceTypeModel =
       GetVehiclesByServiceTypeModel();
@@ -587,7 +589,9 @@ class _NewScreenState extends State<NewScreen> {
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: bottomDetailsSheet(), // Add the bottom sheet here
+                      child: bottomDetailsSheet(
+                        context,
+                      ), // Add the bottom sheet here
                     ),
                   ],
                 ),
@@ -1172,7 +1176,7 @@ class _NewScreenState extends State<NewScreen> {
 // Function to calculate distance and time for multiple deliveries
   List<String> distances = [];
   List<String> durations = [];
-  Map<int, Map<String, dynamic>> dataByIndex = {};
+  // Map<int, Map<String, dynamic>> dataByIndex = {};
   Future<void> calculateDistanceTime01(
     List<Map<String, double>?> pickupCoordinates,
     List<Map<String, double>?> destinationCoordinates,
@@ -1266,54 +1270,152 @@ class _NewScreenState extends State<NewScreen> {
   List<String> receiversPhones = [];
   List<String> pickupAddresses = [];
   List<String> destinationAddresses = [];
+  List<Map<String, dynamic>> dataForIndexes = [];
+  List<List<Map<String, dynamic>>> allDataForIndexes = [];
+
+  List<Map<String, dynamic>> allDataForIndexes1 = [];
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
 
-    List<String> pickupAddresses = getAddressesFromControllers(pickupControllers);
-    List<String> destinationAddresses = getAddressesFromControllers(destinationControllers);
-    List<String> receiversName = getAddressesFromControllers(receiversNameControllers);
-    List<String> receiversNumber = getAddressesFromControllers(receiversNumberControllers);
+    List<String> pickupAddresses =
+        getAddressesFromControllers(pickupControllers);
+    List<String> destinationAddresses =
+        getAddressesFromControllers(destinationControllers);
+    List<String> receiversName =
+        getAddressesFromControllers(receiversNameControllers);
+    List<String> receiversNumber =
+        getAddressesFromControllers(receiversNumberControllers);
 
-    List<Map<String, double>?> pickupLatLngList = List.filled(pickupAddresses.length, null);
-    List<Map<String, double>?> destinationLatLngList = List.filled(destinationAddresses.length, null);
+    List<Map<String, double>?> pickupLatLngList =
+        List.filled(pickupAddresses.length, null);
+    List<Map<String, double>?> destinationLatLngList =
+        List.filled(destinationAddresses.length, null);
 
     // Create a list to store all the geocoding futures
-    List<Future> geocodingFutures = [];
 
-    for (int index = 0; index < pickupAddresses.length; index++) {
-      String pickupAddress = pickupAddresses[index];
-      String destinationAddress = destinationAddresses[index];
-      String receiverName = receiversName[index];
-      String receiverNumber = receiversNumber[index];
-      Map<String, dynamic> data = {
-        'pickupController': pickupAddress,
-        'destinationController': destinationAddress,
-        'pickupLatLng': null,
-        'destinationLatLng': null,
-        'receiversNameController': receiverName,
-        'receiversNumberController': receiverNumber,
-      };
+    Future<void> fetchData() async {
+      // Create a list to hold all geocoding futures
+      List<Future<void>> geocodingFutures = [];
 
-      // Start the geocoding process and store the futures
-      geocodingFutures.add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
-        data['pickupLatLng'] = pickupLatLng;
-        print('Data for index in pickup $index: $data');
-      }));
+      for (int index = 0;
+          index < pickupAddresses.length && index < destinationAddresses.length;
+          index++) {
+        String pickupAddress = pickupAddresses[index];
+        String destinationAddress = destinationAddresses[index];
+        String receiverName = receiversName[index];
+        String receiverNumber = receiversNumber[index];
+        Map<String, dynamic> data = {
+          'pickupController': pickupAddress,
+          'destinationController': destinationAddress,
+          'pickupLatLng': null,
+          'destinationLatLng': null,
+          'receiversNameController': receiverName,
+          'receiversNumberController': receiverNumber,
+        };
 
-      geocodingFutures.add(getLatLongForAddress(destinationAddress).then((destinationLatLng) {
-        data['destinationLatLng'] = destinationLatLng;
-        print('Data for index in destination $index: $data');
-      }));
+        // Start the geocoding process and store the futures
+        geocodingFutures
+            .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
+          data['pickupLatLng'] = pickupLatLng;
+          print('Data for index in pickup $index: $data');
+        }));
 
-      // Store data in the list for the current index
-      dataForIndexes.add(data);
+        geocodingFutures.add(
+            getLatLongForAddress(destinationAddress).then((destinationLatLng) {
+          data['destinationLatLng'] = destinationLatLng;
+          print('Data for index in destination $index: $data');
+        }));
+
+        geocodingFutures.add(Future.wait([
+          getLatLongForAddress(pickupAddress),
+          getLatLongForAddress(destinationAddress),
+        ]).then((List<dynamic> results) {
+          data['pickupLatLng'] = results[0];
+          data['destinationLatLng'] = results[1];
+          print('Big Data for index $index: $data');
+
+          // Store the data in the list
+        }));
+
+        allDataForIndexes1.add(Map.from(data));
+        print(" allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
+
+        //  Wait for all geocoding futures to complete
+        Future.wait(geocodingFutures).then((_) {
+          calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+        });
+        // dataForIndexes.add(data);
+        // print("DataForIndexes $dataForIndexes");
+        // dataForIndexes.add(data);
+        // allDataForIndexes.add(List.from(dataForIndexes));
+
+        print("allDataForIndexes $allDataForIndexes1");
+
+        // Store data in the list for the current index
+      }
     }
 
-    // Wait for all geocoding operations to complete before calculating distances and durations
-    Future.wait(geocodingFutures).then((_) {
-      calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
-    });
+    // for (int index = 0;
+    //     index < pickupAddresses.length & destinationAddresses.length;
+    //     index++) {
+    //   String pickupAddress = pickupAddresses[index];
+    //   String destinationAddress = destinationAddresses[index];
+    //   String receiverName = receiversName[index];
+    //   String receiverNumber = receiversNumber[index];
+    //   Map<String, dynamic> data = {
+    //     'pickupController': pickupAddress,
+    //     'destinationController': destinationAddress,
+    //     'pickupLatLng': null,
+    //     'destinationLatLng': null,
+    //     'receiversNameController': receiverName,
+    //     'receiversNumberController': receiverNumber,
+    //   };
+
+    //   // Start the geocoding process and store the futures
+    //   geocodingFutures
+    //       .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
+    //     data['pickupLatLng'] = pickupLatLng;
+    //     print('Data for index in pickup $index: $data');
+    //   }));
+
+    //   geocodingFutures.add(
+    //       getLatLongForAddress(destinationAddress).then((destinationLatLng) {
+    //     data['destinationLatLng'] = destinationLatLng;
+    //     print('Data for index in destination $index: $data');
+    //   }));
+
+    //   // Store data in the list for the current index
+    //   dataForIndexes.add(Map.from(data));
+
+    //   print(" dataForIndexes $dataForIndexes");
+    // }
+
+    // // Wait for all geocoding operations to complete before calculating distances and durations
+    // Future.wait(geocodingFutures).then((_) {
+    //   calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+    // });
+
+    // List<TextEditingController> textControllers = [
+    //       pickupController,
+    //       destinationController,
+    //       receiversNameController,
+    //       receiversNumberController,
+    //     ];
+
+    //     // Add a listener to each text controller to check for changes
+    //     for (var controller in textControllers) {
+    //       controller.addListener(() {
+    //         // Check if all text fields are not empty
+    //         bool allFieldsNotEmpty = textControllers
+    //             .every((controller) => controller.text.isNotEmpty);
+
+    //         if (allFieldsNotEmpty) {
+    //           // Call fetchData when all text fields are not empty
+    //           fetchData();
+    //         }
+    //       });
+    //     }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1323,11 +1425,18 @@ class _NewScreenState extends State<NewScreen> {
         child: PageView.builder(
           controller: pageController,
           scrollDirection: Axis.horizontal,
-          onPageChanged: (value) {
+          onPageChanged: (value) async {
             setState(() {
               currentIndex = value;
               print('currentIndex: $currentIndex');
             });
+            //  for (int i = 0; i < pages.length; i++) {
+            //     if (i == 0 && receiversNumberControllers[i].text.isNotEmpty) {
+            //       fetchData(i);
+            //     }
+            //   }
+
+            await fetchData();
           },
           itemCount: pages.length,
           itemBuilder: (context, index) {
@@ -1338,6 +1447,7 @@ class _NewScreenState extends State<NewScreen> {
                 receiversNameControllers[index];
             TextEditingController receiversNumberController =
                 receiversNumberControllers[index];
+
             print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
             print('pickupController: ${pickupController.text}');
@@ -1346,14 +1456,58 @@ class _NewScreenState extends State<NewScreen> {
             print(
                 'receiversNumberController: ${receiversNumberController.text}');
 
-            return HomeTextFields(
-              currentIndex: currentIndex,
-              pageController: pageController,
-              isSelectedAddress: isSelectedAddress,
-              pickupController: pickupController,
-              destinationController: destinationController,
-              receiversNameController: receiversNameController,
-              receiversNumberController: receiversNumberController,
+            if (index == 1 &&
+                pickupController.text.isNotEmpty &&
+                destinationController.text.isNotEmpty &&
+                receiversNameController.text.isNotEmpty &&
+                receiversNumberController.text.isNotEmpty) {
+              fetchData();
+            } else if (index == 2 &&
+                pickupController.text.isNotEmpty &&
+                destinationController.text.isNotEmpty &&
+                receiversNameController.text.isNotEmpty &&
+                receiversNumberController.text.isNotEmpty) {
+              fetchData();
+            } else if (index == 3 &&
+                pickupController.text.isNotEmpty &&
+                destinationController.text.isNotEmpty &&
+                receiversNameController.text.isNotEmpty &&
+                receiversNumberController.text.isNotEmpty) {
+              fetchData();
+            } else if (index == 4 &&
+                pickupController.text.isNotEmpty &&
+                destinationController.text.isNotEmpty &&
+                receiversNameController.text.isNotEmpty &&
+                receiversNumberController.text.isNotEmpty) {
+              fetchData();
+            }
+
+            //  for (int i = 0; i < pages.length; i++) {
+            //     if (i == 0 && receiversNumberControllers[i].text.isNotEmpty) {
+            //       fetchData(i);
+            //     }
+            //   }
+//  for (int i = 0; i < pages.length; i++) {
+//   if (i == 0 && receiversNumberControllers[i].text.isNotEmpty) {
+//     fetchData(i);
+//   }
+// }
+
+            return Listener(
+              child: HomeTextFields(
+                currentIndex: currentIndex,
+                pageController: pageController,
+                isSelectedAddress: isSelectedAddress,
+                pickupController: pickupController,
+                destinationController: destinationController,
+                receiversNameController: receiversNameController,
+                receiversNumberController: receiversNumberController,
+              ),
+              // onPointerUp: (_) {
+              //   if (receiversNumberController.text.isNotEmpty) {
+              //     fetchData();
+              //   }
+              // }
             );
           },
         ),
@@ -1361,9 +1515,15 @@ class _NewScreenState extends State<NewScreen> {
     );
   }
 
+  // fetchDataTimer =
+  //     Timer.periodic(const Duration(seconds: 10), (timer) async {
+  //   await fetchData();
+  // });
   //-----------------#################### IN USE FUNCTION TILL HERE ###############--------------------//
 
-  Widget bottomDetailsSheet() {
+  Widget bottomDetailsSheet(
+    BuildContext context,
+  ) {
     var size = MediaQuery.of(context).size;
 
     return DraggableScrollableSheet(
@@ -2328,14 +2488,36 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ConfirmMultipleDetailsScreen(
-                                        dataForIndexes: dataForIndexes,
+                                  if (dataForIndexes.isNotEmpty) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ConfirmMultipleDetailsScreen(
+                                          dataForIndexes: dataForIndexes,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text('Data Error'),
+                                          content: const Text(
+                                              'Please make sure data is available before proceeding.'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('OK'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
                                 }
                               },
                               child: isLoading

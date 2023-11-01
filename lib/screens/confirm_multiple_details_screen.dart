@@ -19,12 +19,16 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
 
 class _ConfirmMultipleDetailsScreenState
     extends State<ConfirmMultipleDetailsScreen> {
+  List<Map<String, dynamic>>? datalist;
 
   @override
   initState() {
     super.initState();
-    // print("Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
-    // print("Data: ${widget.dataForIndexes}");
+    datalist = widget.dataForIndexes;
+    print("datalist  $datalist");
+    // print(
+    //     "Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
+    print("Data: $dataForIndexes");
     print("Data for 0: ${widget.dataForIndexes![0]}");
     print("Data for 1: ${widget.dataForIndexes![1]}");
     print("Data for 2: ${widget.dataForIndexes![2]}");
