@@ -28,12 +28,18 @@ class _ConfirmMultipleDetailsScreenState
     print("datalist  $datalist");
     // print(
     //     "Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
-     if (datalist != null) {
-      for (var i = 0; i < datalist!.length; i++) {
-        final dataForIndex = datalist![i];
+    if (widget.dataForIndexes != null) {
+      for (var i = 0; i < widget.dataForIndexes!.length; i++) {
+        final dataForIndex = widget.dataForIndexes![i];
         final dataIndex = dataForIndex.keys.first; // Get the index
+        final data = dataForIndex[dataIndex];
 
-        print("Data for Index $dataIndex: ${dataForIndex[dataIndex]}");
+        // Check if data contains null values
+        if (data.containsValue(null)) {
+          print("Data for Index $dataIndex: Data contains null values");
+        } else {
+          print("Data for Index $dataIndex: $data");
+        }
       }
     }
     // print("Data for 0: ${widget.dataForIndexes![0]}");

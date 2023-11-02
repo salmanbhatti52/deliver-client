@@ -1176,7 +1176,6 @@ class _NewScreenState extends State<NewScreen> {
 // Function to calculate distance and time for multiple deliveries
   List<String> distances = [];
   List<String> durations = [];
-  // Map<int, Map<String, dynamic>> dataByIndex = {};
   Future<void> calculateDistanceTime01(
     List<Map<String, double>?> pickupCoordinates,
     List<Map<String, double>?> destinationCoordinates,
@@ -1289,11 +1288,6 @@ class _NewScreenState extends State<NewScreen> {
     List<String> receiversNumber =
         getAddressesFromControllers(receiversNumberControllers);
 
-    List<Map<String, double>?> pickupLatLngList =
-        List.filled(pickupAddresses.length, null);
-    List<Map<String, double>?> destinationLatLngList =
-        List.filled(destinationAddresses.length, null);
-
     // Create a list to store all the geocoding futures
 
     Future<void> fetchData() async {
@@ -1301,7 +1295,10 @@ class _NewScreenState extends State<NewScreen> {
       filteredData.clear();
       // Create a list to hold all geocoding futures
       List<Future<void>> geocodingFutures = [];
-
+      List<Map<String, double>?> pickupLatLngList =
+          List.filled(pickupAddresses.length, null);
+      List<Map<String, double>?> destinationLatLngList =
+          List.filled(destinationAddresses.length, null);
       for (int index = 0;
           index < pickupAddresses.length && index < destinationAddresses.length;
           index++) {
@@ -1322,158 +1319,47 @@ class _NewScreenState extends State<NewScreen> {
         var destinationLatLngFuture = getLatLongForAddress(destinationAddress);
 
         geocodingFutures.add(pickupLatLngFuture.then((pickupLatLng) {
-          data['pickupLatLng'] = pickupLatLng;
-          print('Data for index in pickup $index: $data');
+          if (pickupLatLng != null) {
+            data['pickupLatLng'] = pickupLatLng;
+            print('PickupLatLng for index $index: $pickupLatLng');
+            pickupLatLngList[index] = pickupLatLng; // Store the pickupLatLng
+          } else {
+            print('Invalid PickupLatLng for index $index');
+          }
         }));
 
         geocodingFutures.add(destinationLatLngFuture.then((destinationLatLng) {
-          data['destinationLatLng'] = destinationLatLng;
-          print('Data for index in destination $index: $data');
+          if (destinationLatLng != null) {
+            data['destinationLatLng'] = destinationLatLng;
+            print('DestinationLatLng for index $index: $destinationLatLng');
+            destinationLatLngList[index] =
+                destinationLatLng; // Store the destinationLatLng
+          } else {
+            print('Invalid DestinationLatLng for index $index');
+          }
         }));
-
-        // Wait for all geocoding futures to complete
         await Future.wait([pickupLatLngFuture, destinationLatLngFuture]);
 
         print("pickupControllerrrrrrrrr: ${data['pickupController']}");
         print(
             "destinationControllerrrrrrrrrrr: ${data['destinationController']}");
         print("Data for index $index: $data");
-        // Store the data in the list
         allDataForIndexes1.add({'$index': data});
         print(" allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
       }
 
       // Wait for all geocoding operations to complete before calculating distances and durations
       await Future.wait(geocodingFutures);
+
+      // Ensure that all geocoding has completed before calculating distances and durations
+      await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
       filteredData = allDataForIndexes1
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
 
-      await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+      // await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
       print("filteredData $filteredData");
-      // Start the geocoding process and store the futures
-      //   geocodingFutures
-      //       .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
-      //     data['pickupLatLng'] = pickupLatLng;
-      //     print('Data for index in pickup $index: $data');
-      //   }));
-
-      //   geocodingFutures.add(
-      //       getLatLongForAddress(destinationAddress).then((destinationLatLng) {
-      //     data['destinationLatLng'] = destinationLatLng;
-      //     print('Data for index in destination $index: $data');
-      //   }));
-      //   geocodingFutures.add(Future.wait([
-      //     getLatLongForAddress(pickupAddress),
-      //     getLatLongForAddress(destinationAddress),
-      //   ]).then((List<dynamic> results) {
-      //     data['pickupLatLng'] = results[0];
-      //     data['destinationLatLng'] = results[1];
-      //     print('Big Data for index $index: $data');
-      //   }));
-
-      //   // Store the data in the list
-      //   allDataForIndexes1.add(Map.from(data));
-      // }
-
-      // // Wait for all geocoding futures to complete
-      // await Future.wait(geocodingFutures);
-
-      // // Now you can print the complete data
-      // print("allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
-
-      //   geocodingFutures.add(Future.wait([
-      //     getLatLongForAddress(pickupAddress),
-      //     getLatLongForAddress(destinationAddress),
-      //   ]).then((List<dynamic> results) {
-      //     data['pickupLatLng'] = results[0];
-      //     data['destinationLatLng'] = results[1];
-      //     print('Big Data for index $index: $data');
-
-      //     // Store the data in the list
-      //   }));
-
-      //   dataForIndexes.add(Map.from(data));
-      //   allDataForIndexes1.add(Map.from(data));
-      //   dataByIndex[index] = Map.from(data);
-
-      //   //  Wait for all geocoding futures to complete
-      //   Future.wait(geocodingFutures).then((_) {
-      //     calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
-      //   });
-      //   // dataForIndexes.add(data);
-      //   // print("DataForIndexes $dataForIndexes");
-      //   // dataForIndexes.add(data);
-      //   // allDataForIndexes.add(List.from(dataForIndexes));
-
-      //   // Store data in the list for the current index
-      // }
-
-      // print("All Data For Indexes Big $dataForIndexes");
-      // print(" allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
-      // print(" dataByIndex Big $dataByIndex");
     }
-
-    // for (int index = 0;
-    //     index < pickupAddresses.length & destinationAddresses.length;
-    //     index++) {
-    //   String pickupAddress = pickupAddresses[index];
-    //   String destinationAddress = destinationAddresses[index];
-    //   String receiverName = receiversName[index];
-    //   String receiverNumber = receiversNumber[index];
-    //   Map<String, dynamic> data = {
-    //     'pickupController': pickupAddress,
-    //     'destinationController': destinationAddress,
-    //     'pickupLatLng': null,
-    //     'destinationLatLng': null,
-    //     'receiversNameController': receiverName,
-    //     'receiversNumberController': receiverNumber,
-    //   };
-
-    //   // Start the geocoding process and store the futures
-    //   geocodingFutures
-    //       .add(getLatLongForAddress(pickupAddress).then((pickupLatLng) {
-    //     data['pickupLatLng'] = pickupLatLng;
-    //     print('Data for index in pickup $index: $data');
-    //   }));
-
-    //   geocodingFutures.add(
-    //       getLatLongForAddress(destinationAddress).then((destinationLatLng) {
-    //     data['destinationLatLng'] = destinationLatLng;
-    //     print('Data for index in destination $index: $data');
-    //   }));
-
-    //   // Store data in the list for the current index
-    //   dataForIndexes.add(Map.from(data));
-
-    //   print(" dataForIndexes $dataForIndexes");
-    // }
-
-    // // Wait for all geocoding operations to complete before calculating distances and durations
-    // Future.wait(geocodingFutures).then((_) {
-    //   calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
-    // });
-
-    // List<TextEditingController> textControllers = [
-    //       pickupController,
-    //       destinationController,
-    //       receiversNameController,
-    //       receiversNumberController,
-    //     ];
-
-    //     // Add a listener to each text controller to check for changes
-    //     for (var controller in textControllers) {
-    //       controller.addListener(() {
-    //         // Check if all text fields are not empty
-    //         bool allFieldsNotEmpty = textControllers
-    //             .every((controller) => controller.text.isNotEmpty);
-
-    //         if (allFieldsNotEmpty) {
-    //           // Call fetchData when all text fields are not empty
-    //           fetchData();
-    //         }
-    //       });
-    //     }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
