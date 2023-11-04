@@ -1,44 +1,26 @@
 {
   "project_info": {
-    "project_number": "747855898697",
-    "project_id": "deliverappgfl-client",
-    "storage_bucket": "deliverappgfl-client.appspot.com"
+    "project_number": "1036018314218",
+    "project_id": "deliverbygfl-client1",
+    "storage_bucket": "deliverbygfl-client1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:747855898697:android:95f8c6ab386bc7cbe6f798",
+        "mobilesdk_app_id": "1:1036018314218:android:cea69b961fc4fcd7b9e093",
         "android_client_info": {
           "package_name": "com.deliverbygfl.client"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "747855898697-9cn3kts9v518s7s3jt67b7nk3f16qa5q.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.deliverbygfl.client",
-            "certificate_hash": "6eb7b9c8c347348af580c98234295dce8dee19ad"
-          }
-        },
-        {
-          "client_id": "747855898697-75bfdpla87m4uoo2d5q1i1ol7ihopvbb.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyApILvvAfSdgi3HaNR9OAl2ZEVWuHB97y0"
+          "current_key": "AIzaSyB7RF0jGyxupQlhFGKodgPALx5qHT2UNGg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "747855898697-75bfdpla87m4uoo2d5q1i1ol7ihopvbb.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

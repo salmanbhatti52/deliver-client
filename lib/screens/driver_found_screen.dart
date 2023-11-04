@@ -33,6 +33,7 @@ class DriverFoundScreen extends StatefulWidget {
   final String? currentBookingId;
   final double? distance;
   final Map? singleData;
+  final Map? multipleData;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
 
@@ -44,6 +45,7 @@ class DriverFoundScreen extends StatefulWidget {
     this.currentBookingId,
     this.distance,
     this.singleData,
+    this.multipleData,
     this.riderData,
     this.bookingDestinationId,
   });

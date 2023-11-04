@@ -13,8 +13,8 @@ bool isSelectedCard = false;
 
 class PaymentMethodBySenderSheet extends StatefulWidget {
   final Map? singleData;
-
-  const PaymentMethodBySenderSheet({super.key, this.singleData});
+  final Map? multipleData;
+  const PaymentMethodBySenderSheet({super.key, this.singleData, this.multipleData});
 
   @override
   State<PaymentMethodBySenderSheet> createState() =>
@@ -73,7 +73,8 @@ class _PaymentMethodBySenderSheetState
         select: "Select",
       );
     });
-    print(widget.singleData);
+    print("mapData Single: ${widget.singleData}");
+    print("mapData Multiple: ${widget.multipleData}");
   }
 
   @override
@@ -212,15 +213,31 @@ class _PaymentMethodBySenderSheetState
                   GestureDetector(
                     onTap: () {
                       Map? updatedData = Map.from(widget.singleData!);
-                      updatedData.addAll({
-                        "payment_gateways_id": cardId,
-                      });
+                      Map? updatedData2 = Map.from(widget.multipleData!);
+                      if(widget.multipleData!["delivery_type"] == "Multiple") {
+                        if(updatedData2.isNotEmpty) {
+                          updatedData2.addAll({
+                            "payment_gateways_id": cardId,
+                          });
+                        } else {
+                          updatedData2 = {};
+                        }
+                      } else {
+                        if(updatedData.isNotEmpty) {
+                          updatedData.addAll({
+                            "payment_gateways_id": cardId,
+                          });
+                        } else {
+                          updatedData = {};
+                        }
+                      }
                       Future.delayed(const Duration(seconds: 2), () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SearchRidersScreen(
                               singleData: updatedData,
+                              multipleData: updatedData2,
                             ),
                           ),
                         );

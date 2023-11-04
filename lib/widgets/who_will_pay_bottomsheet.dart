@@ -12,7 +12,8 @@ bool isSelectedPayLater = false;
 
 class WhoWillPaySheet extends StatefulWidget {
   final Map? singleData;
-  const WhoWillPaySheet({super.key, this.singleData});
+  final Map? multipleData;
+  const WhoWillPaySheet({super.key, this.singleData, this.multipleData});
 
   @override
   State<WhoWillPaySheet> createState() => _WhoWillPaySheetState();
@@ -35,7 +36,8 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
         receiver: "Receiver",
       );
     });
-    print("mapData: ${widget.singleData}");
+    print("mapData Single: ${widget.singleData}");
+    print("mapData Multiple: ${widget.multipleData}");
   }
 
   @override
@@ -233,14 +235,30 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                     onTap: () {
                       if (isSelectedPayNow == true) {
                         Map? updatedData = Map.from(widget.singleData!);
-                        updatedData.addAll({
-                          "payment_by": "Sender",
-                        });
+                        Map? updatedData2 = Map.from(widget.multipleData!);
+                        if(widget.multipleData!["delivery_type"] == "Multiple") {
+                          if(updatedData2.isNotEmpty) {
+                            updatedData2.addAll({
+                              "payment_by": "Sender",
+                            });
+                          } else {
+                            updatedData2 = {};
+                          }
+                        } else {
+                          if(updatedData.isNotEmpty) {
+                            updatedData.addAll({
+                              "payment_by": "Sender",
+                            });
+                          } else {
+                            updatedData = {};
+                          }
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PaymentMethodBySenderSheet(
                               singleData: updatedData,
+                              multipleData: updatedData2,
                             ),
                           ),
                         );
@@ -265,14 +283,30 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                         //   context,
                         // );
                         Map? updatedData = Map.from(widget.singleData!);
-                        updatedData.addAll({
-                          "payment_by": "Receiver",
-                        });
+                        Map? updatedData2 = Map.from(widget.multipleData!);
+                        if(widget.multipleData!["delivery_type"] == "Multiple") {
+                          if(updatedData2.isNotEmpty) {
+                            updatedData2.addAll({
+                              "payment_by": "Receiver",
+                            });
+                          } else {
+                            updatedData2 = {};
+                          }
+                        } else {
+                          if(updatedData.isNotEmpty) {
+                            updatedData.addAll({
+                              "payment_by": "Receiver",
+                            });
+                          } else {
+                            updatedData = {};
+                          }
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => PaymentMethodByReceiverSheet(
                               singleData: updatedData,
+                              multipleData: updatedData2,
                             ),
                           ),
                         );

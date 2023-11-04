@@ -20,11 +20,13 @@ double? distanceKm = 0.0;
 
 class RidersList extends StatefulWidget {
   final Map? singleData;
+  final Map? multipleData;
   final SearchRiderData? searchRider;
 
   const RidersList({
     super.key,
     this.singleData,
+    this.multipleData,
     this.searchRider,
   });
 
@@ -52,39 +54,112 @@ class _RidersListState extends State<RidersList> {
       userId = sharedPref.getString('userId');
       final Map<String, dynamic> requestData = {
         "users_fleet_id": widget.searchRider?.usersFleetId,
-        "vehicles_id": widget.singleData?["vehicles_id"],
+        "vehicles_id":  widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"],
         "users_customers_id": userId,
-        "bookings_types_id": widget.singleData?["bookings_types_id"],
-        "delivery_type": widget.singleData?["delivery_type"],
+        "bookings_types_id": widget.singleData!.isNotEmpty ? widget.singleData!["bookings_types_id"] : widget.multipleData!["bookings_types_id"],
+        "delivery_type": widget.singleData!.isNotEmpty ? widget.singleData!["delivery_type"] : widget.multipleData!["delivery_type"],
         "bookings_destinations": [
           {
-            "pickup_address": widget.singleData?["pickup_address"],
-            "pickup_latitude": widget.singleData?["pickup_latitude"],
-            "pickup_longitude": widget.singleData?["pickup_longitude"],
-            "destin_address": widget.singleData?["destin_address"],
-            "destin_latitude": widget.singleData?["destin_latitude"],
-            "destin_longitude": widget.singleData?["destin_longitude"],
-            "destin_distance": widget.singleData?["destin_distance"],
-            "destin_time": widget.singleData?["destin_time"],
-            "destin_delivery_charges":
-                widget.singleData?["destin_delivery_charges"],
-            "destin_vat_charges": widget.singleData?["destin_vat_charges"],
-            "destin_total_charges": widget.singleData?["destin_total_charges"],
-            "destin_discount": widget.singleData?["destin_discount"],
-            "destin_discounted_charges":
-                widget.singleData?["destin_discounted_charges"],
-            "receiver_name": widget.singleData?["receiver_name"],
-            "receiver_phone": widget.singleData?["receiver_phone"],
-          }
+            "pickup_address": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_address0"],
+            "pickup_latitude": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"],
+            "pickup_longitude": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"],
+            "destin_address": widget.singleData!.isNotEmpty ? widget.singleData!["destin_address"] : widget.multipleData!["destin_address0"],
+            "destin_latitude": widget.singleData!.isNotEmpty ? widget.singleData!["destin_latitude"] : widget.multipleData!["destin_latitude0"],
+            "destin_longitude": widget.singleData!.isNotEmpty ? widget.singleData!["destin_longitude"] : widget.multipleData!["destin_longitude0"],
+            "destin_distance": widget.singleData!.isNotEmpty ? widget.singleData!["destin_distance"] : "56",
+            "destin_time": widget.singleData!.isNotEmpty ? widget.singleData!["destin_time"] : "1 hr 30 min",
+            "destin_delivery_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_delivery_charges"] : "2500",
+            "destin_vat_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_vat_charges"] : "250",
+            "destin_total_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_total_charges"] : "2750",
+            "destin_discount": widget.singleData!.isNotEmpty ? widget.singleData!["destin_discount"] : "0",
+            "destin_discounted_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_discounted_charges"] : "0",
+            "receiver_name": widget.singleData!.isNotEmpty ? widget.singleData!["receiver_name"] : widget.multipleData!["receiver_name0"],
+            "receiver_phone": widget.singleData!.isNotEmpty ? widget.singleData!["receiver_phone"] : widget.multipleData!["receiver_phone0"],
+          },
+          if (widget.multipleData!["pickup_address1"] != null &&
+              widget.multipleData!["pickup_address1"].isNotEmpty)
+          {
+            "pickup_address": widget.multipleData!["pickup_address1"],
+            "pickup_latitude": widget.multipleData!["pickup_latitude1"],
+            "pickup_longitude": widget.multipleData!["pickup_longitude1"],
+            "destin_address": widget.multipleData!["destin_address1"],
+            "destin_latitude": widget.multipleData!["destin_latitude1"],
+            "destin_longitude": widget.multipleData!["destin_longitude1"],
+            "destin_distance": "5.0",
+            "destin_time": "15 min",
+            "destin_delivery_charges": "500",
+            "destin_vat_charges": "20",
+            "destin_total_charges": "520",
+            "destin_discount": "0",
+            "destin_discounted_charges": "0",
+            "receiver_name": widget.multipleData!["receiver_name1"],
+            "receiver_phone": widget.multipleData!["receiver_phone1"],
+          },
+          if (widget.multipleData!["pickup_address2"] != null &&
+              widget.multipleData!["pickup_address2"].isNotEmpty)
+            {
+              "pickup_address": widget.multipleData!["pickup_address2"],
+              "pickup_latitude": widget.multipleData!["pickup_latitude2"],
+              "pickup_longitude": widget.multipleData!["pickup_longitude2"],
+              "destin_address": widget.multipleData!["destin_address2"],
+              "destin_latitude": widget.multipleData!["destin_latitude2"],
+              "destin_longitude": widget.multipleData!["destin_longitude2"],
+              "destin_distance": "5.0",
+              "destin_time": "15 min",
+              "destin_delivery_charges": "500",
+              "destin_vat_charges": "20",
+              "destin_total_charges": "520",
+              "destin_discount": "0",
+              "destin_discounted_charges": "0",
+              "receiver_name": widget.multipleData!["receiver_name2"],
+              "receiver_phone": widget.multipleData!["receiver_phone2"],
+            },
+          if (widget.multipleData!["pickup_address3"] != null &&
+              widget.multipleData!["pickup_address3"].isNotEmpty)
+            {
+              "pickup_address": widget.multipleData!["pickup_address3"],
+              "pickup_latitude": widget.multipleData!["pickup_latitude3"],
+              "pickup_longitude": widget.multipleData!["pickup_longitude3"],
+              "destin_address": widget.multipleData!["destin_address3"],
+              "destin_latitude": widget.multipleData!["destin_latitude3"],
+              "destin_longitude": widget.multipleData!["destin_longitude3"],
+              "destin_distance": "5.0",
+              "destin_time": "15 min",
+              "destin_delivery_charges": "500",
+              "destin_vat_charges": "20",
+              "destin_total_charges": "520",
+              "destin_discount": "0",
+              "destin_discounted_charges": "0",
+              "receiver_name": widget.multipleData!["receiver_name3"],
+              "receiver_phone": widget.multipleData!["receiver_phone3"],
+            },
+          if (widget.multipleData!["pickup_address4"] != null &&
+              widget.multipleData!["pickup_address4"].isNotEmpty)
+            {
+              "pickup_address": widget.multipleData!["pickup_address4"],
+              "pickup_latitude": widget.multipleData!["pickup_latitude4"],
+              "pickup_longitude": widget.multipleData!["pickup_longitude4"],
+              "destin_address": widget.multipleData!["destin_address4"],
+              "destin_latitude": widget.multipleData!["destin_latitude4"],
+              "destin_longitude": widget.multipleData!["destin_longitude4"],
+              "destin_distance": "5.0",
+              "destin_time": "15 min",
+              "destin_delivery_charges": "500",
+              "destin_vat_charges": "20",
+              "destin_total_charges": "520",
+              "destin_discount": "0",
+              "destin_discounted_charges": "0",
+              "receiver_name": widget.multipleData!["receiver_name4"],
+              "receiver_phone": widget.multipleData!["receiver_phone4"],
+            },
         ],
-        "total_delivery_charges": widget.singleData?["destin_total_charges"],
-        "total_vat_charges": widget.singleData?["total_vat_charges"],
-        "total_charges": widget.singleData?["total_charges"],
-        "total_discount": widget.singleData?["total_discount"],
-        "total_discounted_charges":
-            widget.singleData?["total_discounted_charges"],
-        "payment_gateways_id": widget.singleData?["payment_gateways_id"],
-        "payment_by": widget.singleData?["payment_by"],
+        "total_delivery_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_total_charges"] : "2750",
+        "total_vat_charges": widget.singleData!.isNotEmpty ? widget.singleData!["total_vat_charges"] : "250",
+        "total_charges": widget.singleData!.isNotEmpty ? widget.singleData!["total_charges"] : "3000",
+        "total_discount": widget.singleData!.isNotEmpty ? widget.singleData!["total_discount"] : "0",
+        "total_discounted_charges": widget.singleData!.isNotEmpty ? widget.singleData!["total_discounted_charges"] : "0",
+        "payment_gateways_id": widget.singleData!.isNotEmpty ? widget.singleData!["payment_gateways_id"] : widget.multipleData!["payment_gateways_id"],
+        "payment_by": widget.singleData!.isNotEmpty ? widget.singleData!["payment_by"] : widget.multipleData!["payment_by"],
         "payment_status": "Unpaid"
       };
       String apiUrl = "$baseUrl/send_request_booking";
@@ -211,6 +286,7 @@ class _RidersListState extends State<RidersList> {
     super.initState();
     calculateDistance();
     print('singleData: ${widget.singleData}');
+    print('multipleData: ${widget.multipleData}');
   }
 
   @override
@@ -290,7 +366,7 @@ class _RidersListState extends State<RidersList> {
                   SizedBox(height: size.height * 0.005),
                   GestureDetector(
                     onTap: () async {
-                      if (widget.singleData?["type"] == "booking") {
+                      if (widget.singleData?["type"] == "booking" || widget.multipleData?["type"] == "booking") {
                         print("booking");
                         await createBooking();
                         if (createBookingModel.data != null) {
@@ -299,22 +375,15 @@ class _RidersListState extends State<RidersList> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DriverFoundScreen(
-                                  bookingId: createBookingModel.data?.bookingsId
-                                      .toString(),
-                                  fleetId:
-                                      "${widget.searchRider?.usersFleetId}",
+                                  bookingId: createBookingModel.data?.bookingsId.toString(),
+                                  fleetId: "${widget.searchRider?.usersFleetId}",
                                   currentBookingId: currentBookingId,
-                                  passCode: createBookingModel
-                                      .data
-                                      ?.bookingsFleet?[0]
-                                      .bookingsDestinations
-                                      ?.passcode,
+                                  passCode: createBookingModel.data?.bookingsFleet?[0].bookingsDestinations?.passcode,
                                   distance: distanceKm,
                                   singleData: widget.singleData,
+                                  multipleData: widget.multipleData,
                                   riderData: widget.searchRider,
-                                  bookingDestinationId: createBookingModel.data
-                                      ?.bookingsFleet?[0].bookingsDestinationsId
-                                      .toString(),
+                                  bookingDestinationId: createBookingModel.data?.bookingsFleet?[0].bookingsDestinationsId.toString(),
                                 ),
                               ),
                             );

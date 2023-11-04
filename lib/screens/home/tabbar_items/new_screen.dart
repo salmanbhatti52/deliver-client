@@ -1176,6 +1176,8 @@ class _NewScreenState extends State<NewScreen> {
 // Function to calculate distance and time for multiple deliveries
   List<String> distances = [];
   List<String> durations = [];
+
+  // Map<int, Map<String, dynamic>> dataByIndex = {};
   Future<void> calculateDistanceTime01(
     List<Map<String, double>?> pickupCoordinates,
     List<Map<String, double>?> destinationCoordinates,
@@ -1353,9 +1355,7 @@ class _NewScreenState extends State<NewScreen> {
 
       // Ensure that all geocoding has completed before calculating distances and durations
       await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
-      filteredData = allDataForIndexes1
-          .where((entry) => entry.values.every((value) => value != null))
-          .toList();
+      filteredData = allDataForIndexes1.where((entry) => entry.values.every((value) => value != null)).toList();
 
       // await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
       print("filteredData $filteredData");
@@ -2432,6 +2432,14 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
+                                  addMultipleData = {
+                                    "type": "booking",
+                                    "vehicles_id": vehicleId,
+                                    "bookings_types_id": bookingsTypeId,
+                                    "delivery_type": selectedRadio == 1
+                                        ? "Single"
+                                        : "Multiple",
+                                  };
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -2473,6 +2481,7 @@ class _NewScreenState extends State<NewScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ConfirmMultipleDetailsScreen(
+                                            multipleData: addMultipleData,
                                             dataForIndexes: filteredData,
                                           ),
                                         ),

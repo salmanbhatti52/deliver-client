@@ -15,8 +15,8 @@ bool isSelectedCash = false;
 
 class PaymentMethodByReceiverSheet extends StatefulWidget {
   final Map? singleData;
-
-  const PaymentMethodByReceiverSheet({super.key, this.singleData});
+  final Map? multipleData;
+  const PaymentMethodByReceiverSheet({super.key, this.singleData, this.multipleData});
 
   @override
   State<PaymentMethodByReceiverSheet> createState() =>
@@ -78,7 +78,8 @@ class _PaymentMethodByReceiverSheetState
         select: "Select",
       );
     });
-    print(widget.singleData);
+    print("mapData Single: ${widget.singleData}");
+    print("mapData Multiple: ${widget.multipleData}");
   }
 
   @override
@@ -294,15 +295,31 @@ class _PaymentMethodByReceiverSheetState
                       // }
                       if (isSelectedCash == true) {
                         Map? updatedData = Map.from(widget.singleData!);
-                        updatedData.addAll({
-                          "payment_gateways_id": cashId,
-                        });
+                        Map? updatedData2 = Map.from(widget.multipleData!);
+                        if(widget.multipleData!["delivery_type"] == "Multiple") {
+                          if(updatedData2.isNotEmpty) {
+                            updatedData2.addAll({
+                              "payment_gateways_id": cashId,
+                            });
+                          } else {
+                            updatedData2 = {};
+                          }
+                        } else {
+                          if(updatedData.isNotEmpty) {
+                            updatedData.addAll({
+                              "payment_gateways_id": cashId,
+                            });
+                          } else {
+                            updatedData = {};
+                          }
+                        }
                         Future.delayed(const Duration(seconds: 2), () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SearchRidersScreen(
                                 singleData: updatedData,
+                                multipleData: updatedData2,
                               ),
                             ),
                           );

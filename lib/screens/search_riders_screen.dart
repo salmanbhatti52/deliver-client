@@ -15,8 +15,8 @@ import 'package:deliver_client/models/get_all_system_data_model.dart';
 
 class SearchRidersScreen extends StatefulWidget {
   final Map? singleData;
-
-  const SearchRidersScreen({super.key, this.singleData});
+  final Map? multipleData;
+  const SearchRidersScreen({super.key, this.singleData, this.multipleData});
 
   @override
   State<SearchRidersScreen> createState() => _SearchRidersScreenState();
@@ -36,18 +36,18 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       });
       String apiUrl = "$baseUrl/get_riders_available";
       print("apiUrl: $apiUrl");
-      print("vehiclesId: ${widget.singleData?["vehicles_id"]}");
-      print("pickupLatitude: ${widget.singleData?["pickup_latitude"]}");
-      print("pickupLongitude: ${widget.singleData?["pickup_longitude"]}");
+      print("vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
+      print("pickupLatitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"]}");
+      print("pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Accept': 'application/json',
         },
         body: {
-          "pickup_latitude": widget.singleData?["pickup_latitude"],
-          "pickup_longitude": widget.singleData?["pickup_longitude"],
-          "vehicles_id": widget.singleData?["vehicles_id"],
+          "pickup_latitude": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"].toString(),
+          "pickup_longitude": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"].toString(),
+          "vehicles_id": widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"].toString(),
         },
       );
       final responseString = response.body;
@@ -125,7 +125,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     super.initState();
     searchRider();
     getAllSystemData();
-    // print('singleData: ${widget.singleData}');
+    print('singleData: ${widget.singleData}');
+    print('multipleData: ${widget.multipleData}');
   }
 
   @override
@@ -225,9 +226,9 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                             print(
                                                 "length: ${searchRiderModel.data?.length}");
                                             return RidersList(
-                                              singleData: widget.singleData,
-                                              searchRider:
-                                                  searchRiderModel.data?[index],
+                                              singleData: widget.singleData!.isNotEmpty ? widget.singleData : const {},
+                                              multipleData: widget.multipleData!.isNotEmpty ? widget.multipleData : const {},
+                                              searchRider: searchRiderModel.data?[index],
                                             );
                                           },
                                         ),

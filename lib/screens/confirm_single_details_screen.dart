@@ -14,7 +14,6 @@ import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
 class ConfirmSingleDetailsScreen extends StatefulWidget {
   final Map? singleData;
-
   const ConfirmSingleDetailsScreen({super.key, this.singleData});
 
   @override
@@ -488,15 +487,6 @@ class _ConfirmSingleDetailsScreenState
                     right: 0,
                     child: GestureDetector(
                       onTap: () {
-                        // whoWillPaySheet(
-                        //   payNow: "Pay Now",
-                        //   imagepayNow: "assets/images/pay-now-icon.svg",
-                        //   sender: "Sender",
-                        //   payLater: "Pay on Delivery",
-                        //   imagepayLater: "assets/images/pay-later-icon.svg",
-                        //   receiver: "Receiver",
-                        //   context,
-                        // );
                         Map? updatedData = Map.from(widget.singleData!);
                         updatedData.addAll({
                           "total_vat_charges": roundedTotalVatAmount.toString(),
@@ -509,6 +499,7 @@ class _ConfirmSingleDetailsScreenState
                           MaterialPageRoute(
                             builder: (context) => WhoWillPaySheet(
                               singleData: updatedData,
+                              multipleData: const {},
                             ),
                           ),
                         );
