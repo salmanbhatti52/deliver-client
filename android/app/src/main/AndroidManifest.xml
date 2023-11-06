@@ -11,6 +11,12 @@
             <data android:scheme="tel" />
         </intent>
     </queries>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
+        </intent>
+    </queries>
     <application
         android:label="Deliver Client"
         android:name="${applicationName}"
@@ -43,6 +49,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw"/>
+            android:value="AIzaSyAk-CA4yYf-txNZvvwmCshykjpLiASEkcw"/>
     </application>
 </manifest>
