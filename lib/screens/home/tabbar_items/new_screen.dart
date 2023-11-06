@@ -297,7 +297,7 @@ class _NewScreenState extends State<NewScreen> {
       String apiUrl = "$baseUrl/get_charges_parameters";
       print("apiUrl: $apiUrl");
       print("bookingsTypeId: $bTypeId");
-      print("distance: $distance");
+      print("distance: 0: ${distance!.split(" ")[0]}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -305,7 +305,14 @@ class _NewScreenState extends State<NewScreen> {
         },
         body: {
           "bookings_types_id": bTypeId,
-          "distance": distance,
+          "distance": {
+            "0": selectedRadio == 1 ? distance!.split(" ")[0] : distances[0].split(" ")[0],
+            "1": distances[1].split(" ")[0],
+            "2": distances[2].split(" ")[0],
+            "3": distances[3].split(" ")[0],
+            "4": distances[4].split(" ")[0],
+          },
+          // distance!.split(" ")[0],
         },
       );
       final responseString = response.body;
@@ -314,14 +321,38 @@ class _NewScreenState extends State<NewScreen> {
       if (response.statusCode == 200) {
         getChargesModel = getChargesModelFromJson(responseString);
         print('getChargesModel status: ${getChargesModel.status}');
-        toKm = "${getChargesModel.data?.firstMilesTo}";
-        fromKm = "${getChargesModel.data?.firstMilesFrom}";
-        perKmAmount = "${getChargesModel.data?.firstMilesAmount}";
+        for (int i = 0; i < getChargesModel.data!.length; i++) {
+          toKm = "${getChargesModel.data![i].firstMilesTo}";
+          fromKm = "${getChargesModel.data![i].firstMilesFrom}";
+          perKmAmount = "${getChargesModel.data![i].firstMilesAmount}";
+        }
         setState(() {});
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
       return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> getDistanceAndTime(
+      String origin,
+      String destination,
+      ) async {
+    final apiKey = dotenv.env['MAPS_KEY'];
+    final response = await http.get(
+      Uri.parse(
+        'https://maps.googleapis.com/maps/api/distancematrix/json'
+            '?origins=$origin'
+            '&destinations=$destination'
+            '&key=$apiKey',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data;
+    } else {
+      throw Exception('Failed to load data');
     }
   }
 
@@ -1177,11 +1208,9 @@ class _NewScreenState extends State<NewScreen> {
   List<String> distances = [];
   List<String> durations = [];
 
-  // Map<int, Map<String, dynamic>> dataByIndex = {};
   Future<void> calculateDistanceTime01(
-    List<Map<String, double>?> pickupCoordinates,
-    List<Map<String, double>?> destinationCoordinates,
-  ) async {
+      List<Map<String, double>?> pickupCoordinates,
+      List<Map<String, double>?> destinationCoordinates) async {
     for (int i = 0; i < pickupCoordinates.length; i++) {
       final pickupLatLng = pickupCoordinates[i];
       final destinationLatLng = destinationCoordinates[i];
@@ -1201,6 +1230,7 @@ class _NewScreenState extends State<NewScreen> {
 
           distances.add(distance);
           durations.add(duration);
+          
 
           print("Delivery $i - Distance: $distance, Duration: $duration");
         } catch (e) {
@@ -1209,28 +1239,6 @@ class _NewScreenState extends State<NewScreen> {
       } else {
         print("Invalid coordinates for Delivery $i");
       }
-    }
-  }
-
-  Future<Map<String, dynamic>> getDistanceAndTime(
-    String origin,
-    String destination,
-  ) async {
-    final apiKey = dotenv.env['MAPS_KEY'];
-    final response = await http.get(
-      Uri.parse(
-        'https://maps.googleapis.com/maps/api/distancematrix/json'
-        '?origins=$origin'
-        '&destinations=$destination'
-        '&key=$apiKey',
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return data;
-    } else {
-      throw Exception('Failed to load data');
     }
   }
 
@@ -1271,24 +1279,18 @@ class _NewScreenState extends State<NewScreen> {
   List<String> receiversPhones = [];
   List<String> pickupAddresses = [];
   List<String> destinationAddresses = [];
-  List<Map<String, dynamic>> dataForIndexes = [];
-  List<List<Map<String, dynamic>>> allDataForIndexes = [];
   List<Map<String, dynamic>> filteredData = [];
+  List<Map<String, dynamic>> dataForIndexes = [];
   List<Map<String, dynamic>> allDataForIndexes1 = [];
-
-  Map<int, Map<String, dynamic>> dataByIndex = {};
+  List<List<Map<String, dynamic>>> allDataForIndexes = [];
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
 
-    List<String> pickupAddresses =
-        getAddressesFromControllers(pickupControllers);
-    List<String> destinationAddresses =
-        getAddressesFromControllers(destinationControllers);
-    List<String> receiversName =
-        getAddressesFromControllers(receiversNameControllers);
-    List<String> receiversNumber =
-        getAddressesFromControllers(receiversNumberControllers);
+    List<String> pickupAddresses = getAddressesFromControllers(pickupControllers);
+    List<String> destinationAddresses = getAddressesFromControllers(destinationControllers);
+    List<String> receiversName = getAddressesFromControllers(receiversNameControllers);
+    List<String> receiversNumber = getAddressesFromControllers(receiversNumberControllers);
 
     // Create a list to store all the geocoding futures
 
@@ -1297,13 +1299,9 @@ class _NewScreenState extends State<NewScreen> {
       filteredData.clear();
       // Create a list to hold all geocoding futures
       List<Future<void>> geocodingFutures = [];
-      List<Map<String, double>?> pickupLatLngList =
-          List.filled(pickupAddresses.length, null);
-      List<Map<String, double>?> destinationLatLngList =
-          List.filled(destinationAddresses.length, null);
-      for (int index = 0;
-          index < pickupAddresses.length && index < destinationAddresses.length;
-          index++) {
+      List<Map<String, double>?> pickupLatLngList = List.filled(pickupAddresses.length, null);
+      List<Map<String, double>?> destinationLatLngList = List.filled(destinationAddresses.length, null);
+      for (int index = 0; index < pickupAddresses.length && index < destinationAddresses.length; index++) {
         String pickupAddress = pickupAddresses[index];
         String destinationAddress = destinationAddresses[index];
         String receiverName = receiversName[index];
@@ -1334,20 +1332,19 @@ class _NewScreenState extends State<NewScreen> {
           if (destinationLatLng != null) {
             data['destinationLatLng'] = destinationLatLng;
             print('DestinationLatLng for index $index: $destinationLatLng');
-            destinationLatLngList[index] =
-                destinationLatLng; // Store the destinationLatLng
+            destinationLatLngList[index] = destinationLatLng; // Store the destinationLatLng
           } else {
             print('Invalid DestinationLatLng for index $index');
           }
         }));
+
         await Future.wait([pickupLatLngFuture, destinationLatLngFuture]);
 
-        print("pickupControllerrrrrrrrr: ${data['pickupController']}");
-        print(
-            "destinationControllerrrrrrrrrrr: ${data['destinationController']}");
+        print("pickupController: ${data['pickupController']}");
+        print("destinationController: ${data['destinationController']}");
         print("Data for index $index: $data");
         allDataForIndexes1.add({'$index': data});
-        print(" allDataForIndexes Bigggggggggggggg $allDataForIndexes1");
+        print(" allDataForIndexes Big: $allDataForIndexes1");
       }
 
       // Wait for all geocoding operations to complete before calculating distances and durations
@@ -1356,9 +1353,7 @@ class _NewScreenState extends State<NewScreen> {
       // Ensure that all geocoding has completed before calculating distances and durations
       await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
       filteredData = allDataForIndexes1.where((entry) => entry.values.every((value) => value != null)).toList();
-
-      // await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
-      print("filteredData $filteredData");
+      print("filteredData: $filteredData");
     }
 
     return Padding(
@@ -1374,31 +1369,21 @@ class _NewScreenState extends State<NewScreen> {
               currentIndex = value;
               print('currentIndex: $currentIndex');
             });
-            //  for (int i = 0; i < pages.length; i++) {
-            //     if (i == 0 && receiversNumberControllers[i].text.isNotEmpty) {
-            //       fetchData(i);
-            //     }
-            //   }
-
             await fetchData();
           },
           itemCount: pages.length,
           itemBuilder: (context, index) {
             TextEditingController pickupController = pickupControllers[index];
-            TextEditingController destinationController =
-                destinationControllers[index];
-            TextEditingController receiversNameController =
-                receiversNameControllers[index];
-            TextEditingController receiversNumberController =
-                receiversNumberControllers[index];
+            TextEditingController destinationController = destinationControllers[index];
+            TextEditingController receiversNameController = receiversNameControllers[index];
+            TextEditingController receiversNumberController = receiversNumberControllers[index];
 
             print('pageIndex: $index');
             print('isSelectedAddress: $isSelectedAddress');
             print('pickupController: ${pickupController.text}');
             print('destinationController: ${destinationController.text}');
             print('receiversNameController: ${receiversNameController.text}');
-            print(
-                'receiversNumberController: ${receiversNumberController.text}');
+            print('receiversNumberController: ${receiversNumberController.text}');
 
             if (index == 1 &&
                 pickupController.text.isNotEmpty &&
@@ -1426,32 +1411,14 @@ class _NewScreenState extends State<NewScreen> {
               fetchData();
             }
 
-            //  for (int i = 0; i < pages.length; i++) {
-            //     if (i == 0 && receiversNumberControllers[i].text.isNotEmpty) {
-            //       fetchData(i);
-            //     }
-            //   }
-//  for (int i = 0; i < pages.length; i++) {
-//   if (i == 0 && receiversNumberControllers[i].text.isNotEmpty) {
-//     fetchData(i);
-//   }
-// }
-
-            return Listener(
-              child: HomeTextFields(
-                currentIndex: currentIndex,
-                pageController: pageController,
-                isSelectedAddress: isSelectedAddress,
-                pickupController: pickupController,
-                destinationController: destinationController,
-                receiversNameController: receiversNameController,
-                receiversNumberController: receiversNumberController,
-              ),
-              // onPointerUp: (_) {
-              //   if (receiversNumberController.text.isNotEmpty) {
-              //     fetchData();
-              //   }
-              // }
+            return HomeTextFields(
+              currentIndex: currentIndex,
+              pageController: pageController,
+              isSelectedAddress: isSelectedAddress,
+              pickupController: pickupController,
+              destinationController: destinationController,
+              receiversNameController: receiversNameController,
+              receiversNumberController: receiversNumberController,
             );
           },
         ),
@@ -1459,15 +1426,9 @@ class _NewScreenState extends State<NewScreen> {
     );
   }
 
-  // fetchDataTimer =
-  //     Timer.periodic(const Duration(seconds: 10), (timer) async {
-  //   await fetchData();
-  // });
   //-----------------#################### IN USE FUNCTION TILL HERE ###############--------------------//
 
-  Widget bottomDetailsSheet(
-    BuildContext context,
-  ) {
+  Widget bottomDetailsSheet(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return DraggableScrollableSheet(
@@ -1664,13 +1625,25 @@ class _NewScreenState extends State<NewScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Find best rider?",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: drawerTextColor,
-                                fontSize: 20,
-                                fontFamily: 'Syne-Bold',
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  print("distances[all]: ${distances.toList()}");
+                                  // print("distances[0]: ${distances[0].split(" ")[0]}");
+                                  // print("distances[1]: ${distances[1].split(" ")[0]}");
+                                  // print("distances[2]: ${distances[2].split(" ")[0]}");
+                                  // print("distances[3]: ${distances[3].split(" ")[0]}");
+                                  // print("distances[4]: ${distances[4].split(" ")[0]}");
+                                });
+                              },
+                              child: Text(
+                                "Find best rider?",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: drawerTextColor,
+                                  fontSize: 20,
+                                  fontFamily: 'Syne-Bold',
+                                ),
                               ),
                             ),
                             if (selectedRadio == 1)
@@ -2042,35 +2015,10 @@ class _NewScreenState extends State<NewScreen> {
                                       selectedBookingType = value;
                                       print("selectedBookingType: $value");
                                       if (getBookingsTypeModel.data != null) {
-                                        for (int i = 0;
-                                            i <
-                                                getBookingsTypeModel
-                                                    .data!.length;
-                                            i++) {
-                                          if ("${getBookingsTypeModel.data?[i].name}" ==
-                                              value) {
-                                            bookingsTypeId =
-                                                getBookingsTypeModel
-                                                    .data?[i].bookingsTypesId
-                                                    .toString();
-                                            print(
-                                                'bookingsTypeId: $bookingsTypeId');
-                                            // await calculateDistanceTime();
-                                            // await getCharges(bookingsTypeId);
-                                            // if (bookingsTypeId == "1") {
-                                            //   print("fromKm: $fromKm");
-                                            //   print("toKm: $toKm");
-                                            //   print("perKmAmount: $perKmAmount");
-                                            //   print("totalDistance: $distance");
-                                            //   calculateStandardAmount(
-                                            //     double.parse(fromKm!),
-                                            //     toKm != "null"
-                                            //         ? double.parse(toKm!)
-                                            //         : 0.0,
-                                            //     double.parse(perKmAmount!),
-                                            //     double.parse(distance!.split(" ")[0]),
-                                            //   );
-                                            // }
+                                        for (int i = 0; i < getBookingsTypeModel.data!.length; i++) {
+                                          if ("${getBookingsTypeModel.data?[i].name}" == value) {
+                                            bookingsTypeId = getBookingsTypeModel.data?[i].bookingsTypesId.toString();
+                                            print('bookingsTypeId: $bookingsTypeId');
                                           }
                                         }
                                       }
@@ -2432,6 +2380,20 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
+                                  await getCharges(bookingsTypeId);
+                                  if (bookingsTypeId == "1") {
+                                    print("fromKm: $fromKm");
+                                    print("toKm: $toKm");
+                                    print("perKmAmount: $perKmAmount");
+                                    print("totalDistance: $distance");
+                                    // calculateStandardAmount(
+                                    //     double.parse(fromKm!),
+                                    //     toKm != "null"
+                                    //         ? double.parse(toKm!)
+                                    //         : 0.0,
+                                    //     double.parse(perKmAmount!),
+                                    //     double.parse(distance!.split(" ")[0]));
+                                  }
                                   addMultipleData = {
                                     "type": "booking",
                                     "vehicles_id": vehicleId,
