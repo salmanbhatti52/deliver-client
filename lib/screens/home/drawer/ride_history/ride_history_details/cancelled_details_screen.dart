@@ -203,7 +203,7 @@ class _RideHistoryCancelledDetailsScreenState
                                     color: transparentColor,
                                     width: size.width * 0.6,
                                     child: AutoSizeText(
-                                      "${widget.cancelledRideModel?.pickupAddress}",
+                                      "${widget.cancelledRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: blackColor,

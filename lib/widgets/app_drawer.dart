@@ -361,9 +361,7 @@ class _AppDrawerState extends State<AppDrawer> {
                               title: 'Update Location',
                               image:
                                   'assets/images/drawer-update-location-icon.svg',
-                              onTap: () {
-                                selectedItem(context, 4);
-                              },
+                              onTap: () {},
                             ),
                             buildMenuItem(
                               title: 'Settings',

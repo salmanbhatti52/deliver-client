@@ -9,6 +9,16 @@ import 'package:deliver_client/utils/remove_scroll_glow.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: bgColor,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: bgColor,
+        systemNavigationBarDividerColor: dividerColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
