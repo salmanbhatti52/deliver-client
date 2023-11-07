@@ -1213,7 +1213,7 @@ class _NewScreenState extends State<NewScreen> {
   List<Map<int, Map<String, String>>> distanceDurationList = [];
   Map<String, dynamic>? distanceData;
   Map<int, Map<String, String>> dataForIndex1 = {};
-
+  Map<int, Map<String, dynamic>> distanceDataMap = {};
   Future<void> calculateDistanceTime01(
       List<Map<String, double>?> pickupCoordinates,
       List<Map<String, double>?> destinationCoordinates) async {
@@ -1251,9 +1251,13 @@ class _NewScreenState extends State<NewScreen> {
             distanceData = dataForIndex1[dataIndex1];
             // Check if data contains null values
             if (distanceData!.containsValue(null)) {
-              print("Data for Index of distanceDurationList $dataIndex1: Data contains null values");
+              print(
+                  "Data for Index in distanceDurationList $dataIndex1: Data contains null values");
             } else {
-              print("Data for Index in distanceDurationList $dataIndex1: $distanceData");
+              print(
+                  "Data for Index in distanceDurationList $dataIndex1: $distanceData");
+              // Store the data in the distanceDataMap
+              distanceDataMap[dataIndex1!] = distanceData!;
             }
           }
           print("Delivery $i - Distance: $distance, Duration: $duration");
@@ -1378,10 +1382,17 @@ class _NewScreenState extends State<NewScreen> {
         print("Data for index $index: $data");
         allDataForIndexes1.add({'$index': data});
         print(" allDataForIndexes Big: $allDataForIndexes1");
-        if(dataIndex1 == 0) {
+        if (dataIndex1 == 0) {
           print("distance 0: ${distanceData!['distance']}");
         } else if (dataIndex1 == 1) {
           print("distance 1: ${distanceData!['distance']}");
+        }
+        if (dataIndex1 == 0) {
+          final distance0 = distanceDataMap[0];
+          print("distance 0: ${distance0!['distance']}");
+        } else if (dataIndex1 == 1) {
+          final distance1 = distanceDataMap[1];
+          print("distance 1: ${distance1!['distance']}");
         }
       }
 
@@ -1672,7 +1683,9 @@ class _NewScreenState extends State<NewScreen> {
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  for (int i = 0; i < 5 && i < distanceDurationList.length; i++) {
+                                  for (int i = 0;
+                                      i < 5 && i < distanceDurationList.length;
+                                      i++) {
                                     final entry = distanceDurationList[i];
                                     print("distanceDurationList[$i]: $entry");
                                   }
@@ -1680,9 +1693,10 @@ class _NewScreenState extends State<NewScreen> {
                               },
                               child: GestureDetector(
                                 onTap: () {
-                                  if(dataIndex1 == 1) {
-                                    print("asfsf: ${distanceData!['distance']}");
-                                  }else {
+                                  if (dataIndex1 == 1) {
+                                    print(
+                                        "asfsf: ${distanceData!['distance']}");
+                                  } else {
                                     print("null");
                                   }
                                 },
