@@ -505,7 +505,7 @@ class _NewScreenState extends State<NewScreen> {
 
   var api;
 
-  calculateDistanceTime() async {
+  calculateDistanceTimeSingle() async {
     final origin =
         '${pickupLat ?? currentLat ?? addressLat},${pickupLng ?? currentLng ?? addressLng}'; // Format coordinates as "latitude,longitude"
     final destination =
@@ -1210,11 +1210,12 @@ class _NewScreenState extends State<NewScreen> {
   int? dataIndex1;
   List<String> distances = [];
   List<String> durations = [];
-  List<Map<int, Map<String, String>>> distanceDurationList = [];
   Map<String, dynamic>? distanceData;
   Map<int, Map<String, String>> dataForIndex1 = {};
   Map<int, Map<String, dynamic>> distanceDataMap = {};
-  Future<void> calculateDistanceTime01(
+  List<Map<int, Map<String, String>>> distanceDurationList = [];
+
+  Future<void> calculateDistanceTimeMultiple(
       List<Map<String, double>?> pickupCoordinates,
       List<Map<String, double>?> destinationCoordinates) async {
     for (int i = 0; i < pickupCoordinates.length; i++) {
@@ -1226,7 +1227,6 @@ class _NewScreenState extends State<NewScreen> {
             '${pickupLatLng['latitude']},${pickupLatLng['longitude']}';
         final destination =
             '${destinationLatLng['latitude']},${destinationLatLng['longitude']}';
-        print("origin value $origin");
 
         try {
           final data = await getDistanceAndTime(origin, destination);
@@ -1382,29 +1382,25 @@ class _NewScreenState extends State<NewScreen> {
         print("Data for index $index: $data");
         allDataForIndexes1.add({'$index': data});
         print(" allDataForIndexes Big: $allDataForIndexes1");
-        if (dataIndex1 == 0) {
-          print("distance 0: ${distanceData!['distance']}");
-        } else if (dataIndex1 == 1) {
-          print("distance 1: ${distanceData!['distance']}");
-        }
-        if (dataIndex1 == 0) {
-          final distance0 = distanceDataMap[0];
-          print("distance 0: ${distance0!['distance']}");
-        } else if (dataIndex1 == 1) {
-          final distance1 = distanceDataMap[1];
-          print("distance 1: ${distance1!['distance']}");
-        }
       }
 
       // Wait for all geocoding operations to complete before calculating distances and durations
       await Future.wait(geocodingFutures);
 
       // Ensure that all geocoding has completed before calculating distances and durations
-      await calculateDistanceTime01(pickupLatLngList, destinationLatLngList);
+      await calculateDistanceTimeMultiple(pickupLatLngList, destinationLatLngList);
       filteredData = allDataForIndexes1
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
       print("filteredData: $filteredData");
+    }
+
+    if (dataIndex1 == 0) {
+      final distance0 = distanceDataMap[0];
+      print("distance 0: ${distance0!['distance']}");
+    } else if (dataIndex1 == 1) {
+      final distance1 = distanceDataMap[1];
+      print("distance 1: ${distance1!['distance']}");
     }
 
     return Padding(
@@ -2250,7 +2246,7 @@ class _NewScreenState extends State<NewScreen> {
                                   setState(() {
                                     isLoading2 = true;
                                   });
-                                  await calculateDistanceTime();
+                                  await calculateDistanceTimeSingle();
                                   await getCharges(bookingsTypeId);
                                   if (bookingsTypeId == "1") {
                                     print("fromKm: $fromKm");
@@ -2393,7 +2389,7 @@ class _NewScreenState extends State<NewScreen> {
                                     setState(() {
                                       isLoading = true;
                                     });
-                                    await calculateDistanceTime();
+                                    await calculateDistanceTimeSingle();
                                     await getCharges(bookingsTypeId);
                                     if (bookingsTypeId == "1") {
                                       print("fromKm: $fromKm");
