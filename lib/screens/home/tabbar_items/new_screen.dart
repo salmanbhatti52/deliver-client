@@ -308,11 +308,11 @@ class _NewScreenState extends State<NewScreen> {
           "distance": {
             "0": selectedRadio == 1
                 ? distance!.split(" ")[0]
-                : distances[0].split(" ")[0],
-            "1": distances[1].split(" ")[0],
-            "2": distances[2].split(" ")[0],
-            "3": distances[3].split(" ")[0],
-            "4": distances[4].split(" ")[0],
+                : distanceData![0]['distance'].split(" ")[0],
+            // "1": distances[1].split(" ")[0],
+            // "2": distances[2].split(" ")[0],
+            // "3": distances[3].split(" ")[0],
+            // "4": distances[4].split(" ")[0],
           },
           // distance!.split(" ")[0],
         },
@@ -1207,10 +1207,12 @@ class _NewScreenState extends State<NewScreen> {
 
 //-----------------#################### IN USE FUNCTION ###############--------------------//
 // Function to calculate distance and time for multiple deliveries
+  int? dataIndex1;
   List<String> distances = [];
   List<String> durations = [];
-
   List<Map<int, Map<String, String>>> distanceDurationList = [];
+  Map<String, dynamic>? distanceData;
+  Map<int, Map<String, String>> dataForIndex1 = {};
 
   Future<void> calculateDistanceTime01(
       List<Map<String, double>?> pickupCoordinates,
@@ -1243,7 +1245,17 @@ class _NewScreenState extends State<NewScreen> {
             }
           });
           print("distanceDurationList $distanceDurationList");
-
+          for (var i = 0; i < distanceDurationList.length; i++) {
+            dataForIndex1 = distanceDurationList[i];
+            dataIndex1 = dataForIndex1.keys.first; // Get the index
+            distanceData = dataForIndex1[dataIndex1];
+            // Check if data contains null values
+            if (distanceData!.containsValue(null)) {
+              print("Data for Index of distanceDurationList $dataIndex1: Data contains null values");
+            } else {
+              print("Data for Index in distanceDurationList $dataIndex1: $distanceData");
+            }
+          }
           print("Delivery $i - Distance: $distance, Duration: $duration");
         } catch (e) {
           print("Error for Delivery $i: $e");
@@ -1366,6 +1378,11 @@ class _NewScreenState extends State<NewScreen> {
         print("Data for index $index: $data");
         allDataForIndexes1.add({'$index': data});
         print(" allDataForIndexes Big: $allDataForIndexes1");
+        if(dataIndex1 == 0) {
+          print("distance 0: ${distanceData!['distance']}");
+        } else if (dataIndex1 == 1) {
+          print("distance 1: ${distanceData!['distance']}");
+        }
       }
 
       // Wait for all geocoding operations to complete before calculating distances and durations
@@ -1655,47 +1672,28 @@ class _NewScreenState extends State<NewScreen> {
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  print(
-                                      "distances[all]: ${distances.toList()}");
-                                  // print("distances[0]: ${distances[0].split(" ")[0]}");
-                                  // print("distances[1]: ${distances[1].split(" ")[0]}");
-                                  // print("distances[2]: ${distances[2].split(" ")[0]}");
-                                  // print("distances[3]: ${distances[3].split(" ")[0]}");
-                                  // print("distances[4]: ${distances[4].split(" ")[0]}");
-                                  for (int i = 0;
-                                      i < 5 && i < distanceDurationList.length;
-                                      i++) {
+                                  for (int i = 0; i < 5 && i < distanceDurationList.length; i++) {
                                     final entry = distanceDurationList[i];
                                     print("distanceDurationList[$i]: $entry");
                                   }
-
-                                  for (var i = 0;
-                                      i < distanceDurationList.length;
-                                      i++) {
-                                    final dataForIndex1 =
-                                        distanceDurationList[i];
-                                    final dataIndex1 = dataForIndex1
-                                        .keys.first; // Get the index
-                                    final data = dataForIndex1[dataIndex1];
-
-                                    // Check if data contains null values
-                                    if (data!.containsValue(null)) {
-                                      print(
-                                          "Data for Index of distanceDurationList $dataIndex1: Data contains null values");
-                                    } else {
-                                      print(
-                                          "Data for Index in distanceDurationList $dataIndex1: $data");
-                                    }
-                                  }
                                 });
                               },
-                              child: Text(
-                                "Find best rider?",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: drawerTextColor,
-                                  fontSize: 20,
-                                  fontFamily: 'Syne-Bold',
+                              child: GestureDetector(
+                                onTap: () {
+                                  if(dataIndex1 == 1) {
+                                    print("asfsf: ${distanceData!['distance']}");
+                                  }else {
+                                    print("null");
+                                  }
+                                },
+                                child: Text(
+                                  "Find best rider?",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: drawerTextColor,
+                                    fontSize: 20,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
                                 ),
                               ),
                             ),
@@ -2480,24 +2478,6 @@ class _NewScreenState extends State<NewScreen> {
                                       () {
                                     // Close the loading dialog
                                     Navigator.of(context).pop();
-
-                                    // Filter the dataForIndexes list to exclude items with empty data or missing pickupLatLng
-                                    List<Map<String, dynamic>>
-                                        filteredDataForIndexes =
-                                        allDataForIndexes1
-                                            .where((data) =>
-                                                data['pickupController'] !=
-                                                    null &&
-                                                data['pickupLatLng'] != null &&
-                                                data['pickupLatLng']
-                                                        ['latitude'] !=
-                                                    null &&
-                                                data['pickupLatLng']
-                                                        ['longitude'] !=
-                                                    null &&
-                                                data['destinationController'] !=
-                                                    null)
-                                            .toList();
 
                                     if (filteredData.isNotEmpty) {
                                       Navigator.push(
