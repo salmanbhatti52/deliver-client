@@ -82,23 +82,59 @@ class _NewScreenState extends State<NewScreen> {
   String? bookingsTypeId;
   String? selectedBookingType;
   List<String> bookingType = [];
-  String? fromKm;
   String? toKm;
+  String? toKm0;
+  String? toKm1;
+  String? toKm2;
+  String? toKm3;
+  String? toKm4;
+  String? fromKm;
+  String? fromKm0;
+  String? fromKm1;
+  String? fromKm2;
+  String? fromKm3;
+  String? fromKm4;
   String? perKmAmount;
+  String? perKmAmount0;
+  String? perKmAmount1;
+  String? perKmAmount2;
+  String? perKmAmount3;
+  String? perKmAmount4;
   double? totalAmount;
+  double? totalAmount0;
+  double? totalAmount1;
+  double? totalAmount2;
+  double? totalAmount3;
+  double? totalAmount4;
   String? roundedTotalAmount;
+  String? roundedTotalAmount0;
+  String? roundedTotalAmount1;
+  String? roundedTotalAmount2;
+  String? roundedTotalAmount3;
+  String? roundedTotalAmount4;
   LatLng? origin;
   LatLng? destination;
   String? distance;
+  String? distance0;
+  String? distance1;
+  String? distance2;
+  String? distance3;
+  String? distance4;
   String? duration;
   String? minPageLength;
   String? maxPageLength;
   int? minPageLen;
   int? maxPageLen;
+  int? dataIndex1;
+  List<String> distances = [];
+  List<String> durations = [];
+  Map<String, dynamic>? distanceData;
+  Map<int, Map<String, String>> dataForIndex1 = {};
+  Map<int, Map<String, dynamic>> distanceDataMap = {};
+  List<Map<int, Map<String, String>>> distanceDurationList = [];
 
   bool isLoading = false;
   bool isLoading2 = false;
-  TextEditingController? pickup01;
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -292,30 +328,26 @@ class _NewScreenState extends State<NewScreen> {
 
   GetChargesModel getChargesModel = GetChargesModel();
 
-  getCharges(String? bTypeId) async {
+  getChargesSingle(String? bTypeId) async {
     try {
       String apiUrl = "$baseUrl/get_charges_parameters";
+      Map<String, String> distanceMap = {
+        "0": distance!.split(" ")[0],
+      };
+      Map<String, dynamic> requestBody = {
+        "bookings_types_id": bTypeId,
+        "distance": distanceMap,
+      };
       print("apiUrl: $apiUrl");
       print("bookingsTypeId: $bTypeId");
-      print("distance: 0: ${distance!.split(" ")[0]}");
+      print("requestBody: $requestBody");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: {
-          "bookings_types_id": bTypeId,
-          "distance": {
-            "0": selectedRadio == 1
-                ? distance!.split(" ")[0]
-                : distanceData![0]['distance'].split(" ")[0],
-            // "1": distances[1].split(" ")[0],
-            // "2": distances[2].split(" ")[0],
-            // "3": distances[3].split(" ")[0],
-            // "4": distances[4].split(" ")[0],
-          },
-          // distance!.split(" ")[0],
-        },
+        body: jsonEncode(requestBody),
       );
       final responseString = response.body;
       print("response: $responseString");
@@ -323,11 +355,70 @@ class _NewScreenState extends State<NewScreen> {
       if (response.statusCode == 200) {
         getChargesModel = getChargesModelFromJson(responseString);
         print('getChargesModel status: ${getChargesModel.status}');
-        for (int i = 0; i < getChargesModel.data!.length; i++) {
-          toKm = "${getChargesModel.data![i].firstMilesTo}";
-          fromKm = "${getChargesModel.data![i].firstMilesFrom}";
-          perKmAmount = "${getChargesModel.data![i].firstMilesAmount}";
-        }
+        print('getChargesModel length: ${getChargesModel.data!.length}');
+        toKm = "${getChargesModel.data![0].firstMilesTo}";
+        fromKm = "${getChargesModel.data![0].firstMilesFrom}";
+        perKmAmount = "${getChargesModel.data![0].firstMilesAmount}";
+        setState(() {});
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  getChargesMultiple(String? bTypeId) async {
+    try {
+      String apiUrl = "$baseUrl/get_charges_parameters";
+      Map<String, String> distanceMap = {
+        "0": distance0!.split(" ")[0],
+        "1": distance1!.split(" ")[0],
+        "2": distance2!.split(" ")[0],
+        "3": distance3!.split(" ")[0],
+        "4": distance4!.split(" ")[0],
+        // You can add more entries here if needed
+      };
+      // Create the request body as a map
+      Map<String, dynamic> requestBody = {
+        "bookings_types_id": bTypeId,
+        "distance": distanceMap,
+      };
+      print("apiUrl: $apiUrl");
+      print("bookingsTypeId: $bTypeId");
+      print("requestBody: $requestBody");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody),
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        getChargesModel = getChargesModelFromJson(responseString);
+        print('getChargesModel status: ${getChargesModel.status}');
+        print('getChargesModel length: ${getChargesModel.data!.length}');
+        // for (int i = 0; i < getChargesModel.data!.length; i++) {
+        toKm0 = "${getChargesModel.data![0].firstMilesTo}";
+        toKm1 = "${getChargesModel.data![1].firstMilesTo}";
+        toKm2 = "${getChargesModel.data![2].firstMilesTo}";
+        toKm3 = "${getChargesModel.data![3].firstMilesTo}";
+        toKm4 = "${getChargesModel.data![4].firstMilesTo}";
+        fromKm0 = "${getChargesModel.data![0].firstMilesFrom}";
+        fromKm1 = "${getChargesModel.data![1].firstMilesFrom}";
+        fromKm2 = "${getChargesModel.data![2].firstMilesFrom}";
+        fromKm3 = "${getChargesModel.data![3].firstMilesFrom}";
+        fromKm4 = "${getChargesModel.data![4].firstMilesFrom}";
+        perKmAmount0 = "${getChargesModel.data![0].firstMilesAmount}";
+        perKmAmount1 = "${getChargesModel.data![1].firstMilesAmount}";
+        perKmAmount2 = "${getChargesModel.data![2].firstMilesAmount}";
+        perKmAmount3 = "${getChargesModel.data![3].firstMilesAmount}";
+        perKmAmount4 = "${getChargesModel.data![4].firstMilesAmount}";
+
+        // }
         setState(() {});
       }
     } catch (e) {
@@ -370,6 +461,76 @@ class _NewScreenState extends State<NewScreen> {
     print("totalAmount: $totalAmount");
     roundedTotalAmount = totalAmount!.toStringAsFixed(2);
     print("roundedTotalAmount: $roundedTotalAmount");
+  }
+
+  calculateStandardAmount0(
+      double from0, double to0, double perKm0, double distance0) {
+    if (to0 < 16) {
+      totalAmount0 = distance0 * perKm0;
+    } else if (from0 > 15.99 && to0 < 31) {
+      totalAmount0 = distance0 * perKm0;
+    } else if (from0 > 30.99) {
+      totalAmount0 = distance0 * perKm0;
+    }
+    print("totalAmount0: $totalAmount0");
+    roundedTotalAmount0 = totalAmount0!.toStringAsFixed(2);
+    print("roundedTotalAmount0: $roundedTotalAmount0");
+  }
+
+  calculateStandardAmount1(
+      double from1, double to1, double perKm1, double distance1) {
+    if (to1 < 16) {
+      totalAmount1 = distance1 * perKm1;
+    } else if (from1 > 15.99 && to1 < 31) {
+      totalAmount1 = distance1 * perKm1;
+    } else if (from1 > 30.99) {
+      totalAmount1 = distance1 * perKm1;
+    }
+    print("totalAmount1: $totalAmount1");
+    roundedTotalAmount1 = totalAmount1!.toStringAsFixed(2);
+    print("roundedTotalAmount1: $roundedTotalAmount1");
+  }
+
+  calculateStandardAmount2(
+      double from2, double to2, double perKm2, double distance2) {
+    if (to2 < 16) {
+      totalAmount2 = distance2 * perKm2;
+    } else if (from2 > 15.99 && to2 < 31) {
+      totalAmount2 = distance2 * perKm2;
+    } else if (from2 > 30.99) {
+      totalAmount2 = distance2 * perKm2;
+    }
+    print("totalAmount2: $totalAmount2");
+    roundedTotalAmount2 = totalAmount2!.toStringAsFixed(2);
+    print("roundedTotalAmount2: $roundedTotalAmount2");
+  }
+
+  calculateStandardAmount3(
+      double from3, double to3, double perKm3, double distance3) {
+    if (to3 < 16) {
+      totalAmount3 = distance3 * perKm3;
+    } else if (from3 > 15.99 && to3 < 31) {
+      totalAmount3 = distance3 * perKm3;
+    } else if (from3 > 30.99) {
+      totalAmount3 = distance3 * perKm3;
+    }
+    print("totalAmount3: $totalAmount3");
+    roundedTotalAmount3 = totalAmount3!.toStringAsFixed(2);
+    print("roundedTotalAmount3: $roundedTotalAmount3");
+  }
+
+  calculateStandardAmount4(
+      double from4, double to4, double perKm4, double distance4) {
+    if (to4 < 16) {
+      totalAmount4 = distance4 * perKm4;
+    } else if (from4 > 15.99 && to4 < 31) {
+      totalAmount4 = distance4 * perKm4;
+    } else if (from4 > 30.99) {
+      totalAmount4 = distance4 * perKm4;
+    }
+    print("totalAmount4: $totalAmount4");
+    roundedTotalAmount4 = totalAmount4!.toStringAsFixed(2);
+    print("roundedTotalAmount4: $roundedTotalAmount4");
   }
 
   int currentIndex = 0;
@@ -1207,13 +1368,6 @@ class _NewScreenState extends State<NewScreen> {
 
 //-----------------#################### IN USE FUNCTION ###############--------------------//
 // Function to calculate distance and time for multiple deliveries
-  int? dataIndex1;
-  List<String> distances = [];
-  List<String> durations = [];
-  Map<String, dynamic>? distanceData;
-  Map<int, Map<String, String>> dataForIndex1 = {};
-  Map<int, Map<String, dynamic>> distanceDataMap = {};
-  List<Map<int, Map<String, String>>> distanceDurationList = [];
 
   Future<void> calculateDistanceTimeMultiple(
       List<Map<String, double>?> pickupCoordinates,
@@ -1388,19 +1542,28 @@ class _NewScreenState extends State<NewScreen> {
       await Future.wait(geocodingFutures);
 
       // Ensure that all geocoding has completed before calculating distances and durations
-      await calculateDistanceTimeMultiple(pickupLatLngList, destinationLatLngList);
+      await calculateDistanceTimeMultiple(
+          pickupLatLngList, destinationLatLngList);
       filteredData = allDataForIndexes1
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
       print("filteredData: $filteredData");
-    }
-
-    if (dataIndex1 == 0) {
-      final distance0 = distanceDataMap[0];
-      print("distance 0: ${distance0!['distance']}");
-    } else if (dataIndex1 == 1) {
-      final distance1 = distanceDataMap[1];
-      print("distance 1: ${distance1!['distance']}");
+      if (dataIndex1 == 0) {
+        distance0 = distanceDataMap[0]!['distance'];
+        print("distance 0: $distance0");
+      } else if (dataIndex1 == 1) {
+        distance1 = distanceDataMap[1]!['distance'];
+        print("distance 1: $distance1");
+      } else if (dataIndex1 == 2) {
+        distance2 = distanceDataMap[2]!['distance'];
+        print("distance 2: $distance2");
+      } else if (dataIndex1 == 3) {
+        distance3 = distanceDataMap[3]!['distance'];
+        print("distance 3: $distance3");
+      } else if (dataIndex1 == 4) {
+        distance4 = distanceDataMap[4]!['distance'];
+        print("distance 4: $distance4");
+      }
     }
 
     return Padding(
@@ -1687,23 +1850,13 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 });
                               },
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (dataIndex1 == 1) {
-                                    print(
-                                        "asfsf: ${distanceData!['distance']}");
-                                  } else {
-                                    print("null");
-                                  }
-                                },
-                                child: Text(
-                                  "Find best rider?",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: drawerTextColor,
-                                    fontSize: 20,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
+                              child: Text(
+                                "Find best rider?",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: drawerTextColor,
+                                  fontSize: 20,
+                                  fontFamily: 'Syne-Bold',
                                 ),
                               ),
                             ),
@@ -2247,7 +2400,7 @@ class _NewScreenState extends State<NewScreen> {
                                     isLoading2 = true;
                                   });
                                   await calculateDistanceTimeSingle();
-                                  await getCharges(bookingsTypeId);
+                                  await getChargesSingle(bookingsTypeId);
                                   if (bookingsTypeId == "1") {
                                     print("fromKm: $fromKm");
                                     print("toKm: $toKm");
@@ -2390,7 +2543,7 @@ class _NewScreenState extends State<NewScreen> {
                                       isLoading = true;
                                     });
                                     await calculateDistanceTimeSingle();
-                                    await getCharges(bookingsTypeId);
+                                    await getChargesSingle(bookingsTypeId);
                                     if (bookingsTypeId == "1") {
                                       print("fromKm: $fromKm");
                                       print("toKm: $toKm");
@@ -2450,46 +2603,109 @@ class _NewScreenState extends State<NewScreen> {
                                   }
                                 }
                                 if (selectedRadio == 2) {
-                                  await getCharges(bookingsTypeId);
-                                  if (bookingsTypeId == "1") {
-                                    print("fromKm: $fromKm");
-                                    print("toKm: $toKm");
-                                    print("perKmAmount: $perKmAmount");
-                                    print("totalDistance: $distance");
-                                    // calculateStandardAmount(
-                                    //     double.parse(fromKm!),
-                                    //     toKm != "null"
-                                    //         ? double.parse(toKm!)
-                                    //         : 0.0,
-                                    //     double.parse(perKmAmount!),
-                                    //     double.parse(distance!.split(" ")[0]));
-                                  }
-                                  addMultipleData = {
-                                    "type": "booking",
-                                    "vehicles_id": vehicleId,
-                                    "bookings_types_id": bookingsTypeId,
-                                    "delivery_type": selectedRadio == 1
-                                        ? "Single"
-                                        : "Multiple",
-                                  };
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return const AlertDialog(
-                                        title: Text('Loading Data'),
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Loading Data...',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 20,
+                                            fontFamily: 'Inter-Bold',
+                                          ),
+                                        ),
                                         content: Text(
-                                            'Please wait while data is being loaded.'),
+                                          'Please wait while data is being loaded.',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Regular',
+                                          ),
+                                        ),
                                       );
                                     },
                                   );
-
                                   // Add a delay to ensure data is populated in allDataForIndexes1
                                   Future.delayed(const Duration(seconds: 1),
-                                      () {
+                                      () async {
                                     // Close the loading dialog
                                     Navigator.of(context).pop();
 
                                     if (filteredData.isNotEmpty) {
+                                      await getChargesMultiple(bookingsTypeId);
+                                      if (bookingsTypeId == "1") {
+                                        print("fromKm0: $fromKm0");
+                                        print("toKm0: $toKm0");
+                                        print("perKmAmount0: $perKmAmount0");
+                                        print("totalDistance0: $distance0");
+                                        calculateStandardAmount0(
+                                            double.parse(fromKm0!),
+                                            toKm0 != "null"
+                                                ? double.parse(toKm0!)
+                                                : 0.0,
+                                            double.parse(perKmAmount0!),
+                                            double.parse(
+                                                distance0!.split(" ")[0]));
+                                        print("fromKm1: $fromKm1");
+                                        print("toKm1: $toKm1");
+                                        print("perKmAmount1: $perKmAmount1");
+                                        print("totalDistance1: $distance1");
+                                        calculateStandardAmount1(
+                                            double.parse(fromKm1!),
+                                            toKm1 != "null"
+                                                ? double.parse(toKm1!)
+                                                : 0.0,
+                                            double.parse(perKmAmount1!),
+                                            double.parse(
+                                                distance1!.split(" ")[0]));
+                                        print("fromKm2: $fromKm2");
+                                        print("toKm2: $toKm2");
+                                        print("perKmAmount2: $perKmAmount2");
+                                        print("totalDistance2: $distance2");
+                                        calculateStandardAmount2(
+                                            double.parse(fromKm2!),
+                                            toKm2 != "null"
+                                                ? double.parse(toKm2!)
+                                                : 0.0,
+                                            double.parse(perKmAmount2!),
+                                            double.parse(
+                                                distance2!.split(" ")[0]));
+                                        print("fromKm3: $fromKm3");
+                                        print("toKm3: $toKm3");
+                                        print("perKmAmount3: $perKmAmount3");
+                                        print("totalDistance3: $distance3");
+                                        calculateStandardAmount3(
+                                            double.parse(fromKm3!),
+                                            toKm3 != "null"
+                                                ? double.parse(toKm3!)
+                                                : 0.0,
+                                            double.parse(perKmAmount3!),
+                                            double.parse(
+                                                distance3!.split(" ")[0]));
+                                        print("fromKm4: $fromKm4");
+                                        print("toKm4: $toKm4");
+                                        print("perKmAmount4: $perKmAmount4");
+                                        print("totalDistance4: $distance4");
+                                        calculateStandardAmount4(
+                                            double.parse(fromKm4!),
+                                            toKm3 != "null"
+                                                ? double.parse(toKm4!)
+                                                : 0.0,
+                                            double.parse(perKmAmount4!),
+                                            double.parse(
+                                                distance4!.split(" ")[0]));
+                                      }
+                                      addMultipleData = {
+                                        "type": "booking",
+                                        "vehicles_id": vehicleId,
+                                        "bookings_types_id": bookingsTypeId,
+                                        "delivery_type": selectedRadio == 1
+                                            ? "Single"
+                                            : "Multiple",
+                                      };
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -2504,18 +2720,84 @@ class _NewScreenState extends State<NewScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text('Data Error'),
-                                            content: const Text(
-                                                'Please make sure data is available before proceeding.'),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: const Text('OK'),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
+                                          return Dialog(
+                                            backgroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                            ),
+                                            insetPadding: const EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: SizedBox(
+                                              width: size.width,
+                                              height: size.height * 0.25,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.02),
+                                                        Align(
+                                                          alignment:
+                                                              Alignment.topLeft,
+                                                          child: Text(
+                                                            'Data Error',
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  orangeColor,
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  'Inter-Bold',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.03),
+                                                        Text(
+                                                          'Please make sure data is available before proceeding.',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Regular',
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.02),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 140),
+                                                      child:
+                                                          dialogButtonGradientSmall(
+                                                              "OK", context),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           );
                                         },
                                       );
