@@ -373,11 +373,13 @@ class _NewScreenState extends State<NewScreen> {
       Map<String, String> distanceMap = {
         "0": distance0!.split(" ")[0],
         "1": distance1!.split(" ")[0],
-        "2": distance2!.split(" ")[0],
-        "3": distance3!.split(" ")[0],
-        "4": distance4!.split(" ")[0],
-        // You can add more entries here if needed
+        // "2": distance2!.split(" ")[0],
+        // "3": distance3!.split(" ")[0],
+        // "4": distance4!.split(" ")[0],
       };
+      if (distance2 != null) distanceMap["2"] = distance2!.split(" ")[0];
+      if (distance3 != null) distanceMap["3"] = distance3!.split(" ")[0];
+      if (distance4 != null) distanceMap["4"] = distance4!.split(" ")[0];
       // Create the request body as a map
       Map<String, dynamic> requestBody = {
         "bookings_types_id": bTypeId,
@@ -403,21 +405,26 @@ class _NewScreenState extends State<NewScreen> {
         print('getChargesModel length: ${getChargesModel.data!.length}');
         // for (int i = 0; i < getChargesModel.data!.length; i++) {
         toKm0 = "${getChargesModel.data![0].firstMilesTo}";
-        toKm1 = "${getChargesModel.data![1].firstMilesTo}";
-        toKm2 = "${getChargesModel.data![2].firstMilesTo}";
-        toKm3 = "${getChargesModel.data![3].firstMilesTo}";
-        toKm4 = "${getChargesModel.data![4].firstMilesTo}";
         fromKm0 = "${getChargesModel.data![0].firstMilesFrom}";
-        fromKm1 = "${getChargesModel.data![1].firstMilesFrom}";
-        fromKm2 = "${getChargesModel.data![2].firstMilesFrom}";
-        fromKm3 = "${getChargesModel.data![3].firstMilesFrom}";
-        fromKm4 = "${getChargesModel.data![4].firstMilesFrom}";
         perKmAmount0 = "${getChargesModel.data![0].firstMilesAmount}";
+        toKm1 = "${getChargesModel.data![1].firstMilesTo}";
+        fromKm1 = "${getChargesModel.data![1].firstMilesFrom}";
         perKmAmount1 = "${getChargesModel.data![1].firstMilesAmount}";
-        perKmAmount2 = "${getChargesModel.data![2].firstMilesAmount}";
-        perKmAmount3 = "${getChargesModel.data![3].firstMilesAmount}";
-        perKmAmount4 = "${getChargesModel.data![4].firstMilesAmount}";
-
+        if (distance2 != null) {
+          toKm2 = "${getChargesModel.data![2].firstMilesTo}";
+          fromKm2 = "${getChargesModel.data![2].firstMilesFrom}";
+          perKmAmount2 = "${getChargesModel.data![2].firstMilesAmount}";
+        }
+        if (distance3 != null) {
+          toKm3 = "${getChargesModel.data![3].firstMilesTo}";
+          fromKm3 = "${getChargesModel.data![3].firstMilesFrom}";
+          perKmAmount3 = "${getChargesModel.data![3].firstMilesAmount}";
+        }
+        if (distance4 != null) {
+          toKm4 = "${getChargesModel.data![4].firstMilesTo}";
+          fromKm4 = "${getChargesModel.data![4].firstMilesFrom}";
+          perKmAmount4 = "${getChargesModel.data![4].firstMilesAmount}";
+        }
         // }
         setState(() {});
       }
@@ -2661,42 +2668,48 @@ class _NewScreenState extends State<NewScreen> {
                                             double.parse(perKmAmount1!),
                                             double.parse(
                                                 distance1!.split(" ")[0]));
-                                        print("fromKm2: $fromKm2");
-                                        print("toKm2: $toKm2");
-                                        print("perKmAmount2: $perKmAmount2");
-                                        print("totalDistance2: $distance2");
-                                        calculateStandardAmount2(
-                                            double.parse(fromKm2!),
-                                            toKm2 != "null"
-                                                ? double.parse(toKm2!)
-                                                : 0.0,
-                                            double.parse(perKmAmount2!),
-                                            double.parse(
-                                                distance2!.split(" ")[0]));
-                                        print("fromKm3: $fromKm3");
-                                        print("toKm3: $toKm3");
-                                        print("perKmAmount3: $perKmAmount3");
-                                        print("totalDistance3: $distance3");
-                                        calculateStandardAmount3(
-                                            double.parse(fromKm3!),
-                                            toKm3 != "null"
-                                                ? double.parse(toKm3!)
-                                                : 0.0,
-                                            double.parse(perKmAmount3!),
-                                            double.parse(
-                                                distance3!.split(" ")[0]));
-                                        print("fromKm4: $fromKm4");
-                                        print("toKm4: $toKm4");
-                                        print("perKmAmount4: $perKmAmount4");
-                                        print("totalDistance4: $distance4");
-                                        calculateStandardAmount4(
-                                            double.parse(fromKm4!),
-                                            toKm3 != "null"
-                                                ? double.parse(toKm4!)
-                                                : 0.0,
-                                            double.parse(perKmAmount4!),
-                                            double.parse(
-                                                distance4!.split(" ")[0]));
+                                        if (distance2 != null) {
+                                          print("fromKm2: $fromKm2");
+                                          print("toKm2: $toKm2");
+                                          print("perKmAmount2: $perKmAmount2");
+                                          print("totalDistance2: $distance2");
+                                          calculateStandardAmount2(
+                                              double.parse(fromKm2!),
+                                              toKm2 != "null"
+                                                  ? double.parse(toKm2!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount2!),
+                                              double.parse(
+                                                  distance2!.split(" ")[0]));
+                                        }
+                                        if (distance3 != null) {
+                                          print("fromKm3: $fromKm3");
+                                          print("toKm3: $toKm3");
+                                          print("perKmAmount3: $perKmAmount3");
+                                          print("totalDistance3: $distance3");
+                                          calculateStandardAmount3(
+                                              double.parse(fromKm3!),
+                                              toKm3 != "null"
+                                                  ? double.parse(toKm3!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount3!),
+                                              double.parse(
+                                                  distance3!.split(" ")[0]));
+                                        }
+                                        if (distance4 != null) {
+                                          print("fromKm4: $fromKm4");
+                                          print("toKm4: $toKm4");
+                                          print("perKmAmount4: $perKmAmount4");
+                                          print("totalDistance4: $distance4");
+                                          calculateStandardAmount4(
+                                              double.parse(fromKm4!),
+                                              toKm3 != "null"
+                                                  ? double.parse(toKm4!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount4!),
+                                              double.parse(
+                                                  distance4!.split(" ")[0]));
+                                        }
                                       }
                                       addMultipleData = {
                                         "type": "booking",
@@ -2705,6 +2718,43 @@ class _NewScreenState extends State<NewScreen> {
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"
                                             : "Multiple",
+                                        "destin_distance0":
+                                        distance0!.split(" ")[0],
+                                        "destin_time0": duration,
+                                        "destin_delivery_charges0":
+                                        roundedTotalAmount0 ?? "0.00",
+                                        "destin_vat_charges0": "0.00",
+                                        "destin_total_charges0": "0.00",
+                                        "destin_discount0": "0.00",
+                                        "destin_discounted_charges0": "0.00",
+                                        "destin_distance1": distance1!.split(" ")[0],
+                                        "destin_time1": duration,
+                                        "destin_delivery_charges1": roundedTotalAmount1 ?? "0.00",
+                                        "destin_vat_charges1": "0.00",
+                                        "destin_total_charges1": "0.00",
+                                        "destin_discount1": "0.00",
+                                        "destin_discounted_charges1": "0.00",
+                                        "destin_distance2": distance2 != null ? distance2!.split(" ")[0] : "0.00",
+                                        "destin_time2": duration,
+                                        "destin_delivery_charges2": roundedTotalAmount2 ?? "0.00",
+                                        "destin_vat_charges2": "0.00",
+                                        "destin_total_charges2": "0.00",
+                                        "destin_discount2": "0.00",
+                                        "destin_discounted_charges2": "0.00",
+                                        "destin_distance3": distance3 != null ? distance3!.split(" ")[0] : "0.00",
+                                        "destin_time3": duration,
+                                        "destin_delivery_charges3": roundedTotalAmount3 ?? "0.00",
+                                        "destin_vat_charges3": "0.00",
+                                        "destin_total_charges3": "0.00",
+                                        "destin_discount3": "0.00",
+                                        "destin_discounted_charges3": "0.00",
+                                        "destin_distance4": distance4 != null ? distance4!.split(" ")[0] : "0.00",
+                                        "destin_time4": duration,
+                                        "destin_delivery_charges4": roundedTotalAmount4 ?? "0.00",
+                                        "destin_vat_charges4": "0.00",
+                                        "destin_total_charges4": "0.00",
+                                        "destin_discount4": "0.00",
+                                        "destin_discounted_charges4": "0.00",
                                       };
                                       Navigator.push(
                                         context,

@@ -30,9 +30,8 @@ class _ConfirmSingleDetailsScreenState
   double? totalVatAmount;
   double? roundedTotalVatAmount;
   double? totalPrice;
-  double? roundedtotalPrice;
+  double? roundedTotalPrice;
 
-  bool isLoading = false;
   String? baseUrl = dotenv.env['BASE_URL'];
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
@@ -91,8 +90,8 @@ class _ConfirmSingleDetailsScreenState
   calculateTotalPrice(double deliveryCharges, double roundedTotalVatAmount) {
     totalPrice = deliveryCharges + roundedTotalVatAmount;
     print("totalPrice: $totalPrice");
-    roundedtotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
-    print("roundedTotalVatAmount: $roundedtotalPrice");
+    roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
+    print("roundedTotalVatAmount: $roundedTotalPrice");
   }
 
   @override
@@ -105,422 +104,417 @@ class _ConfirmSingleDetailsScreenState
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: bgColor,
-        body: getAllSystemDataModel.data != null
-            ? Stack(
-                children: [
-                  Image.asset(
-                    'assets/images/home-location-background.png',
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 40,
-                    left: 20,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: SvgPicture.asset(
-                        'assets/images/back-icon.svg',
-                        fit: BoxFit.scaleDown,
-                      ),
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: getAllSystemDataModel.data != null
+          ? Stack(
+              children: [
+                Image.asset(
+                  'assets/images/home-location-background.png',
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 40,
+                  left: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/back-icon.svg',
+                      fit: BoxFit.scaleDown,
                     ),
                   ),
-                  Positioned(
-                    top: 240,
-                    right: 120,
-                    child: Image.asset(
-                      'assets/images/bike-icon.png',
-                      width: 100,
-                      height: 100,
-                    ),
+                ),
+                Positioned(
+                  top: 240,
+                  right: 120,
+                  child: Image.asset(
+                    'assets/images/bike-icon.png',
+                    width: 100,
+                    height: 100,
                   ),
-                  Positioned(
-                    top: 101,
-                    right: 4,
-                    child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
-                  ),
-                  Positioned(
-                    top: 225,
-                    right: 135,
-                    child: SpeechBalloon(
-                      nipLocation: NipLocation.bottom,
-                      nipHeight: 12,
-                      color: orangeColor,
-                      borderColor: borderColor,
-                      width: size.width * 0.3,
-                      height: size.height * 0.05,
-                      borderRadius: 10,
-                      offset: const Offset(10, 0),
-                      child: Center(
-                        child: Text(
-                          "${widget.singleData!["destin_time"]}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: whiteColor,
-                            fontSize: 12,
-                            fontFamily: 'Syne-SemiBold',
-                          ),
+                ),
+                Positioned(
+                  top: 101,
+                  right: 4,
+                  child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
+                ),
+                Positioned(
+                  top: 225,
+                  right: 135,
+                  child: SpeechBalloon(
+                    nipLocation: NipLocation.bottom,
+                    nipHeight: 12,
+                    color: orangeColor,
+                    borderColor: borderColor,
+                    width: size.width * 0.3,
+                    height: size.height * 0.05,
+                    borderRadius: 10,
+                    offset: const Offset(10, 0),
+                    child: Center(
+                      child: Text(
+                        "${widget.singleData!["destin_time"]}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: whiteColor,
+                          fontSize: 12,
+                          fontFamily: 'Syne-SemiBold',
                         ),
                       ),
                     ),
                   ),
-                  Positioned(
-                    left: 20,
-                    right: 20,
-                    bottom: 85,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        width: size.width * 0.6,
-                        height: size.height * 0.38,
-                        color: whiteColor,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: [
-                              SizedBox(height: size.height * 0.02),
-                              Container(
-                                color: transparentColor,
-                                width: size.width,
-                                height: size.height * 0.09,
-                                child: Row(
+                ),
+                Positioned(
+                  left: 20,
+                  right: 20,
+                  bottom: 85,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      width: size.width * 0.6,
+                      height: size.height * 0.38,
+                      color: whiteColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            SizedBox(height: size.height * 0.02),
+                            Container(
+                              color: transparentColor,
+                              width: size.width,
+                              height: size.height * 0.09,
+                              child: Row(
+                                children: [
+                                  SizedBox(width: size.width * 0.02),
+                                  Text(
+                                    "Fare",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: orangeColor,
+                                      fontSize: 32,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                  SizedBox(width: size.width * 0.02),
+                                  Text(
+                                    "$currencyUnit",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: orangeColor,
+                                      fontSize: 38,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(width: size.width * 0.02),
+                                  Tooltip(
+                                    message: roundedTotalPrice.toString(),
+                                    child: Container(
+                                      color: transparentColor,
+                                      width: size.width * 0.359,
+                                      child: AutoSizeText(
+                                        roundedTotalPrice.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 32,
+                                          fontFamily: 'Inter-Bold',
+                                        ),
+                                        maxLines: 1,
+                                        maxFontSize: 32,
+                                        minFontSize: 24,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: size.width * 0.05),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  'Discount: ',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '$currencyUnit ',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: orangeColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                Text(
+                                  "${widget.singleData?["destin_discount"]}",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                SizedBox(width: size.width * 0.05),
+                              ],
+                            ),
+                            SizedBox(height: size.height * 0.005),
+                            Row(
+                              children: [
+                                Text(
+                                  'VAT Fee ($doubleVatCharges%): ',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '$currencyUnit ',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: orangeColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                Text(
+                                  "$roundedTotalVatAmount",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                SizedBox(width: size.width * 0.05),
+                              ],
+                            ),
+                            SizedBox(height: size.height * 0.005),
+                            Row(
+                              children: [
+                                Text(
+                                  'Total Price: ',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '$currencyUnit ',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: orangeColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                Text(
+                                  '$totalPrice',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
+                                ),
+                                SizedBox(width: size.width * 0.05),
+                              ],
+                            ),
+                            SizedBox(height: size.height * 0.03),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/orange-location-big-icon.svg',
+                                ),
+                                SizedBox(width: size.width * 0.04),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(width: size.width * 0.02),
                                     Text(
-                                      "Fare",
+                                      'Pickup',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
-                                        color: orangeColor,
-                                        fontSize: 32,
-                                        fontFamily: 'Syne-Bold',
+                                        color: textHaveAccountColor,
+                                        fontSize: 14,
+                                        fontFamily: 'Syne-Regular',
                                       ),
                                     ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Text(
-                                      "$currencyUnit",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: orangeColor,
-                                        fontSize: 38,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
+                                    SizedBox(height: size.height * 0.01),
                                     Tooltip(
-                                      message: roundedtotalPrice.toString(),
+                                      message:
+                                          "${widget.singleData?["pickup_address"]}",
                                       child: Container(
                                         color: transparentColor,
-                                        width: size.width * 0.359,
+                                        width: size.width * 0.62,
                                         child: AutoSizeText(
-                                          roundedtotalPrice.toString(),
+                                          "${widget.singleData?["pickup_address"]}",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: blackColor,
-                                            fontSize: 32,
-                                            fontFamily: 'Inter-Bold',
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
                                           ),
+                                          minFontSize: 14,
+                                          maxFontSize: 14,
                                           maxLines: 1,
-                                          maxFontSize: 32,
-                                          minFontSize: 24,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: size.width * 0.05),
                                   ],
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Discount: ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '$currencyUnit ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  Text(
-                                    "${widget.singleData?["destin_discount"]}",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.05),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.005),
-                              Row(
-                                children: [
-                                  Text(
-                                    'VAT Fee ($doubleVatCharges%): ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '$currencyUnit ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  Text(
-                                    "$roundedTotalVatAmount",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.05),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.005),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Total Price: ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '$currencyUnit ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  Text(
-                                    '$totalPrice',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.05),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.03),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/orange-location-big-icon.svg',
-                                  ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Pickup',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "${widget.singleData?["pickup_address"]}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            "${widget.singleData?["pickup_address"]}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                              ],
+                            ),
+                            SizedBox(height: size.height * 0.01),
+                            Divider(
+                              thickness: 1,
+                              color: dividerColor,
+                              indent: 30,
+                              endIndent: 30,
+                            ),
+                            SizedBox(height: size.height * 0.01),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/send-small-icon.svg',
+                                ),
+                                SizedBox(width: size.width * 0.04),
+                                Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Dropoff',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: textHaveAccountColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Syne-Regular',
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/send-small-icon.svg',
-                                  ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Dropoff',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Syne-Regular',
-                                            ),
+                                        SizedBox(width: size.width * 0.3),
+                                        Text(
+                                          '$currencyUnit ',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
                                           ),
-                                          SizedBox(width: size.width * 0.3),
-                                          Text(
-                                            '$currencyUnit ',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                          ),
-                                          Tooltip(
-                                            message:
-                                                "${widget.singleData?["destin_delivery_charges"]}",
-                                            child: Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.18,
-                                              child: AutoSizeText(
-                                                "${widget.singleData?["destin_delivery_charges"]}",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
-                                                ),
-                                                maxFontSize: 14,
-                                                minFontSize: 12,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Tooltip(
+                                          message:
+                                              "${widget.singleData?["destin_delivery_charges"]}",
+                                          child: Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.18,
+                                            child: AutoSizeText(
+                                              "${widget.singleData?["destin_delivery_charges"]}",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: blackColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Medium',
                                               ),
+                                              maxFontSize: 14,
+                                              minFontSize: 12,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "${widget.singleData?["destin_address"]}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            "${widget.singleData?["destin_address"]}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
+                                      ],
+                                    ),
+                                    SizedBox(height: size.height * 0.01),
+                                    Tooltip(
+                                      message:
+                                          "${widget.singleData?["destin_address"]}",
+                                      child: Container(
+                                        color: transparentColor,
+                                        width: size.width * 0.62,
+                                        child: AutoSizeText(
+                                          "${widget.singleData?["destin_address"]}",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                          minFontSize: 14,
+                                          maxFontSize: 14,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  Positioned(
-                    bottom: 15,
-                    left: 0,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {
-                        Map? updatedData = Map.from(widget.singleData!);
-                        updatedData.addAll({
-                          "total_vat_charges": roundedTotalVatAmount.toString(),
-                          "total_charges": totalPrice.toString(),
-                          "total_discount": "0.00",
-                          "total_discounted_charges": "0.00",
-                        });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WhoWillPaySheet(
-                              singleData: updatedData,
-                              multipleData: const {},
-                            ),
+                ),
+                Positioned(
+                  bottom: 15,
+                  left: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Map? updatedData = Map.from(widget.singleData!);
+                      updatedData.addAll({
+                        "total_vat_charges": roundedTotalVatAmount.toString(),
+                        "total_charges": totalPrice.toString(),
+                        "total_discount": "0.00",
+                        "total_discounted_charges": "0.00",
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WhoWillPaySheet(
+                            singleData: updatedData,
+                            multipleData: const {},
                           ),
-                        );
-                      },
-                      child: buttonGradient("CONFIRM", context),
-                    ),
-                  ),
-                ],
-              )
-            : Center(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: transparentColor,
-                  child: Lottie.asset(
-                    'assets/images/loading-icon.json',
-                    fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                    child: buttonGradient("CONFIRM", context),
                   ),
                 ),
+              ],
+            )
+          : Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                color: transparentColor,
+                child: Lottie.asset(
+                  'assets/images/loading-icon.json',
+                  fit: BoxFit.cover,
+                ),
               ),
-      ),
+            ),
     );
   }
 }
