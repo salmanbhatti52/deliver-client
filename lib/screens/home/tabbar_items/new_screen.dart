@@ -121,6 +121,11 @@ class _NewScreenState extends State<NewScreen> {
   String? distance3;
   String? distance4;
   String? duration;
+  String? duration0;
+  String? duration1;
+  String? duration2;
+  String? duration3;
+  String? duration4;
   String? minPageLength;
   String? maxPageLength;
   int? minPageLen;
@@ -1557,19 +1562,29 @@ class _NewScreenState extends State<NewScreen> {
       print("filteredData: $filteredData");
       if (dataIndex1 == 0) {
         distance0 = distanceDataMap[0]!['distance'];
+        duration0 = distanceDataMap[0]!['duration'];
         print("distance 0: $distance0");
+        print("duration 0: $duration0");
       } else if (dataIndex1 == 1) {
         distance1 = distanceDataMap[1]!['distance'];
+        duration1 = distanceDataMap[1]!['duration'];
         print("distance 1: $distance1");
+        print("duration 1: $duration1");
       } else if (dataIndex1 == 2) {
         distance2 = distanceDataMap[2]!['distance'];
+        duration2 = distanceDataMap[2]!['duration'];
         print("distance 2: $distance2");
+        print("duration 2: $duration2");
       } else if (dataIndex1 == 3) {
         distance3 = distanceDataMap[3]!['distance'];
+        duration3 = distanceDataMap[3]!['duration'];
         print("distance 3: $distance3");
+        print("duration 3: $duration3");
       } else if (dataIndex1 == 4) {
         distance4 = distanceDataMap[4]!['distance'];
+        duration4 = distanceDataMap[4]!['duration'];
         print("distance 4: $distance4");
+        print("duration 4: $duration4");
       }
     }
 
@@ -2720,7 +2735,7 @@ class _NewScreenState extends State<NewScreen> {
                                             : "Multiple",
                                         "destin_distance0":
                                         distance0!.split(" ")[0],
-                                        "destin_time0": duration,
+                                        "destin_time0": duration0,
                                         "destin_delivery_charges0":
                                         roundedTotalAmount0 ?? "0.00",
                                         "destin_vat_charges0": "0.00",
@@ -2728,28 +2743,28 @@ class _NewScreenState extends State<NewScreen> {
                                         "destin_discount0": "0.00",
                                         "destin_discounted_charges0": "0.00",
                                         "destin_distance1": distance1!.split(" ")[0],
-                                        "destin_time1": duration,
+                                        "destin_time1": duration1,
                                         "destin_delivery_charges1": roundedTotalAmount1 ?? "0.00",
                                         "destin_vat_charges1": "0.00",
                                         "destin_total_charges1": "0.00",
                                         "destin_discount1": "0.00",
                                         "destin_discounted_charges1": "0.00",
                                         "destin_distance2": distance2 != null ? distance2!.split(" ")[0] : "0.00",
-                                        "destin_time2": duration,
+                                        "destin_time2": duration2,
                                         "destin_delivery_charges2": roundedTotalAmount2 ?? "0.00",
                                         "destin_vat_charges2": "0.00",
                                         "destin_total_charges2": "0.00",
                                         "destin_discount2": "0.00",
                                         "destin_discounted_charges2": "0.00",
                                         "destin_distance3": distance3 != null ? distance3!.split(" ")[0] : "0.00",
-                                        "destin_time3": duration,
+                                        "destin_time3": duration3,
                                         "destin_delivery_charges3": roundedTotalAmount3 ?? "0.00",
                                         "destin_vat_charges3": "0.00",
                                         "destin_total_charges3": "0.00",
                                         "destin_discount3": "0.00",
                                         "destin_discounted_charges3": "0.00",
                                         "destin_distance4": distance4 != null ? distance4!.split(" ")[0] : "0.00",
-                                        "destin_time4": duration,
+                                        "destin_time4": duration4,
                                         "destin_delivery_charges4": roundedTotalAmount4 ?? "0.00",
                                         "destin_vat_charges4": "0.00",
                                         "destin_total_charges4": "0.00",
@@ -2798,7 +2813,7 @@ class _NewScreenState extends State<NewScreen> {
                                                           alignment:
                                                               Alignment.topLeft,
                                                           child: Text(
-                                                            'Data Error',
+                                                            "Just a moment",
                                                             textAlign:
                                                                 TextAlign.left,
                                                             style: TextStyle(

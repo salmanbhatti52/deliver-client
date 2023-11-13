@@ -34,7 +34,7 @@ class _ConfirmMultipleDetailsScreenState
 
   String? currencyUnit;
   String? vatCharges;
-  String? discountCharges;
+  double? discountCharges;
   double? deliveryCharges;
   double? doubleVatCharges;
   double? totalVatCharges;
@@ -96,12 +96,12 @@ class _ConfirmMultipleDetailsScreenState
   }
 
   allDiscountCharges() {
-    discountCharges = widget.multipleData!["destin_discount0"] +
-        widget.multipleData!["destin_discount1"] +
-        widget.multipleData!["destin_discount2"] +
-        widget.multipleData!["destin_discount3"] +
-        widget.multipleData!["destin_discount4"];
-    print("deliveryCharges: $deliveryCharges");
+    discountCharges = double.parse(widget.multipleData!["destin_discount0"]) +
+        double.parse(widget.multipleData!["destin_discount1"]) +
+        double.parse(widget.multipleData!["destin_discount2"]) +
+        double.parse(widget.multipleData!["destin_discount3"]) +
+        double.parse(widget.multipleData!["destin_discount4"]);
+    print("discountCharges: $discountCharges");
   }
 
   calculateVATCharges(double vat) {
@@ -131,50 +131,37 @@ class _ConfirmMultipleDetailsScreenState
     allDiscountCharges();
     print("multipleData:  ${widget.multipleData}");
     dataList = widget.dataForIndexes;
-    // print("dataList:  $dataList");
-    // print("dataList Length:  ${dataList!.length}");
-    // print(
-    //     "Data for 0: ${widget.dataForIndexes![0]['pickupLatLng']['latitude']}");
-    if (widget.dataForIndexes != null) {
-      for (var i = 0; i < widget.dataForIndexes!.length; i++) {
-        final dataForIndex = widget.dataForIndexes![i];
-        final dataIndex = dataForIndex.keys.first; // Get the index
-        final data = dataForIndex[dataIndex];
-
-        // Check if data contains null values
-        if (data.containsValue(null)) {
-          print("Data for Index $dataIndex: Data contains null values");
-        } else {
-          print("Data for Index $dataIndex: $data");
-        }
-      }
-    }
-    //  if (dataList != null) {
-    //   for (var i = 0; i < dataList!.length; i++) {
-    //     final dataForIndex = dataList![i];
+    // if (widget.dataForIndexes != null) {
+    //   for (var i = 0; i < widget.dataForIndexes!.length; i++) {
+    //     final dataForIndex = widget.dataForIndexes![i];
     //     final dataIndex = dataForIndex.keys.first; // Get the index
-    //     print("Data for Index $dataIndex: ${dataForIndex[dataIndex]}");
+    //     final data = dataForIndex[dataIndex];
+    //
+    //     // Check if data contains null values
+    //     if (data.containsValue(null)) {
+    //       print("Data for Index $dataIndex: Data contains null values");
+    //     } else {
+    //       print("Data for Index $dataIndex: $data");
+    //     }
     //   }
     // }
+
+
     dataForIndex0 = dataList![0];
     print("Data for Index 0: $dataForIndex0");
     // print("pickupController for Index 0: ${dataForIndex0['0']['pickupController']}");
 
     dataForIndex1 = dataList![1];
     print("Data for Index 1: $dataForIndex1");
-    // print("pickupController for Index 1: ${dataForIndex1['1']['pickupController']}");
-    //
+
     dataForIndex2 = dataList![2];
     print("Data for Index 2: $dataForIndex2");
-    // print("pickupController for Index 2: ${dataForIndex2['2']['pickupController']}");
-    //
+
     dataForIndex3 = dataList![3];
     print("Data for Index 3: $dataForIndex3");
-    // print("pickupController for Index 3: ${dataForIndex3['3']['pickupController']}");
-    //
+
     dataForIndex4 = dataList![4];
     print("Data for Index 4: $dataForIndex4");
-    // print("pickupController for Index 4: ${dataForIndex4['4']['pickupController']}");
   }
 
   @override
@@ -332,7 +319,7 @@ class _ConfirmMultipleDetailsScreenState
                                     ),
                                   ),
                                   Text(
-                                    "0.0",
+                                    "$discountCharges",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -1301,6 +1288,10 @@ class _ConfirmMultipleDetailsScreenState
                         "receiver_phone4": dataForIndex4['4']
                                 ['receiversNumberController'] ??
                             "",
+                        "total_vat_charges": roundedTotalVatAmount.toString(),
+                        "total_charges": totalPrice.toString(),
+                        "total_discount": "0.00",
+                        "total_discounted_charges": "0.00",
                       });
                       Navigator.push(
                         context,

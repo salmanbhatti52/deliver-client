@@ -91,7 +91,7 @@ class _ConfirmSingleDetailsScreenState
     totalPrice = deliveryCharges + roundedTotalVatAmount;
     print("totalPrice: $totalPrice");
     roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
-    print("roundedTotalVatAmount: $roundedTotalPrice");
+    print("roundedTotalAmount: $roundedTotalPrice");
   }
 
   @override
