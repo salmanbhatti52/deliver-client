@@ -2454,10 +2454,9 @@ class _NewScreenState extends State<NewScreen> {
                                     "destin_longitude": destinationLng,
                                     "destin_distance": distance!.split(" ")[0],
                                     "destin_time": duration,
-                                    "destin_delivery_charges":
-                                        roundedTotalAmount ?? "0.00",
+                                    "destin_delivery_charges": "0.00",
                                     "destin_vat_charges": "0.00",
-                                    "destin_total_charges": "0.00",
+                                    "destin_total_charges": roundedTotalAmount ?? "0.00",
                                     "destin_discount": "0.00",
                                     "destin_discounted_charges": "0.00",
                                     "receiver_name":
@@ -2599,10 +2598,9 @@ class _NewScreenState extends State<NewScreen> {
                                       "destin_distance":
                                           distance!.split(" ")[0],
                                       "destin_time": duration,
-                                      "destin_delivery_charges":
-                                          roundedTotalAmount ?? "0.00",
+                                      "destin_delivery_charges": "0.00",
                                       "destin_vat_charges": "0.00",
-                                      "destin_total_charges": "0.00",
+                                      "destin_total_charges": roundedTotalAmount ?? "0.00",
                                       "destin_discount": "0.00",
                                       "destin_discounted_charges": "0.00",
                                       "receiver_name":

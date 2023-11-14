@@ -1288,6 +1288,7 @@ class _ConfirmMultipleDetailsScreenState
                         "receiver_phone4": dataForIndex4['4']
                                 ['receiversNumberController'] ??
                             "",
+                        "destin_total_charges": roundedTotalPrice.toString(),
                         "total_vat_charges": roundedTotalVatAmount.toString(),
                         "total_charges": totalPrice.toString(),
                         "total_discount": "0.00",

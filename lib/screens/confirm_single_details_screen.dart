@@ -65,7 +65,7 @@ class _ConfirmSingleDetailsScreenState
             print("doubleVatCharges: $doubleVatCharges");
             setState(() {});
             calculateVATCharges(doubleVatCharges!,
-                double.parse(widget.singleData!["destin_delivery_charges"]));
+                double.parse(widget.singleData!["destin_total_charges"]));
           }
         }
       }
@@ -183,7 +183,7 @@ class _ConfirmSingleDetailsScreenState
                             Container(
                               color: transparentColor,
                               width: size.width,
-                              height: size.height * 0.09,
+                              height: size.height * 0.08,
                               child: Row(
                                 children: [
                                   SizedBox(width: size.width * 0.02),
@@ -423,12 +423,12 @@ class _ConfirmSingleDetailsScreenState
                                         ),
                                         Tooltip(
                                           message:
-                                              "${widget.singleData?["destin_delivery_charges"]}",
+                                              "${widget.singleData?["destin_total_charges"]}",
                                           child: Container(
                                             color: transparentColor,
                                             width: size.width * 0.18,
                                             child: AutoSizeText(
-                                              "${widget.singleData?["destin_delivery_charges"]}",
+                                              "${widget.singleData?["destin_total_charges"]}",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: blackColor,
@@ -466,6 +466,7 @@ class _ConfirmSingleDetailsScreenState
                                         ),
                                       ),
                                     ),
+                                    SizedBox(height: size.height * 0.01),
                                   ],
                                 ),
                               ],

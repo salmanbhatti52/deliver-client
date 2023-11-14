@@ -64,10 +64,13 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   String? lng;
   double? riderLat;
   double? riderLng;
+  int currentIndex = 0;
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
   String? baseUrl = dotenv.env['BASE_URL'];
   String? imageUrl = dotenv.env['IMAGE_URL'];
+  ScrollController scrollController = ScrollController();
+
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -329,6 +332,12 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     print("currentBookingId: ${widget.currentBookingId}");
     print("bookingDestinationId;: ${widget.bookingDestinationId}");
     startTimer();
+    scrollController.addListener(() {
+      setState(() {
+        // Update the current index based on the scroll position
+        currentIndex = (scrollController.offset / MediaQuery.of(context).size.width).round();
+      });
+    });
   }
 
   @override
@@ -494,7 +503,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                           ),
                           child: Container(
                             width: size.width,
-                            height: size.height * 0.46,
+                            height: widget.singleData!.isNotEmpty ? size.height * 0.46 : size.height * 0.48,
                             decoration: BoxDecoration(
                               color: whiteColor,
                             ),
@@ -674,116 +683,794 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.03),
-                                  Tooltip(
-                                    message:
-                                        "${widget.singleData?["destin_address"]}",
-                                    child: Text(
-                                      "${widget.singleData?["destin_address"]}",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: blackColor,
-                                        fontSize: 16,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  SizedBox(height: size.height * 0.03),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  widget.singleData!.isNotEmpty ?
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/images/black-location-icon.svg',
+                                      Tooltip(
+                                        message:
+                                        "${widget.singleData?["destin_address"]}",
+                                        child: Text(
+                                          "${widget.singleData?["destin_address"]}",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 16,
+                                            fontFamily: 'Syne-Bold',
                                           ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Tooltip(
-                                            message:
-                                                "${widget.distance} $distanceUnit",
-                                            child: Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.18,
-                                              child: AutoSizeText(
-                                                "${widget.distance} $distanceUnit",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: drawerTextColor,
-                                                  fontSize: 16,
-                                                  fontFamily: 'Inter-Regular',
-                                                ),
-                                                maxFontSize: 16,
-                                                minFontSize: 12,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                      Column(
+                                      SizedBox(height: size.height * 0.03),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
-                                          SvgPicture.asset(
-                                            'assets/images/black-clock-icon.svg',
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Tooltip(
-                                            message:
-                                                "${widget.singleData?["destin_time"]}",
-                                            child: Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.38,
-                                              child: AutoSizeText(
-                                                "${widget.singleData?["destin_time"]}",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: drawerTextColor,
-                                                  fontSize: 16,
-                                                  fontFamily: 'Inter-Regular',
-                                                ),
-                                                maxFontSize: 16,
-                                                minFontSize: 12,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                                          Column(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/images/black-location-icon.svg',
                                               ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/images/black-naira-icon.svg',
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Tooltip(
-                                            message:
-                                                "$currencyUnit${widget.singleData?["total_charges"]}",
-                                            child: Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.2,
-                                              child: AutoSizeText(
-                                                "$currencyUnit${widget.singleData?["total_charges"]}",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: drawerTextColor,
-                                                  fontSize: 16,
-                                                  fontFamily: 'Inter-Regular',
+                                              SizedBox(height: size.height * 0.01),
+                                              Tooltip(
+                                                message:
+                                                "${widget.distance} $distanceUnit",
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.18,
+                                                  child: AutoSizeText(
+                                                    "${widget.distance} $distanceUnit",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: drawerTextColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Inter-Regular',
+                                                    ),
+                                                    maxFontSize: 16,
+                                                    minFontSize: 12,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
                                                 ),
-                                                maxFontSize: 16,
-                                                minFontSize: 12,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                            ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/images/black-clock-icon.svg',
+                                              ),
+                                              SizedBox(height: size.height * 0.01),
+                                              Tooltip(
+                                                message:
+                                                "${widget.singleData?["destin_time"]}",
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.38,
+                                                  child: AutoSizeText(
+                                                    "${widget.singleData?["destin_time"]}",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: drawerTextColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Inter-Regular',
+                                                    ),
+                                                    maxFontSize: 16,
+                                                    minFontSize: 12,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/images/black-naira-icon.svg',
+                                              ),
+                                              SizedBox(height: size.height * 0.01),
+                                              Tooltip(
+                                                message:
+                                                "$currencyUnit${widget.singleData?["total_charges"]}",
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.2,
+                                                  child: AutoSizeText(
+                                                    "$currencyUnit${widget.singleData?["total_charges"]}",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: drawerTextColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Inter-Regular',
+                                                    ),
+                                                    maxFontSize: 16,
+                                                    minFontSize: 12,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
+                                  ): Container(
+                                    color: transparentColor,
+                                    child: SingleChildScrollView(
+                                      controller: scrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.86,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Tooltip(
+                                                  message:
+                                                  "${widget.multipleData?["destin_address0"]}",
+                                                  child: Text(
+                                                    "${widget.multipleData?["destin_address0"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Syne-Bold',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(height: size.height * 0.03),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-location-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.distance} $distanceUnit",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.18,
+                                                            child: AutoSizeText(
+                                                              "${widget.distance} $distanceUnit",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-clock-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.multipleData?["destin_time0"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.38,
+                                                            child: AutoSizeText(
+                                                              "${widget.multipleData?["destin_time0"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-naira-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.2,
+                                                            child: AutoSizeText(
+                                                              "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: size.width * 0.04),
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.85,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Tooltip(
+                                                  message:
+                                                  "${widget.multipleData?["destin_address1"]}",
+                                                  child: Text(
+                                                    "${widget.multipleData?["destin_address1"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Syne-Bold',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(height: size.height * 0.03),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-location-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.distance} $distanceUnit",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.18,
+                                                            child: AutoSizeText(
+                                                              "${widget.distance} $distanceUnit",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-clock-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.multipleData?["destin_time1"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.38,
+                                                            child: AutoSizeText(
+                                                              "${widget.multipleData?["destin_time1"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-naira-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.2,
+                                                            child: AutoSizeText(
+                                                              "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          // if (widget.multipleData!["destin_address2"] != null &&
+                                          //     widget.multipleData!["destin_address2"].isNotEmpty)
+                                          SizedBox(width: size.width * 0.04),
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.85,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Tooltip(
+                                                  message:
+                                                  "${widget.multipleData?["destin_address2"]}",
+                                                  child: Text(
+                                                    "${widget.multipleData?["destin_address2"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Syne-Bold',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(height: size.height * 0.03),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-location-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.distance} $distanceUnit",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.18,
+                                                            child: AutoSizeText(
+                                                              "${widget.distance} $distanceUnit",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-clock-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.multipleData?["destin_time2"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.38,
+                                                            child: AutoSizeText(
+                                                              "${widget.multipleData?["destin_time2"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-naira-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.2,
+                                                            child: AutoSizeText(
+                                                              "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          // if (widget.multipleData!["destin_address3"] != null &&
+                                          //     widget.multipleData!["destin_address3"].isNotEmpty)
+                                          SizedBox(width: size.width * 0.04),
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.85,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Tooltip(
+                                                  message:
+                                                  "${widget.multipleData?["destin_address3"]}",
+                                                  child: Text(
+                                                    "${widget.multipleData?["destin_address3"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Syne-Bold',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(height: size.height * 0.03),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-location-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.distance} $distanceUnit",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.18,
+                                                            child: AutoSizeText(
+                                                              "${widget.distance} $distanceUnit",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-clock-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.multipleData?["destin_time3"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.38,
+                                                            child: AutoSizeText(
+                                                              "${widget.multipleData?["destin_time3"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-naira-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.2,
+                                                            child: AutoSizeText(
+                                                              "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          // if (widget.multipleData!["destin_address4"] != null &&
+                                          //     widget.multipleData!["destin_address4"].isNotEmpty)
+                                          SizedBox(width: size.width * 0.04),
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.85,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Tooltip(
+                                                  message:
+                                                  "${widget.multipleData?["destin_address4"]}",
+                                                  child: Text(
+                                                    "${widget.multipleData?["destin_address4"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 16,
+                                                      fontFamily: 'Syne-Bold',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                SizedBox(height: size.height * 0.03),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-location-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.distance} $distanceUnit",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.18,
+                                                            child: AutoSizeText(
+                                                              "${widget.distance} $distanceUnit",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-clock-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "${widget.multipleData?["destin_time4"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.38,
+                                                            child: AutoSizeText(
+                                                              "${widget.multipleData?["destin_time4"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/black-naira-icon.svg',
+                                                        ),
+                                                        SizedBox(height: size.height * 0.01),
+                                                        Tooltip(
+                                                          message:
+                                                          "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                          child: Container(
+                                                            color: transparentColor,
+                                                            width: size.width * 0.2,
+                                                            child: AutoSizeText(
+                                                              "$currencyUnit${widget.multipleData?["total_charges"]}",
+                                                              textAlign: TextAlign.center,
+                                                              style: TextStyle(
+                                                                color: drawerTextColor,
+                                                                fontSize: 16,
+                                                                fontFamily: 'Inter-Regular',
+                                                              ),
+                                                              maxFontSize: 16,
+                                                              minFontSize: 12,
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  SizedBox(height: size.height * 0.03),
+                                  SizedBox(height: size.height * 0.02),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentIndex == 0 ? orangeColor : dotsColor,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentIndex == 1 ? orangeColor : dotsColor,
+                                        ),
+                                      ),
+                                      if (widget.multipleData!["destin_address2"] != null &&
+                                          widget.multipleData!["destin_address2"].isNotEmpty)
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentIndex == 2 ? orangeColor : dotsColor,
+                                        ),
+                                      ),
+                                      if (widget.multipleData!["destin_address3"] != null &&
+                                          widget.multipleData!["destin_address3"].isNotEmpty)
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentIndex == 3 ? orangeColor : dotsColor,
+                                        ),
+                                      ),
+                                      if (widget.multipleData!["destin_address4"] != null &&
+                                          widget.multipleData!["destin_address4"].isNotEmpty)
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: currentIndex == 4 ? orangeColor : dotsColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.02),
                                   GestureDetector(
                                     onTap: () {
                                       showDialog(
