@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool status = false;
   String? currentLat;
   String? currentLng;
+  bool isLoading = false;
   LatLng? currentLocation;
 
   void locationPermission() async {
@@ -264,6 +265,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (logInFormKey.currentState!.validate()) {
+                      setState(() {
+                        isLoading = true;
+                      });
                       await getCurrentLocation();
                       Navigator.push(
                         context,
@@ -276,9 +280,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       );
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
                   },
-                  child: buttonGradient("LOGIN", context),
+                  child: isLoading
+                      ? buttonGradientWithLoader("Please Wait...", context)
+                      : buttonGradient("LOGIN", context),
                 ),
                 SizedBox(height: size.height * 0.04),
                 SvgPicture.asset('assets/images/fingerprint-icon.svg'),

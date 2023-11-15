@@ -5,6 +5,7 @@ import 'package:pinput/pinput.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,6 +19,7 @@ class VerifyPhoneSignUpScreen extends StatefulWidget {
   final String? phoneNumber;
   final String? lat;
   final String? lng;
+
   const VerifyPhoneSignUpScreen({
     super.key,
     this.phoneNumber,
@@ -413,8 +415,20 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
               SizedBox(height: size.height * 0.03),
               GestureDetector(
                 onTap: () async {
-                  verifyOTPCode();
-                  timer?.cancel();
+                  if (otpController.text.isNotEmpty) {
+                    verifyOTPCode();
+                    timer?.cancel();
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: "Please Enter OTP!",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 2,
+                      backgroundColor: toastColor,
+                      textColor: whiteColor,
+                      fontSize: 12,
+                    );
+                  }
                 },
                 child: isLoading
                     ? buttonGradientWithLoader("Please Wait...", context)
