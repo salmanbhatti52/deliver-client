@@ -21,6 +21,7 @@ import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
 class InProgressHomeScreen extends StatefulWidget {
   final Map? singleData;
   final String? passCode;
+  final Map? multipleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
@@ -29,6 +30,7 @@ class InProgressHomeScreen extends StatefulWidget {
     super.key,
     this.singleData,
     this.passCode,
+    this.multipleData,
     this.currentBookingId,
     this.riderData,
     this.bookingDestinationId,
@@ -128,6 +130,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
               builder: (context) => AmountToPayScreen(
                 riderData: widget.riderData!,
                 singleData: widget.singleData,
+                multipleData: widget.multipleData,
                 currentBookingId: widget.currentBookingId,
                 bookingDestinationId: widget.bookingDestinationId,
               ),
@@ -142,6 +145,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
           //       index: 1,
           //       passCode: widget.passCode,
           //       singleData: widget.singleData,
+          //       multipleData: widget.multipleData,
           //       riderData: widget.riderData!,
           //       currentBookingId: widget.currentBookingId,
           //       bookingDestinationId: widget.bookingDestinationId,
@@ -156,10 +160,29 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     }
   }
 
-  getLocation() {
+  getLocationSingle() {
     if (widget.singleData != null) {
       latDest = "${widget.singleData!['destin_latitude']}";
       lngDest = "${widget.singleData!['destin_longitude']}";
+      destLat = double.parse(latDest!);
+      destLng = double.parse(lngDest!);
+      print("destLat: $destLat");
+      print("destLng: $destLng");
+      latRider = "${widget.riderData!.latitude}";
+      lngRider = "${widget.riderData!.longitude}";
+      riderLat = double.parse(latRider!);
+      riderLng = double.parse(lngRider!);
+      print("riderLat: $riderLat");
+      print("riderLng: $riderLng");
+    } else {
+      print("No LatLng Data");
+    }
+  }
+
+  getLocationMultiple() {
+    if (widget.multipleData != null) {
+      latDest = "${widget.multipleData!['destin_latitude0']}";
+      lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
       print("destLat: $destLat");
@@ -231,9 +254,11 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
-    loadCustomDestMarker();
-    getLocation();
-    getPolyPoints();
+    // loadCustomDestMarker();
+    // getPolyPoints()
+    widget.singleData!.isNotEmpty ? getPolyPoints() : '';
+    widget.singleData!.isNotEmpty ? loadCustomDestMarker() : '';
+    widget.singleData!.isNotEmpty ? getLocationSingle() : getLocationMultiple();
     startTimer();
   }
 
@@ -345,41 +370,332 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                         'assets/images/small-black-send-icon.svg',
                                       ),
                                       SizedBox(width: size.width * 0.03),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Destination Address",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Regular',
-                                            ),
-                                          ),
-                                          SizedBox(height: size.height * 0.005),
-                                          Tooltip(
-                                            message:
-                                                "${widget.singleData!['destin_address']}",
-                                            child: Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.7,
-                                              child: Text(
-                                                "${widget.singleData!['destin_address']}",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
+                                      widget.singleData!.isNotEmpty
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Destination Address",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Regular',
+                                                  ),
                                                 ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                                SizedBox(
+                                                    height:
+                                                        size.height * 0.005),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.singleData!['destin_address']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.79,
+                                                    child: Text(
+                                                      "${widget.singleData!['destin_address']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Destination Addresses",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "1.",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            size.width * 0.02),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 2.5),
+                                                      child: Tooltip(
+                                                        message:
+                                                            "${widget.multipleData!['destin_address0']}",
+                                                        child: Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.75,
+                                                          child: Text(
+                                                            "${widget.multipleData!['destin_address0']}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "2.",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            size.width * 0.02),
+                                                    Tooltip(
+                                                      message:
+                                                          "${widget.multipleData!['destin_address1']}",
+                                                      child: Container(
+                                                        color: transparentColor,
+                                                        width:
+                                                            size.width * 0.75,
+                                                        child: Text(
+                                                          "${widget.multipleData!['destin_address1']}",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                if (widget.multipleData![
+                                                            "destin_address2"] !=
+                                                        null &&
+                                                    widget
+                                                        .multipleData![
+                                                            "destin_address2"]
+                                                        .isNotEmpty)
+                                                  SizedBox(
+                                                      height:
+                                                          size.height * 0.01),
+                                                if (widget.multipleData![
+                                                            "destin_address2"] !=
+                                                        null &&
+                                                    widget
+                                                        .multipleData![
+                                                            "destin_address2"]
+                                                        .isNotEmpty)
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "3.",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          width: size.width *
+                                                              0.02),
+                                                      Tooltip(
+                                                        message:
+                                                            "${widget.multipleData!['destin_address2']}",
+                                                        child: Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.75,
+                                                          child: Text(
+                                                            "${widget.multipleData!['destin_address2']}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                if (widget.multipleData![
+                                                            "destin_address3"] !=
+                                                        null &&
+                                                    widget
+                                                        .multipleData![
+                                                            "destin_address3"]
+                                                        .isNotEmpty)
+                                                  SizedBox(
+                                                      height:
+                                                          size.height * 0.01),
+                                                if (widget.multipleData![
+                                                            "destin_address3"] !=
+                                                        null &&
+                                                    widget
+                                                        .multipleData![
+                                                            "destin_address3"]
+                                                        .isNotEmpty)
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "4.",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          width: size.width *
+                                                              0.02),
+                                                      Tooltip(
+                                                        message:
+                                                            "${widget.multipleData!['destin_address3']}",
+                                                        child: Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.75,
+                                                          child: Text(
+                                                            "${widget.multipleData!['destin_address3']}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                if (widget.multipleData![
+                                                            "destin_address4"] !=
+                                                        null &&
+                                                    widget
+                                                        .multipleData![
+                                                            "destin_address4"]
+                                                        .isNotEmpty)
+                                                  SizedBox(
+                                                      height:
+                                                          size.height * 0.01),
+                                                if (widget.multipleData![
+                                                            "destin_address4"] !=
+                                                        null &&
+                                                    widget
+                                                        .multipleData![
+                                                            "destin_address4"]
+                                                        .isNotEmpty)
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        "5.",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          width: size.width *
+                                                              0.02),
+                                                      Tooltip(
+                                                        message:
+                                                            "${widget.multipleData!['destin_address4']}",
+                                                        child: Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.75,
+                                                          child: Text(
+                                                            "${widget.multipleData!['destin_address4']}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.01),
@@ -410,15 +726,274 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                             ),
                                           ),
                                           SizedBox(height: size.height * 0.005),
-                                          Text(
-                                            "${widget.singleData!['destin_distance']} $distanceUnit",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                          ),
+                                          widget.singleData!.isNotEmpty
+                                              ? Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.25,
+                                                  child: Text(
+                                                    "${widget.singleData!['destin_distance']} $distanceUnit",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                  ),
+                                                )
+                                              : Column(
+                                                  children: [
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            0.005),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "1.",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 2.5),
+                                                          child: Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.25,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_distance0']} $distanceUnit",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "2.",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.25,
+                                                          child: Text(
+                                                            "${widget.multipleData!['destin_distance1']} $distanceUnit",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    if (widget.multipleData![
+                                                                "destin_address2"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address2"]
+                                                            .isNotEmpty)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (widget.multipleData![
+                                                                "destin_address2"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address2"]
+                                                            .isNotEmpty)
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "3.",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.25,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_distance2']} $distanceUnit",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (widget.multipleData![
+                                                                "destin_address3"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address3"]
+                                                            .isNotEmpty)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (widget.multipleData![
+                                                                "destin_address3"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address3"]
+                                                            .isNotEmpty)
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "4.",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.25,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_distance3']} $distanceUnit",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (widget.multipleData![
+                                                                "destin_address4"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address4"]
+                                                            .isNotEmpty)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (widget.multipleData![
+                                                                "destin_address4"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address4"]
+                                                            .isNotEmpty)
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "5.",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.25,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_distance4']} $distanceUnit",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ],
+                                                ),
                                         ],
                                       ),
                                     ],
@@ -451,15 +1026,274 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                             ),
                                           ),
                                           SizedBox(height: size.height * 0.005),
-                                          Text(
-                                            "${widget.singleData!['destin_time']}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                          ),
+                                          widget.singleData!.isNotEmpty
+                                              ? Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.25,
+                                                  child: Text(
+                                                    "${widget.singleData!['destin_time']}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                  ),
+                                                )
+                                              : Column(
+                                                  children: [
+                                                    SizedBox(
+                                                        height: size.height *
+                                                            0.005),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "1.",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 2.5),
+                                                          child: Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.4,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_time0']}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Row(
+                                                      children: [
+                                                        Text(
+                                                          "2.",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.4,
+                                                          child: Text(
+                                                            "${widget.multipleData!['destin_time1']}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    if (widget.multipleData![
+                                                                "destin_address2"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address2"]
+                                                            .isNotEmpty)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (widget.multipleData![
+                                                                "destin_address2"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address2"]
+                                                            .isNotEmpty)
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "3.",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.4,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_time2']}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (widget.multipleData![
+                                                                "destin_address3"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address3"]
+                                                            .isNotEmpty)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (widget.multipleData![
+                                                                "destin_address3"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address3"]
+                                                            .isNotEmpty)
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "4.",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.4,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_time3']}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (widget.multipleData![
+                                                                "destin_address4"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address4"]
+                                                            .isNotEmpty)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (widget.multipleData![
+                                                                "destin_address4"] !=
+                                                            null &&
+                                                        widget
+                                                            .multipleData![
+                                                                "destin_address4"]
+                                                            .isNotEmpty)
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "5.",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color: blackColor,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Inter-Medium',
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.4,
+                                                            child: Text(
+                                                              "${widget.multipleData!['destin_time4']}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    blackColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Inter-Medium',
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ],
+                                                ),
                                         ],
                                       ),
                                       SizedBox(width: size.width * 0.08),
@@ -623,7 +1457,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                         "${widget.riderData!.address}",
                                                     child: Container(
                                                       color: transparentColor,
-                                                      width: size.width * 0.3,
+                                                      width: widget.singleData!
+                                                              .isNotEmpty
+                                                          ? size.width * 0.3
+                                                          : size.width * 0.4,
                                                       child: AutoSizeText(
                                                         "${widget.riderData!.address}",
                                                         textAlign:
@@ -647,38 +1484,46 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               ),
                                               SizedBox(
                                                   width: size.width * 0.01),
-                                              Row(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    'assets/images/small-grey-arrival-time-icon.svg',
-                                                  ),
-                                                  SizedBox(
-                                                      width: size.width * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "ETA ${widget.singleData!['destin_time']}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.23,
-                                                      child: Text(
-                                                        "ETA ${widget.singleData!['destin_time']}",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color:
-                                                              textHaveAccountColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Syne-Regular',
+                                              widget.singleData!.isNotEmpty
+                                                  ? Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/small-grey-arrival-time-icon.svg',
                                                         ),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.01),
+                                                        Tooltip(
+                                                          message:
+                                                              "ETA ${widget.singleData!['destin_time']}",
+                                                          child: Container(
+                                                            color:
+                                                                transparentColor,
+                                                            width: size.width *
+                                                                0.23,
+                                                            child: Text(
+                                                              "ETA ${widget.singleData!['destin_time']}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    textHaveAccountColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Syne-Regular',
+                                                              ),
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : SizedBox(
+                                                      width: size.width * 0.16),
                                               SizedBox(
                                                   width: size.width * 0.02),
                                               GestureDetector(
@@ -709,87 +1554,680 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.02),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/small-white-send-icon.svg',
-                                      ),
-                                      SizedBox(width: size.width * 0.03),
-                                      Text(
-                                        "Pickup",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.02),
-                                      Tooltip(
-                                        message:
-                                            "${widget.singleData!['pickup_address']}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.6,
-                                          child: Text(
-                                            "${widget.singleData!['pickup_address']}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
+                                  widget.singleData!.isNotEmpty
+                                      ? Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/images/small-white-send-icon.svg',
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.03),
+                                                Text(
+                                                  "Pickup",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.singleData!['pickup_address']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.6,
+                                                    child: Text(
+                                                      "${widget.singleData!['pickup_address']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.01),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/small-white-send-icon.svg',
-                                      ),
-                                      SizedBox(width: size.width * 0.03),
-                                      Text(
-                                        "Destination",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.02),
-                                      Tooltip(
-                                        message:
-                                            "${widget.singleData!['destin_address']}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.53,
-                                          child: Text(
-                                            "${widget.singleData!['destin_address']}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/images/small-white-send-icon.svg',
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.03),
+                                                Text(
+                                                  "Destination",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.singleData!['destin_address']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.53,
+                                                    child: Text(
+                                                      "${widget.singleData!['destin_address']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                          ],
+                                        )
+                                      : Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/images/small-white-send-icon.svg',
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.03),
+                                                Text(
+                                                  "Pickup 1",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.multipleData!['pickup_address0']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.61,
+                                                    child: Text(
+                                                      "${widget.multipleData!['pickup_address0']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/images/small-white-send-icon.svg',
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.03),
+                                                Text(
+                                                  "Destination 1",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.multipleData!['destin_address0']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.53,
+                                                    child: Text(
+                                                      "${widget.multipleData!['destin_address0']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/images/small-white-send-icon.svg',
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.03),
+                                                Text(
+                                                  "Pickup 2",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.multipleData!['pickup_address1']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.61,
+                                                    child: Text(
+                                                      "${widget.multipleData!['pickup_address1']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  'assets/images/small-white-send-icon.svg',
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.03),
+                                                Text(
+                                                  "Destination 2",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.multipleData!['destin_address1']}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.53,
+                                                    child: Text(
+                                                      "${widget.multipleData!['destin_address1']}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/small-white-send-icon.svg',
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.03),
+                                                  Text(
+                                                    "Pickup 3",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                          textHaveAccountColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Syne-Regular',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['pickup_address2']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.61,
+                                                      child: Text(
+                                                        "${widget.multipleData!['pickup_address2']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/small-white-send-icon.svg',
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.03),
+                                                  Text(
+                                                    "Destination 3",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                          textHaveAccountColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Syne-Regular',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address2']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.53,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address2']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/small-white-send-icon.svg',
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.03),
+                                                  Text(
+                                                    "Pickup 4",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                          textHaveAccountColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Syne-Regular',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['pickup_address3']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.61,
+                                                      child: Text(
+                                                        "${widget.multipleData!['pickup_address3']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/small-white-send-icon.svg',
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.03),
+                                                  Text(
+                                                    "Destination 4",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                          textHaveAccountColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Syne-Regular',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address3']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.53,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address3']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/small-white-send-icon.svg',
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.03),
+                                                  Text(
+                                                    "Pickup 5",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                          textHaveAccountColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Syne-Regular',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['pickup_address4']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.61,
+                                                      child: Text(
+                                                        "${widget.multipleData!['pickup_address4']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/small-white-send-icon.svg',
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.03),
+                                                  Text(
+                                                    "Destination 5",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color:
+                                                          textHaveAccountColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Syne-Regular',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address4']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.53,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address4']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
+                                  widget.singleData!.isNotEmpty
+                                      ? const SizedBox()
+                                      : SizedBox(height: size.height * 0.12),
                                 ],
                               ),
                             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/widgets/tabbar_scheduled_rides.dart';
+import 'package:deliver_client/widgets/scheduled_list.dart';
 
 class ScheduledRideScreen extends StatefulWidget {
   final int? selectedRadio;
@@ -53,7 +53,7 @@ class _ScheduledRideScreenState extends State<ScheduledRideScreen> {
           child: Column(
             children: [
               SizedBox(height: size.height * 0.03),
-              const TabbarScheduledHistory(),
+              const ScheduledList(),
             ],
           ),
         ),

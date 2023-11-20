@@ -8,6 +8,7 @@ import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/inp
 class TabbarRideHistory extends StatefulWidget {
   final int? index;
   final Map? singleData;
+  final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
   final SearchRiderData? riderData;
@@ -16,6 +17,7 @@ class TabbarRideHistory extends StatefulWidget {
     super.key,
     this.index,
     this.singleData,
+    this.multipleData,
     this.passCode,
     this.currentBookingId,
     this.riderData,
@@ -93,6 +95,7 @@ class _TabbarRideHistoryState extends State<TabbarRideHistory>
               InProgressHistoryScreen(
                 singleData: widget.singleData,
                 passCode: widget.passCode,
+                multipleData: widget.multipleData,
                 currentBookingId: widget.currentBookingId,
                 riderData: widget.riderData,
                 bookingDestinationId: widget.bookingDestinationId,

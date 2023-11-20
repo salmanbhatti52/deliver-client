@@ -25,6 +25,7 @@ class ScheduledList extends StatefulWidget {
 }
 
 class _ScheduledListState extends State<ScheduledList> {
+  DateTime? timeAdded;
   bool isLoading = false;
   String? baseUrl = dotenv.env['BASE_URL'];
   String? imageUrl = dotenv.env['IMAGE_URL'];
@@ -107,6 +108,29 @@ class _ScheduledListState extends State<ScheduledList> {
     }
   }
 
+  String formatTimeDifference(DateTime dateTime) {
+    Duration difference = DateTime.now().difference(dateTime);
+
+    if (difference.inDays >= 365) {
+      int years = (difference.inDays / 365).floor();
+      return "${years == 1 ? '1 year' : '$years years'} ago";
+    } else if (difference.inDays >= 30) {
+      int months = (difference.inDays / 30).floor();
+      return "${months == 1 ? '1 month' : '$months months'} ago";
+    } else if (difference.inDays >= 7) {
+      int weeks = (difference.inDays / 7).floor();
+      return "${weeks == 1 ? '1 week' : '$weeks weeks'} ago";
+    } else if (difference.inDays > 0) {
+      return "${difference.inDays == 1 ? '1 day' : '${difference.inDays} days'} ago";
+    } else if (difference.inHours > 0) {
+      return "${difference.inHours == 1 ? '1 hour' : '${difference.inHours} hours'} ago";
+    } else if (difference.inMinutes > 0) {
+      return "${difference.inMinutes == 1 ? '1 minute' : '${difference.inMinutes} mins'} ago";
+    } else {
+      return "Just now";
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -135,12 +159,12 @@ class _ScheduledListState extends State<ScheduledList> {
                 scrollDirection: Axis.vertical,
                 itemCount: getScheduledBookingModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
+                  timeAdded = DateTime.parse("${getScheduledBookingModel.data![index].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "12 min ago",
-                        // '${completedRideModel.data![index].rideCompleted}',
+                        formatTimeDifference(timeAdded!),
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: sheetBarrierColor,
@@ -250,7 +274,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                     color: transparentColor,
                                     width: size.width * 0.54,
                                     child: AutoSizeText(
-                                      'You Completed a ride\n12 min ago with this captain',
+                                      'You Scheduled a ride\n${formatTimeDifference(timeAdded!)} with this captain',
                                       // 'You Completed a ride\n${completedRideModel.data![index].rideCompleted} with this captain',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(

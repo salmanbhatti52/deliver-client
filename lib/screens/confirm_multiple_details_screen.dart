@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print,, prefer_typing_uninitialized_variables
+// ignore_for_file: avoid_print, prefer_typing_uninitialized_variables
 
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';

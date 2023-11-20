@@ -11,6 +11,7 @@ class HomePageScreen extends StatefulWidget {
   final int? index;
   final Map? singleData;
   final String? passCode;
+  final Map? multipleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
@@ -20,6 +21,7 @@ class HomePageScreen extends StatefulWidget {
     this.index,
     this.singleData,
     this.passCode,
+    this.multipleData,
     this.currentBookingId,
     this.riderData,
     this.bookingDestinationId,
@@ -78,6 +80,7 @@ class _HomePageScreenState extends State<HomePageScreen>
           drawer: AppDrawer(
             singleData: widget.singleData,
             passCode: widget.passCode,
+            multipleData: widget.multipleData,
             currentBookingId: widget.currentBookingId,
             riderData: widget.riderData,
             bookingDestinationId: widget.bookingDestinationId,
@@ -166,6 +169,7 @@ class _HomePageScreenState extends State<HomePageScreen>
                           InProgressHomeScreen(
                             singleData: widget.singleData,
                             passCode: widget.passCode,
+                            multipleData: widget.multipleData,
                             currentBookingId: widget.currentBookingId,
                             riderData: widget.riderData,
                             bookingDestinationId: widget.bookingDestinationId,

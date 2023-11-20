@@ -6,6 +6,7 @@ import 'package:deliver_client/models/search_rider_model.dart';
 class InProgressHistoryScreen extends StatefulWidget {
   final int? index;
   final Map? singleData;
+  final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
   final SearchRiderData? riderData;
@@ -14,6 +15,7 @@ class InProgressHistoryScreen extends StatefulWidget {
     super.key,
     this.index,
     this.singleData,
+    this.multipleData,
     this.passCode,
     this.currentBookingId,
     this.riderData,
@@ -38,6 +40,7 @@ class _InProgressHistoryScreenState extends State<InProgressHistoryScreen> {
           child: InProgressList(
             singleData: widget.singleData,
             passCode: widget.passCode,
+            multipleData: widget.multipleData,
             currentBookingId: widget.currentBookingId,
             riderData: widget.riderData,
             bookingDestinationId: widget.bookingDestinationId,

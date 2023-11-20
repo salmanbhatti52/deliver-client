@@ -19,6 +19,7 @@ import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
 
 class AmountToPayScreen extends StatefulWidget {
   final Map? singleData;
+  final Map? multipleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
@@ -27,6 +28,7 @@ class AmountToPayScreen extends StatefulWidget {
     super.key,
     this.riderData,
     this.singleData,
+    this.multipleData,
     this.currentBookingId,
     this.bookingDestinationId,
   });
@@ -95,6 +97,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
           builder: (context) => AmountPaidScreen(
             riderData: widget.riderData!,
             singleData: widget.singleData,
+            multipleData: widget.multipleData,
             currentBookingId: widget.currentBookingId,
             bookingDestinationId: widget.bookingDestinationId,
           ),
@@ -373,6 +376,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                                     builder: (context) => AmountPaidScreen(
                                       riderData: widget.riderData!,
                                       singleData: widget.singleData,
+                                      multipleData: widget.multipleData,
                                       currentBookingId: widget.currentBookingId,
                                       bookingDestinationId:
                                           widget.bookingDestinationId,

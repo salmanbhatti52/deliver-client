@@ -13,6 +13,7 @@ String? userEmail;
 
 class AmountPaidScreen extends StatefulWidget {
   final Map? singleData;
+  final Map? multipleData;
   final String? currentBookingId;
   final SearchRiderData? riderData;
   final String? bookingDestinationId;
@@ -21,6 +22,7 @@ class AmountPaidScreen extends StatefulWidget {
     super.key,
     this.riderData,
     this.singleData,
+    this.multipleData,
     this.currentBookingId,
     this.bookingDestinationId,
   });

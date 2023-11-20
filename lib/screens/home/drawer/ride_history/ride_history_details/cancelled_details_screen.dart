@@ -22,7 +22,31 @@ class RideHistoryCancelledDetailsScreen extends StatefulWidget {
 
 class _RideHistoryCancelledDetailsScreenState
     extends State<RideHistoryCancelledDetailsScreen> {
+  DateTime? timeAdded;
   String? imageUrl = dotenv.env['IMAGE_URL'];
+
+  String formatTimeDifference(DateTime dateTime) {
+    Duration difference = DateTime.now().difference(dateTime);
+
+    if (difference.inDays >= 365) {
+      int years = (difference.inDays / 365).floor();
+      return "${years == 1 ? '1 year' : '$years years'} ago";
+    } else if (difference.inDays >= 30) {
+      int months = (difference.inDays / 30).floor();
+      return "${months == 1 ? '1 month' : '$months months'} ago";
+    } else if (difference.inDays >= 7) {
+      int weeks = (difference.inDays / 7).floor();
+      return "${weeks == 1 ? '1 week' : '$weeks weeks'} ago";
+    } else if (difference.inDays > 0) {
+      return "${difference.inDays == 1 ? '1 day' : '${difference.inDays} days'} ago";
+    } else if (difference.inHours > 0) {
+      return "${difference.inHours == 1 ? '1 hour' : '${difference.inHours} hours'} ago";
+    } else if (difference.inMinutes > 0) {
+      return "${difference.inMinutes == 1 ? '1 minute' : '${difference.inMinutes} mins'} ago";
+    } else {
+      return "Just now";
+    }
+  }
 
   @override
   void initState() {
@@ -32,6 +56,7 @@ class _RideHistoryCancelledDetailsScreenState
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    timeAdded = DateTime.parse("${widget.cancelledRideModel?.dateModified}");
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
@@ -77,8 +102,7 @@ class _RideHistoryCancelledDetailsScreenState
                   Padding(
                     padding: const EdgeInsets.only(left: 5),
                     child: Text(
-                      "12 min ago",
-                      // '${widget.cancelledRideModel?.rideCancelled}',
+                      formatTimeDifference(timeAdded!),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: sheetBarrierColor,
