@@ -31,8 +31,8 @@ class DrawerSaveLocationScreen extends StatefulWidget {
 }
 
 class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
-  TextEditingController searchController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   final GlobalKey<FormState> nameLocationFormKey = GlobalKey<FormState>();
 
   bool isLoading = false;
@@ -421,7 +421,8 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
                         getCurrentLocation();
                       },
                       child: SvgPicture.asset(
-                          'assets/images/current-location-icon.svg'),
+                          'assets/images/current-location-icon.svg',
+                      ),
                     ),
                   ),
                   Positioned(
