@@ -372,10 +372,16 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
-    widget.singleData!.isNotEmpty ? getPolyPoints() : '';
-    widget.singleData!.isNotEmpty ? loadCustomPickupMarker() : '';
-    widget.singleData!.isNotEmpty ? getLocationSingle() : getLocationMultiple();
     // getPolyPoints();
+    if (widget.singleData != null) {
+      getPolyPoints();
+      getLocationSingle();
+      loadCustomPickupMarker();
+    } else {
+      getLocationMultiple();
+      print("Multiple data so no polyline will be shown!");
+      print("Multiple data so no custom marker will be shown!");
+    }
     startTimer();
     scrollController.addListener(() {
       setState(() {

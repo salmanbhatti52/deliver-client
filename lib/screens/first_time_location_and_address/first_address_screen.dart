@@ -163,6 +163,7 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                             scrollDirection: Axis.vertical,
                             itemCount: getAddressesModel.data!.length,
                             itemBuilder: (BuildContext context, int index) {
+                              int reverseIndex = getAddressesModel.data!.length - 1 - index;
                               return Column(
                                 children: [
                                   Card(
@@ -186,9 +187,9 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                                               width: size.width * 0.65,
                                               child: Tooltip(
                                                 message:
-                                                    "${getAddressesModel.data![index].name}",
+                                                    "${getAddressesModel.data![reverseIndex].name}",
                                                 child: Text(
-                                                  "${getAddressesModel.data![index].name}",
+                                                  "${getAddressesModel.data![reverseIndex].name}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -207,9 +208,9 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                                               width: size.width * 0.65,
                                               child: Tooltip(
                                                 message:
-                                                    "${getAddressesModel.data![index].address}",
+                                                    "${getAddressesModel.data![reverseIndex].address}",
                                                 child: Text(
-                                                  "${getAddressesModel.data![index].address}",
+                                                  "${getAddressesModel.data![reverseIndex].address}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -233,7 +234,7 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                                                 builder: (context) =>
                                                     deleteConformation(
                                                         getAddressesModel
-                                                            .data![index]
+                                                            .data![reverseIndex]
                                                             .usersCustomersAddressesId));
                                           },
                                           child: Container(

@@ -10,6 +10,7 @@ Widget loyaltyPointList(BuildContext context) {
     scrollDirection: Axis.vertical,
     itemCount: myList.length,
     itemBuilder: (BuildContext context, int index) {
+      int reverseIndex = myList.length - 1 - index;
       return Card(
         color: whiteColor,
         elevation: 5,
@@ -30,13 +31,13 @@ Widget loyaltyPointList(BuildContext context) {
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset(myList[index].image),
+                    child: Image.asset(myList[reverseIndex].image),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        myList[index].title,
+                        myList[reverseIndex].title,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: drawerTextColor,
@@ -48,7 +49,7 @@ Widget loyaltyPointList(BuildContext context) {
                         color: transparentColor,
                         width: size.width * 0.5,
                         child: AutoSizeText(
-                          myList[index].subtitle,
+                          myList[reverseIndex].subtitle,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             color: textHaveAccountColor,

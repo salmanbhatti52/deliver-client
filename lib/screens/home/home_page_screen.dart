@@ -155,7 +155,8 @@ class _HomePageScreenState extends State<HomePageScreen>
                                 Tab(text: "In Progress"),
                               ],
                             ),
-                          )),
+                          ),
+                      ),
                     ),
                     Container(
                       color: transparentColor,

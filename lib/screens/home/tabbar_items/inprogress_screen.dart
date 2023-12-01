@@ -256,9 +256,15 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     loadCustomMarker();
     // loadCustomDestMarker();
     // getPolyPoints()
-    widget.singleData!.isNotEmpty ? getPolyPoints() : '';
-    widget.singleData!.isNotEmpty ? loadCustomDestMarker() : '';
-    widget.singleData!.isNotEmpty ? getLocationSingle() : getLocationMultiple();
+    if (widget.singleData != null) {
+      getPolyPoints();
+      getLocationSingle();
+      loadCustomDestMarker();
+    } else {
+      getLocationMultiple();
+      print("Multiple data so no polyline will be shown!");
+      print("Multiple data so no custom marker will be shown!");
+    }
     startTimer();
   }
 

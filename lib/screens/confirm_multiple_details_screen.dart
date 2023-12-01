@@ -131,6 +131,7 @@ class _ConfirmMultipleDetailsScreenState
     allDiscountCharges();
     print("multipleData:  ${widget.multipleData}");
     dataList = widget.dataForIndexes;
+    print("DataList: $dataList");
     // if (widget.dataForIndexes != null) {
     //   for (var i = 0; i < widget.dataForIndexes!.length; i++) {
     //     final dataForIndex = widget.dataForIndexes![i];
@@ -141,27 +142,30 @@ class _ConfirmMultipleDetailsScreenState
     //     if (data.containsValue(null)) {
     //       print("Data for Index $dataIndex: Data contains null values");
     //     } else {
-    //       print("Data for Index $dataIndex: $data");
+    //       print("Data for Index Number $dataIndex: $data");
     //     }
     //   }
     // }
 
+    if (dataList != null) {
+      dataForIndex0 = dataList![0];
+      print("Data for Index 0: $dataForIndex0");
+      // print("pickupController for Index 0: ${dataForIndex0['0']["pickupController"]}");
 
-    dataForIndex0 = dataList![0];
-    print("Data for Index 0: $dataForIndex0");
-    // print("pickupController for Index 0: ${dataForIndex0['0']['pickupController']}");
+      dataForIndex1 = dataList![1];
+      print("Data for Index 1: $dataForIndex1");
 
-    dataForIndex1 = dataList![1];
-    print("Data for Index 1: $dataForIndex1");
+      dataForIndex2 = dataList![2];
+      print("Data for Index 2: $dataForIndex2");
 
-    dataForIndex2 = dataList![2];
-    print("Data for Index 2: $dataForIndex2");
+      dataForIndex3 = dataList![3];
+      print("Data for Index 3: $dataForIndex3");
 
-    dataForIndex3 = dataList![3];
-    print("Data for Index 3: $dataForIndex3");
-
-    dataForIndex4 = dataList![4];
-    print("Data for Index 4: $dataForIndex4");
+      dataForIndex4 = dataList![4];
+      print("Data for Index 4: $dataForIndex4");
+    } else {
+      print('No Data in list');
+    }
   }
 
   @override
@@ -319,7 +323,7 @@ class _ConfirmMultipleDetailsScreenState
                                     ),
                                   ),
                                   Text(
-                                    "$discountCharges",
+                                    discountCharges.toString(),
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -334,7 +338,7 @@ class _ConfirmMultipleDetailsScreenState
                               Row(
                                 children: [
                                   Text(
-                                    'VAT Fee ($doubleVatCharges%): ',
+                                    'VAT Fee (${doubleVatCharges.toString()}%): ',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -353,7 +357,7 @@ class _ConfirmMultipleDetailsScreenState
                                     ),
                                   ),
                                   Text(
-                                    "$roundedTotalVatAmount",
+                                    roundedTotalVatAmount.toString(),
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -387,7 +391,7 @@ class _ConfirmMultipleDetailsScreenState
                                     ),
                                   ),
                                   Text(
-                                    '$totalPrice',
+                                    totalPrice.toString(),
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -422,12 +426,12 @@ class _ConfirmMultipleDetailsScreenState
                                       SizedBox(height: size.height * 0.01),
                                       Tooltip(
                                         message:
-                                            '${dataForIndex0['0']['pickupController']}',
+                                            '${dataForIndex0['0']["pickupController"]}',
                                         child: Container(
                                           color: transparentColor,
                                           width: size.width * 0.62,
                                           child: AutoSizeText(
-                                            '${dataForIndex0['0']['pickupController']}',
+                                            '${dataForIndex0['0']["pickupController"]}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: blackColor,
@@ -565,12 +569,12 @@ class _ConfirmMultipleDetailsScreenState
                                       SizedBox(height: size.height * 0.01),
                                       Tooltip(
                                         message:
-                                            '${dataForIndex1['1']['pickupController']}',
+                                            '${dataForIndex1['1']["pickupController"]}',
                                         child: Container(
                                           color: transparentColor,
                                           width: size.width * 0.62,
                                           child: AutoSizeText(
-                                            '${dataForIndex1['1']['pickupController']}',
+                                            '${dataForIndex1['1']["pickupController"]}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: blackColor,
@@ -679,155 +683,168 @@ class _ConfirmMultipleDetailsScreenState
                               SizedBox(height: size.height * 0.01),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ): const SizedBox(),
+                                      thickness: 1,
+                                      color: dividerColor,
+                                      indent: 30,
+                                      endIndent: 30,
+                                    )
+                                  : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? SizedBox(height: size.height * 0.01)
                                   : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/orange-location-big-icon.svg',
-                                  ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Pickup 3',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          'assets/images/orange-location-big-icon.svg',
                                         ),
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            '${dataForIndex2['2']['pickupController']}',
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            '${dataForIndex2['2']['pickupController']}',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
+                                        SizedBox(width: size.width * 0.04),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Pickup 3',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: textHaveAccountColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Syne-Regular',
+                                              ),
                                             ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Tooltip(
+                                              message:
+                                                  '${dataForIndex2['2']["pickupController"]}',
+                                              child: Container(
+                                                color: transparentColor,
+                                                width: size.width * 0.62,
+                                                child: AutoSizeText(
+                                                  '${dataForIndex2['2']["pickupController"]}',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  minFontSize: 14,
+                                                  maxFontSize: 14,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ): const SizedBox(),
+                                      ],
+                                    )
+                                  : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? SizedBox(height: size.height * 0.01)
                                   : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ): const SizedBox(),
+                                      thickness: 1,
+                                      color: dividerColor,
+                                      indent: 30,
+                                      endIndent: 30,
+                                    )
+                                  : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? SizedBox(height: size.height * 0.01)
                                   : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/images/send-small-icon.svg'),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Dropoff 3',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Syne-Regular',
-                                            ),
-                                          ),
-                                          SizedBox(width: size.width * 0.3),
-                                          Text(
-                                            '$currencyUnit ',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                          ),
-                                          Tooltip(
-                                            message:
-                                                "${widget.multipleData!["destin_delivery_charges2"]}",
-                                            child: Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.16,
-                                              child: AutoSizeText(
-                                                "${widget.multipleData!["destin_delivery_charges2"]}",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                            'assets/images/send-small-icon.svg'),
+                                        SizedBox(width: size.width * 0.04),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Dropoff 3',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
                                                 ),
-                                                maxFontSize: 14,
-                                                minFontSize: 12,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                                                SizedBox(
+                                                    width: size.width * 0.3),
+                                                Text(
+                                                  '$currencyUnit ',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: orangeColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                ),
+                                                Tooltip(
+                                                  message:
+                                                      "${widget.multipleData!["destin_delivery_charges2"]}",
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.16,
+                                                    child: AutoSizeText(
+                                                      "${widget.multipleData!["destin_delivery_charges2"]}",
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      maxFontSize: 14,
+                                                      minFontSize: 12,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Tooltip(
+                                              message:
+                                                  '${dataForIndex2['2']['destinationController']}',
+                                              child: Container(
+                                                color: transparentColor,
+                                                width: size.width * 0.62,
+                                                child: AutoSizeText(
+                                                  '${dataForIndex2['2']['destinationController']}',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  minFontSize: 14,
+                                                  maxFontSize: 14,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            '${dataForIndex2['2']['destinationController']}',
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            '${dataForIndex2['2']['destinationController']}',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ): const SizedBox(),
+                                      ],
+                                    )
+                                  : const SizedBox(),
                               widget.multipleData!['destin_distance2'] != '0.00'
                                   ? SizedBox(height: size.height * 0.01)
                                   : const SizedBox(),
@@ -868,12 +885,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex3['3']['pickupController']}',
+                                                  '${dataForIndex3['3']["pickupController"]}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex3['3']['pickupController']}',
+                                                  '${dataForIndex3['3']["pickupController"]}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -1035,12 +1052,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex4['4']['pickupController']}',
+                                                  '${dataForIndex4['4']["pickupController"]}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex4['4']['pickupController']}',
+                                                  '${dataForIndex4['4']["pickupController"]}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -1182,111 +1199,122 @@ class _ConfirmMultipleDetailsScreenState
                       Map? updatedData2 = Map.from(widget.multipleData!);
                       updatedData2.addAll({
                         "pickup_address0": dataForIndex0['0']
-                            ['pickupController'],
-                        "pickup_latitude0": dataForIndex0['0']['pickupLatLng']
-                            ['latitude'],
-                        "pickup_longitude0": dataForIndex0['0']['pickupLatLng']
-                            ['longitude'],
+                            ["pickupController"],
+                        "pickup_latitude0": dataForIndex0['0']["pickupLatLng"]
+                            ["latitude"],
+                        "pickup_longitude0": dataForIndex0['0']["pickupLatLng"]
+                            ["longitude"],
                         "destin_address0": dataForIndex0['0']
-                            ['destinationController'],
+                            ["destinationController"],
                         "destin_latitude0": dataForIndex0['0']
-                            ['destinationLatLng']['latitude'],
+                            ["destinationLatLng"]["latitude"],
                         "destin_longitude0": dataForIndex0['0']
-                            ['destinationLatLng']['longitude'],
+                            ["destinationLatLng"]["longitude"],
                         "receiver_name0": dataForIndex0['0']
-                            ['receiversNameController'],
+                            ["receiversNameController"],
                         "receiver_phone0": dataForIndex0['0']
-                            ['receiversNumberController'],
+                            ["receiversNumberController"],
                         "pickup_address1": dataForIndex1['1']
-                            ['pickupController'],
-                        "pickup_latitude1": dataForIndex1['1']['pickupLatLng']
-                            ['latitude'],
-                        "pickup_longitude1": dataForIndex1['1']['pickupLatLng']
-                            ['longitude'],
+                            ["pickupController"],
+                        "pickup_latitude1": dataForIndex1['1']["pickupLatLng"]
+                            ["latitude"],
+                        "pickup_longitude1": dataForIndex1['1']["pickupLatLng"]
+                            ["longitude"],
                         "destin_address1": dataForIndex1['1']
                             ['destinationController'],
                         "destin_latitude1": dataForIndex1['1']
-                            ['destinationLatLng']['latitude'],
+                            ['destinationLatLng']["latitude"],
                         "destin_longitude1": dataForIndex1['1']
-                            ['destinationLatLng']['longitude'],
+                            ['destinationLatLng']["longitude"],
                         "receiver_name1": dataForIndex1['1']
-                            ['receiversNameController'],
+                            ["receiversNameController"],
                         "receiver_phone1": dataForIndex1['1']
-                            ['receiversNumberController'],
+                            ["receiversNumberController"],
                         "pickup_address2":
-                            dataForIndex2['2']['pickupController'] ?? "",
+                            dataForIndex2['2']["pickupController"] ?? "",
                         "pickup_latitude2":
-                            dataForIndex2['2']['pickupLatLng'] != 'null'
-                                ? dataForIndex2['2']['pickupLatLng']
+                            dataForIndex2['2']["pickupLatLng"] != 'null'
+                                ? dataForIndex2['2']["pickupLatLng"]["latitude"]
                                 : "null",
                         "pickup_longitude2":
-                            dataForIndex2['2']['pickupLatLng'] != 'null'
-                                ? dataForIndex2['2']['pickupLatLng']
+                            dataForIndex2['2']["pickupLatLng"] != 'null'
+                                ? dataForIndex2['2']["pickupLatLng"]
+                                    ["longitude"]
                                 : "null",
                         "destin_address2":
                             dataForIndex2['2']['destinationController'] ?? "",
                         "destin_latitude2":
                             dataForIndex2['2']['destinationLatLng'] != 'null'
                                 ? dataForIndex2['2']['destinationLatLng']
+                                    ["latitude"]
                                 : "null",
                         "destin_longitude2":
                             dataForIndex2['2']['destinationLatLng'] != 'null'
                                 ? dataForIndex2['2']['destinationLatLng']
+                                    ["longitude"]
                                 : "null",
                         "receiver_name2":
-                            dataForIndex2['2']['receiversNameController'] ?? "",
+                            dataForIndex2['2']["receiversNameController"] ?? "",
                         "receiver_phone2": dataForIndex2['2']
-                                ['receiversNumberController'] ??
+                                ["receiversNumberController"] ??
                             "",
                         "pickup_address3":
-                            dataForIndex3['3']['pickupController'] ?? "",
+                            dataForIndex3['3']["pickupController"] ?? "",
                         "pickup_latitude3":
-                            dataForIndex3['3']['pickupLatLng'] != 'null'
-                                ? dataForIndex3['3']['pickupLatLng']
+                            dataForIndex3['3']["pickupLatLng"] != 'null'
+                                ? dataForIndex3['3']["pickupLatLng"]
+                                    ["longitude"]
                                 : "null",
                         "pickup_longitude3":
-                            dataForIndex3['3']['pickupLatLng'] != 'null'
-                                ? dataForIndex3['3']['pickupLatLng']
+                            dataForIndex3['3']["pickupLatLng"] != 'null'
+                                ? dataForIndex3['3']["pickupLatLng"]
+                                    ["longitude"]
                                 : "null",
                         "destin_address3":
                             dataForIndex3['3']['destinationController'] ?? "",
                         "destin_latitude3":
                             dataForIndex3['3']['destinationLatLng'] != 'null'
                                 ? dataForIndex3['3']['destinationLatLng']
+                                    ["longitude"]
                                 : "null",
                         "destin_longitude3":
                             dataForIndex3['3']['destinationLatLng'] != 'null'
                                 ? dataForIndex3['3']['destinationLatLng']
+                                    ["longitude"]
                                 : "null",
                         "receiver_name3":
-                            dataForIndex3['3']['receiversNameController'] ?? "",
+                            dataForIndex3['3']["receiversNameController"] ?? "",
                         "receiver_phone3": dataForIndex3['3']
-                                ['receiversNumberController'] ??
+                                ["receiversNumberController"] ??
                             "",
                         "pickup_address4":
-                            dataForIndex4['4']['pickupController'] ?? "",
+                            dataForIndex4['4']["pickupController"] ?? "",
                         "pickup_latitude4":
-                            dataForIndex4['4']['pickupLatLng'] != 'null'
-                                ? dataForIndex4['4']['pickupLatLng']
+                            dataForIndex4['4']["pickupLatLng"] != 'null'
+                                ? dataForIndex4['4']["pickupLatLng"]
+                                    ["longitude"]
                                 : "null",
                         "pickup_longitude4":
-                            dataForIndex4['4']['pickupLatLng'] != 'null'
-                                ? dataForIndex4['4']['pickupLatLng']
+                            dataForIndex4['4']["pickupLatLng"] != 'null'
+                                ? dataForIndex4['4']["pickupLatLng"]
+                                    ["longitude"]
                                 : "null",
                         "destin_address4":
                             dataForIndex4['4']['destinationController'] ?? "",
                         "destin_latitude4":
                             dataForIndex4['4']['destinationLatLng'] != 'null'
                                 ? dataForIndex4['4']['destinationLatLng']
+                                    ["longitude"]
                                 : "null",
                         "destin_longitude4":
                             dataForIndex4['4']['destinationLatLng'] != 'null'
                                 ? dataForIndex4['4']['destinationLatLng']
+                                    ["longitude"]
                                 : "null",
                         "receiver_name4":
-                            dataForIndex4['4']['receiversNameController'] ?? "",
+                            dataForIndex4['4']["receiversNameController"] ?? "",
                         "receiver_phone4": dataForIndex4['4']
-                                ['receiversNumberController'] ??
+                                ["receiversNumberController"] ??
                             "",
                         "destin_total_charges": roundedTotalPrice.toString(),
                         "total_vat_charges": roundedTotalVatAmount.toString(),

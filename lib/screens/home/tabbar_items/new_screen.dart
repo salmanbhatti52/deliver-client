@@ -2347,135 +2347,396 @@ class _NewScreenState extends State<NewScreen> {
                           children: [
                             GestureDetector(
                               onTap: () async {
-                                if (pickupController.text.isEmpty ||
-                                    destinationController.text.isEmpty ||
-                                    receiversNameController.text.isEmpty ||
-                                    receiversNumberController.text.isEmpty ||
-                                    selectedVehicle == null ||
-                                    selectedBookingType == null) {
-                                  if (pickupController.text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill pickup address!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (destinationController
-                                      .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill destination address!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (receiversNameController
-                                      .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill receiver's name!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (receiversNumberController
-                                      .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please fill receiver's number!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (selectedVehicle == null) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please select a vehicle!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  } else if (selectedBookingType == null) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please select booking type!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
-                                      fontSize: 12,
-                                    );
-                                  }
-                                } else {
-                                  setState(() {
-                                    isLoading2 = true;
-                                  });
-                                  await calculateDistanceTimeSingle();
-                                  await getChargesSingle(bookingsTypeId);
-                                  if (bookingsTypeId == "1") {
-                                    print("fromKm: $fromKm");
-                                    print("toKm: $toKm");
-                                    print("perKmAmount: $perKmAmount");
-                                    print("totalDistance: $distance");
-                                    calculateStandardAmount(
-                                        double.parse(fromKm!),
-                                        toKm != "null"
-                                            ? double.parse(toKm!)
-                                            : 0.0,
-                                        double.parse(perKmAmount!),
-                                        double.parse(distance!.split(" ")[0]));
-                                  }
-                                  addSingleData = {
-                                    "type": "schedule",
-                                    "vehicles_id": vehicleId,
-                                    "bookings_types_id": bookingsTypeId,
-                                    "delivery_type": selectedRadio == 1
-                                        ? "Single"
-                                        : "Multiple",
-                                    "pickup_address": pickupController.text,
-                                    "pickup_latitude":
-                                        pickupLat ?? currentLat ?? addressLat,
-                                    "pickup_longitude":
-                                        pickupLng ?? currentLng ?? addressLng,
-                                    "destin_address":
-                                        destinationController.text,
-                                    "destin_latitude": destinationLat,
-                                    "destin_longitude": destinationLng,
-                                    "destin_distance": distance!.split(" ")[0],
-                                    "destin_time": duration,
-                                    "destin_delivery_charges": "0.00",
-                                    "destin_vat_charges": "0.00",
-                                    "destin_total_charges": roundedTotalAmount ?? "0.00",
-                                    "destin_discount": "0.00",
-                                    "destin_discounted_charges": "0.00",
-                                    "receiver_name":
-                                        receiversNameController.text,
-                                    "receiver_phone":
-                                        receiversNumberController.text,
-                                  };
-                                  setState(() {
-                                    isLoading2 = false;
-                                  });
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ScheduleRideScreen(
-                                        selectedRadio: selectedRadio,
-                                        scheduledSingleData: addSingleData,
+                                if (selectedRadio == 1) {
+                                  if (pickupController.text.isEmpty ||
+                                      destinationController.text.isEmpty ||
+                                      receiversNameController.text.isEmpty ||
+                                      receiversNumberController.text.isEmpty ||
+                                      selectedVehicle == null ||
+                                      selectedBookingType == null) {
+                                    if (pickupController.text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill pickup address!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (destinationController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill destination address!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (receiversNameController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill receiver's name!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (receiversNumberController
+                                        .text.isEmpty) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please fill receiver's number!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (selectedVehicle == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please select a vehicle!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    } else if (selectedBookingType == null) {
+                                      Fluttertoast.showToast(
+                                        msg: "Please select booking type!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: toastColor,
+                                        textColor: whiteColor,
+                                        fontSize: 12,
+                                      );
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isLoading2 = true;
+                                    });
+                                    await calculateDistanceTimeSingle();
+                                    await getChargesSingle(bookingsTypeId);
+                                    if (bookingsTypeId == "1") {
+                                      print("fromKm: $fromKm");
+                                      print("toKm: $toKm");
+                                      print("perKmAmount: $perKmAmount");
+                                      print("totalDistance: $distance");
+                                      calculateStandardAmount(
+                                          double.parse(fromKm!),
+                                          toKm != "null"
+                                              ? double.parse(toKm!)
+                                              : 0.0,
+                                          double.parse(perKmAmount!),
+                                          double.parse(
+                                              distance!.split(" ")[0]));
+                                    }
+                                    addSingleData = {
+                                      "type": "schedule",
+                                      "vehicles_id": vehicleId,
+                                      "bookings_types_id": bookingsTypeId,
+                                      "delivery_type": selectedRadio == 1
+                                          ? "Single"
+                                          : "Multiple",
+                                      "pickup_address": pickupController.text,
+                                      "pickup_latitude":
+                                          pickupLat ?? currentLat ?? addressLat,
+                                      "pickup_longitude":
+                                          pickupLng ?? currentLng ?? addressLng,
+                                      "destin_address":
+                                          destinationController.text,
+                                      "destin_latitude": destinationLat,
+                                      "destin_longitude": destinationLng,
+                                      "destin_distance":
+                                          distance!.split(" ")[0],
+                                      "destin_time": duration,
+                                      "destin_delivery_charges": "0.00",
+                                      "destin_vat_charges": "0.00",
+                                      "destin_total_charges":
+                                          roundedTotalAmount ?? "0.00",
+                                      "destin_discount": "0.00",
+                                      "destin_discounted_charges": "0.00",
+                                      "receiver_name":
+                                          receiversNameController.text,
+                                      "receiver_phone":
+                                          receiversNumberController.text,
+                                    };
+                                    setState(() {
+                                      isLoading2 = false;
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ScheduleRideScreen(
+                                          selectedRadio: selectedRadio,
+                                          scheduledSingleData: addSingleData,
+                                        ),
                                       ),
-                                    ),
+                                    );
+                                  }
+                                }
+                                if (selectedRadio == 2) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Loading Data...',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 20,
+                                            fontFamily: 'Inter-Bold',
+                                          ),
+                                        ),
+                                        content: Text(
+                                          'Please wait while data is being loaded.',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Regular',
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   );
+                                  // Add a delay to ensure data is populated in allDataForIndexes1
+                                  Future.delayed(const Duration(seconds: 3),
+                                      () async {
+                                    // Close the loading dialog
+                                    Navigator.of(context).pop();
+
+                                    if (filteredData.isNotEmpty) {
+                                      await getChargesMultiple(bookingsTypeId);
+                                      if (bookingsTypeId == "1") {
+                                        print("fromKm0: $fromKm0");
+                                        print("toKm0: $toKm0");
+                                        print("perKmAmount0: $perKmAmount0");
+                                        print("totalDistance0: $distance0");
+                                        calculateStandardAmount0(
+                                            double.parse(fromKm0!),
+                                            toKm0 != "null"
+                                                ? double.parse(toKm0!)
+                                                : 0.0,
+                                            double.parse(perKmAmount0!),
+                                            double.parse(
+                                                distance0!.split(" ")[0]));
+                                        print("fromKm1: $fromKm1");
+                                        print("toKm1: $toKm1");
+                                        print("perKmAmount1: $perKmAmount1");
+                                        print("totalDistance1: $distance1");
+                                        calculateStandardAmount1(
+                                            double.parse(fromKm1!),
+                                            toKm1 != "null"
+                                                ? double.parse(toKm1!)
+                                                : 0.0,
+                                            double.parse(perKmAmount1!),
+                                            double.parse(
+                                                distance1!.split(" ")[0]));
+                                        if (distance2 != null) {
+                                          print("fromKm2: $fromKm2");
+                                          print("toKm2: $toKm2");
+                                          print("perKmAmount2: $perKmAmount2");
+                                          print("totalDistance2: $distance2");
+                                          calculateStandardAmount2(
+                                              double.parse(fromKm2!),
+                                              toKm2 != "null"
+                                                  ? double.parse(toKm2!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount2!),
+                                              double.parse(
+                                                  distance2!.split(" ")[0]));
+                                        }
+                                        if (distance3 != null) {
+                                          print("fromKm3: $fromKm3");
+                                          print("toKm3: $toKm3");
+                                          print("perKmAmount3: $perKmAmount3");
+                                          print("totalDistance3: $distance3");
+                                          calculateStandardAmount3(
+                                              double.parse(fromKm3!),
+                                              toKm3 != "null"
+                                                  ? double.parse(toKm3!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount3!),
+                                              double.parse(
+                                                  distance3!.split(" ")[0]));
+                                        }
+                                        if (distance4 != null) {
+                                          print("fromKm4: $fromKm4");
+                                          print("toKm4: $toKm4");
+                                          print("perKmAmount4: $perKmAmount4");
+                                          print("totalDistance4: $distance4");
+                                          calculateStandardAmount4(
+                                              double.parse(fromKm4!),
+                                              toKm3 != "null"
+                                                  ? double.parse(toKm4!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount4!),
+                                              double.parse(
+                                                  distance4!.split(" ")[0]));
+                                        }
+                                      }
+                                      addMultipleData = {
+                                        "type": "scheduled",
+                                        "vehicles_id": vehicleId,
+                                        "bookings_types_id": bookingsTypeId,
+                                        "delivery_type": selectedRadio == 1
+                                            ? "Single"
+                                            : "Multiple",
+                                        "destin_distance0":
+                                            distance0!.split(" ")[0],
+                                        "destin_time0": duration0,
+                                        "destin_delivery_charges0":
+                                            roundedTotalAmount0 ?? "0.00",
+                                        "destin_vat_charges0": "0.00",
+                                        "destin_total_charges0": "0.00",
+                                        "destin_discount0": "0.00",
+                                        "destin_discounted_charges0": "0.00",
+                                        "destin_distance1":
+                                            distance1!.split(" ")[0],
+                                        "destin_time1": duration1,
+                                        "destin_delivery_charges1":
+                                            roundedTotalAmount1 ?? "0.00",
+                                        "destin_vat_charges1": "0.00",
+                                        "destin_total_charges1": "0.00",
+                                        "destin_discount1": "0.00",
+                                        "destin_discounted_charges1": "0.00",
+                                        "destin_distance2": distance2 != null
+                                            ? distance2!.split(" ")[0]
+                                            : "0.00",
+                                        "destin_time2": duration2,
+                                        "destin_delivery_charges2":
+                                            roundedTotalAmount2 ?? "0.00",
+                                        "destin_vat_charges2": "0.00",
+                                        "destin_total_charges2": "0.00",
+                                        "destin_discount2": "0.00",
+                                        "destin_discounted_charges2": "0.00",
+                                        "destin_distance3": distance3 != null
+                                            ? distance3!.split(" ")[0]
+                                            : "0.00",
+                                        "destin_time3": duration3,
+                                        "destin_delivery_charges3":
+                                            roundedTotalAmount3 ?? "0.00",
+                                        "destin_vat_charges3": "0.00",
+                                        "destin_total_charges3": "0.00",
+                                        "destin_discount3": "0.00",
+                                        "destin_discounted_charges3": "0.00",
+                                        "destin_distance4": distance4 != null
+                                            ? distance4!.split(" ")[0]
+                                            : "0.00",
+                                        "destin_time4": duration4,
+                                        "destin_delivery_charges4":
+                                            roundedTotalAmount4 ?? "0.00",
+                                        "destin_vat_charges4": "0.00",
+                                        "destin_total_charges4": "0.00",
+                                        "destin_discount4": "0.00",
+                                        "destin_discounted_charges4": "0.00",
+                                      };
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ScheduleRideScreen(
+                                            selectedRadio: selectedRadio,
+                                            dataForIndexes: filteredData,
+                                            scheduledMultipleData: addMultipleData,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                            ),
+                                            insetPadding: const EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: SizedBox(
+                                              width: size.width,
+                                              height: size.height * 0.25,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.02),
+                                                        Align(
+                                                          alignment:
+                                                              Alignment.topLeft,
+                                                          child: Text(
+                                                            "Just a moment",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  orangeColor,
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  'Inter-Bold',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.03),
+                                                        Text(
+                                                          'Please make sure data is available before proceeding.',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Regular',
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height:
+                                                                size.height *
+                                                                    0.02),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 140),
+                                                      child:
+                                                          dialogButtonGradientSmall(
+                                                              "OK", context),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
+                                  });
                                 }
                               },
                               child: isLoading2
@@ -2600,7 +2861,8 @@ class _NewScreenState extends State<NewScreen> {
                                       "destin_time": duration,
                                       "destin_delivery_charges": "0.00",
                                       "destin_vat_charges": "0.00",
-                                      "destin_total_charges": roundedTotalAmount ?? "0.00",
+                                      "destin_total_charges":
+                                          roundedTotalAmount ?? "0.00",
                                       "destin_discount": "0.00",
                                       "destin_discounted_charges": "0.00",
                                       "receiver_name":
@@ -2732,38 +2994,49 @@ class _NewScreenState extends State<NewScreen> {
                                             ? "Single"
                                             : "Multiple",
                                         "destin_distance0":
-                                        distance0!.split(" ")[0],
+                                            distance0!.split(" ")[0],
                                         "destin_time0": duration0,
                                         "destin_delivery_charges0":
-                                        roundedTotalAmount0 ?? "0.00",
+                                            roundedTotalAmount0 ?? "0.00",
                                         "destin_vat_charges0": "0.00",
                                         "destin_total_charges0": "0.00",
                                         "destin_discount0": "0.00",
                                         "destin_discounted_charges0": "0.00",
-                                        "destin_distance1": distance1!.split(" ")[0],
+                                        "destin_distance1":
+                                            distance1!.split(" ")[0],
                                         "destin_time1": duration1,
-                                        "destin_delivery_charges1": roundedTotalAmount1 ?? "0.00",
+                                        "destin_delivery_charges1":
+                                            roundedTotalAmount1 ?? "0.00",
                                         "destin_vat_charges1": "0.00",
                                         "destin_total_charges1": "0.00",
                                         "destin_discount1": "0.00",
                                         "destin_discounted_charges1": "0.00",
-                                        "destin_distance2": distance2 != null ? distance2!.split(" ")[0] : "0.00",
+                                        "destin_distance2": distance2 != null
+                                            ? distance2!.split(" ")[0]
+                                            : "0.00",
                                         "destin_time2": duration2,
-                                        "destin_delivery_charges2": roundedTotalAmount2 ?? "0.00",
+                                        "destin_delivery_charges2":
+                                            roundedTotalAmount2 ?? "0.00",
                                         "destin_vat_charges2": "0.00",
                                         "destin_total_charges2": "0.00",
                                         "destin_discount2": "0.00",
                                         "destin_discounted_charges2": "0.00",
-                                        "destin_distance3": distance3 != null ? distance3!.split(" ")[0] : "0.00",
+                                        "destin_distance3": distance3 != null
+                                            ? distance3!.split(" ")[0]
+                                            : "0.00",
                                         "destin_time3": duration3,
-                                        "destin_delivery_charges3": roundedTotalAmount3 ?? "0.00",
+                                        "destin_delivery_charges3":
+                                            roundedTotalAmount3 ?? "0.00",
                                         "destin_vat_charges3": "0.00",
                                         "destin_total_charges3": "0.00",
                                         "destin_discount3": "0.00",
                                         "destin_discounted_charges3": "0.00",
-                                        "destin_distance4": distance4 != null ? distance4!.split(" ")[0] : "0.00",
+                                        "destin_distance4": distance4 != null
+                                            ? distance4!.split(" ")[0]
+                                            : "0.00",
                                         "destin_time4": duration4,
-                                        "destin_delivery_charges4": roundedTotalAmount4 ?? "0.00",
+                                        "destin_delivery_charges4":
+                                            roundedTotalAmount4 ?? "0.00",
                                         "destin_vat_charges4": "0.00",
                                         "destin_total_charges4": "0.00",
                                         "destin_discount4": "0.00",
@@ -2811,7 +3084,7 @@ class _NewScreenState extends State<NewScreen> {
                                                           alignment:
                                                               Alignment.topLeft,
                                                           child: Text(
-                                                            "Just a moment",
+                                                            "Just a moment...",
                                                             textAlign:
                                                                 TextAlign.left,
                                                             style: TextStyle(

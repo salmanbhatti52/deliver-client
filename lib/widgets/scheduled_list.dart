@@ -159,7 +159,8 @@ class _ScheduledListState extends State<ScheduledList> {
                 scrollDirection: Axis.vertical,
                 itemCount: getScheduledBookingModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  timeAdded = DateTime.parse("${getScheduledBookingModel.data![index].dateModified}");
+                  int reverseIndex = getScheduledBookingModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse("${getScheduledBookingModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -204,7 +205,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                               "assets/images/user-profile.png",
                                             ),
                                             image: NetworkImage(
-                                              '$imageUrl${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleet?.profilePic}',
+                                              '$imageUrl${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -219,7 +220,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                             color: transparentColor,
                                             width: size.width * 0.44,
                                             child: AutoSizeText(
-                                              '${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleet?.firstName} ${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleet?.lastName}',
+                                              '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.firstName} ${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.lastName}',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: drawerTextColor,
@@ -236,7 +237,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                           Row(
                                             children: [
                                               Text(
-                                                '${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleetVehicles?.color} ',
+                                                '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.color} ',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: textHaveAccountColor,
@@ -245,7 +246,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                                 ),
                                               ),
                                               Text(
-                                                '${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleetVehicles?.model}',
+                                                '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.model}',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: textHaveAccountColor,
@@ -257,7 +258,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                           ),
                                           SizedBox(height: size.height * 0.005),
                                           Text(
-                                            '(${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo})',
+                                            '(${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo})',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -275,7 +276,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                     width: size.width * 0.54,
                                     child: AutoSizeText(
                                       'You Scheduled a ride\n${formatTimeDifference(timeAdded!)} with this captain',
-                                      // 'You Completed a ride\n${completedRideModel.data![index].rideCompleted} with this captain',
+                                      // 'You Completed a ride\n${completedRideModel.data![reverseIndex].rideCompleted} with this captain',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: textHaveAccountColor,
@@ -303,7 +304,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                 top: 19,
                                 right: 7,
                                 child: Text(
-                                  '${getScheduledBookingModel.data?[index].bookingsFleet?[0].usersFleet?.bookingsRatings}',
+                                  '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.bookingsRatings}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: blackColor,
@@ -339,7 +340,7 @@ class _ScheduledListState extends State<ScheduledList> {
                                             ScheduledRideDetailScreen(
                                           getScheduledBookingModel:
                                               getScheduledBookingModel
-                                                  .data?[index],
+                                                  .data?[reverseIndex],
                                         ),
                                       ),
                                     );

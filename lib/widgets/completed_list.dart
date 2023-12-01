@@ -118,7 +118,8 @@ class _CompletedListState extends State<CompletedList> {
                 scrollDirection: Axis.vertical,
                 itemCount: completedRideModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  timeAdded = DateTime.parse("${completedRideModel.data![index].dateModified}");
+                  int reverseIndex = completedRideModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse("${completedRideModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -163,7 +164,7 @@ class _CompletedListState extends State<CompletedList> {
                                               "assets/images/user-profile.png",
                                             ),
                                             image: NetworkImage(
-                                              '$imageUrl${completedRideModel.data![index].bookingsFleet?[0].usersFleet?.profilePic}',
+                                              '$imageUrl${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -178,7 +179,7 @@ class _CompletedListState extends State<CompletedList> {
                                             color: transparentColor,
                                             width: size.width * 0.44,
                                             child: AutoSizeText(
-                                              '${completedRideModel.data![index].bookingsFleet?[0].usersFleet?.firstName} ${completedRideModel.data![index].bookingsFleet?[0].usersFleet?.lastName}',
+                                              '${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.firstName} ${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.lastName}',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: drawerTextColor,
@@ -195,7 +196,7 @@ class _CompletedListState extends State<CompletedList> {
                                           Row(
                                             children: [
                                               Text(
-                                                '${completedRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.color} ',
+                                                '${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.color} ',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: textHaveAccountColor,
@@ -204,7 +205,7 @@ class _CompletedListState extends State<CompletedList> {
                                                 ),
                                               ),
                                               Text(
-                                                '${completedRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.model}',
+                                                '${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.model}',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: textHaveAccountColor,
@@ -216,7 +217,7 @@ class _CompletedListState extends State<CompletedList> {
                                           ),
                                           SizedBox(height: size.height * 0.005),
                                           Text(
-                                            '${completedRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
+                                            '${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -234,7 +235,7 @@ class _CompletedListState extends State<CompletedList> {
                                     width: size.width * 0.54,
                                     child: AutoSizeText(
                                       'You Completed a ride\n${formatTimeDifference(timeAdded!)} ago with this captain',
-                                      // 'You Completed a ride\n${completedRideModel.data![index].rideCompleted} with this captain',
+                                      // 'You Completed a ride\n${completedRideModel.data![reverseIndex].rideCompleted} with this captain',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: textHaveAccountColor,
@@ -262,7 +263,7 @@ class _CompletedListState extends State<CompletedList> {
                                 top: 19,
                                 right: 7,
                                 child: Text(
-                                  '${completedRideModel.data![index].bookingsFleet?[0].usersFleet?.bookingsRatings}',
+                                  '${completedRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.bookingsRatings}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: blackColor,
@@ -298,7 +299,7 @@ class _CompletedListState extends State<CompletedList> {
                                         builder: (context) =>
                                             RideHistoryCompletedDetailsScreen(
                                           completedRideModel:
-                                              completedRideModel.data?[index],
+                                              completedRideModel.data?[reverseIndex],
                                         ),
                                       ),
                                     );

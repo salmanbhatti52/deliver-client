@@ -176,6 +176,7 @@ class _DrawerAddressScreenState extends State<DrawerAddressScreen> {
                             scrollDirection: Axis.vertical,
                             itemCount: getAddressesModel.data!.length,
                             itemBuilder: (BuildContext context, int index) {
+                              int reverseIndex = getAddressesModel.data!.length - 1 - index;
                               return Column(
                                 children: [
                                   Card(
@@ -199,9 +200,9 @@ class _DrawerAddressScreenState extends State<DrawerAddressScreen> {
                                               width: size.width * 0.65,
                                               child: Tooltip(
                                                 message:
-                                                    "${getAddressesModel.data![index].name}",
+                                                    "${getAddressesModel.data![reverseIndex].name}",
                                                 child: Text(
-                                                  "${getAddressesModel.data![index].name}",
+                                                  "${getAddressesModel.data![reverseIndex].name}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -220,9 +221,9 @@ class _DrawerAddressScreenState extends State<DrawerAddressScreen> {
                                               width: size.width * 0.65,
                                               child: Tooltip(
                                                 message:
-                                                    "${getAddressesModel.data![index].address}",
+                                                    "${getAddressesModel.data![reverseIndex].address}",
                                                 child: Text(
-                                                  "${getAddressesModel.data![index].address}",
+                                                  "${getAddressesModel.data![reverseIndex].address}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -246,7 +247,7 @@ class _DrawerAddressScreenState extends State<DrawerAddressScreen> {
                                                 builder: (context) =>
                                                     deleteConformation(
                                                         getAddressesModel
-                                                            .data![index]
+                                                            .data![reverseIndex]
                                                             .usersCustomersAddressesId));
                                           },
                                           child: Container(

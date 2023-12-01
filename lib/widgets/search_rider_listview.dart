@@ -46,7 +46,7 @@ class _RidersListState extends State<RidersList> {
   CreateBookingModel createBookingModel = CreateBookingModel();
 
   createBooking() async {
-    // try {
+    try {
       setState(() {
         isLoading = true;
       });
@@ -67,7 +67,7 @@ class _RidersListState extends State<RidersList> {
             "destin_latitude": widget.singleData!.isNotEmpty ? widget.singleData!["destin_latitude"] : widget.multipleData!["destin_latitude0"],
             "destin_longitude": widget.singleData!.isNotEmpty ? widget.singleData!["destin_longitude"] : widget.multipleData!["destin_longitude0"],
             "destin_distance": widget.singleData!.isNotEmpty ? widget.singleData!["destin_distance"] : widget.multipleData!["destin_distance0"],
-            "destin_time": widget.singleData!.isNotEmpty ? widget.singleData!["destin_time"] : widget.multipleData!['destin_time0'],
+            "destin_time": widget.singleData!.isNotEmpty ? widget.singleData!["destin_time"] : widget.multipleData!["destin_time0"],
             "destin_delivery_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_delivery_charges"] : widget.multipleData!["destin_delivery_charges0"],
             "destin_vat_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_vat_charges"] : widget.multipleData!["destin_vat_charges0"],
             "destin_total_charges": widget.singleData!.isNotEmpty ? widget.singleData!["destin_total_charges"] : widget.multipleData!["destin_total_charges0"],
@@ -86,7 +86,7 @@ class _RidersListState extends State<RidersList> {
             "destin_latitude": widget.multipleData!["destin_latitude1"],
             "destin_longitude": widget.multipleData!["destin_longitude1"],
             "destin_distance": widget.multipleData!["destin_distance1"],
-            "destin_time": widget.multipleData!['destin_time1'],
+            "destin_time": widget.multipleData!["destin_time1"],
             "destin_delivery_charges": widget.multipleData!["destin_delivery_charges1"],
             "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
             "destin_total_charges": widget.multipleData!["destin_total_charges1"],
@@ -105,7 +105,7 @@ class _RidersListState extends State<RidersList> {
               "destin_latitude": widget.multipleData!["destin_latitude2"],
               "destin_longitude": widget.multipleData!["destin_longitude2"],
               "destin_distance": widget.multipleData!["destin_distance2"],
-              "destin_time": widget.multipleData!['destin_time2'],
+              "destin_time": widget.multipleData!["destin_time2"],
               "destin_delivery_charges": widget.multipleData!["destin_delivery_charges2"],
               "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
               "destin_total_charges": widget.multipleData!["destin_total_charges2"],
@@ -124,7 +124,7 @@ class _RidersListState extends State<RidersList> {
               "destin_latitude": widget.multipleData!["destin_latitude3"],
               "destin_longitude": widget.multipleData!["destin_longitude3"],
               "destin_distance": widget.multipleData!["destin_distance3"],
-              "destin_time": widget.multipleData!['destin_time3'],
+              "destin_time": widget.multipleData!["destin_time3"],
               "destin_delivery_charges": widget.multipleData!["destin_delivery_charges3"],
               "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
               "destin_total_charges": widget.multipleData!["destin_total_charges3"],
@@ -143,7 +143,7 @@ class _RidersListState extends State<RidersList> {
               "destin_latitude": widget.multipleData!["destin_latitude4"],
               "destin_longitude": widget.multipleData!["destin_longitude4"],
               "destin_distance": widget.multipleData!["destin_distance4"],
-              "destin_time": widget.multipleData!['destin_time4'],
+              "destin_time": widget.multipleData!["destin_time4"],
               "destin_delivery_charges": widget.multipleData!["destin_delivery_charges4"],
               "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
               "destin_total_charges": widget.multipleData!["destin_total_charges4"],
@@ -164,6 +164,7 @@ class _RidersListState extends State<RidersList> {
       };
       String apiUrl = "$baseUrl/send_request_booking";
       print("apiUrl: $apiUrl");
+      print("requestData: $requestData");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -184,10 +185,10 @@ class _RidersListState extends State<RidersList> {
           isLoading = false;
         });
       }
-    // } catch (e) {
-    //   print('Something went wrong = ${e.toString()}');
-    //   return null;
-    // }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
   }
 
   ScheduleBookingModel scheduleBookingModel = ScheduleBookingModel();

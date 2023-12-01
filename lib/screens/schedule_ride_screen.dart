@@ -12,11 +12,18 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
     as picker;
 
 class ScheduleRideScreen extends StatefulWidget {
-  final Map? scheduledSingleData;
   final int? selectedRadio;
+  final Map? scheduledSingleData;
+  final Map? scheduledMultipleData;
+  final List<Map<String, dynamic>>? dataForIndexes;
 
-  const ScheduleRideScreen(
-      {super.key, this.scheduledSingleData, this.selectedRadio});
+  const ScheduleRideScreen({
+    super.key,
+    this.selectedRadio,
+    this.scheduledSingleData,
+    this.scheduledMultipleData,
+    this.dataForIndexes,
+  });
 
   @override
   State<ScheduleRideScreen> createState() => _ScheduleRideScreenState();
@@ -26,7 +33,9 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
   @override
   initState() {
     super.initState();
-    print("mapData: ${widget.scheduledSingleData}");
+    print("dataForIndexes 0: ${widget.dataForIndexes}");
+    print("mapData Single: ${widget.scheduledSingleData}");
+    print("mapData Multiple: ${widget.scheduledMultipleData}");
   }
 
   DateTime? selectedDate;
@@ -34,6 +43,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("dataForIndexes 1: ${widget.dataForIndexes}");
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: bgColor,
@@ -274,10 +284,9 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                   );
                 } else {
                   if (widget.selectedRadio == 1) {
-                    Map? updatedScheduledData =
+                    Map? updatedSingleScheduledData =
                         Map.from(widget.scheduledSingleData!);
-                    updatedScheduledData.addAll({
-                      "type": "schedule",
+                    updatedSingleScheduledData.addAll({
                       "delivery_date": DateFormat('yyyy-MM-dd')
                           .format(selectedDate!)
                           .toString(),
@@ -288,17 +297,28 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ConfirmSingleDetailsScreen(
-                          singleData: updatedScheduledData,
+                          singleData: updatedSingleScheduledData,
                         ),
                       ),
                     );
                   }
                   if (widget.selectedRadio == 2) {
+                    Map? updatedMultipleScheduledData =
+                        Map.from(widget.scheduledMultipleData!);
+                    updatedMultipleScheduledData.addAll({
+                      "delivery_date": DateFormat('yyyy-MM-dd')
+                          .format(selectedDate!)
+                          .toString(),
+                      "delivery_time":
+                          DateFormat('h:mm').format(selectedTime!).toString(),
+                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            const ConfirmMultipleDetailsScreen(),
+                        builder: (context) => ConfirmMultipleDetailsScreen(
+                          multipleData: updatedMultipleScheduledData,
+                          dataForIndexes: widget.dataForIndexes,
+                        ),
                       ),
                     );
                   }

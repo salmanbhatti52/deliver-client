@@ -136,7 +136,8 @@ class _InProgressListState extends State<InProgressList> {
                 scrollDirection: Axis.vertical,
                 itemCount: inProgressRideModel.data?.length,
                 itemBuilder: (BuildContext context, int index) {
-                  timeAdded = DateTime.parse("${inProgressRideModel.data![index].dateModified}");
+                  int reverseIndex = inProgressRideModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse("${inProgressRideModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -180,7 +181,7 @@ class _InProgressListState extends State<InProgressList> {
                                           "assets/images/user-profile.png",
                                         ),
                                         image: NetworkImage(
-                                          '$imageUrl${inProgressRideModel.data![index].bookingsFleet?[0].usersFleet?.profilePic}',
+                                          '$imageUrl${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
                                         ),
                                         fit: BoxFit.cover,
                                       ),
@@ -197,7 +198,7 @@ class _InProgressListState extends State<InProgressList> {
                                             color: transparentColor,
                                             width: size.width * 0.44,
                                             child: AutoSizeText(
-                                              '${inProgressRideModel.data![index].bookingsFleet?[0].usersFleet?.firstName} ${inProgressRideModel.data![index].bookingsFleet?[0].usersFleet?.lastName}',
+                                              '${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.firstName} ${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.lastName}',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: drawerTextColor,
@@ -223,7 +224,7 @@ class _InProgressListState extends State<InProgressList> {
                                                   top: 1.5,
                                                 ),
                                                 child: Text(
-                                                  '${inProgressRideModel.data![index].bookingsFleet?[0].usersFleet?.bookingsRatings}',
+                                                  '${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.bookingsRatings}',
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -240,7 +241,7 @@ class _InProgressListState extends State<InProgressList> {
                                       Row(
                                         children: [
                                           Text(
-                                            '${inProgressRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.color} ',
+                                            '${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.color} ',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -249,7 +250,7 @@ class _InProgressListState extends State<InProgressList> {
                                             ),
                                           ),
                                           Text(
-                                            '${inProgressRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.model}',
+                                            '${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.model}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -261,7 +262,7 @@ class _InProgressListState extends State<InProgressList> {
                                       ),
                                       SizedBox(height: size.height * 0.005),
                                       Text(
-                                        '${inProgressRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
+                                        '${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: textHaveAccountColor,
@@ -315,6 +316,7 @@ class _InProgressListState extends State<InProgressList> {
                           ),
                         ),
                       ),
+                      SizedBox(height: size.height * 0.02),
                     ],
                   );
                 },

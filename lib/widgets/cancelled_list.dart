@@ -117,7 +117,8 @@ class _CancelledListState extends State<CancelledList> {
                 scrollDirection: Axis.vertical,
                 itemCount: cancelledRideModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  timeAdded = DateTime.parse("${cancelledRideModel.data![index].dateModified}");
+                  int reverseIndex = cancelledRideModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse("${cancelledRideModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -161,7 +162,7 @@ class _CancelledListState extends State<CancelledList> {
                                               "assets/images/user-profile.png",
                                             ),
                                             image: NetworkImage(
-                                              '$imageUrl${cancelledRideModel.data![index].bookingsFleet?[0].usersFleet?.profilePic}',
+                                              '$imageUrl${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -176,7 +177,7 @@ class _CancelledListState extends State<CancelledList> {
                                             color: transparentColor,
                                             width: size.width * 0.44,
                                             child: AutoSizeText(
-                                              '${cancelledRideModel.data![index].bookingsFleet?[0].usersFleet?.firstName} ${cancelledRideModel.data![index].bookingsFleet?[0].usersFleet?.lastName}',
+                                              '${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.firstName} ${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.lastName}',
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: drawerTextColor,
@@ -193,7 +194,7 @@ class _CancelledListState extends State<CancelledList> {
                                           Row(
                                             children: [
                                               Text(
-                                                '${cancelledRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.color} ',
+                                                '${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.color} ',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: textHaveAccountColor,
@@ -202,7 +203,7 @@ class _CancelledListState extends State<CancelledList> {
                                                 ),
                                               ),
                                               Text(
-                                                '${cancelledRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.model}',
+                                                '${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.model}',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: textHaveAccountColor,
@@ -214,7 +215,7 @@ class _CancelledListState extends State<CancelledList> {
                                           ),
                                           SizedBox(height: size.height * 0.005),
                                           Text(
-                                            '${cancelledRideModel.data![index].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
+                                            '${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -240,7 +241,7 @@ class _CancelledListState extends State<CancelledList> {
                                         builder: (context) =>
                                             RideHistoryCancelledDetailsScreen(
                                           cancelledRideModel:
-                                              cancelledRideModel.data?[index],
+                                              cancelledRideModel.data?[reverseIndex],
                                         ),
                                       ),
                                     );
