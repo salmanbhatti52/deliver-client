@@ -99,11 +99,11 @@ class _RidersListState extends State<RidersList> {
               widget.multipleData!["pickup_address2"].isNotEmpty)
             {
               "pickup_address": widget.multipleData!["pickup_address2"],
-              "pickup_latitude": widget.multipleData!["pickup_latitude2"],
-              "pickup_longitude": widget.multipleData!["pickup_longitude2"],
+              "pickup_latitude": widget.multipleData!["pickup_latitude2"]["latitude"],
+              "pickup_longitude": widget.multipleData!["pickup_longitude2"]["longitude"],
               "destin_address": widget.multipleData!["destin_address2"],
-              "destin_latitude": widget.multipleData!["destin_latitude2"],
-              "destin_longitude": widget.multipleData!["destin_longitude2"],
+              "destin_latitude": widget.multipleData!["destin_latitude2"]["latitude"],
+              "destin_longitude": widget.multipleData!["destin_longitude2"]["longitude"],
               "destin_distance": widget.multipleData!["destin_distance2"],
               "destin_time": widget.multipleData!["destin_time2"],
               "destin_delivery_charges": widget.multipleData!["destin_delivery_charges2"],
@@ -118,11 +118,11 @@ class _RidersListState extends State<RidersList> {
               widget.multipleData!["pickup_address3"].isNotEmpty)
             {
               "pickup_address": widget.multipleData!["pickup_address3"],
-              "pickup_latitude": widget.multipleData!["pickup_latitude3"],
-              "pickup_longitude": widget.multipleData!["pickup_longitude3"],
+              "pickup_latitude": widget.multipleData!["pickup_latitude3"]["latitude"],
+              "pickup_longitude": widget.multipleData!["pickup_longitude3"]["longitude"],
               "destin_address": widget.multipleData!["destin_address3"],
-              "destin_latitude": widget.multipleData!["destin_latitude3"],
-              "destin_longitude": widget.multipleData!["destin_longitude3"],
+              "destin_latitude": widget.multipleData!["destin_latitude3"]["latitude"],
+              "destin_longitude": widget.multipleData!["destin_longitude3"]["longitude"],
               "destin_distance": widget.multipleData!["destin_distance3"],
               "destin_time": widget.multipleData!["destin_time3"],
               "destin_delivery_charges": widget.multipleData!["destin_delivery_charges3"],
@@ -137,11 +137,11 @@ class _RidersListState extends State<RidersList> {
               widget.multipleData!["pickup_address4"].isNotEmpty)
             {
               "pickup_address": widget.multipleData!["pickup_address4"],
-              "pickup_latitude": widget.multipleData!["pickup_latitude4"],
-              "pickup_longitude": widget.multipleData!["pickup_longitude4"],
+              "pickup_latitude": widget.multipleData!["pickup_latitude4"]["latitude"],
+              "pickup_longitude": widget.multipleData!["pickup_longitude4"]["longitude"],
               "destin_address": widget.multipleData!["destin_address4"],
-              "destin_latitude": widget.multipleData!["destin_latitude4"],
-              "destin_longitude": widget.multipleData!["destin_longitude4"],
+              "destin_latitude": widget.multipleData!["destin_latitude4"]["latitude"],
+              "destin_longitude": widget.multipleData!["destin_longitude4"]["longitude"],
               "destin_distance": widget.multipleData!["destin_distance4"],
               "destin_time": widget.multipleData!["destin_time4"],
               "destin_delivery_charges": widget.multipleData!["destin_delivery_charges4"],

@@ -131,7 +131,7 @@ class _ConfirmMultipleDetailsScreenState
     allDiscountCharges();
     print("multipleData:  ${widget.multipleData}");
     dataList = widget.dataForIndexes;
-    print("DataList: $dataList");
+    print("dataList: $dataList");
     // if (widget.dataForIndexes != null) {
     //   for (var i = 0; i < widget.dataForIndexes!.length; i++) {
     //     final dataForIndex = widget.dataForIndexes![i];
@@ -1234,24 +1234,21 @@ class _ConfirmMultipleDetailsScreenState
                             dataForIndex2['2']["pickupController"] ?? "",
                         "pickup_latitude2":
                             dataForIndex2['2']["pickupLatLng"] != 'null'
-                                ? dataForIndex2['2']["pickupLatLng"]["latitude"]
+                                ? dataForIndex2['2']["pickupLatLng"]
                                 : "null",
                         "pickup_longitude2":
                             dataForIndex2['2']["pickupLatLng"] != 'null'
                                 ? dataForIndex2['2']["pickupLatLng"]
-                                    ["longitude"]
                                 : "null",
                         "destin_address2":
                             dataForIndex2['2']['destinationController'] ?? "",
                         "destin_latitude2":
                             dataForIndex2['2']['destinationLatLng'] != 'null'
                                 ? dataForIndex2['2']['destinationLatLng']
-                                    ["latitude"]
                                 : "null",
                         "destin_longitude2":
                             dataForIndex2['2']['destinationLatLng'] != 'null'
                                 ? dataForIndex2['2']['destinationLatLng']
-                                    ["longitude"]
                                 : "null",
                         "receiver_name2":
                             dataForIndex2['2']["receiversNameController"] ?? "",
@@ -1263,24 +1260,20 @@ class _ConfirmMultipleDetailsScreenState
                         "pickup_latitude3":
                             dataForIndex3['3']["pickupLatLng"] != 'null'
                                 ? dataForIndex3['3']["pickupLatLng"]
-                                    ["longitude"]
                                 : "null",
                         "pickup_longitude3":
                             dataForIndex3['3']["pickupLatLng"] != 'null'
                                 ? dataForIndex3['3']["pickupLatLng"]
-                                    ["longitude"]
                                 : "null",
                         "destin_address3":
                             dataForIndex3['3']['destinationController'] ?? "",
                         "destin_latitude3":
                             dataForIndex3['3']['destinationLatLng'] != 'null'
                                 ? dataForIndex3['3']['destinationLatLng']
-                                    ["longitude"]
                                 : "null",
                         "destin_longitude3":
                             dataForIndex3['3']['destinationLatLng'] != 'null'
                                 ? dataForIndex3['3']['destinationLatLng']
-                                    ["longitude"]
                                 : "null",
                         "receiver_name3":
                             dataForIndex3['3']["receiversNameController"] ?? "",
@@ -1292,24 +1285,20 @@ class _ConfirmMultipleDetailsScreenState
                         "pickup_latitude4":
                             dataForIndex4['4']["pickupLatLng"] != 'null'
                                 ? dataForIndex4['4']["pickupLatLng"]
-                                    ["longitude"]
                                 : "null",
                         "pickup_longitude4":
                             dataForIndex4['4']["pickupLatLng"] != 'null'
                                 ? dataForIndex4['4']["pickupLatLng"]
-                                    ["longitude"]
                                 : "null",
                         "destin_address4":
                             dataForIndex4['4']['destinationController'] ?? "",
                         "destin_latitude4":
                             dataForIndex4['4']['destinationLatLng'] != 'null'
                                 ? dataForIndex4['4']['destinationLatLng']
-                                    ["longitude"]
                                 : "null",
                         "destin_longitude4":
                             dataForIndex4['4']['destinationLatLng'] != 'null'
                                 ? dataForIndex4['4']['destinationLatLng']
-                                    ["longitude"]
                                 : "null",
                         "receiver_name4":
                             dataForIndex4['4']["receiversNameController"] ?? "",
