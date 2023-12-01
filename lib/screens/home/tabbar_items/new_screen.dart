@@ -1469,10 +1469,6 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
-  List<String> receiversNames = [];
-  List<String> receiversPhones = [];
-  List<String> pickupAddresses = [];
-  List<String> destinationAddresses = [];
   List<Map<String, dynamic>> filteredData = [];
   List<Map<String, dynamic>> dataForIndexes = [];
   List<Map<String, dynamic>> allDataForIndexes1 = [];
@@ -3042,6 +3038,8 @@ class _NewScreenState extends State<NewScreen> {
                                         "destin_discount4": "0.00",
                                         "destin_discounted_charges4": "0.00",
                                       };
+
+                                      print("filteredData: $filteredData");
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
