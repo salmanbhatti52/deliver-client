@@ -19,10 +19,7 @@ void main() async {
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
   );
-  await Firebase.initializeApp(
-    name: 'deliverbygfl-client',
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
