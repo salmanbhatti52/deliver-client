@@ -1469,6 +1469,11 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
+  var indexData0;
+  var indexData1;
+  var indexData2;
+  var indexData3;
+  var indexData4;
   List<Map<String, dynamic>> filteredData = [];
   List<Map<String, dynamic>> dataForIndexes = [];
   List<Map<String, dynamic>> allDataForIndexes1 = [];
@@ -3040,6 +3045,33 @@ class _NewScreenState extends State<NewScreen> {
                                       };
 
                                       print("filteredData: $filteredData");
+
+
+                                        for (var i = 0; i < filteredData.length; i++) {
+                                          final dataForIndex = filteredData[i];
+                                          final dataIndex = dataForIndex.keys.first; // Get the index
+                                          final data = dataForIndex[dataIndex];
+
+                                          // Check if data contains null values
+                                          if (data.containsValue(null)) {
+                                            print("Data for Index $dataIndex: Data contains null values");
+                                          } else {
+                                            print("Data for Index Number $dataIndex: $data");
+                                          }
+                                        }
+
+                                      indexData0 = filteredData[0];
+                                      indexData1 = filteredData[1];
+                                      indexData2 = filteredData[2];
+                                      indexData3 = filteredData[3];
+                                      indexData4 = filteredData[4];
+
+                                      print("indexData0: $indexData0");
+                                      print("indexData1: $indexData1");
+                                      print("indexData2: $indexData2");
+                                      print("indexData3: $indexData3");
+                                      print("indexData4: $indexData4");
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
