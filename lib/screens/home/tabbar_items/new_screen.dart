@@ -2475,7 +2475,8 @@ class _NewScreenState extends State<NewScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ScheduleRideScreen(
+                                        builder: (context) =>
+                                            ScheduleRideScreen(
                                           selectedRadio: selectedRadio,
                                           scheduledSingleData: addSingleData,
                                         ),
@@ -2644,10 +2645,12 @@ class _NewScreenState extends State<NewScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ScheduleRideScreen(
+                                          builder: (context) =>
+                                              ScheduleRideScreen(
                                             selectedRadio: selectedRadio,
                                             dataForIndexes: filteredData,
-                                            scheduledMultipleData: addMultipleData,
+                                            scheduledMultipleData:
+                                                addMultipleData,
                                           ),
                                         ),
                                       );
@@ -3046,25 +3049,42 @@ class _NewScreenState extends State<NewScreen> {
 
                                       print("filteredData: $filteredData");
 
+                                      List<Map<int, dynamic>> indexData =
+                                          List.filled(5, {});
 
-                                        for (var i = 0; i < filteredData.length; i++) {
-                                          final dataForIndex = filteredData[i];
-                                          final dataIndex = dataForIndex.keys.first; // Get the index
-                                          final data = dataForIndex[dataIndex];
+                                      for (var i = 0;
+                                          i < filteredData.length;
+                                          i++) {
+                                        final dataForIndex = filteredData[i];
+                                        final dataIndexString = dataForIndex
+                                            .keys
+                                            .first; // Get the index as a String
+                                        final dataIndex =
+                                            int.tryParse(dataIndexString);
 
-                                          // Check if data contains null values
-                                          if (data.containsValue(null)) {
-                                            print("Data for Index $dataIndex: Data contains null values");
-                                          } else {
-                                            print("Data for Index Number $dataIndex: $data");
-                                          }
+                                        if (dataIndex != null &&
+                                            dataIndex >= 0 &&
+                                            dataIndex <= 4) {
+                                          indexData[dataIndex] = dataForIndex
+                                              .map((key, value) => MapEntry(
+                                                  int.parse(key), value));
+                                        } else {
+                                          print(
+                                              "Invalid or out of bounds index: $dataIndexString");
                                         }
+                                      }
 
-                                      indexData0 = filteredData[0];
-                                      indexData1 = filteredData[1];
-                                      indexData2 = filteredData[2];
-                                      indexData3 = filteredData[3];
-                                      indexData4 = filteredData[4];
+                                      // Separate the data into different lists based on their indices
+                                      Map<int, dynamic> indexData0 =
+                                          indexData[0];
+                                      Map<int, dynamic> indexData1 =
+                                          indexData[1];
+                                      Map<int, dynamic> indexData2 =
+                                          indexData[2];
+                                      Map<int, dynamic> indexData3 =
+                                          indexData[3];
+                                      Map<int, dynamic> indexData4 =
+                                          indexData[4];
 
                                       print("indexData0: $indexData0");
                                       print("indexData1: $indexData1");
