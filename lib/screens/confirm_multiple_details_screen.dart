@@ -12,11 +12,24 @@ import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
 class ConfirmMultipleDetailsScreen extends StatefulWidget {
+  Map<int, dynamic>? indexData0;
+  Map<int, dynamic>? indexData1;
+  Map<int, dynamic>? indexData2;
+  Map<int, dynamic>? indexData3;
+  Map<int, dynamic>? indexData4;
   final Map? multipleData;
   final List<Map<String, dynamic>>? dataForIndexes;
 
-  const ConfirmMultipleDetailsScreen(
-      {super.key, this.multipleData, this.dataForIndexes});
+  ConfirmMultipleDetailsScreen({
+    super.key,
+    this.indexData0,
+    this.indexData1,
+    this.indexData2,
+    this.indexData3,
+    this.indexData4,
+    this.multipleData,
+    this.dataForIndexes,
+  });
 
   @override
   State<ConfirmMultipleDetailsScreen> createState() =>
@@ -147,25 +160,25 @@ class _ConfirmMultipleDetailsScreenState
     //   }
     // }
 
-    if (dataList != null) {
-      dataForIndex0 = dataList![0];
+    // if (dataList != null) {
+      dataForIndex0 = widget.indexData0;
       print("Data for Index 0: $dataForIndex0");
-      // print("pickupController for Index 0: ${dataForIndex0['0']["pickupController"]}");
+      // print("pickupController for Index 0: ${dataForIndex0[0]["pickupController"]}");
 
-      dataForIndex1 = dataList![1];
+      dataForIndex1 = widget.indexData1;
       print("Data for Index 1: $dataForIndex1");
 
-      dataForIndex2 = dataList![2];
+      dataForIndex2 = widget.indexData2;
       print("Data for Index 2: $dataForIndex2");
 
-      dataForIndex3 = dataList![3];
+      dataForIndex3 = widget.indexData3;
       print("Data for Index 3: $dataForIndex3");
 
-      dataForIndex4 = dataList![4];
+      dataForIndex4 = widget.indexData4;
       print("Data for Index 4: $dataForIndex4");
-    } else {
-      print('No Data in list');
-    }
+    // } else {
+    //   print('No Data in list');
+    // }
   }
 
   @override
@@ -426,12 +439,12 @@ class _ConfirmMultipleDetailsScreenState
                                       SizedBox(height: size.height * 0.01),
                                       Tooltip(
                                         message:
-                                            '${dataForIndex0['0']["pickupController"]}',
+                                            '${dataForIndex0[0]["pickupController"]}',
                                         child: Container(
                                           color: transparentColor,
                                           width: size.width * 0.62,
                                           child: AutoSizeText(
-                                            '${dataForIndex0['0']["pickupController"]}',
+                                            '${dataForIndex0[0]["pickupController"]}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: blackColor,
@@ -515,12 +528,12 @@ class _ConfirmMultipleDetailsScreenState
                                       SizedBox(height: size.height * 0.01),
                                       Tooltip(
                                         message:
-                                            '${dataForIndex0['0']['destinationController']}',
+                                            '${dataForIndex0[0]['destinationController']}',
                                         child: Container(
                                           color: transparentColor,
                                           width: size.width * 0.62,
                                           child: AutoSizeText(
-                                            '${dataForIndex0['0']['destinationController']}',
+                                            '${dataForIndex0[0]['destinationController']}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: blackColor,
@@ -569,12 +582,12 @@ class _ConfirmMultipleDetailsScreenState
                                       SizedBox(height: size.height * 0.01),
                                       Tooltip(
                                         message:
-                                            '${dataForIndex1['1']["pickupController"]}',
+                                            '${dataForIndex1[1]["pickupController"]}',
                                         child: Container(
                                           color: transparentColor,
                                           width: size.width * 0.62,
                                           child: AutoSizeText(
-                                            '${dataForIndex1['1']["pickupController"]}',
+                                            '${dataForIndex1[1]["pickupController"]}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: blackColor,
@@ -657,12 +670,12 @@ class _ConfirmMultipleDetailsScreenState
                                       SizedBox(height: size.height * 0.01),
                                       Tooltip(
                                         message:
-                                            '${dataForIndex1['1']['destinationController']}',
+                                            '${dataForIndex1[1]['destinationController']}',
                                         child: Container(
                                           color: transparentColor,
                                           width: size.width * 0.62,
                                           child: AutoSizeText(
-                                            '${dataForIndex1['1']['destinationController']}',
+                                            '${dataForIndex1[1]['destinationController']}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: blackColor,
@@ -718,12 +731,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex2['2']["pickupController"]}',
+                                                  '${dataForIndex2[2]["pickupController"]}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex2['2']["pickupController"]}',
+                                                  '${dataForIndex2[2]["pickupController"]}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -820,12 +833,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex2['2']['destinationController']}',
+                                                  '${dataForIndex2[2]['destinationController']}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex2['2']['destinationController']}',
+                                                  '${dataForIndex2[2]['destinationController']}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -885,12 +898,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex3['3']["pickupController"]}',
+                                                  '${dataForIndex3[3]["pickupController"]}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex3['3']["pickupController"]}',
+                                                  '${dataForIndex3[3]["pickupController"]}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -987,12 +1000,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex3['3']['destinationController']}',
+                                                  '${dataForIndex3[3]['destinationController']}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex3['3']['destinationController']}',
+                                                  '${dataForIndex3[3]['destinationController']}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -1052,12 +1065,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex4['4']["pickupController"]}',
+                                                  '${dataForIndex4[4]["pickupController"]}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex4['4']["pickupController"]}',
+                                                  '${dataForIndex4[4]["pickupController"]}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -1154,12 +1167,12 @@ class _ConfirmMultipleDetailsScreenState
                                                 height: size.height * 0.01),
                                             Tooltip(
                                               message:
-                                                  '${dataForIndex4['4']['destinationController']}',
+                                                  '${dataForIndex4[4]['destinationController']}',
                                               child: Container(
                                                 color: transparentColor,
                                                 width: size.width * 0.62,
                                                 child: AutoSizeText(
-                                                  '${dataForIndex4['4']['destinationController']}',
+                                                  '${dataForIndex4[4]['destinationController']}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -1198,111 +1211,111 @@ class _ConfirmMultipleDetailsScreenState
                     onTap: () {
                       Map? updatedData2 = Map.from(widget.multipleData!);
                       updatedData2.addAll({
-                        "pickup_address0": dataForIndex0['0']
+                        "pickup_address0": dataForIndex0[0]
                             ["pickupController"],
-                        "pickup_latitude0": dataForIndex0['0']["pickupLatLng"]
+                        "pickup_latitude0": dataForIndex0[0]["pickupLatLng"]
                             ["latitude"],
-                        "pickup_longitude0": dataForIndex0['0']["pickupLatLng"]
+                        "pickup_longitude0": dataForIndex0[0]["pickupLatLng"]
                             ["longitude"],
-                        "destin_address0": dataForIndex0['0']
+                        "destin_address0": dataForIndex0[0]
                             ["destinationController"],
-                        "destin_latitude0": dataForIndex0['0']
+                        "destin_latitude0": dataForIndex0[0]
                             ["destinationLatLng"]["latitude"],
-                        "destin_longitude0": dataForIndex0['0']
+                        "destin_longitude0": dataForIndex0[0]
                             ["destinationLatLng"]["longitude"],
-                        "receiver_name0": dataForIndex0['0']
+                        "receiver_name0": dataForIndex0[0]
                             ["receiversNameController"],
-                        "receiver_phone0": dataForIndex0['0']
+                        "receiver_phone0": dataForIndex0[0]
                             ["receiversNumberController"],
-                        "pickup_address1": dataForIndex1['1']
+                        "pickup_address1": dataForIndex1[1]
                             ["pickupController"],
-                        "pickup_latitude1": dataForIndex1['1']["pickupLatLng"]
+                        "pickup_latitude1": dataForIndex1[1]["pickupLatLng"]
                             ["latitude"],
-                        "pickup_longitude1": dataForIndex1['1']["pickupLatLng"]
+                        "pickup_longitude1": dataForIndex1[1]["pickupLatLng"]
                             ["longitude"],
-                        "destin_address1": dataForIndex1['1']
+                        "destin_address1": dataForIndex1[1]
                             ['destinationController'],
-                        "destin_latitude1": dataForIndex1['1']
+                        "destin_latitude1": dataForIndex1[1]
                             ['destinationLatLng']["latitude"],
-                        "destin_longitude1": dataForIndex1['1']
+                        "destin_longitude1": dataForIndex1[1]
                             ['destinationLatLng']["longitude"],
-                        "receiver_name1": dataForIndex1['1']
+                        "receiver_name1": dataForIndex1[1]
                             ["receiversNameController"],
-                        "receiver_phone1": dataForIndex1['1']
+                        "receiver_phone1": dataForIndex1[1]
                             ["receiversNumberController"],
                         "pickup_address2":
-                            dataForIndex2['2']["pickupController"] ?? "",
+                            dataForIndex2[2]["pickupController"] ?? "",
                         "pickup_latitude2":
-                            dataForIndex2['2']["pickupLatLng"] != 'null'
-                                ? dataForIndex2['2']["pickupLatLng"]
+                            dataForIndex2[2]["pickupLatLng"] != 'null'
+                                ? dataForIndex2[2]["pickupLatLng"]
                                 : "null",
                         "pickup_longitude2":
-                            dataForIndex2['2']["pickupLatLng"] != 'null'
-                                ? dataForIndex2['2']["pickupLatLng"]
+                            dataForIndex2[2]["pickupLatLng"] != 'null'
+                                ? dataForIndex2[2]["pickupLatLng"]
                                 : "null",
                         "destin_address2":
-                            dataForIndex2['2']['destinationController'] ?? "",
+                            dataForIndex2[2]['destinationController'] ?? "",
                         "destin_latitude2":
-                            dataForIndex2['2']['destinationLatLng'] != 'null'
-                                ? dataForIndex2['2']['destinationLatLng']
+                            dataForIndex2[2]['destinationLatLng'] != 'null'
+                                ? dataForIndex2[2]['destinationLatLng']
                                 : "null",
                         "destin_longitude2":
-                            dataForIndex2['2']['destinationLatLng'] != 'null'
-                                ? dataForIndex2['2']['destinationLatLng']
+                            dataForIndex2[2]['destinationLatLng'] != 'null'
+                                ? dataForIndex2[2]['destinationLatLng']
                                 : "null",
                         "receiver_name2":
-                            dataForIndex2['2']["receiversNameController"] ?? "",
-                        "receiver_phone2": dataForIndex2['2']
+                            dataForIndex2[2]["receiversNameController"] ?? "",
+                        "receiver_phone2": dataForIndex2[2]
                                 ["receiversNumberController"] ??
                             "",
                         "pickup_address3":
-                            dataForIndex3['3']["pickupController"] ?? "",
+                            dataForIndex3[3]["pickupController"] ?? "",
                         "pickup_latitude3":
-                            dataForIndex3['3']["pickupLatLng"] != 'null'
-                                ? dataForIndex3['3']["pickupLatLng"]
+                            dataForIndex3[3]["pickupLatLng"] != 'null'
+                                ? dataForIndex3[3]["pickupLatLng"]
                                 : "null",
                         "pickup_longitude3":
-                            dataForIndex3['3']["pickupLatLng"] != 'null'
-                                ? dataForIndex3['3']["pickupLatLng"]
+                            dataForIndex3[3]["pickupLatLng"] != 'null'
+                                ? dataForIndex3[3]["pickupLatLng"]
                                 : "null",
                         "destin_address3":
-                            dataForIndex3['3']['destinationController'] ?? "",
+                            dataForIndex3[3]['destinationController'] ?? "",
                         "destin_latitude3":
-                            dataForIndex3['3']['destinationLatLng'] != 'null'
-                                ? dataForIndex3['3']['destinationLatLng']
+                            dataForIndex3[3]['destinationLatLng'] != 'null'
+                                ? dataForIndex3[3]['destinationLatLng']
                                 : "null",
                         "destin_longitude3":
-                            dataForIndex3['3']['destinationLatLng'] != 'null'
-                                ? dataForIndex3['3']['destinationLatLng']
+                            dataForIndex3[3]['destinationLatLng'] != 'null'
+                                ? dataForIndex3[3]['destinationLatLng']
                                 : "null",
                         "receiver_name3":
-                            dataForIndex3['3']["receiversNameController"] ?? "",
-                        "receiver_phone3": dataForIndex3['3']
+                            dataForIndex3[3]["receiversNameController"] ?? "",
+                        "receiver_phone3": dataForIndex3[3]
                                 ["receiversNumberController"] ??
                             "",
                         "pickup_address4":
-                            dataForIndex4['4']["pickupController"] ?? "",
+                            dataForIndex4[4]["pickupController"] ?? "",
                         "pickup_latitude4":
-                            dataForIndex4['4']["pickupLatLng"] != 'null'
-                                ? dataForIndex4['4']["pickupLatLng"]
+                            dataForIndex4[4]["pickupLatLng"] != 'null'
+                                ? dataForIndex4[4]["pickupLatLng"]
                                 : "null",
                         "pickup_longitude4":
-                            dataForIndex4['4']["pickupLatLng"] != 'null'
-                                ? dataForIndex4['4']["pickupLatLng"]
+                            dataForIndex4[4]["pickupLatLng"] != 'null'
+                                ? dataForIndex4[4]["pickupLatLng"]
                                 : "null",
                         "destin_address4":
-                            dataForIndex4['4']['destinationController'] ?? "",
+                            dataForIndex4[4]['destinationController'] ?? "",
                         "destin_latitude4":
-                            dataForIndex4['4']['destinationLatLng'] != 'null'
-                                ? dataForIndex4['4']['destinationLatLng']
+                            dataForIndex4[4]['destinationLatLng'] != 'null'
+                                ? dataForIndex4[4]['destinationLatLng']
                                 : "null",
                         "destin_longitude4":
-                            dataForIndex4['4']['destinationLatLng'] != 'null'
-                                ? dataForIndex4['4']['destinationLatLng']
+                            dataForIndex4[4]['destinationLatLng'] != 'null'
+                                ? dataForIndex4[4]['destinationLatLng']
                                 : "null",
                         "receiver_name4":
-                            dataForIndex4['4']["receiversNameController"] ?? "",
-                        "receiver_phone4": dataForIndex4['4']
+                            dataForIndex4[4]["receiversNameController"] ?? "",
+                        "receiver_phone4": dataForIndex4[4]
                                 ["receiversNumberController"] ??
                             "",
                         "destin_total_charges": roundedTotalPrice.toString(),

@@ -3097,6 +3097,11 @@ class _NewScreenState extends State<NewScreen> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ConfirmMultipleDetailsScreen(
+                                            indexData0: indexData0,
+                                            indexData1: indexData1,
+                                            indexData2: indexData2,
+                                            indexData3: indexData3,
+                                            indexData4: indexData4,
                                             multipleData: addMultipleData,
                                             dataForIndexes: filteredData,
                                           ),
