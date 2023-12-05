@@ -2587,7 +2587,7 @@ class _NewScreenState extends State<NewScreen> {
                                         }
                                       }
                                       addMultipleData = {
-                                        "type": "scheduled",
+                                        "type": "schedule",
                                         "vehicles_id": vehicleId,
                                         "bookings_types_id": bookingsTypeId,
                                         "delivery_type": selectedRadio == 1
@@ -2642,13 +2642,55 @@ class _NewScreenState extends State<NewScreen> {
                                         "destin_discount4": "0.00",
                                         "destin_discounted_charges4": "0.00",
                                       };
+
+                                      List<Map<int, dynamic>> indexData =
+                                          List.filled(5, {});
+
+                                      for (var i = 0;
+                                          i < filteredData.length;
+                                          i++) {
+                                        final dataForIndex = filteredData[i];
+                                        final dataIndexString = dataForIndex
+                                            .keys
+                                            .first; // Get the index as a String
+                                        final dataIndex =
+                                            int.tryParse(dataIndexString);
+
+                                        if (dataIndex != null &&
+                                            dataIndex >= 0 &&
+                                            dataIndex <= 4) {
+                                          indexData[dataIndex] = dataForIndex
+                                              .map((key, value) => MapEntry(
+                                                  int.parse(key), value));
+                                        } else {
+                                          print(
+                                              "Invalid or out of bounds index: $dataIndexString");
+                                        }
+                                      }
+
+                                      // Separate the data into different lists based on their indices
+                                      Map<int, dynamic> indexData0 =
+                                          indexData[0];
+                                      Map<int, dynamic> indexData1 =
+                                          indexData[1];
+                                      Map<int, dynamic> indexData2 =
+                                          indexData[2];
+                                      Map<int, dynamic> indexData3 =
+                                          indexData[3];
+                                      Map<int, dynamic> indexData4 =
+                                          indexData[4];
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               ScheduleRideScreen(
+                                            indexData0: indexData0,
+                                            indexData1: indexData1,
+                                            indexData2: indexData2,
+                                            indexData3: indexData3,
+                                            indexData4: indexData4,
                                             selectedRadio: selectedRadio,
-                                            dataForIndexes: filteredData,
                                             scheduledMultipleData:
                                                 addMultipleData,
                                           ),
@@ -3103,7 +3145,6 @@ class _NewScreenState extends State<NewScreen> {
                                             indexData3: indexData3,
                                             indexData4: indexData4,
                                             multipleData: addMultipleData,
-                                            dataForIndexes: filteredData,
                                           ),
                                         ),
                                       );

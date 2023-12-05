@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, must_be_immutable
 
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -13,16 +13,24 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
 
 class ScheduleRideScreen extends StatefulWidget {
   final int? selectedRadio;
+  Map<int, dynamic>? indexData0;
+  Map<int, dynamic>? indexData1;
+  Map<int, dynamic>? indexData2;
+  Map<int, dynamic>? indexData3;
+  Map<int, dynamic>? indexData4;
   final Map? scheduledSingleData;
   final Map? scheduledMultipleData;
-  final List<Map<String, dynamic>>? dataForIndexes;
 
-  const ScheduleRideScreen({
+  ScheduleRideScreen({
     super.key,
+    this.indexData0,
+    this.indexData1,
+    this.indexData2,
+    this.indexData3,
+    this.indexData4,
     this.selectedRadio,
     this.scheduledSingleData,
     this.scheduledMultipleData,
-    this.dataForIndexes,
   });
 
   @override
@@ -33,7 +41,11 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
   @override
   initState() {
     super.initState();
-    print("dataForIndexes 0: ${widget.dataForIndexes}");
+    print("Schedule indexData0: ${widget.indexData0}");
+    print("Schedule indexData1: ${widget.indexData1}");
+    print("Schedule indexData2: ${widget.indexData2}");
+    print("Schedule indexData3: ${widget.indexData3}");
+    print("Schedule indexData4: ${widget.indexData4}");
     print("mapData Single: ${widget.scheduledSingleData}");
     print("mapData Multiple: ${widget.scheduledMultipleData}");
   }
@@ -43,7 +55,6 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("dataForIndexes 1: ${widget.dataForIndexes}");
     var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: bgColor,
@@ -316,8 +327,12 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ConfirmMultipleDetailsScreen(
+                          indexData0: widget.indexData0,
+                          indexData1: widget.indexData1,
+                          indexData2: widget.indexData2,
+                          indexData3: widget.indexData3,
+                          indexData4: widget.indexData4,
                           multipleData: updatedMultipleScheduledData,
-                          dataForIndexes: widget.dataForIndexes,
                         ),
                       ),
                     );

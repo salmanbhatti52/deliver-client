@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, prefer_typing_uninitialized_variables
+// ignore_for_file: avoid_print, prefer_typing_uninitialized_variables, must_be_immutable
 
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,6 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
   Map<int, dynamic>? indexData3;
   Map<int, dynamic>? indexData4;
   final Map? multipleData;
-  final List<Map<String, dynamic>>? dataForIndexes;
 
   ConfirmMultipleDetailsScreen({
     super.key,
@@ -28,7 +27,6 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
     this.indexData3,
     this.indexData4,
     this.multipleData,
-    this.dataForIndexes,
   });
 
   @override
@@ -38,7 +36,6 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
 
 class _ConfirmMultipleDetailsScreenState
     extends State<ConfirmMultipleDetailsScreen> {
-  List<Map<String, dynamic>>? dataList;
   var dataForIndex0;
   var dataForIndex1;
   var dataForIndex2;
@@ -143,8 +140,6 @@ class _ConfirmMultipleDetailsScreenState
     getAllSystemData();
     allDiscountCharges();
     print("multipleData:  ${widget.multipleData}");
-    dataList = widget.dataForIndexes;
-    print("dataList: $dataList");
     // if (widget.dataForIndexes != null) {
     //   for (var i = 0; i < widget.dataForIndexes!.length; i++) {
     //     final dataForIndex = widget.dataForIndexes![i];
@@ -160,25 +155,21 @@ class _ConfirmMultipleDetailsScreenState
     //   }
     // }
 
-    // if (dataList != null) {
-      dataForIndex0 = widget.indexData0;
-      print("Data for Index 0: $dataForIndex0");
-      // print("pickupController for Index 0: ${dataForIndex0[0]["pickupController"]}");
+    dataForIndex0 = widget.indexData0;
+    print("Data for Index 0: $dataForIndex0");
+    // print("pickupController for Index 0: ${dataForIndex0[0]["pickupController"]}");
 
-      dataForIndex1 = widget.indexData1;
-      print("Data for Index 1: $dataForIndex1");
+    dataForIndex1 = widget.indexData1;
+    print("Data for Index 1: $dataForIndex1");
 
-      dataForIndex2 = widget.indexData2;
-      print("Data for Index 2: $dataForIndex2");
+    dataForIndex2 = widget.indexData2;
+    print("Data for Index 2: $dataForIndex2");
 
-      dataForIndex3 = widget.indexData3;
-      print("Data for Index 3: $dataForIndex3");
+    dataForIndex3 = widget.indexData3;
+    print("Data for Index 3: $dataForIndex3");
 
-      dataForIndex4 = widget.indexData4;
-      print("Data for Index 4: $dataForIndex4");
-    // } else {
-    //   print('No Data in list');
-    // }
+    dataForIndex4 = widget.indexData4;
+    print("Data for Index 4: $dataForIndex4");
   }
 
   @override
@@ -1211,8 +1202,7 @@ class _ConfirmMultipleDetailsScreenState
                     onTap: () {
                       Map? updatedData2 = Map.from(widget.multipleData!);
                       updatedData2.addAll({
-                        "pickup_address0": dataForIndex0[0]
-                            ["pickupController"],
+                        "pickup_address0": dataForIndex0[0]["pickupController"],
                         "pickup_latitude0": dataForIndex0[0]["pickupLatLng"]
                             ["latitude"],
                         "pickup_longitude0": dataForIndex0[0]["pickupLatLng"]
@@ -1227,8 +1217,7 @@ class _ConfirmMultipleDetailsScreenState
                             ["receiversNameController"],
                         "receiver_phone0": dataForIndex0[0]
                             ["receiversNumberController"],
-                        "pickup_address1": dataForIndex1[1]
-                            ["pickupController"],
+                        "pickup_address1": dataForIndex1[1]["pickupController"],
                         "pickup_latitude1": dataForIndex1[1]["pickupLatLng"]
                             ["latitude"],
                         "pickup_longitude1": dataForIndex1[1]["pickupLatLng"]
@@ -1265,9 +1254,8 @@ class _ConfirmMultipleDetailsScreenState
                                 : "null",
                         "receiver_name2":
                             dataForIndex2[2]["receiversNameController"] ?? "",
-                        "receiver_phone2": dataForIndex2[2]
-                                ["receiversNumberController"] ??
-                            "",
+                        "receiver_phone2":
+                            dataForIndex2[2]["receiversNumberController"] ?? "",
                         "pickup_address3":
                             dataForIndex3[3]["pickupController"] ?? "",
                         "pickup_latitude3":
@@ -1290,9 +1278,8 @@ class _ConfirmMultipleDetailsScreenState
                                 : "null",
                         "receiver_name3":
                             dataForIndex3[3]["receiversNameController"] ?? "",
-                        "receiver_phone3": dataForIndex3[3]
-                                ["receiversNumberController"] ??
-                            "",
+                        "receiver_phone3":
+                            dataForIndex3[3]["receiversNumberController"] ?? "",
                         "pickup_address4":
                             dataForIndex4[4]["pickupController"] ?? "",
                         "pickup_latitude4":
@@ -1315,9 +1302,8 @@ class _ConfirmMultipleDetailsScreenState
                                 : "null",
                         "receiver_name4":
                             dataForIndex4[4]["receiversNameController"] ?? "",
-                        "receiver_phone4": dataForIndex4[4]
-                                ["receiversNumberController"] ??
-                            "",
+                        "receiver_phone4":
+                            dataForIndex4[4]["receiversNumberController"] ?? "",
                         "destin_total_charges": roundedTotalPrice.toString(),
                         "total_vat_charges": roundedTotalVatAmount.toString(),
                         "total_charges": totalPrice.toString(),
