@@ -33,10 +33,12 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Needs camera access to capture photo.</string>
+	<key>NSLocationUsageDescription</key>
+    <string>This app needs access to location.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open and in the background.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
+	<string>This app needs access to location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location in the background.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
