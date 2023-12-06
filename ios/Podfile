@@ -4,12 +4,14 @@
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+# Define the project with configurations for Debug, Profile, and Release
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
   'Release' => :release,
 }
 
+# Define a function to get the Flutter root directory
 def flutter_root
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)
@@ -23,28 +25,45 @@ def flutter_root
   raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
 end
 
+# Require the podhelper script from Flutter tools
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
+# Set up Flutter-related configurations for iOS
 flutter_ios_podfile_setup
 
+# Define the target for the 'Runner' app
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
+  # Install all Flutter dependencies for iOS
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Define a target for 'RunnerTests' with inherited search paths
   target 'RunnerTests' do
     inherit! :search_paths
   end
 end
 
+# Post-installation hook for additional configurations
 post_install do |installer|
   installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-      flutter_additional_ios_build_settings(target)
-      xcconfig_path = config.base_configuration_reference.real_path
-      xcconfig = File.read(xcconfig_path)
-      xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
-      File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
-      end
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        'PERMISSION_CAMERA=1',      # dart: PermissionGroup.camera
+        'PERMISSION_PHOTOS=1',      # dart: PermissionGroup.photos
+        'PERMISSION_LOCATION=1',    # dart: PermissionGroup.location
+      ]
+    end
+
+    # Apply additional Flutter iOS build settings
+    flutter_additional_ios_build_settings(target)
+
+    # Modify the xcconfig file to replace DT_TOOLCHAIN_DIR with TOOLCHAIN_DIR
+    xcconfig_path = config.base_configuration_reference.real_path
+    xcconfig = File.read(xcconfig_path)
+    xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
+    File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
   end
 end
