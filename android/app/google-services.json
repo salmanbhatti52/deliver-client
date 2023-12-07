@@ -12,7 +12,44 @@
           "package_name": "com.deliverbygfl.client"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1036018314218-0q1ajn8gtqkgq6b11b96trrc9u7ke04m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deliverbygfl.client",
+            "certificate_hash": "4d10642d576117d92af08eb77955117814d8248a"
+          }
+        },
+        {
+          "client_id": "1036018314218-668klc2gafm0av9v0b9ecm7ffbc9mebo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deliverbygfl.client",
+            "certificate_hash": "7eab7070c371d28d192f2a7aaedde61602cb6c11"
+          }
+        },
+        {
+          "client_id": "1036018314218-hkb5qt6p1ipedvpse7kao65stfcbecof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deliverbygfl.client",
+            "certificate_hash": "fb402597ffd125b7bcadb4ca96ab5ab50954ff1c"
+          }
+        },
+        {
+          "client_id": "1036018314218-lbi66gdnartgb37a42m2t31cqnoj81ed.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.deliverbygfl.client",
+            "certificate_hash": "6eb7b9c8c347348af580c98234295dce8dee19ad"
+          }
+        },
+        {
+          "client_id": "1036018314218-tl679vgra4kqb5e87lb07clq6lhbr1mr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB7RF0jGyxupQlhFGKodgPALx5qHT2UNGg"
@@ -20,7 +57,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036018314218-tl679vgra4kqb5e87lb07clq6lhbr1mr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1036018314218-fsfro4ntjhgp0fhnia1o56c5tlkunp3m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.deliverbygfl.client",
+                "app_store_id": "6473718847"
+              }
+            }
+          ]
         }
       }
     }
