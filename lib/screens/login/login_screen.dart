@@ -110,11 +110,15 @@ class _LoginScreenState extends State<LoginScreen> {
             key: logInFormKey,
             child: Column(
               children: [
-                SizedBox(height: size.height * 0.1),
+                SizedBox(height: size.height * 0.17),
                 Center(
-                  child: SvgPicture.asset('assets/images/logo-big-icon.svg'),
+                  child: Image.asset(
+                    'assets/images/logo-big-icon.png',
+                    width: 300,
+                    height: 125,
+                  ),
                 ),
-                SizedBox(height: size.height * 0.05),
+                SizedBox(height: size.height * 0.04),
                 Text(
                   "Login".toUpperCase(),
                   textAlign: TextAlign.center,
@@ -133,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontFamily: 'Syne-Regular',
                   ),
                 ),
-                SizedBox(height: size.height * 0.06),
+                SizedBox(height: size.height * 0.1),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: TextFormField(
@@ -261,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: size.height * 0.05),
+                SizedBox(height: size.height * 0.1),
                 GestureDetector(
                   onTap: () async {
                     if (logInFormKey.currentState!.validate()) {
@@ -289,49 +293,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ? buttonGradientWithLoader("Please Wait...", context)
                       : buttonGradient("LOGIN", context),
                 ),
-                SizedBox(height: size.height * 0.04),
-                SvgPicture.asset('assets/images/fingerprint-icon.svg'),
-                SizedBox(height: size.height * 0.04),
-                Container(
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    border: Border.all(color: borderColor, width: 1),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(height: size.height * 0.02),
-                      const Text(
-                        'OR',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFFA3A6AA),
-                          fontSize: 18,
-                          fontFamily: 'Syne-SemiBold',
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      GestureDetector(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          'assets/images/facebook-login-icon.svg',
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.01),
-                      GestureDetector(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          'assets/images/google-login-icon.svg',
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.03),
-                    ],
-                  ),
-                ),
+                SizedBox(height: size.height * 0.02),
               ],
             ),
           ),
@@ -340,6 +302,353 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+// // ignore_for_file: avoid_print, use_build_context_synchronously
+//
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:geocoding/geocoding.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:deliver_client/utils/colors.dart';
+// import 'package:deliver_client/widgets/buttons.dart';
+// import 'package:permission_handler/permission_handler.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:fl_country_code_picker/fl_country_code_picker.dart';
+// import 'package:deliver_client/screens/signup/verify_phone_signup_screen.dart';
+//
+// class LoginScreen extends StatefulWidget {
+//   const LoginScreen({super.key});
+//
+//   @override
+//   State<LoginScreen> createState() => _LoginScreenState();
+// }
+//
+// class _LoginScreenState extends State<LoginScreen> {
+//   TextEditingController contactNumberController = TextEditingController();
+//   final GlobalKey<FormState> logInFormKey = GlobalKey<FormState>();
+//   final countryPicker = const FlCountryCodePicker();
+//   CountryCode? countryCode =
+//       const CountryCode(name: 'Nigeria', code: 'NG', dialCode: '+234');
+//
+//   bool status = false;
+//   String? currentLat;
+//   String? currentLng;
+//   bool isLoading = false;
+//   LatLng? currentLocation;
+//
+//   void locationPermission() async {
+//     PermissionStatus status = await Permission.location.request();
+//
+//     if (status.isGranted) {
+//       // Permission granted, navigate to the next screen
+//     } else if (status.isDenied) {
+//       // Permission denied, show a message and ask for permission again
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           backgroundColor: orangeColor,
+//           duration: const Duration(seconds: 2),
+//           content: Text(
+//             'Location permission is required to continue.',
+//             style: TextStyle(
+//               color: whiteColor,
+//               fontSize: 12,
+//               fontFamily: 'Syne-Regular',
+//             ),
+//           ),
+//         ),
+//       );
+//       PermissionStatus reRequestStatus = await Permission.location.request();
+//       if (reRequestStatus.isGranted) {
+//         // Permission granted after re-request, navigate to the next screen
+//       } else if (reRequestStatus.isPermanentlyDenied) {
+//         // Permission denied permanently, open app settings
+//         openAppSettings();
+//       }
+//     } else if (status.isPermanentlyDenied) {
+//       // Permission denied permanently, open app settings
+//       openAppSettings();
+//     }
+//   }
+//
+//   Future<void> getCurrentLocation() async {
+//     final Position position = await Geolocator.getCurrentPosition(
+//       desiredAccuracy: LocationAccuracy.best,
+//     );
+//
+//     final List<Placemark> placemarks =
+//         await placemarkFromCoordinates(position.latitude, position.longitude);
+//
+//     if (placemarks.isNotEmpty) {
+//       final Placemark currentPlace = placemarks.first;
+//       final String currentAddress =
+//           "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
+//
+//       setState(() {
+//         currentLocation = LatLng(position.latitude, position.longitude);
+//         currentLat = position.latitude.toString();
+//         currentLng = position.longitude.toString();
+//         print("currentLat: $currentLat");
+//         print("currentLng: $currentLng");
+//         print("currentPickupLocation: $currentAddress");
+//       });
+//     }
+//   }
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     locationPermission();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     var size = MediaQuery.of(context).size;
+//     return GestureDetector(
+//       onTap: () {
+//         FocusManager.instance.primaryFocus?.unfocus();
+//       },
+//       child: Scaffold(
+//         backgroundColor: bgColor,
+//         body: SingleChildScrollView(
+//           child: Form(
+//             key: logInFormKey,
+//             child: Column(
+//               children: [
+//                 SizedBox(height: size.height * 0.1),
+//                 Center(
+//                   child: Image.asset(
+//                     'assets/images/logo-big-icon.png',
+//                     width: 300,
+//                     height: 125,
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.05),
+//                 Text(
+//                   "Login".toUpperCase(),
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(
+//                     color: orangeColor,
+//                     fontSize: 30,
+//                     fontFamily: 'Syne-Bold',
+//                   ),
+//                 ),
+//                 Text(
+//                   "Welcome, how can we help you?",
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(
+//                     color: blackColor,
+//                     fontSize: 16,
+//                     fontFamily: 'Syne-Regular',
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.06),
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(horizontal: 40),
+//                   child: TextFormField(
+//                     controller: contactNumberController,
+//                     cursorColor: orangeColor,
+//                     keyboardType: TextInputType.number,
+//                     inputFormatters: [
+//                       FilteringTextInputFormatter.digitsOnly,
+//                       LengthLimitingTextInputFormatter(15),
+//                     ],
+//                     validator: (value) {
+//                       if (value == null || value.isEmpty) {
+//                         return 'Contact Number is required!';
+//                       }
+//                       return null;
+//                     },
+//                     style: TextStyle(
+//                       color: blackColor,
+//                       fontSize: 14,
+//                       fontFamily: 'Inter-Regular',
+//                     ),
+//                     decoration: InputDecoration(
+//                       filled: true,
+//                       fillColor: filledColor,
+//                       errorStyle: TextStyle(
+//                         color: redColor,
+//                         fontSize: 10,
+//                         fontFamily: 'Inter-Bold',
+//                       ),
+//                       border: const OutlineInputBorder(
+//                         borderRadius: BorderRadius.all(
+//                           Radius.circular(10),
+//                         ),
+//                         borderSide: BorderSide.none,
+//                       ),
+//                       enabledBorder: const OutlineInputBorder(
+//                         borderRadius: BorderRadius.all(
+//                           Radius.circular(10),
+//                         ),
+//                         borderSide: BorderSide.none,
+//                       ),
+//                       focusedBorder: const OutlineInputBorder(
+//                         borderRadius: BorderRadius.all(
+//                           Radius.circular(10),
+//                         ),
+//                         borderSide: BorderSide.none,
+//                       ),
+//                       focusedErrorBorder: const OutlineInputBorder(
+//                         borderRadius: BorderRadius.all(
+//                           Radius.circular(10),
+//                         ),
+//                         borderSide: BorderSide.none,
+//                       ),
+//                       errorBorder: OutlineInputBorder(
+//                         borderRadius: const BorderRadius.all(
+//                           Radius.circular(10),
+//                         ),
+//                         borderSide: BorderSide(
+//                           color: redColor,
+//                           width: 1,
+//                         ),
+//                       ),
+//                       contentPadding: const EdgeInsets.symmetric(
+//                           horizontal: 20, vertical: 10),
+//                       hintText: "Contact Number",
+//                       hintStyle: TextStyle(
+//                         color: hintColor,
+//                         fontSize: 12,
+//                         fontFamily: 'Inter-Light',
+//                       ),
+//                       prefixIcon: GestureDetector(
+//                         onTap: () async {
+//                           final code =
+//                               await countryPicker.showPicker(context: context);
+//                           setState(() {
+//                             countryCode = code;
+//                           });
+//                           print('countryName: ${countryCode!.name}');
+//                           print('countryCode: ${countryCode!.code}');
+//                           print('countryDialCode: ${countryCode!.dialCode}');
+//                         },
+//                         child: Row(
+//                           mainAxisSize: MainAxisSize.min,
+//                           children: [
+//                             Padding(
+//                               padding: const EdgeInsets.only(left: 20),
+//                               child: Container(
+//                                 child: countryCode != null
+//                                     ? Image.asset(
+//                                         countryCode!.flagUri,
+//                                         package: countryCode!.flagImagePackage,
+//                                         width: 25,
+//                                         height: 20,
+//                                       )
+//                                     : SvgPicture.asset(
+//                                         'assets/images/flag-icon.svg',
+//                                       ),
+//                               ),
+//                             ),
+//                             Padding(
+//                               padding: const EdgeInsets.only(left: 10),
+//                               child: Text(
+//                                 countryCode?.dialCode ?? "+234",
+//                                 textAlign: TextAlign.center,
+//                                 style: TextStyle(
+//                                   color: hintColor,
+//                                   fontSize: 12,
+//                                   fontFamily: 'Inter-Light',
+//                                 ),
+//                               ),
+//                             ),
+//                             SizedBox(width: size.width * 0.02),
+//                             Text(
+//                               '|',
+//                               style: TextStyle(
+//                                 color: hintColor,
+//                                 fontSize: 12,
+//                                 fontFamily: 'Inter-SemiBold',
+//                               ),
+//                             ),
+//                             SizedBox(width: size.width * 0.02),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.05),
+//                 GestureDetector(
+//                   onTap: () async {
+//                     if (logInFormKey.currentState!.validate()) {
+//                       setState(() {
+//                         isLoading = true;
+//                       });
+//                       await getCurrentLocation();
+//                       Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => VerifyPhoneSignUpScreen(
+//                             phoneNumber: countryCode!.dialCode +
+//                                 contactNumberController.text,
+//                             lat: currentLat,
+//                             lng: currentLng,
+//                           ),
+//                         ),
+//                       );
+//                       setState(() {
+//                         isLoading = false;
+//                       });
+//                     }
+//                   },
+//                   child: isLoading
+//                       ? buttonGradientWithLoader("Please Wait...", context)
+//                       : buttonGradient("LOGIN", context),
+//                 ),
+//                 SizedBox(height: size.height * 0.04),
+//                 SvgPicture.asset('assets/images/fingerprint-icon.svg'),
+//                 SizedBox(height: size.height * 0.04),
+//                 Container(
+//                   width: size.width,
+//                   decoration: BoxDecoration(
+//                     color: whiteColor,
+//                     border: Border.all(color: borderColor, width: 1),
+//                     borderRadius: const BorderRadius.only(
+//                       topLeft: Radius.circular(40),
+//                       topRight: Radius.circular(40),
+//                     ),
+//                   ),
+//                   child: Column(
+//                     children: [
+//                       SizedBox(height: size.height * 0.02),
+//                       const Text(
+//                         'OR',
+//                         textAlign: TextAlign.center,
+//                         style: TextStyle(
+//                           color: Color(0xFFA3A6AA),
+//                           fontSize: 18,
+//                           fontFamily: 'Syne-SemiBold',
+//                         ),
+//                       ),
+//                       SizedBox(height: size.height * 0.02),
+//                       GestureDetector(
+//                         onTap: () {},
+//                         child: SvgPicture.asset(
+//                           'assets/images/facebook-login-icon.svg',
+//                         ),
+//                       ),
+//                       SizedBox(height: size.height * 0.01),
+//                       GestureDetector(
+//                         onTap: () {},
+//                         child: SvgPicture.asset(
+//                           'assets/images/google-login-icon.svg',
+//                         ),
+//                       ),
+//                       SizedBox(height: size.height * 0.03),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 // // ignore_for_file: avoid_print, use_build_context_synchronously
 

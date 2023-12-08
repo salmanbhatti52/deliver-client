@@ -107,8 +107,10 @@
 //               children: [
 //                 SizedBox(height: size.height * 0.08),
 //                 Center(
-//                   child: SvgPicture.asset(
-//                     'assets/images/logo-big-icon.svg',
+//                   child: Image.asset(
+//                     'assets/images/logo-big-icon.png',
+//                     width: 300,
+//                     height: 125,
 //                   ),
 //                 ),
 //                 SizedBox(height: size.height * 0.06),

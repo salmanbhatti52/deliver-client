@@ -59,7 +59,11 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset("assets/images/splash-icon.svg"),
+                Image.asset(
+                  'assets/images/logo-big-icon.png',
+                  width: 300,
+                  height: 125,
+                ),
                 Container(
                   color: transparentColor,
                   child: DefaultTextStyle(
