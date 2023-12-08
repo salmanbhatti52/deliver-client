@@ -274,47 +274,6 @@ class _RidersListState extends State<RidersList> {
       });
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
-      // final Map<String, dynamic> requestData = {
-      //   "users_fleet_id": widget.searchRider?.usersFleetId,
-      //   "vehicles_id": widget.singleData?["vehicles_id"],
-      //   "users_customers_id": userId,
-      //   "bookings_types_id": widget.singleData?["bookings_types_id"],
-      //   "delivery_type": widget.singleData?["delivery_type"],
-      //   "bookings_destinations": [
-      //     {
-      //       "pickup_address": widget.singleData?["pickup_address"],
-      //       "pickup_latitude": widget.singleData?["pickup_latitude"],
-      //       "pickup_longitude": widget.singleData?["pickup_longitude"],
-      //       "destin_address": widget.singleData?["destin_address"],
-      //       "destin_latitude": widget.singleData?["destin_latitude"],
-      //       "destin_longitude": widget.singleData?["destin_longitude"],
-      //       "destin_distance": widget.singleData?["destin_distance"],
-      //       "destin_time": widget.singleData?["destin_time"],
-      //       "destin_delivery_charges":
-      //           widget.singleData?["destin_delivery_charges"],
-      //       "destin_vat_charges": widget.singleData?["destin_vat_charges"],
-      //       "destin_total_charges": widget.singleData?["destin_total_charges"],
-      //       "destin_discount": widget.singleData?["destin_discount"],
-      //       "destin_discounted_charges":
-      //           widget.singleData?["destin_discounted_charges"],
-      //       "receiver_name": widget.singleData?["receiver_name"],
-      //       "receiver_phone": widget.singleData?["receiver_phone"],
-      //     }
-      //   ],
-      //   "delivery_date": widget.singleData?["delivery_date"],
-      //   "delivery_time": widget.singleData?["delivery_time"],
-      //   "total_delivery_charges": widget.singleData?["destin_total_charges"],
-      //   "total_vat_charges": widget.singleData?["total_vat_charges"],
-      //   "total_charges": widget.singleData?["total_charges"],
-      //   "total_discount": widget.singleData?["total_discount"],
-      //   "total_discounted_charges":
-      //       widget.singleData?["total_discounted_charges"],
-      //   "payment_gateways_id": widget.singleData?["payment_gateways_id"],
-      //   "payment_by": widget.singleData?["payment_gateways_id"] == "1"
-      //       ? "Receiver"
-      //       : "Sender",
-      //   "payment_status": "Unpaid"
-      // };
       final Map<String, dynamic> requestData = {
         "users_fleet_id": widget.searchRider?.usersFleetId,
         "vehicles_id": widget.singleData!.isNotEmpty
