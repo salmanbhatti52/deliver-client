@@ -34,6 +34,39 @@ Widget buttonGradient(buttonText, context) {
   );
 }
 
+Widget buttonGradient1(String buttonText, BuildContext context) {
+  final double screenHeight = MediaQuery.of(context).size.height;
+  final double screenWidth = MediaQuery.of(context).size.width;
+  double fontSize = screenHeight * 0.02;
+  return Center(
+    child: SizedBox(
+      height: screenHeight * 0.065,
+      width: screenWidth * 0.6,
+      child: ElevatedButton(
+        onPressed: () {
+          // Add your button onPressed logic here
+        },
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor:
+              Colors.orange, // Replace with your gradient definition
+        ),
+        child: Text(
+          buttonText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: fontSize,
+            fontFamily: 'Syne-Medium',
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 Widget buttonGradientWithLoader(buttonText, context) {
   return Center(
     child: Container(

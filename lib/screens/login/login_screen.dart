@@ -98,6 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
     var size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
@@ -111,11 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 SizedBox(height: size.height * 0.17),
-                Center(
-                  child: Image.asset(
-                    'assets/images/logo-big-icon.png',
-                    width: 300,
-                    height: 125,
+                SizedBox(
+                  height: size.height * 0.15,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/logo-big-icon.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
                 SizedBox(height: size.height * 0.04),
@@ -124,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: orangeColor,
-                    fontSize: 30,
+                    fontSize: size.width * 0.08,
                     fontFamily: 'Syne-Bold',
                   ),
                 ),
@@ -133,13 +137,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: blackColor,
-                    fontSize: 16,
+                    fontSize: size.width * 0.04,
                     fontFamily: 'Syne-Regular',
                   ),
                 ),
                 SizedBox(height: size.height * 0.1),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
                   child: TextFormField(
                     controller: contactNumberController,
                     cursorColor: orangeColor,
@@ -200,8 +204,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 1,
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.04,
+                        vertical: screenHeight * 0.02,
+                      ),
                       hintText: "Contact Number",
                       hintStyle: TextStyle(
                         color: hintColor,
@@ -273,25 +279,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         isLoading = true;
                       });
                       await getCurrentLocation();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VerifyPhoneSignUpScreen(
-                            phoneNumber: countryCode!.dialCode +
-                                contactNumberController.text,
-                            lat: currentLat,
-                            lng: currentLng,
-                          ),
-                        ),
-                      );
-                      setState(() {
-                        isLoading = false;
-                      });
+                      navigateToVerifyPhoneSignUpScreen();
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => VerifyPhoneSignUpScreen(
+                      //       phoneNumber: countryCode!.dialCode +
+                      //           contactNumberController.text,
+                      //       lat: currentLat,
+                      //       lng: currentLng,
+                      //     ),
+                      //   ),
+                      // );
+                      // setState(() {
+                      //   isLoading = false;
+                      // });
                     }
                   },
                   child: isLoading
                       ? buttonGradientWithLoader("Please Wait...", context)
-                      : buttonGradient("LOGIN", context),
+                      : buttonGradient1("LOGIN", context),
                 ),
                 SizedBox(height: size.height * 0.02),
               ],
@@ -300,6 +307,23 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void navigateToVerifyPhoneSignUpScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VerifyPhoneSignUpScreen(
+          phoneNumber: countryCode!.dialCode + contactNumberController.text,
+          lat: currentLat,
+          lng: currentLng,
+        ),
+      ),
+    ).then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 }
 
