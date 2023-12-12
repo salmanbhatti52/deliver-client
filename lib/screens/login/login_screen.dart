@@ -279,21 +279,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         isLoading = true;
                       });
                       await getCurrentLocation();
-                      navigateToVerifyPhoneSignUpScreen();
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => VerifyPhoneSignUpScreen(
-                      //       phoneNumber: countryCode!.dialCode +
-                      //           contactNumberController.text,
-                      //       lat: currentLat,
-                      //       lng: currentLng,
-                      //     ),
-                      //   ),
-                      // );
-                      // setState(() {
-                      //   isLoading = false;
-                      // });
+                      // navigateToVerifyPhoneSignUpScreen();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VerifyPhoneSignUpScreen(
+                            phoneNumber: countryCode!.dialCode +
+                                contactNumberController.text,
+                            lat: currentLat,
+                            lng: currentLng,
+                          ),
+                        ),
+                      );
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
                   },
                   child: isLoading
