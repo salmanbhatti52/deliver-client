@@ -3,10 +3,13 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 Widget buttonGradient(buttonText, context) {
+  final double screenHeight = MediaQuery.of(context).size.height;
+  final double screenWidth = MediaQuery.of(context).size.width;
+  double fontSize = screenHeight * 0.02;
   return Center(
     child: Container(
-      height: MediaQuery.of(context).size.height * 0.065,
-      width: MediaQuery.of(context).size.width * 0.6,
+      height: screenHeight * 0.065,
+      width: screenWidth * 0.6,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.centerRight,
@@ -25,7 +28,7 @@ Widget buttonGradient(buttonText, context) {
           textAlign: TextAlign.center,
           style: TextStyle(
             color: whiteColor,
-            fontSize: 16,
+            fontSize: fontSize,
             fontFamily: 'Syne-Medium',
           ),
         ),
