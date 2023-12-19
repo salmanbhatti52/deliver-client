@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:device_preview/device_preview.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:deliver_client/screens/splash_screen.dart';
 import 'package:deliver_client/utils/remove_scroll_glow.dart';
 
