@@ -267,8 +267,8 @@ class _SupportScreenState extends State<SupportScreen> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
                                   child: Container(
-                                    width: size.width * 0.15,
-                                    height: size.height * 0.07,
+                                    width: 60,
+                                    height: 60,
                                     decoration: BoxDecoration(
                                       color: transparentColor,
                                     ),
@@ -459,8 +459,8 @@ class _SupportScreenState extends State<SupportScreen> {
                                                         borderRadius:
                                                             BorderRadius.circular(100),
                                                         child: Container(
-                                                          width: 25.6,
-                                                          height: 25.5,
+                                                          width: 25,
+                                                          height: 25,
                                                           decoration: BoxDecoration(
                                                             color: transparentColor,
                                                           ),

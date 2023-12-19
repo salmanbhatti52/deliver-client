@@ -159,8 +159,10 @@ class _ScheduledListState extends State<ScheduledList> {
                 scrollDirection: Axis.vertical,
                 itemCount: getScheduledBookingModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  int reverseIndex = getScheduledBookingModel.data!.length - 1 - index;
-                  timeAdded = DateTime.parse("${getScheduledBookingModel.data![reverseIndex].dateModified}");
+                  int reverseIndex =
+                      getScheduledBookingModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse(
+                      "${getScheduledBookingModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -362,20 +364,21 @@ class _ScheduledListState extends State<ScheduledList> {
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 180),
-                child: Column(
-                  children: [
-                    Lottie.asset('assets/images/no-data-icon.json'),
-                    SizedBox(height: size.height * 0.04),
-                    Text(
-                      "No Ride is Scheduled",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: textHaveAccountColor,
-                        fontSize: 24,
-                        fontFamily: 'Syne-SemiBold',
+                child: Center(
+                  child: Column(
+                    children: [
+                      Lottie.asset('assets/images/no-data-icon.json'),
+                      SizedBox(height: size.height * 0.04),
+                      Text(
+                        "No Ride is Scheduled",
+                        style: TextStyle(
+                          color: textHaveAccountColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-SemiBold',
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
   }

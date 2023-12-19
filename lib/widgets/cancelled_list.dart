@@ -117,8 +117,10 @@ class _CancelledListState extends State<CancelledList> {
                 scrollDirection: Axis.vertical,
                 itemCount: cancelledRideModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  int reverseIndex = cancelledRideModel.data!.length - 1 - index;
-                  timeAdded = DateTime.parse("${cancelledRideModel.data![reverseIndex].dateModified}");
+                  int reverseIndex =
+                      cancelledRideModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse(
+                      "${cancelledRideModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -240,8 +242,8 @@ class _CancelledListState extends State<CancelledList> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             RideHistoryCancelledDetailsScreen(
-                                          cancelledRideModel:
-                                              cancelledRideModel.data?[reverseIndex],
+                                          cancelledRideModel: cancelledRideModel
+                                              .data?[reverseIndex],
                                         ),
                                       ),
                                     );
@@ -261,20 +263,21 @@ class _CancelledListState extends State<CancelledList> {
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 180),
-                child: Column(
-                  children: [
-                    Lottie.asset('assets/images/no-data-icon.json'),
-                    SizedBox(height: size.height * 0.04),
-                    Text(
-                      "No Ride is Cancelled",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: textHaveAccountColor,
-                        fontSize: 24,
-                        fontFamily: 'Syne-SemiBold',
+                child: Center(
+                  child: Column(
+                    children: [
+                      Lottie.asset('assets/images/no-data-icon.json'),
+                      SizedBox(height: size.height * 0.04),
+                      Text(
+                        "No Ride is Cancelled",
+                        style: TextStyle(
+                          color: textHaveAccountColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-SemiBold',
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
   }

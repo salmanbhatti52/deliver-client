@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors, unused_local_variable
 
 import 'dart:async';
+import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,6 +36,7 @@ class VerifyPhoneSignUpScreen extends StatefulWidget {
 class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   TextEditingController otpController = TextEditingController();
 
+  bool otpSent = false;
   bool isLoading = false;
   bool isLoading2 = false;
   String? baseUrl = dotenv.env['BASE_URL'];
@@ -176,12 +178,19 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     return '${minutes}m:${seconds.toString().padLeft(2, '0')}s';
   }
 
+  loaderTimer() {
+    Timer(const Duration(seconds: 8), () {
+      isLoading2 = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     startTimer();
+    loaderTimer();
     verifyPhoneNumber();
-      otpSent = true; 
+    isLoading2 = true;
     print("lat: ${widget.lat}");
     print("lng: ${widget.lng}");
     print("phoneNumber: ${widget.phoneNumber}");
@@ -236,197 +245,208 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
           ),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: size.height * 0.04),
-              Center(
-                child: SvgPicture.asset(
-                  'assets/images/phone-verification-icon.svg',
+        body: isLoading2
+            ? Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: transparentColor,
+                  child: Lottie.asset(
+                    'assets/images/loading-icon.json',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              SizedBox(height: size.height * 0.1),
-              Text(
-                "We will send you OTP verification code at\nthis ${widget.phoneNumber}. Put your OTP code\nbelow for verification.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: blackColor,
-                  fontSize: 16,
-                  fontFamily: 'Syne-Regular',
-                ),
-              ),
-              SizedBox(height: size.height * 0.08),
-              Text(
-                "Enter OTP Code",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: blackColor,
-                  fontSize: 16,
-                  fontFamily: 'Syne-SemiBold',
-                ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Pinput(
-                  length: 6,
-                  controller: otpController,
-                  keyboardType: TextInputType.number,
-                  defaultPinTheme: PinTheme(
-                    width: 60,
-                    height: 48,
-                    textStyle: TextStyle(
-                      color: blackColor,
-                      fontSize: 14,
-                      fontFamily: 'Inter-Regular',
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: filledColor,
-                    ),
-                  ),
-                  focusedPinTheme: PinTheme(
-                    width: 60,
-                    height: 48,
-                    textStyle: TextStyle(
-                      color: blackColor,
-                      fontSize: 14,
-                      fontFamily: 'Inter-Regular',
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: filledColor,
-                      border: Border.all(
-                        color: orangeColor,
-                      ),
-                    ),
-                  ),
-                  submittedPinTheme: PinTheme(
-                    width: 60,
-                    height: 48,
-                    textStyle: TextStyle(
-                      color: blackColor,
-                      fontSize: 14,
-                      fontFamily: 'Inter-Regular',
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: filledColor,
-                      border: Border.all(
-                        color: orangeColor,
-                      ),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    code = value;
-                  },
-                ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "OTP valid for",
-                    style: TextStyle(
-                      color: blackColor,
-                      fontSize: 14,
-                      fontFamily: 'Syne-Regular',
-                    ),
-                  ),
-                  SizedBox(width: size.width * 0.02),
-                  secondsRemaining == 0
-                      ? SvgPicture.asset(
-                          'assets/images/clock-inactive-icon.svg',
-                        )
-                      : SvgPicture.asset(
-                          'assets/images/clock-active-icon.svg',
-                        ),
-                  SizedBox(width: size.width * 0.02),
-                  Text(
-                    getTimerText(),
-                    style: TextStyle(
-                      color: blackColor,
-                      fontSize: 16,
-                      fontFamily: 'Inter-SemiBold',
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.04),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              )
+            : SingleChildScrollView(
+                child: Column(
                   children: [
+                    SizedBox(height: size.height * 0.04),
+                    Center(
+                      child: SvgPicture.asset(
+                        'assets/images/phone-verification-icon.svg',
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.1),
                     Text(
-                      "Don't Receive the Code? ",
-                      textAlign: TextAlign.left,
+                      "We will send you OTP verification code at\nthis ${widget.phoneNumber}. Put your OTP code\nbelow for verification.",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: blackColor,
-                        fontSize: 14,
+                        fontSize: 16,
                         fontFamily: 'Syne-Regular',
                       ),
                     ),
-                    secondsRemaining == 0
-                        ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                secondsRemaining = 120;
-                                startTimer();
-                              });
-                              verifyPhoneNumber();
-                            },
-                            child: Text(
-                              'Resend Code',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: orangeColor,
-                                fontSize: 16,
-                                fontFamily: 'Syne-SemiBold',
-                              ),
-                            ),
-                          )
-                        : Text(
-                            'Resend Code',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: supportTextColor,
-                              fontSize: 16,
-                              fontFamily: 'Syne-SemiBold',
+                    SizedBox(height: size.height * 0.08),
+                    Text(
+                      "Enter OTP Code",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: blackColor,
+                        fontSize: 16,
+                        fontFamily: 'Syne-SemiBold',
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Pinput(
+                        length: 6,
+                        controller: otpController,
+                        keyboardType: TextInputType.number,
+                        defaultPinTheme: PinTheme(
+                          width: 60,
+                          height: 48,
+                          textStyle: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: filledColor,
+                          ),
+                        ),
+                        focusedPinTheme: PinTheme(
+                          width: 60,
+                          height: 48,
+                          textStyle: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: filledColor,
+                            border: Border.all(
+                              color: orangeColor,
                             ),
                           ),
+                        ),
+                        submittedPinTheme: PinTheme(
+                          width: 60,
+                          height: 48,
+                          textStyle: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: filledColor,
+                            border: Border.all(
+                              color: orangeColor,
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          code = value;
+                        },
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "OTP valid for",
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 14,
+                            fontFamily: 'Syne-Regular',
+                          ),
+                        ),
+                        SizedBox(width: size.width * 0.02),
+                        secondsRemaining == 0
+                            ? SvgPicture.asset(
+                                'assets/images/clock-inactive-icon.svg',
+                              )
+                            : SvgPicture.asset(
+                                'assets/images/clock-active-icon.svg',
+                              ),
+                        SizedBox(width: size.width * 0.02),
+                        Text(
+                          getTimerText(),
+                          style: TextStyle(
+                            color: blackColor,
+                            fontSize: 16,
+                            fontFamily: 'Inter-SemiBold',
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: size.height * 0.04),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't Receive the Code? ",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: blackColor,
+                              fontSize: 14,
+                              fontFamily: 'Syne-Regular',
+                            ),
+                          ),
+                          secondsRemaining == 0
+                              ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      secondsRemaining = 120;
+                                      startTimer();
+                                    });
+                                    verifyPhoneNumber();
+                                  },
+                                  child: Text(
+                                    'Resend Code',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: orangeColor,
+                                      fontSize: 16,
+                                      fontFamily: 'Syne-SemiBold',
+                                    ),
+                                  ),
+                                )
+                              : Text(
+                                  'Resend Code',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: supportTextColor,
+                                    fontSize: 16,
+                                    fontFamily: 'Syne-SemiBold',
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.03),
+                    GestureDetector(
+                      onTap: () async {
+                        if (otpController.text.isNotEmpty) {
+                          verifyOTPCode();
+                          timer?.cancel();
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Please Enter OTP!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 2,
+                            backgroundColor: toastColor,
+                            textColor: whiteColor,
+                            fontSize: 12,
+                          );
+                        }
+                      },
+                      child: isLoading
+                          ? buttonGradientWithLoader("Please Wait...", context)
+                          : buttonGradient("Next", context),
+                    ),
+                    SizedBox(height: size.height * 0.02),
                   ],
                 ),
               ),
-              SizedBox(height: size.height * 0.03),
-              GestureDetector(
-                onTap: () async {
-                  if (otpController.text.isNotEmpty) {
-                    verifyOTPCode();
-                    timer?.cancel();
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: "Please Enter OTP!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
-                      backgroundColor: toastColor,
-                      textColor: whiteColor,
-                      fontSize: 12,
-                    );
-                  }
-                },
-                child: isLoading
-                    ? buttonGradientWithLoader("Please Wait...", context)
-                    : buttonGradient("Next", context),
-              ),
-              SizedBox(height: size.height * 0.02),
-            ],
-          ),
-        ),
       ),
     );
   }
-  bool otpSent = false;
 }

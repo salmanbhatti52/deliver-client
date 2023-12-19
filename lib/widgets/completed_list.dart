@@ -118,8 +118,10 @@ class _CompletedListState extends State<CompletedList> {
                 scrollDirection: Axis.vertical,
                 itemCount: completedRideModel.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  int reverseIndex = completedRideModel.data!.length - 1 - index;
-                  timeAdded = DateTime.parse("${completedRideModel.data![reverseIndex].dateModified}");
+                  int reverseIndex =
+                      completedRideModel.data!.length - 1 - index;
+                  timeAdded = DateTime.parse(
+                      "${completedRideModel.data![reverseIndex].dateModified}");
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -298,8 +300,8 @@ class _CompletedListState extends State<CompletedList> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             RideHistoryCompletedDetailsScreen(
-                                          completedRideModel:
-                                              completedRideModel.data?[reverseIndex],
+                                          completedRideModel: completedRideModel
+                                              .data?[reverseIndex],
                                         ),
                                       ),
                                     );
@@ -319,20 +321,21 @@ class _CompletedListState extends State<CompletedList> {
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 180),
-                child: Column(
-                  children: [
-                    Lottie.asset('assets/images/no-data-icon.json'),
-                    SizedBox(height: size.height * 0.04),
-                    Text(
-                      "No Ride is Completed",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: textHaveAccountColor,
-                        fontSize: 24,
-                        fontFamily: 'Syne-SemiBold',
+                child: Center(
+                  child: Column(
+                    children: [
+                      Lottie.asset('assets/images/no-data-icon.json'),
+                      SizedBox(height: size.height * 0.04),
+                      Text(
+                        "No Ride is Completed",
+                        style: TextStyle(
+                          color: textHaveAccountColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-SemiBold',
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
   }

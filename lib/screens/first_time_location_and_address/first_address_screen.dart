@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
-
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -163,7 +162,6 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                             scrollDirection: Axis.vertical,
                             itemCount: getAddressesModel.data!.length,
                             itemBuilder: (BuildContext context, int index) {
-                              int reverseIndex = getAddressesModel.data!.length - 1 - index;
                               return Column(
                                 children: [
                                   Card(
@@ -187,9 +185,9 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                                               width: size.width * 0.65,
                                               child: Tooltip(
                                                 message:
-                                                    "${getAddressesModel.data![reverseIndex].name}",
+                                                    "${getAddressesModel.data![index].name}",
                                                 child: Text(
-                                                  "${getAddressesModel.data![reverseIndex].name}",
+                                                  "${getAddressesModel.data![index].name}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -208,9 +206,9 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                                               width: size.width * 0.65,
                                               child: Tooltip(
                                                 message:
-                                                    "${getAddressesModel.data![reverseIndex].address}",
+                                                    "${getAddressesModel.data![index].address}",
                                                 child: Text(
-                                                  "${getAddressesModel.data![reverseIndex].address}",
+                                                  "${getAddressesModel.data![index].address}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -234,7 +232,7 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                                                 builder: (context) =>
                                                     deleteConformation(
                                                         getAddressesModel
-                                                            .data![reverseIndex]
+                                                            .data![index]
                                                             .usersCustomersAddressesId));
                                           },
                                           child: Container(
@@ -335,7 +333,7 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
                         onTap: () {
@@ -344,6 +342,7 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
                         child: dialogButtonTransparentGradientSmall(
                             'Cancel', context),
                       ),
+                      SizedBox(width: size.width * 0.02),
                       GestureDetector(
                         onTap: () async {
                           await deleteAddress(index);
@@ -367,127 +366,3 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
     );
   }
 }
-
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:deliver_client/utils/colors.dart';
-// import 'package:auto_size_text/auto_size_text.dart';
-// import 'package:deliver_client/widgets/buttons.dart';
-// import 'package:deliver_client/screens/home/home_page_screen.dart';
-
-// class FirstAddressScreen extends StatefulWidget {
-//   const FirstAddressScreen({super.key});
-
-//   @override
-//   State<FirstAddressScreen> createState() => _FirstAddressScreenState();
-// }
-
-// class _FirstAddressScreenState extends State<FirstAddressScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     var size = MediaQuery.of(context).size;
-//     return Scaffold(
-//       backgroundColor: bgColor,
-//       appBar: AppBar(
-//         backgroundColor: bgColor,
-//         elevation: 0,
-//         scrolledUnderElevation: 0,
-//         automaticallyImplyLeading: false,
-//         title: Text(
-//           "Addresses",
-//           textAlign: TextAlign.center,
-//           style: TextStyle(
-//             color: blackColor,
-//             fontSize: 20,
-//             fontFamily: 'Syne-Bold',
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-//       body: Column(
-//         children: [
-//           SizedBox(height: size.height * 0.02),
-//           Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 20),
-//             child: Container(
-//               color: transparentColor,
-//               height: size.height * 0.75,
-//               child: SingleChildScrollView(
-//                 physics: const BouncingScrollPhysics(),
-//                 child: Column(
-//                   children: [
-//                     Card(
-//                       color: whiteColor,
-//                       elevation: 3,
-//                       shape: RoundedRectangleBorder(
-//                         borderRadius: BorderRadius.circular(10),
-//                       ),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                         children: [
-//                           Column(
-//                             crossAxisAlignment: CrossAxisAlignment.start,
-//                             children: [
-//                               SizedBox(height: size.height * 0.02),
-//                               Container(
-//                                 color: transparentColor,
-//                                 width: size.width * 0.65,
-//                                 child: AutoSizeText(
-//                                   "Home",
-//                                   textAlign: TextAlign.left,
-//                                   style: TextStyle(
-//                                     color: blackColor,
-//                                     fontSize: 16,
-//                                     fontFamily: 'Syne-Bold',
-//                                   ),
-//                                   minFontSize: 16,
-//                                   maxFontSize: 16,
-//                                   overflow: TextOverflow.ellipsis,
-//                                 ),
-//                               ),
-//                               SizedBox(height: size.height * 0.01),
-//                               Container(
-//                                 color: transparentColor,
-//                                 width: size.width * 0.65,
-//                                 child: AutoSizeText(
-//                                   "Lorem ipsum dolor sit amet, consete",
-//                                   textAlign: TextAlign.left,
-//                                   style: TextStyle(
-//                                     color: blackColor,
-//                                     fontSize: 16,
-//                                     fontFamily: 'Syne-Regular',
-//                                   ),
-//                                   minFontSize: 16,
-//                                   maxFontSize: 16,
-//                                   overflow: TextOverflow.ellipsis,
-//                                 ),
-//                               ),
-//                               SizedBox(height: size.height * 0.02),
-//                             ],
-//                           ),
-//                           SvgPicture.asset('assets/images/delete-icon.svg'),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//           const Spacer(),
-//           GestureDetector(
-//             onTap: () {
-//               Navigator.of(context).pushAndRemoveUntil(
-//                   MaterialPageRoute(
-//                       builder: (context) => const HomePageScreen()),
-//                   (Route<dynamic> route) => false);
-//             },
-//             child: buttonGradient("NEXT", context),
-//           ),
-//           SizedBox(height: size.height * 0.03),
-//         ],
-//       ),
-//     );
-//   }
-// }
