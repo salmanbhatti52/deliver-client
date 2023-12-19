@@ -735,6 +735,9 @@ class _NewScreenState extends State<NewScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    double fontSize = screenHeight * 0.02;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -828,552 +831,550 @@ class _NewScreenState extends State<NewScreen> {
 
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        color: transparentColor,
-        height: size.height * 0.3,
-        child: Row(
-          children: [
-            SvgPicture.asset('assets/images/home-location-path-icon.svg'),
-            SizedBox(width: size.width * 0.02),
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  isSelectedAddress == true
-                      ? Container(
-                          color: transparentColor,
-                          width: size.width * 0.8,
-                          child: Stack(
-                            children: [
-                              TextFormField(
-                                controller: pickupController,
-                                onChanged: (value) {
-                                  addresses.toList();
-                                },
-                                onTap: () {
-                                  setState(() {
-                                    addressesVisible =
-                                        true; // Show the list when the text field is tapped.
-                                  });
-                                },
-                                cursorColor: orangeColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter-Regular',
+    return Container(
+      color: transparentColor,
+      width: size.width,
+      height: size.height * 0.3,
+      child: Row(
+        children: [
+          SizedBox(width: size.width * 0.02),
+          SvgPicture.asset('assets/images/home-location-path-icon.svg'),
+          SizedBox(width: size.width * 0.02),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                isSelectedAddress == true
+                    ? Container(
+                        color: transparentColor,
+                        width: size.width * 0.85,
+                        child: Stack(
+                          children: [
+                            TextFormField(
+                              controller: pickupController,
+                              onChanged: (value) {
+                                addresses.toList();
+                              },
+                              onTap: () {
+                                setState(() {
+                                  addressesVisible =
+                                      true; // Show the list when the text field is tapped.
+                                });
+                              },
+                              cursorColor: orangeColor,
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 14,
+                                fontFamily: 'Inter-Regular',
+                              ),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: filledColor,
+                                errorStyle: TextStyle(
+                                  color: redColor,
+                                  fontSize: 10,
+                                  fontFamily: 'Inter-Bold',
                                 ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: filledColor,
-                                  errorStyle: TextStyle(
+                                border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide(
                                     color: redColor,
-                                    fontSize: 10,
-                                    fontFamily: 'Inter-Bold',
+                                    width: 1,
                                   ),
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: redColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  hintText: "Pickup Location",
-                                  hintStyle: TextStyle(
-                                    color: hintColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Light',
-                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                hintText: "Pickup Location",
+                                hintStyle: TextStyle(
+                                  color: hintColor,
+                                  fontSize: 12,
+                                  fontFamily: 'Inter-Light',
                                 ),
                               ),
-                              if (addressesVisible)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 40),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: filledColor,
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    width: size.width * 0.8,
-                                    height: size.height * 0.2,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: getAddressesModel.data!.length,
-                                      itemBuilder: (context, index) {
-                                        final addresses =
-                                            getAddressesModel.data![index];
-                                        return ListTile(
-                                          title: Text("${addresses.name}"),
-                                          subtitle:
-                                              Text(addresses.address ?? ''),
-                                          onTap: () {
-                                            addressesVisible = false;
-                                            pickupController.text =
-                                                "${addresses.address}";
-                                            final double savedLat =
-                                                double.parse(
-                                                    "${addresses.latitude}");
-                                            final double savedLng =
-                                                double.parse(
-                                                    "${addresses.longitude}");
-                                            const double zoomLevel = 15.0;
-                                            onPickUpLocationSavedAddresses(
-                                                LatLng(savedLat, savedLng),
-                                                zoomLevel);
-                                            addressLat = savedLat.toString();
-                                            addressLng = savedLng.toString();
-                                            setState(() {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              print("addressLat: $addressLat");
-                                              print("addressLng $addressLng");
-                                              print(
-                                                  "addressLocation: ${addresses.address}");
-                                            });
-                                            // Move the map camera to the selected location
-                                            mapController?.animateCamera(
-                                                CameraUpdate.newLatLng(
-                                                    selectedAddressLocation!));
-                                          },
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return Divider(
-                                          color: textHaveAccountColor,
-                                        );
-                                      },
+                            ),
+                            if (addressesVisible)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: filledColor,
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
                                     ),
                                   ),
-                                ),
-                            ],
-                          ),
-                        )
-                      : Container(
-                          color: transparentColor,
-                          width: size.width * 0.8,
-                          child: Stack(
-                            children: [
-                              TextFormField(
-                                controller: pickupController,
-                                onChanged: (value) {
-                                  searchPickUpPlaces(value);
-                                },
-                                onTap: () {
-                                  // pickupController.clear();
-                                  pickUpPredictions.clear();
-                                },
-                                cursorColor: orangeColor,
-                                keyboardType: TextInputType.text,
-                                style: TextStyle(
-                                  color: blackColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter-Regular',
-                                ),
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: filledColor,
-                                  errorStyle: TextStyle(
-                                    color: redColor,
-                                    fontSize: 10,
-                                    fontFamily: 'Inter-Bold',
-                                  ),
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    borderSide: BorderSide(
-                                      color: redColor,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  hintText: "Pickup Location",
-                                  hintStyle: TextStyle(
-                                    color: hintColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Light',
-                                  ),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      getCurrentLocation();
+                                  width: size.width * 0.8,
+                                  height: size.height * 0.2,
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: getAddressesModel.data!.length,
+                                    itemBuilder: (context, index) {
+                                      final addresses =
+                                          getAddressesModel.data![index];
+                                      return ListTile(
+                                        title: Text("${addresses.name}"),
+                                        subtitle:
+                                            Text(addresses.address ?? ''),
+                                        onTap: () {
+                                          addressesVisible = false;
+                                          pickupController.text =
+                                              "${addresses.address}";
+                                          final double savedLat =
+                                              double.parse(
+                                                  "${addresses.latitude}");
+                                          final double savedLng =
+                                              double.parse(
+                                                  "${addresses.longitude}");
+                                          const double zoomLevel = 15.0;
+                                          onPickUpLocationSavedAddresses(
+                                              LatLng(savedLat, savedLng),
+                                              zoomLevel);
+                                          addressLat = savedLat.toString();
+                                          addressLng = savedLng.toString();
+                                          setState(() {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            print("addressLat: $addressLat");
+                                            print("addressLng $addressLng");
+                                            print(
+                                                "addressLocation: ${addresses.address}");
+                                          });
+                                          // Move the map camera to the selected location
+                                          mapController?.animateCamera(
+                                              CameraUpdate.newLatLng(
+                                                  selectedAddressLocation!));
+                                        },
+                                      );
                                     },
-                                    child: Container(
-                                      color: transparentColor,
-                                      child: SvgPicture.asset(
-                                        'assets/images/gps-icon.svg',
-                                        fit: BoxFit.scaleDown,
-                                      ),
+                                    separatorBuilder: (context, index) {
+                                      return Divider(
+                                        color: textHaveAccountColor,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    : Container(
+                        color: transparentColor,
+                        width: size.width * 0.85,
+                        child: Stack(
+                          children: [
+                            TextFormField(
+                              controller: pickupController,
+                              onChanged: (value) {
+                                searchPickUpPlaces(value);
+                              },
+                              onTap: () {
+                                // pickupController.clear();
+                                pickUpPredictions.clear();
+                              },
+                              cursorColor: orangeColor,
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 14,
+                                fontFamily: 'Inter-Regular',
+                              ),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: filledColor,
+                                errorStyle: TextStyle(
+                                  color: redColor,
+                                  fontSize: 10,
+                                  fontFamily: 'Inter-Bold',
+                                ),
+                                border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide(
+                                    color: redColor,
+                                    width: 1,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                hintText: "Pickup Location",
+                                hintStyle: TextStyle(
+                                  color: hintColor,
+                                  fontSize: 12,
+                                  fontFamily: 'Inter-Light',
+                                ),
+                                suffixIcon: GestureDetector(
+                                  onTap: () {
+                                    getCurrentLocation();
+                                  },
+                                  child: Container(
+                                    color: transparentColor,
+                                    child: SvgPicture.asset(
+                                      'assets/images/gps-icon.svg',
+                                      fit: BoxFit.scaleDown,
                                     ),
                                   ),
                                 ),
                               ),
-                              if (pickUpPredictions.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 40),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: filledColor,
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    width: size.width * 0.8,
-                                    height: size.height * 0.2,
-                                    child: ListView.separated(
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: pickUpPredictions.length,
-                                      itemBuilder: (context, index) {
-                                        final prediction =
-                                            pickUpPredictions[index];
-                                        return ListTile(
-                                          title: Text(prediction.name),
-                                          subtitle: Text(
-                                              prediction.formattedAddress ??
-                                                  ''),
-                                          onTap: () {
-                                            pickupController.text =
-                                                prediction.formattedAddress!;
-                                            final double lat = prediction
-                                                .geometry!.location.lat;
-                                            final double lng = prediction
-                                                .geometry!.location.lng;
-                                            const double zoomLevel = 15.0;
-                                            onPickUpLocationSelected(
-                                                LatLng(lat, lng), zoomLevel);
-                                            pickupLat = lat.toString();
-                                            pickupLng = lng.toString();
-                                            setState(() {
-                                              pickUpPredictions.clear();
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              print("pickupLat: $pickupLat");
-                                              print("pickupLng $pickupLng");
-                                              print(
-                                                  "pickupLocation: ${prediction.formattedAddress}");
-                                            });
-                                            // Move the map camera to the selected location
-                                            mapController?.animateCamera(
-                                                CameraUpdate.newLatLng(
-                                                    selectedLocation!));
-                                          },
-                                        );
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return Divider(
-                                          color: textHaveAccountColor,
-                                        );
-                                      },
+                            ),
+                            if (pickUpPredictions.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: filledColor,
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
                                     ),
                                   ),
+                                  width: size.width * 0.8,
+                                  height: size.height * 0.2,
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: pickUpPredictions.length,
+                                    itemBuilder: (context, index) {
+                                      final prediction =
+                                          pickUpPredictions[index];
+                                      return ListTile(
+                                        title: Text(prediction.name),
+                                        subtitle: Text(
+                                            prediction.formattedAddress ??
+                                                ''),
+                                        onTap: () {
+                                          pickupController.text =
+                                              prediction.formattedAddress!;
+                                          final double lat = prediction
+                                              .geometry!.location.lat;
+                                          final double lng = prediction
+                                              .geometry!.location.lng;
+                                          const double zoomLevel = 15.0;
+                                          onPickUpLocationSelected(
+                                              LatLng(lat, lng), zoomLevel);
+                                          pickupLat = lat.toString();
+                                          pickupLng = lng.toString();
+                                          setState(() {
+                                            pickUpPredictions.clear();
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            print("pickupLat: $pickupLat");
+                                            print("pickupLng $pickupLng");
+                                            print(
+                                                "pickupLocation: ${prediction.formattedAddress}");
+                                          });
+                                          // Move the map camera to the selected location
+                                          mapController?.animateCamera(
+                                              CameraUpdate.newLatLng(
+                                                  selectedLocation!));
+                                        },
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return Divider(
+                                        color: textHaveAccountColor,
+                                      );
+                                    },
+                                  ),
                                 ),
-                            ],
-                          ),
+                              ),
+                          ],
                         ),
-                  SizedBox(height: size.height * 0.015),
-                  Container(
-                    color: transparentColor,
-                    width: size.width * 0.8,
-                    child: Stack(
-                      children: [
-                        TextFormField(
-                          controller: destinationController,
-                          onChanged: (value) {
-                            searchDestinationPlaces(value);
-                          },
-                          onTap: () {
-                            // destinationController.clear();
-                            destinationPredictions.clear();
-                          },
-                          cursorColor: orangeColor,
-                          keyboardType: TextInputType.text,
-                          style: TextStyle(
-                            color: blackColor,
-                            fontSize: 14,
-                            fontFamily: 'Inter-Regular',
+                      ),
+                SizedBox(height: size.height * 0.015),
+                Container(
+                  color: transparentColor,
+                  width: size.width * 0.85,
+                  child: Stack(
+                    children: [
+                      TextFormField(
+                        controller: destinationController,
+                        onChanged: (value) {
+                          searchDestinationPlaces(value);
+                        },
+                        onTap: () {
+                          // destinationController.clear();
+                          destinationPredictions.clear();
+                        },
+                        cursorColor: orangeColor,
+                        keyboardType: TextInputType.text,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 14,
+                          fontFamily: 'Inter-Regular',
+                        ),
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: filledColor,
+                          errorStyle: TextStyle(
+                            color: redColor,
+                            fontSize: 10,
+                            fontFamily: 'Inter-Bold',
                           ),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: filledColor,
-                            errorStyle: TextStyle(
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide.none,
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            borderSide: BorderSide(
                               color: redColor,
-                              fontSize: 10,
-                              fontFamily: 'Inter-Bold',
+                              width: 1,
                             ),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              borderSide: BorderSide(
-                                color: redColor,
-                                width: 1,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          hintText: "Destination",
+                          hintStyle: TextStyle(
+                            color: hintColor,
+                            fontSize: 12,
+                            fontFamily: 'Inter-Light',
+                          ),
+                        ),
+                      ),
+                      if (destinationPredictions.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: filledColor,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(10),
+                                bottomRight: Radius.circular(10),
                               ),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            hintText: "Destination",
-                            hintStyle: TextStyle(
-                              color: hintColor,
-                              fontSize: 12,
-                              fontFamily: 'Inter-Light',
+                            width: size.width * 0.8,
+                            height: size.height * 0.2,
+                            child: ListView.separated(
+                              scrollDirection: Axis.vertical,
+                              itemCount: destinationPredictions.length,
+                              itemBuilder: (context, index) {
+                                final prediction =
+                                    destinationPredictions[index];
+                                return ListTile(
+                                  title: Text(prediction.name),
+                                  subtitle:
+                                      Text(prediction.formattedAddress ?? ''),
+                                  onTap: () {
+                                    destinationController.text =
+                                        prediction.formattedAddress!;
+                                    final double lat =
+                                        prediction.geometry!.location.lat;
+                                    final double lng =
+                                        prediction.geometry!.location.lng;
+                                    destinationLat = lat.toString();
+                                    destinationLng = lng.toString();
+                                    setState(() {
+                                      destinationPredictions.clear();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      print(
+                                          "destinationLat: $destinationLat");
+                                      print("destinationLng $destinationLng");
+                                      print(
+                                          "destinationLocation: ${prediction.formattedAddress}");
+                                    });
+                                  },
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  color: textHaveAccountColor,
+                                );
+                              },
                             ),
                           ),
                         ),
-                        if (destinationPredictions.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: filledColor,
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10),
-                                ),
-                              ),
-                              width: size.width * 0.8,
-                              height: size.height * 0.2,
-                              child: ListView.separated(
-                                scrollDirection: Axis.vertical,
-                                itemCount: destinationPredictions.length,
-                                itemBuilder: (context, index) {
-                                  final prediction =
-                                      destinationPredictions[index];
-                                  return ListTile(
-                                    title: Text(prediction.name),
-                                    subtitle:
-                                        Text(prediction.formattedAddress ?? ''),
-                                    onTap: () {
-                                      destinationController.text =
-                                          prediction.formattedAddress!;
-                                      final double lat =
-                                          prediction.geometry!.location.lat;
-                                      final double lng =
-                                          prediction.geometry!.location.lng;
-                                      destinationLat = lat.toString();
-                                      destinationLng = lng.toString();
-                                      setState(() {
-                                        destinationPredictions.clear();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                        print(
-                                            "destinationLat: $destinationLat");
-                                        print("destinationLng $destinationLng");
-                                        print(
-                                            "destinationLocation: ${prediction.formattedAddress}");
-                                      });
-                                    },
-                                  );
-                                },
-                                separatorBuilder: (context, index) {
-                                  return Divider(
-                                    color: textHaveAccountColor,
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
-                  SizedBox(height: size.height * 0.015),
-                  Container(
-                    color: transparentColor,
-                    width: size.width * 0.8,
-                    child: TextFormField(
-                      controller: receiversNameController,
-                      cursorColor: orangeColor,
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                        color: blackColor,
-                        fontSize: 14,
-                        fontFamily: 'Inter-Regular',
+                ),
+                SizedBox(height: size.height * 0.015),
+                Container(
+                  color: transparentColor,
+                  width: size.width * 0.85,
+                  child: TextFormField(
+                    controller: receiversNameController,
+                    cursorColor: orangeColor,
+                    keyboardType: TextInputType.text,
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 14,
+                      fontFamily: 'Inter-Regular',
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: filledColor,
+                      errorStyle: TextStyle(
+                        color: redColor,
+                        fontSize: 10,
+                        fontFamily: 'Inter-Bold',
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: filledColor,
-                        errorStyle: TextStyle(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedErrorBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide(
                           color: redColor,
-                          fontSize: 10,
-                          fontFamily: 'Inter-Bold',
+                          width: 1,
                         ),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedErrorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide(
-                            color: redColor,
-                            width: 1,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        hintText: "Receiver's Name",
-                        hintStyle: TextStyle(
-                          color: hintColor,
-                          fontSize: 12,
-                          fontFamily: 'Inter-Light',
-                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      hintText: "Receiver's Name",
+                      hintStyle: TextStyle(
+                        color: hintColor,
+                        fontSize: 12,
+                        fontFamily: 'Inter-Light',
                       ),
                     ),
                   ),
-                  SizedBox(height: size.height * 0.015),
-                  Container(
-                    color: transparentColor,
-                    width: size.width * 0.8,
-                    child: TextFormField(
-                      controller: receiversNumberController,
-                      cursorColor: orangeColor,
-                      keyboardType: TextInputType.phone,
-                      style: TextStyle(
-                        color: blackColor,
-                        fontSize: 14,
-                        fontFamily: 'Inter-Regular',
+                ),
+                SizedBox(height: size.height * 0.015),
+                Container(
+                  color: transparentColor,
+                  width: size.width * 0.85,
+                  child: TextFormField(
+                    controller: receiversNumberController,
+                    cursorColor: orangeColor,
+                    keyboardType: TextInputType.phone,
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 14,
+                      fontFamily: 'Inter-Regular',
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: filledColor,
+                      errorStyle: TextStyle(
+                        color: redColor,
+                        fontSize: 10,
+                        fontFamily: 'Inter-Bold',
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: filledColor,
-                        errorStyle: TextStyle(
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedErrorBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        borderSide: BorderSide(
                           color: redColor,
-                          fontSize: 10,
-                          fontFamily: 'Inter-Bold',
+                          width: 1,
                         ),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedErrorBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          borderSide: BorderSide(
-                            color: redColor,
-                            width: 1,
-                          ),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        hintText: "Receiver's Phone Number",
-                        hintStyle: TextStyle(
-                          color: hintColor,
-                          fontSize: 12,
-                          fontFamily: 'Inter-Light',
-                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      hintText: "Receiver's Phone Number",
+                      hintStyle: TextStyle(
+                        color: hintColor,
+                        fontSize: 12,
+                        fontFamily: 'Inter-Light',
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -1667,7 +1668,9 @@ class _NewScreenState extends State<NewScreen> {
 
   Widget bottomDetailsSheet(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    double fontSize = screenHeight * 0.02;
     return DraggableScrollableSheet(
       initialChildSize: .38,
       minChildSize: .38,
@@ -1721,140 +1724,140 @@ class _NewScreenState extends State<NewScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: size.height * 0.04),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                vehiclesType.clear();
-                                selectedVehicle = null;
-                                getVehiclesByServiceType(courierId);
-                                setState(() {
-                                  isSelectedBus = false;
-                                  isSelectedCourier = true;
-                                  print("courierId: $courierId");
-                                });
-                              },
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    color: transparentColor,
+                      SizedBox(height: size.height * 0.02),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              vehiclesType.clear();
+                              selectedVehicle = null;
+                              getVehiclesByServiceType(courierId);
+                              setState(() {
+                                isSelectedBus = false;
+                                isSelectedCourier = true;
+                                print("courierId: $courierId");
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Container(
+                                  color: transparentColor,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.43,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.14,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  child: Container(
                                     width: MediaQuery.of(context).size.width *
                                         0.43,
                                     height: MediaQuery.of(context).size.height *
-                                        0.12,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.43,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
-                                      decoration: BoxDecoration(
-                                        color: isSelectedCourier == true
-                                            ? orangeColor
-                                            : const Color(0xFFEBEBEB),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
+                                        0.1,
+                                    decoration: BoxDecoration(
+                                      color: isSelectedCourier == true
+                                          ? orangeColor
+                                          : const Color(0xFFEBEBEB),
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  Positioned(
-                                    bottom: 20,
-                                    left: 0,
-                                    right: 0,
-                                    child: Text(
-                                      "Deliver a Parcel",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: isSelectedCourier == true
-                                            ? whiteColor
-                                            : drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: Text(
+                                    "Deliver a Parcel",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: isSelectedCourier == true
+                                          ? whiteColor
+                                          : drawerTextColor,
+                                      fontSize: fontSize,
+                                      fontFamily: 'Syne-Bold',
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: SvgPicture.asset(
-                                      "assets/images/login-parcel-icon.svg",
-                                    ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  left: 0,
+                                  right: 0,
+                                  child: SvgPicture.asset(
+                                    "assets/images/login-parcel-icon.svg",
+                                    width: size.width * 0.07,
+                                    height: size.height * 0.07,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () async {
-                                vehiclesType.clear();
-                                selectedVehicle = null;
-                                getVehiclesByServiceType(otherId);
-                                setState(() {
-                                  isSelectedBus = true;
-                                  isSelectedCourier = false;
-                                  print("otherId: $otherId");
-                                });
-                              },
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    color: transparentColor,
+                          ),
+                          SizedBox(width: size.width * 0.04),
+                          GestureDetector(
+                            onTap: () async {
+                              vehiclesType.clear();
+                              selectedVehicle = null;
+                              getVehiclesByServiceType(otherId);
+                              setState(() {
+                                isSelectedBus = true;
+                                isSelectedCourier = false;
+                                print("otherId: $otherId");
+                              });
+                            },
+                            child: Stack(
+                              children: [
+                                Container(
+                                  color: transparentColor,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.43,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.14,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  child: Container(
                                     width: MediaQuery.of(context).size.width *
                                         0.43,
                                     height: MediaQuery.of(context).size.height *
-                                        0.12,
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.43,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.1,
-                                      decoration: BoxDecoration(
-                                        color: isSelectedBus == true
-                                            ? orangeColor
-                                            : const Color(0xFFEBEBEB),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
+                                        0.1,
+                                    decoration: BoxDecoration(
+                                      color: isSelectedBus == true
+                                          ? orangeColor
+                                          : const Color(0xFFEBEBEB),
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                   ),
-                                  Positioned(
-                                    bottom: 20,
-                                    left: 0,
-                                    right: 0,
-                                    child: Text(
-                                      "Book a Van",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: isSelectedBus == true
-                                            ? whiteColor
-                                            : drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
+                                ),
+                                Positioned(
+                                  bottom: 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: Text(
+                                    "Book a Van",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: isSelectedBus == true
+                                          ? whiteColor
+                                          : drawerTextColor,
+                                      fontSize: fontSize,
+                                      fontFamily: 'Syne-Bold',
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: SvgPicture.asset(
-                                      "assets/images/login-truck-icon.svg",
-                                    ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  left: 0,
+                                  right: 0,
+                                  child: SvgPicture.asset(
+                                    "assets/images/login-truck-icon.svg",
+                                    width: size.width * 0.07,
+                                    height: size.height * 0.07,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: size.height * 0.03),
                       Padding(
@@ -1979,57 +1982,62 @@ class _NewScreenState extends State<NewScreen> {
                         ),
                       ),
                       SizedBox(height: size.height * 0.005),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Theme(
-                          data: ThemeData(
-                            unselectedWidgetColor: orangeColor,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Radio(
-                                value: 1,
-                                groupValue: selectedRadio,
-                                activeColor: orangeColor,
-                                visualDensity: VisualDensity.compact,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedRadio = value!;
-                                  });
-                                },
-                              ),
-                              Text(
-                                "Single Delivery",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: drawerTextColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Syne-Bold',
+                      Theme(
+                        data: ThemeData(
+                          unselectedWidgetColor: orangeColor,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Radio(
+                                  value: 1,
+                                  groupValue: selectedRadio,
+                                  activeColor: orangeColor,
+                                  visualDensity: VisualDensity.compact,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedRadio = value!;
+                                    });
+                                  },
                                 ),
-                              ),
-                              Radio(
-                                value: 2,
-                                groupValue: selectedRadio,
-                                activeColor: orangeColor,
-                                visualDensity: VisualDensity.compact,
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedRadio = value!;
-                                  });
-                                },
-                              ),
-                              Text(
-                                "Multiple Delivery",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: drawerTextColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Syne-Bold',
+                                Text(
+                                  "Single Delivery",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: drawerTextColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio(
+                                  value: 2,
+                                  groupValue: selectedRadio,
+                                  activeColor: orangeColor,
+                                  visualDensity: VisualDensity.compact,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedRadio = value!;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  "Multiple Delivery",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: drawerTextColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(height: size.height * 0.015),
@@ -2536,11 +2544,26 @@ class _NewScreenState extends State<NewScreen> {
                                     Navigator.of(context).pop();
 
                                     if (filteredData.isNotEmpty) {
-                                      if (distance0 != null && double.parse(distance0!.split(" ")[0]) <= 1.0 ||
-                                          distance1 != null && double.parse(distance1!.split(" ")[0]) <= 1.0 ||
-                                          distance2 != null && double.parse(distance2!.split(" ")[0]) <= 1.0 ||
-                                          distance3 != null && double.parse(distance3!.split(" ")[0]) <= 1.0 ||
-                                          distance4 != null && double.parse(distance4!.split(" ")[0]) <= 1.0) {
+                                      if (distance0 != null &&
+                                              double.parse(distance0!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance1 != null &&
+                                              double.parse(distance1!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance2 != null &&
+                                              double.parse(distance2!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance3 != null &&
+                                              double.parse(distance3!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance4 != null &&
+                                              double.parse(distance4!
+                                                      .split(" ")[0]) <=
+                                                  1.0) {
                                         Fluttertoast.showToast(
                                           msg:
                                               "Distance should be greater than 1.0 Km!",
@@ -3022,11 +3045,26 @@ class _NewScreenState extends State<NewScreen> {
                                     Navigator.of(context).pop();
 
                                     if (filteredData.isNotEmpty) {
-                                      if (distance0 != null && double.parse(distance0!.split(" ")[0]) <= 1.0 ||
-                                          distance1 != null && double.parse(distance1!.split(" ")[0]) <= 1.0 ||
-                                          distance2 != null && double.parse(distance2!.split(" ")[0]) <= 1.0 ||
-                                          distance3 != null && double.parse(distance3!.split(" ")[0]) <= 1.0 ||
-                                          distance4 != null && double.parse(distance4!.split(" ")[0]) <= 1.0) {
+                                      if (distance0 != null &&
+                                              double.parse(distance0!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance1 != null &&
+                                              double.parse(distance1!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance2 != null &&
+                                              double.parse(distance2!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance3 != null &&
+                                              double.parse(distance3!
+                                                      .split(" ")[0]) <=
+                                                  1.0 ||
+                                          distance4 != null &&
+                                              double.parse(distance4!
+                                                      .split(" ")[0]) <=
+                                                  1.0) {
                                         Fluttertoast.showToast(
                                           msg:
                                               "Distance should be greater than 1.0 Km!",

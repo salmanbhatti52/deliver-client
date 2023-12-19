@@ -42,20 +42,22 @@ Widget buttonGradient1(String buttonText, BuildContext context) {
   final double screenWidth = MediaQuery.of(context).size.width;
   double fontSize = screenHeight * 0.02;
   return Center(
-    child: SizedBox(
+    child: Container(
       height: screenHeight * 0.065,
       width: screenWidth * 0.6,
-      child: ElevatedButton(
-        onPressed: () {
-          // Add your button onPressed logic here
-        },
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor:
-              Colors.orange, // Replace with your gradient definition
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
+          stops: const [0.1, 1.5],
+          colors: [
+            orangeColor,
+            yellowColor,
+          ],
         ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
         child: Text(
           buttonText,
           textAlign: TextAlign.center,

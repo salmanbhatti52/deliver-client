@@ -109,9 +109,15 @@ class _ConfirmSingleDetailsScreenState
       body: getAllSystemDataModel.data != null
           ? Stack(
               children: [
-                Image.asset(
-                  'assets/images/home-location-background.png',
-                  fit: BoxFit.cover,
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Image.asset(
+                    'assets/images/home-location-background.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Positioned(
                   top: 40,
@@ -168,7 +174,7 @@ class _ConfirmSingleDetailsScreenState
                 Positioned(
                   left: 20,
                   right: 20,
-                  bottom: 85,
+                  bottom: size.height * 0.1,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
@@ -185,8 +191,8 @@ class _ConfirmSingleDetailsScreenState
                               width: size.width,
                               height: size.height * 0.08,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  SizedBox(width: size.width * 0.02),
                                   Text(
                                     "Fare",
                                     textAlign: TextAlign.left,
@@ -213,7 +219,6 @@ class _ConfirmSingleDetailsScreenState
                                     message: roundedTotalPrice.toString(),
                                     child: Container(
                                       color: transparentColor,
-                                      width: size.width * 0.359,
                                       child: AutoSizeText(
                                         roundedTotalPrice.toString(),
                                         textAlign: TextAlign.left,
@@ -229,7 +234,6 @@ class _ConfirmSingleDetailsScreenState
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: size.width * 0.05),
                                 ],
                               ),
                             ),
@@ -500,7 +504,7 @@ class _ConfirmSingleDetailsScreenState
                         ),
                       );
                     },
-                    child: buttonGradient("CONFIRM", context),
+                    child: buttonGradient1("CONFIRM", context),
                   ),
                 ),
               ],

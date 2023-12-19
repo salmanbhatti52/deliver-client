@@ -22,6 +22,7 @@ class EditProfileScreen extends StatefulWidget {
   final String? firstName;
   final String? lastName;
   final String? image;
+
   const EditProfileScreen(
       {super.key, this.firstName, this.lastName, this.image});
 
@@ -78,6 +79,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   File? imagePathGallery;
   String? base64imgGallery;
+
   Future pickImageGallery() async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -110,17 +112,76 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  Future getStoragePermission() async {
+  // Future getStoragePermission() async {
+  //   PermissionStatus status = await Permission.storage.request();
+  //
+  //   if (status.isGranted) {
+  //     // Permission granted, navigate to the next screen
+  //   } else if (status.isDenied) {
+  //     // Permission denied, show a message and ask for permission again
+  //   } else if (status.isPermanentlyDenied) {
+  //     // Permission denied permanently, open app settings
+  //     openAppSettings();
+  //   }
+  // }
+
+  void getStoragePermission() async {
     PermissionStatus status = await Permission.storage.request();
 
     if (status.isGranted) {
       // Permission granted, navigate to the next screen
-    } else if (status.isDenied) {
-      // Permission denied, show a message and ask for permission again
-    } else if (status.isPermanentlyDenied) {
-      // Permission denied permanently, open app settings
-      openAppSettings();
+    } else if (status.isDenied || status.isPermanentlyDenied) {
+      // Permission denied, show a message and provide information
+      showStoragePermissionSnackBar();
     }
+  }
+
+  void showStoragePermissionSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: orangeColor,
+        duration: const Duration(seconds: 60),
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Photo Library permission is required\nto change profile picture.',
+              style: TextStyle(
+                color: whiteColor,
+                fontSize: 12,
+                fontFamily: 'Syne-Regular',
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            GestureDetector(
+              onTap: () {
+                openAppSettings();
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.04,
+                width: MediaQuery.of(context).size.width * 0.33,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF36454F),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    'Grant Permission',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontSize: 12,
+                      fontFamily: 'Syne-Medium',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -429,7 +490,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
-
 
 // // ignore_for_file: avoid_print, use_build_context_synchronously
 

@@ -32,38 +32,97 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   LatLng? currentLocation;
 
+  // void locationPermission() async {
+  //   PermissionStatus status = await Permission.location.request();
+  //
+  //   if (status.isGranted) {
+  //     // Permission granted, navigate to the next screen
+  //   } else if (status.isDenied) {
+  //     // Permission denied, show a message and ask for permission again
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         backgroundColor: orangeColor,
+  //         duration: const Duration(seconds: 2),
+  //         content: Text(
+  //           'Location permission is required to continue.',
+  //           style: TextStyle(
+  //             color: whiteColor,
+  //             fontSize: 12,
+  //             fontFamily: 'Syne-Regular',
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //     PermissionStatus reRequestStatus = await Permission.location.request();
+  //     if (reRequestStatus.isGranted) {
+  //       // Permission granted after re-request, navigate to the next screen
+  //     } else if (reRequestStatus.isPermanentlyDenied) {
+  //       // Permission denied permanently, open app settings
+  //       openAppSettings();
+  //     }
+  //   } else if (status.isPermanentlyDenied) {
+  //     // Permission denied permanently, open app settings
+  //     openAppSettings();
+  //   }
+  // }
+
   void locationPermission() async {
     PermissionStatus status = await Permission.location.request();
 
     if (status.isGranted) {
       // Permission granted, navigate to the next screen
-    } else if (status.isDenied) {
-      // Permission denied, show a message and ask for permission again
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: orangeColor,
-          duration: const Duration(seconds: 2),
-          content: Text(
-            'Location permission is required to continue.',
-            style: TextStyle(
-              color: whiteColor,
-              fontSize: 12,
-              fontFamily: 'Syne-Regular',
-            ),
-          ),
-        ),
-      );
-      PermissionStatus reRequestStatus = await Permission.location.request();
-      if (reRequestStatus.isGranted) {
-        // Permission granted after re-request, navigate to the next screen
-      } else if (reRequestStatus.isPermanentlyDenied) {
-        // Permission denied permanently, open app settings
-        openAppSettings();
-      }
-    } else if (status.isPermanentlyDenied) {
-      // Permission denied permanently, open app settings
-      openAppSettings();
+    } else if (status.isDenied || status.isPermanentlyDenied) {
+      // Permission denied, show a message and provide information
+      showLocationPermissionSnackBar();
     }
+  }
+
+  void showLocationPermissionSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: orangeColor,
+        duration: const Duration(seconds: 60),
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Location permission is required\nto continue.',
+              style: TextStyle(
+                color: whiteColor,
+                fontSize: 12,
+                fontFamily: 'Syne-Regular',
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            GestureDetector(
+              onTap: () {
+                openAppSettings();
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.04,
+                width: MediaQuery.of(context).size.width * 0.33,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF36454F),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    'Grant Permission',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontSize: 12,
+                      fontFamily: 'Syne-Medium',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> getCurrentLocation() async {

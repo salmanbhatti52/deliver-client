@@ -147,138 +147,140 @@ class _AppDrawerState extends State<AppDrawer> {
               backgroundColor: whiteColor,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(height: size.height * 0.04),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: SvgPicture.asset('assets/images/back-icon.svg'),
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.03),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        color: transparentColor,
-                        width: size.width * 0.23,
-                        height: size.height * 0.1,
-                        child: FadeInImage(
-                          placeholder: const AssetImage(
-                            "assets/images/user-profile.png",
-                          ),
-                          image: NetworkImage(
-                            '$imageUrl${getProfileModel.data!.profilePic}',
-                          ),
-                          fit: BoxFit.cover,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: size.height * 0.04),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: SvgPicture.asset('assets/images/back-icon.svg'),
                         ),
                       ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    Text(
-                      '${getProfileModel.data!.firstName} ${getProfileModel.data!.lastName}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: drawerTextColor,
-                        fontSize: 14,
-                        fontFamily: 'Syne-Bold',
+                      SizedBox(height: size.height * 0.03),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          color: transparentColor,
+                          width: 120,
+                          height: 120,
+                          child: FadeInImage(
+                            placeholder: const AssetImage(
+                              "assets/images/user-profile.png",
+                            ),
+                            image: NetworkImage(
+                              '$imageUrl${getProfileModel.data!.profilePic}',
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    Container(
-                      color: transparentColor,
-                      height: size.height * 0.705,
-                      child: ListView(
-                        scrollDirection: Axis.vertical,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          buildMenuItem(
-                            title: 'Profile',
-                            image: 'assets/images/drawer-profile-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 0);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Ride History',
-                            image: 'assets/images/drawer-history-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 1);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Scheduled Rides',
-                            image: 'assets/images/drawer-history-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 2);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Addresses',
-                            image: 'assets/images/drawer-address-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 3);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Update Location',
-                            image:
-                                'assets/images/drawer-update-location-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 4);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Settings',
-                            image: 'assets/images/drawer-setting-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 5);
-                            },
-                          ),
-                          // buildMenuItem(
-                          //   title: 'Payment',
-                          //   image: 'assets/images/drawer-payment-icon.svg',
-                          //   onTap: () {
-                          //     selectedItem(context, 6);
-                          //   },
-                          // ),
-                          buildMenuItem(
-                            title: 'Loyalty Points',
-                            image: 'assets/images/drawer-points-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 6);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Support',
-                            image: 'assets/images/drawer-support-icon.svg',
-                            onTap: () async {
-                              await getSupportAdmin();
-                              selectedItem(context, 7);
-                            },
-                          ),
-                          buildMenuItem(
-                            title: 'Legel',
-                            image: 'assets/images/drawer-legel-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 8);
-                            },
-                          ),
-                          SizedBox(height: size.height * 0.06),
-                          buildMenuItem(
-                            title: 'Logout',
-                            image: 'assets/images/drawer-logout-icon.svg',
-                            onTap: () {
-                              selectedItem(context, 9);
-                            },
-                          ),
-                        ],
+                      SizedBox(height: size.height * 0.02),
+                      Text(
+                        '${getProfileModel.data!.firstName} ${getProfileModel.data!.lastName}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: drawerTextColor,
+                          fontSize: 14,
+                          fontFamily: 'Syne-Bold',
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: size.height * 0.02),
+                      Container(
+                        color: transparentColor,
+                        height: size.height * 0.7,
+                        child: ListView(
+                          scrollDirection: Axis.vertical,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            buildMenuItem(
+                              title: 'Profile',
+                              image: 'assets/images/drawer-profile-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 0);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Ride History',
+                              image: 'assets/images/drawer-history-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 1);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Scheduled Rides',
+                              image: 'assets/images/drawer-history-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 2);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Addresses',
+                              image: 'assets/images/drawer-address-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 3);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Update Location',
+                              image:
+                                  'assets/images/drawer-update-location-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 4);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Settings',
+                              image: 'assets/images/drawer-setting-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 5);
+                              },
+                            ),
+                            // buildMenuItem(
+                            //   title: 'Payment',
+                            //   image: 'assets/images/drawer-payment-icon.svg',
+                            //   onTap: () {
+                            //     selectedItem(context, 6);
+                            //   },
+                            // ),
+                            buildMenuItem(
+                              title: 'Loyalty Points',
+                              image: 'assets/images/drawer-points-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 6);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Support',
+                              image: 'assets/images/drawer-support-icon.svg',
+                              onTap: () async {
+                                await getSupportAdmin();
+                                selectedItem(context, 7);
+                              },
+                            ),
+                            buildMenuItem(
+                              title: 'Legal',
+                              image: 'assets/images/drawer-legal-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 8);
+                              },
+                            ),
+                            // SizedBox(height: size.height * 0.04),
+                            buildMenuItem(
+                              title: 'Logout',
+                              image: 'assets/images/drawer-logout-icon.svg',
+                              onTap: () {
+                                selectedItem(context, 9);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
@@ -305,8 +307,8 @@ class _AppDrawerState extends State<AppDrawer> {
                         borderRadius: BorderRadius.circular(10),
                         child: Container(
                           color: transparentColor,
-                          width: size.width * 0.23,
-                          height: size.height * 0.1,
+                          width: 120,
+                          height: 120,
                           child: Image.asset(
                             "assets/images/user-profile.png",
                             fit: BoxFit.cover,
@@ -392,13 +394,13 @@ class _AppDrawerState extends State<AppDrawer> {
                               onTap: () {},
                             ),
                             buildMenuItem(
-                              title: 'Legel',
-                              image: 'assets/images/drawer-legel-icon.svg',
+                              title: 'Legal',
+                              image: 'assets/images/drawer-legal-icon.svg',
                               onTap: () {
                                 selectedItem(context, 8);
                               },
                             ),
-                            SizedBox(height: size.height * 0.06),
+                            // SizedBox(height: size.height * 0.04),
                             buildMenuItem(
                               title: 'Logout',
                               image: 'assets/images/drawer-logout-icon.svg',

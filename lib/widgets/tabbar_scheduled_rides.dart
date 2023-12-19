@@ -20,7 +20,6 @@
 //         Padding(
 //           padding: const EdgeInsets.symmetric(horizontal: 10),
 //           child: Container(
-//               width: MediaQuery.of(context).size.width,
 //               height: MediaQuery.of(context).size.height * 0.06,
 //               decoration: BoxDecoration(
 //                 color: Colors.white,
