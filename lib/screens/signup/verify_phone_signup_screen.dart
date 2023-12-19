@@ -134,6 +134,9 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       print('User Login In Successful ${value.user}');
       await checkNumber();
       if (checkNumberModel.status == "success") {
+        setState(() {
+          otpSent = true; // Set otpSent to true on successful verification
+        });
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => HomePageScreen(),
@@ -180,6 +183,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     super.initState();
     startTimer();
     verifyPhoneNumber();
+    isLoading = true;
     print("lat: ${widget.lat}");
     print("lng: ${widget.lng}");
     print("phoneNumber: ${widget.phoneNumber}");
@@ -430,9 +434,11 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                     );
                   }
                 },
-                child: isLoading
-                    ? buttonGradientWithLoader("Please Wait...", context)
-                    : buttonGradient("Next", context),
+                child: !otpSent
+                    ? SizedBox()
+                    : isLoading
+                        ? buttonGradientWithLoader("Please Wait...", context)
+                        : buttonGradient("Next", context),
               ),
               SizedBox(height: size.height * 0.02),
             ],
@@ -441,4 +447,6 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       ),
     );
   }
+
+  bool otpSent = false;
 }
