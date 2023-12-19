@@ -52,7 +52,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>16</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>
@@ -60,6 +60,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This app uses library to save the downloded files to library and files on your phone.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Needs camera access to capture photo to update in your profile and gallery.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
