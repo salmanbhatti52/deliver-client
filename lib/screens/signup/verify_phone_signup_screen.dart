@@ -258,24 +258,18 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                 ),
               ),
               SizedBox(height: size.height * 0.08),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: Text(
-                    "Enter OTP Code",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: blackColor,
-                      fontSize: 16,
-                      fontFamily: 'Syne-SemiBold',
-                    ),
-                  ),
+              Text(
+                "Enter OTP Code",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blackColor,
+                  fontSize: 16,
+                  fontFamily: 'Syne-SemiBold',
                 ),
               ),
+              SizedBox(height: size.height * 0.02),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Pinput(
                   length: 6,
                   controller: otpController,
@@ -331,44 +325,35 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "OTP valid for",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: blackColor,
-                        fontSize: 14,
-                        fontFamily: 'Syne-Regular',
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "OTP valid for",
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 14,
+                      fontFamily: 'Syne-Regular',
                     ),
-                    SizedBox(width: size.width * 0.02),
-                    secondsRemaining == 0
-                        ? SvgPicture.asset(
-                            'assets/images/clock-inactive-icon.svg',
-                          )
-                        : SvgPicture.asset(
-                            'assets/images/clock-active-icon.svg',
-                          ),
-                    SizedBox(width: size.width * 0.02),
-                    Container(
-                      width: size.width * 0.2,
-                      color: transparentColor,
-                      child: Text(
-                        getTimerText(),
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: blackColor,
-                          fontSize: 16,
-                          fontFamily: 'Inter-SemiBold',
+                  ),
+                  SizedBox(width: size.width * 0.02),
+                  secondsRemaining == 0
+                      ? SvgPicture.asset(
+                          'assets/images/clock-inactive-icon.svg',
+                        )
+                      : SvgPicture.asset(
+                          'assets/images/clock-active-icon.svg',
                         ),
-                      ),
+                  SizedBox(width: size.width * 0.02),
+                  Text(
+                    getTimerText(),
+                    style: TextStyle(
+                      color: blackColor,
+                      fontSize: 16,
+                      fontFamily: 'Inter-SemiBold',
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               SizedBox(height: size.height * 0.04),
               Padding(
