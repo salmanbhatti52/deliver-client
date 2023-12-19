@@ -52,7 +52,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>15</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>
@@ -60,11 +60,7 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-    <string>Needs access to photo library to manage your profile image</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Needs camera access to capture photo to update in your profile and gallery.</string>
-	<key>NSMicrophoneUsageDescription</key>
 	<string>Needs camera access to capture photo to update in your profile and gallery.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app requires access to your location for delivery tracking and route planning while in use and in the background.</string>
@@ -72,6 +68,10 @@
 	<string>For seamless delivery tracking and route optimization, this app needs access to your location even when in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To enhance your delivery experience, this app requires access to your location while in use and in the background.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Needs camera access to capture photo to update in your profile and gallery.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Needs access to photo library to manage your profile image</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
