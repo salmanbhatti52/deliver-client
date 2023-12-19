@@ -157,7 +157,8 @@ class _AppDrawerState extends State<AppDrawer> {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: SvgPicture.asset('assets/images/back-icon.svg'),
+                          child:
+                              SvgPicture.asset('assets/images/back-icon.svg'),
                         ),
                       ),
                       SizedBox(height: size.height * 0.03),

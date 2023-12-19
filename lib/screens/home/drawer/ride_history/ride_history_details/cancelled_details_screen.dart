@@ -209,7 +209,7 @@ class _RideHistoryCancelledDetailsScreenState
                               SvgPicture.asset(
                                 'assets/images/orange-location-big-icon.svg',
                               ),
-                              SizedBox(width: size.width * 0.04),
+                              SizedBox(width: size.width * 0.02),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -223,21 +223,25 @@ class _RideHistoryCancelledDetailsScreenState
                                     ),
                                   ),
                                   SizedBox(height: size.height * 0.01),
-                                  Container(
-                                    color: transparentColor,
-                                    width: size.width * 0.6,
-                                    child: AutoSizeText(
-                                      "${widget.cancelledRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: blackColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter-Medium',
+                                  Tooltip(
+                                    message:
+                                        "${widget.cancelledRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
+                                    child: Container(
+                                      color: transparentColor,
+                                      width: size.width * 0.7,
+                                      child: AutoSizeText(
+                                        "${widget.cancelledRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                        minFontSize: 14,
+                                        maxFontSize: 14,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      minFontSize: 14,
-                                      maxFontSize: 14,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],

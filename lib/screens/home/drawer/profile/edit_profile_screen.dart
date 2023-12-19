@@ -240,49 +240,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: size.height * 0.03),
-                    SizedBox(
-                      width: size.width * 0.42,
-                      height: size.height * 0.22,
-                      child: Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              width: size.width * 0.4,
-                              height: size.height * 0.2,
-                              decoration: BoxDecoration(
-                                color: transparentColor,
-                              ),
-                              child: imagePathGallery != null
-                                  ? Image.file(
-                                      imagePathGallery!,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : FadeInImage(
-                                      placeholder: const AssetImage(
-                                        "assets/images/user-profile.png",
-                                      ),
-                                      image: NetworkImage(
-                                        '$imageUrl${widget.image}',
-                                      ),
-                                      fit: BoxFit.cover,
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            width: 180,
+                            height: 180,
+                            decoration: BoxDecoration(
+                              color: transparentColor,
+                            ),
+                            child: imagePathGallery != null
+                                ? Image.file(
+                                    imagePathGallery!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : FadeInImage(
+                                    placeholder: const AssetImage(
+                                      "assets/images/user-profile.png",
                                     ),
+                                    image: NetworkImage(
+                                      '$imageUrl${widget.image}',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -10,
+                          right: -20,
+                          child: GestureDetector(
+                            onTap: () {
+                              pickImageGallery();
+                            },
+                            child: SvgPicture.asset(
+                              'assets/images/camera-icon.svg',
                             ),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                pickImageGallery();
-                              },
-                              child: SvgPicture.asset(
-                                'assets/images/camera-icon.svg',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: size.height * 0.02),
                     Text(

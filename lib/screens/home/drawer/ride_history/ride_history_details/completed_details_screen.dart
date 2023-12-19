@@ -283,7 +283,7 @@ class _RideHistoryCompletedDetailsScreenState
                                         SvgPicture.asset(
                                           'assets/images/orange-location-big-icon.svg',
                                         ),
-                                        SizedBox(width: size.width * 0.04),
+                                        SizedBox(width: size.width * 0.02),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -299,21 +299,26 @@ class _RideHistoryCompletedDetailsScreenState
                                             ),
                                             SizedBox(
                                                 height: size.height * 0.01),
-                                            Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.6,
-                                              child: AutoSizeText(
-                                                "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
+                                            Tooltip(
+                                              message:
+                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
+                                              child: Container(
+                                                color: transparentColor,
+                                                width: size.width * 0.65,
+                                                child: AutoSizeText(
+                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  minFontSize: 14,
+                                                  maxFontSize: 14,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                minFontSize: 14,
-                                                maxFontSize: 14,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],
@@ -335,7 +340,7 @@ class _RideHistoryCompletedDetailsScreenState
                                         SvgPicture.asset(
                                           'assets/images/send-small-icon.svg',
                                         ),
-                                        SizedBox(width: size.width * 0.04),
+                                        SizedBox(width: size.width * 0.02),
                                         Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -351,21 +356,26 @@ class _RideHistoryCompletedDetailsScreenState
                                             ),
                                             SizedBox(
                                                 height: size.height * 0.01),
-                                            Container(
-                                              color: transparentColor,
-                                              width: size.width * 0.6,
-                                              child: AutoSizeText(
-                                                "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
+                                            Tooltip(
+                                              message:
+                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
+                                              child: Container(
+                                                color: transparentColor,
+                                                width: size.width * 0.65,
+                                                child: AutoSizeText(
+                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  minFontSize: 14,
+                                                  maxFontSize: 14,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                minFontSize: 14,
-                                                maxFontSize: 14,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],

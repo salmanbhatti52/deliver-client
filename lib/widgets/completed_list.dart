@@ -273,7 +273,7 @@ class _CompletedListState extends State<CompletedList> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 52,
+                                bottom: 55,
                                 right: 0,
                                 child: GestureDetector(
                                   onTap: () {
@@ -289,7 +289,7 @@ class _CompletedListState extends State<CompletedList> {
                                 ),
                               ),
                               Positioned(
-                                bottom: 13,
+                                bottom: 0,
                                 right: 0,
                                 child: GestureDetector(
                                   onTap: () {

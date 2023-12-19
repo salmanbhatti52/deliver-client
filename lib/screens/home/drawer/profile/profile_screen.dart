@@ -140,31 +140,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          color: transparentColor,
-                          width: size.width,
-                          height: size.height * 0.23,
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  width: size.width * 0.4,
-                                  height: size.height * 0.2,
-                                  decoration: BoxDecoration(
-                                    color: transparentColor,
-                                    borderRadius: BorderRadius.circular(10),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                width: 180,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  color: transparentColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: FadeInImage(
+                                  placeholder: const AssetImage(
+                                    "assets/images/user-profile.png",
                                   ),
-                                  child: FadeInImage(
-                                    placeholder: const AssetImage(
-                                      "assets/images/user-profile.png",
-                                    ),
-                                    image: NetworkImage(
-                                      '$imageUrl${getProfileModel.data!.profilePic}',
-                                    ),
-                                    fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                    '$imageUrl${getProfileModel.data!.profilePic}',
                                   ),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -185,13 +180,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Container(
                             width: size.width,
-                            height: size.height * 0.06,
                             decoration: BoxDecoration(
                               color: filledColor,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 20),
+                              padding: const EdgeInsets.only(
+                                  top: 17, left: 20, bottom: 17),
                               child: Text(
                                 '${getProfileModel.data!.firstName}',
                                 style: TextStyle(
@@ -203,18 +198,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                        //   child: TextFormField(
+                        //     readOnly: true,
+                        //     decoration: InputDecoration(
+                        //       filled: true,
+                        //       fillColor: filledColor,
+                        //       errorStyle: TextStyle(
+                        //         color: redColor,
+                        //         fontSize: 10,
+                        //         fontFamily: 'Inter-Bold',
+                        //       ),
+                        //       border: const OutlineInputBorder(
+                        //         borderRadius: BorderRadius.all(
+                        //           Radius.circular(10),
+                        //         ),
+                        //         borderSide: BorderSide.none,
+                        //       ),
+                        //       enabledBorder: const OutlineInputBorder(
+                        //         borderRadius: BorderRadius.all(
+                        //           Radius.circular(10),
+                        //         ),
+                        //         borderSide: BorderSide.none,
+                        //       ),
+                        //       focusedBorder: const OutlineInputBorder(
+                        //         borderRadius: BorderRadius.all(
+                        //           Radius.circular(10),
+                        //         ),
+                        //         borderSide: BorderSide.none,
+                        //       ),
+                        //       focusedErrorBorder: const OutlineInputBorder(
+                        //         borderRadius: BorderRadius.all(
+                        //           Radius.circular(10),
+                        //         ),
+                        //         borderSide: BorderSide.none,
+                        //       ),
+                        //       errorBorder: OutlineInputBorder(
+                        //         borderRadius: const BorderRadius.all(
+                        //           Radius.circular(10),
+                        //         ),
+                        //         borderSide: BorderSide(
+                        //           color: redColor,
+                        //           width: 1,
+                        //         ),
+                        //       ),
+                        //       contentPadding: const EdgeInsets.symmetric(
+                        //           horizontal: 20, vertical: 10),
+                        //       hintText: "${getProfileModel.data!.firstName}",
+                        //       hintStyle: TextStyle(
+                        //         color: hintColor,
+                        //         fontSize: 12,
+                        //         fontFamily: 'Inter-Light',
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         SizedBox(height: size.height * 0.02),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Container(
                             width: size.width,
-                            height: size.height * 0.06,
                             decoration: BoxDecoration(
                               color: filledColor,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 20),
+                              padding: const EdgeInsets.only(
+                                  top: 17, left: 20, bottom: 17),
                               child: Text(
                                 '${getProfileModel.data!.lastName}',
                                 style: TextStyle(
@@ -231,13 +282,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Container(
                             width: size.width,
-                            height: size.height * 0.06,
                             decoration: BoxDecoration(
                               color: filledColor,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 20),
+                              padding: const EdgeInsets.only(
+                                  top: 17, left: 20, bottom: 17),
                               child: Text(
                                 '${getProfileModel.data!.phone}',
                                 style: TextStyle(
@@ -254,13 +305,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Container(
                             width: size.width,
-                            height: size.height * 0.06,
                             decoration: BoxDecoration(
                               color: filledColor,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 20),
+                              padding: const EdgeInsets.only(
+                                  top: 17, left: 20, bottom: 17),
                               child: Text(
                                 '${getProfileModel.data!.email}',
                                 style: TextStyle(
@@ -293,7 +344,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
 
 // // ignore_for_file: avoid_print
 
