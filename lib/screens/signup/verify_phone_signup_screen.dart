@@ -135,9 +135,6 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       print('User Login In Successful ${value.user}');
       await checkNumber();
       if (checkNumberModel.status == "success") {
-         setState(() {
-        isLoading2 = true; // Set otpSent to true on successful verification
-      });
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => HomePageScreen(),
@@ -184,7 +181,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     super.initState();
     startTimer();
     verifyPhoneNumber();
-    isLoading2 = true;
+      otpSent = true; 
     print("lat: ${widget.lat}");
     print("lng: ${widget.lng}");
     print("phoneNumber: ${widget.phoneNumber}");
