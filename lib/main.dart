@@ -1,9 +1,11 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:deliver_client/screens/splash_screen.dart';
 import 'package:deliver_client/utils/remove_scroll_glow.dart';
 
@@ -25,6 +27,12 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await dotenv.load(fileName: ".env");
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => const MyApp(),
+  //   ),
+  // );
   runApp(const MyApp());
   // runApp(
   //   DevicePreview(
@@ -42,6 +50,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Deliver Client',
       debugShowCheckedModeBanner: false,
+      // builder: DevicePreview.appBuilder,
+      // locale: DevicePreview.locale(context),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: orangeColor,
