@@ -107,7 +107,7 @@ class _LegalScreenState extends State<LegalScreen> {
             ),
           ),
           title: Text(
-            "Legel",
+            "Legal",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: blackColor,

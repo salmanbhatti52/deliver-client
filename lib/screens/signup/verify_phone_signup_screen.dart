@@ -420,12 +420,11 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: size.height * 0.03),
+                    SizedBox(height: size.height * 0.02),
                     GestureDetector(
                       onTap: () async {
                         if (otpController.text.isNotEmpty) {
                           verifyOTPCode();
-                          timer?.cancel();
                         } else {
                           Fluttertoast.showToast(
                             msg: "Please Enter OTP!",
