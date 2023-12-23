@@ -101,7 +101,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '${widget.phoneNumber}',
       verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential);
+        // await auth.signInWithCredential(credential);
       },
       verificationFailed: (FirebaseAuthException e) async {
         if (e.code == 'invalid-phone-number') {
