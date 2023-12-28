@@ -19,6 +19,7 @@ import 'package:deliver_client/screens/first_time_location_and_address/first_sav
 
 class LoginProfileScreen extends StatefulWidget {
   final String? contactNumber;
+
   const LoginProfileScreen({super.key, this.contactNumber});
 
   @override
@@ -93,6 +94,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
 
   File? imagePathGallery;
   String? base64imgGallery;
+
   Future pickImageGallery() async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -131,13 +133,58 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
     if (status.isGranted) {
       // Permission granted, navigate to the next screen
       pickImageGallery();
-    } else if (status.isDenied) {
-      // Permission denied, show a message and ask for permission again
-      openAppSettings();
-    } else if (status.isPermanentlyDenied) {
-      // Permission denied permanently, open app settings
-      openAppSettings();
+    } else if (status.isDenied || status.isPermanentlyDenied) {
+      // Permission denied, show a message and provide information
+      showStoragePermissionSnackBar();
     }
+  }
+
+  void showStoragePermissionSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: orangeColor,
+        duration: const Duration(seconds: 5),
+        content: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Photo Library permission is required\nto change profile picture.',
+              style: TextStyle(
+                color: whiteColor,
+                fontSize: 12,
+                fontFamily: 'Syne-Regular',
+              ),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            GestureDetector(
+              onTap: () {
+                openAppSettings();
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.04,
+                width: MediaQuery.of(context).size.width * 0.33,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF36454F),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    'Grant Permission',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: whiteColor,
+                      fontSize: 12,
+                      fontFamily: 'Syne-Medium',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -435,7 +482,8 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        if (createProfileImageFormKey.currentState!.validate()) {
+                        if (createProfileImageFormKey.currentState!
+                            .validate()) {
                           if (base64imgGallery == null) {
                             final snackBar = SnackBar(
                               elevation: 0,
@@ -506,7 +554,6 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
     );
   }
 }
-
 
 // // ignore_for_file: avoid_print, use_build_context_synchronously
 
