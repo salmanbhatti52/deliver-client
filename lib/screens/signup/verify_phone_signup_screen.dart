@@ -105,7 +105,25 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       },
       verificationFailed: (FirebaseAuthException e) async {
         if (e.code == 'invalid-phone-number') {
-          print('The provided phone number is not valid.');
+          Fluttertoast.showToast(
+            msg: "The provided phone number is invalid",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: toastColor,
+            textColor: whiteColor,
+            fontSize: 12,
+          );
+          print('The provided phone number is invalid.');
+          setState(() {
+            isLoading = false;
+          });
+        } else {
+          // showToastError('Verification failed: ${e.message}', FToast().init(context));
+          print('Verification failed: ${e.message}');
+          setState(() {
+            isLoading = false;
+          });
         }
       },
       codeSent: (String verificationId, int? resendToken) async {
@@ -133,28 +151,44 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       verificationId: verifyId,
       smsCode: otpController.text,
     );
-    await auth.signInWithCredential(credential).then((value) async {
-      print('User Login In Successful ${value.user}');
-      await checkNumber();
-      if (checkNumberModel.status == "success") {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => HomePageScreen(),
-            ),
-            (Route<dynamic> route) => false);
-      } else {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => LoginProfileScreen(
-                contactNumber: widget.phoneNumber,
+    try {
+      await auth.signInWithCredential(credential).then((value) async {
+        print('User Login In Successful ${value.user}');
+        await checkNumber();
+        if (checkNumberModel.status == "success") {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => HomePageScreen(),
               ),
-            ),
-            (Route<dynamic> route) => false);
-      }
+              (Route<dynamic> route) => false);
+        } else {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => LoginProfileScreen(
+                  contactNumber: widget.phoneNumber,
+                ),
+              ),
+              (Route<dynamic> route) => false);
+        }
+        setState(() {
+          isLoading = false;
+        });
+      });
+    } catch (e) {
+      Fluttertoast.showToast(
+        msg: "The provided verification code is invalid or expired",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 2,
+        backgroundColor: toastColor,
+        textColor: whiteColor,
+        fontSize: 12,
+      );
+      print('Something went wrong = ${e.toString()}');
       setState(() {
         isLoading = false;
       });
-    });
+    }
   }
 
   Timer? timer;
