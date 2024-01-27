@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:deliver_client/models/get_payment_getaways_model.dart';
+import 'package:lottie/lottie.dart';
 // import 'package:deliver_client/screens/payment/pay_via_bank_screen.dart';
 
 // bool isSelectedBank = true;
@@ -16,7 +17,9 @@ bool isSelectedCash = false;
 class PaymentMethodByReceiverSheet extends StatefulWidget {
   final Map? singleData;
   final Map? multipleData;
-  const PaymentMethodByReceiverSheet({super.key, this.singleData, this.multipleData});
+
+  const PaymentMethodByReceiverSheet(
+      {super.key, this.singleData, this.multipleData});
 
   @override
   State<PaymentMethodByReceiverSheet> createState() =>
@@ -26,6 +29,7 @@ class PaymentMethodByReceiverSheet extends StatefulWidget {
 class _PaymentMethodByReceiverSheetState
     extends State<PaymentMethodByReceiverSheet> {
   String? cashId;
+  bool isApiCalled = false;
   String? baseUrl = dotenv.env['BASE_URL'];
 
   GetPaymentGatewaysModel getPaymentGatewaysModel = GetPaymentGatewaysModel();
@@ -208,12 +212,16 @@ class _PaymentMethodByReceiverSheetState
                         // ),
                         GestureDetector(
                           onTap: () async {
-                            await getPaymentGateways();
-                            setState(() {
-                              // isSelectedBank = false;
-                              isSelectedCash = true;
-                              print("cashId: $cashId");
-                            });
+                            if (!isApiCalled) {
+                              setState(() {
+                                // isSelectedBank = false;
+                                isApiCalled = true;
+                                isSelectedCash = true;
+                                print("cashId: $cashId");
+                                print("isApiCalled: $isApiCalled");
+                              });
+                              await getPaymentGateways();
+                            }
                           },
                           child: Stack(
                             children: [
@@ -296,8 +304,9 @@ class _PaymentMethodByReceiverSheetState
                       if (isSelectedCash == true) {
                         Map? updatedData = Map.from(widget.singleData!);
                         Map? updatedData2 = Map.from(widget.multipleData!);
-                        if(widget.multipleData!["delivery_type"] == "Multiple") {
-                          if(updatedData2.isNotEmpty) {
+                        if (widget.multipleData!["delivery_type"] ==
+                            "Multiple") {
+                          if (updatedData2.isNotEmpty) {
                             updatedData2.addAll({
                               "payment_gateways_id": cashId,
                             });
@@ -305,7 +314,7 @@ class _PaymentMethodByReceiverSheetState
                             updatedData2 = {};
                           }
                         } else {
-                          if(updatedData.isNotEmpty) {
+                          if (updatedData.isNotEmpty) {
                             updatedData.addAll({
                               "payment_gateways_id": cashId,
                             });

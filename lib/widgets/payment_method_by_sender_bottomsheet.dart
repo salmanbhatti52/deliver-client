@@ -14,7 +14,9 @@ bool isSelectedCard = false;
 class PaymentMethodBySenderSheet extends StatefulWidget {
   final Map? singleData;
   final Map? multipleData;
-  const PaymentMethodBySenderSheet({super.key, this.singleData, this.multipleData});
+
+  const PaymentMethodBySenderSheet(
+      {super.key, this.singleData, this.multipleData});
 
   @override
   State<PaymentMethodBySenderSheet> createState() =>
@@ -24,6 +26,7 @@ class PaymentMethodBySenderSheet extends StatefulWidget {
 class _PaymentMethodBySenderSheetState
     extends State<PaymentMethodBySenderSheet> {
   String? cardId;
+  bool isApiCalled = false;
   String? baseUrl = dotenv.env['BASE_URL'];
 
   GetPaymentGatewaysModel getPaymentGatewaysModel = GetPaymentGatewaysModel();
@@ -136,11 +139,15 @@ class _PaymentMethodBySenderSheetState
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            await getPaymentGateways();
-                            setState(() {
-                              isSelectedCard = true;
-                              print("cardId: $cardId");
-                            });
+                            if (!isApiCalled) {
+                              setState(() {
+                                isApiCalled = true;
+                                isSelectedCard = true;
+                                print("cardId: $cardId");
+                                print("isApiCalled: $isApiCalled");
+                              });
+                              await getPaymentGateways();
+                            }
                           },
                           child: Stack(
                             children: [
@@ -214,8 +221,8 @@ class _PaymentMethodBySenderSheetState
                     onTap: () {
                       Map? updatedData = Map.from(widget.singleData!);
                       Map? updatedData2 = Map.from(widget.multipleData!);
-                      if(widget.multipleData!["delivery_type"] == "Multiple") {
-                        if(updatedData2.isNotEmpty) {
+                      if (widget.multipleData!["delivery_type"] == "Multiple") {
+                        if (updatedData2.isNotEmpty) {
                           updatedData2.addAll({
                             "payment_gateways_id": cardId,
                           });
@@ -223,7 +230,7 @@ class _PaymentMethodBySenderSheetState
                           updatedData2 = {};
                         }
                       } else {
-                        if(updatedData.isNotEmpty) {
+                        if (updatedData.isNotEmpty) {
                           updatedData.addAll({
                             "payment_gateways_id": cardId,
                           });

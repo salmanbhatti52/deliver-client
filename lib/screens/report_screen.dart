@@ -792,7 +792,7 @@ class _ReportScreenState extends State<ReportScreen> {
         ),
         insetPadding: const EdgeInsets.only(left: 20, right: 20),
         child: SizedBox(
-          height: size.height * 0.59,
+          height: size.height * 0.58,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -821,7 +821,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   ),
                 ),
                 Text(
-                  'Lorem ipsum dolor sit amet,\nconsetetur sadipscing elitr, sed\ndiam nonumy eirmod tempor\ninvidunt ut labore et dolore',
+                  'Your report has been submitted successfully. We will investigate the issue thoroughly and take appropriate action.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: blackColor,
