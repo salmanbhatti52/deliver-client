@@ -8,8 +8,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:deliver_client/models/get_payment_getaways_model.dart';
-import 'package:lottie/lottie.dart';
-// import 'package:deliver_client/screens/payment/pay_via_bank_screen.dart';
 
 // bool isSelectedBank = true;
 bool isSelectedCash = false;
@@ -217,10 +215,10 @@ class _PaymentMethodByReceiverSheetState
                                 // isSelectedBank = false;
                                 isApiCalled = true;
                                 isSelectedCash = true;
-                                print("cashId: $cashId");
-                                print("isApiCalled: $isApiCalled");
                               });
                               await getPaymentGateways();
+                              print("cashId: $cashId");
+                              print("isApiCalled: $isApiCalled");
                             }
                           },
                           child: Stack(

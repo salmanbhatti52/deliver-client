@@ -93,329 +93,334 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
       },
-      child: Scaffold(
-        backgroundColor: transparentColor,
-        body: Stack(
-          children: [
-            Image.asset(
-              'assets/images/payment-location-background.png',
-              width: size.width,
-              height: size.height,
-              fit: BoxFit.cover,
-            ),
-            Positioned(
-              top: 45,
-              left: 0,
-              right: 0,
-              child: Text(
-                "Rate Driver",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: blackColor,
-                  fontSize: 20,
-                  fontFamily: 'Syne-Bold',
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+          backgroundColor: transparentColor,
+          body: Stack(
+            children: [
+              Image.asset(
+                'assets/images/payment-location-background.png',
+                width: size.width,
+                height: size.height,
+                fit: BoxFit.cover,
+              ),
+              Positioned(
+                top: 45,
+                left: 0,
+                right: 0,
+                child: Text(
+                  "Rate Driver",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: blackColor,
+                    fontSize: 20,
+                    fontFamily: 'Syne-Bold',
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
-                child: Container(
-                  width: size.width,
-                  height: size.height * 0.7,
-                  decoration: BoxDecoration(
-                    color: whiteColor,
+              Positioned(
+                bottom: 0,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          SizedBox(height: size.height * 0.04),
-                          SpeechBalloon(
-                            nipLocation: NipLocation.bottom,
-                            nipHeight: 12,
-                            borderColor: borderColor,
-                            width: size.width * 0.4,
-                            height: size.height * 0.07,
-                            borderRadius: 10,
-                            offset: const Offset(10, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Container(
-                                    color: transparentColor,
-                                    width: 40,
-                                    height: 40,
-                                    child: FadeInImage(
-                                      placeholder: const AssetImage(
-                                        "assets/images/user-profile.png",
+                  child: Container(
+                    width: size.width,
+                    height: size.height * 0.7,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: size.height * 0.04),
+                            SpeechBalloon(
+                              nipLocation: NipLocation.bottom,
+                              nipHeight: 12,
+                              borderColor: borderColor,
+                              width: size.width * 0.4,
+                              height: size.height * 0.07,
+                              borderRadius: 10,
+                              offset: const Offset(10, 0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Container(
+                                      color: transparentColor,
+                                      width: 40,
+                                      height: 40,
+                                      child: FadeInImage(
+                                        placeholder: const AssetImage(
+                                          "assets/images/user-profile.png",
+                                        ),
+                                        image: NetworkImage(
+                                          '$imageUrl${widget.riderData!.profilePic}',
+                                        ),
+                                        fit: BoxFit.cover,
                                       ),
-                                      image: NetworkImage(
-                                        '$imageUrl${widget.riderData!.profilePic}',
-                                      ),
-                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: size.width * 0.02),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "${widget.riderData!.firstName}",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: blackColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Syne-SemiBold',
+                                  SizedBox(width: size.width * 0.02),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${widget.riderData!.firstName}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Syne-SemiBold',
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "Rider",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: textHaveAccountColor,
-                                        fontSize: 12,
-                                        fontFamily: 'Syne-Regular',
+                                      Text(
+                                        "Rider",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: textHaveAccountColor,
+                                          fontSize: 12,
+                                          fontFamily: 'Syne-Regular',
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: size.height * 0.03),
-                          Text(
-                            "Thank you!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: blackColor,
-                              fontSize: 16,
-                              fontFamily: 'Syne-Bold',
-                            ),
-                          ),
-                          SizedBox(height: size.height * 0.04),
-                          Text(
-                            "Your feedback will improve our service.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: blackColor,
-                              fontSize: 16,
-                              fontFamily: 'Syne-Regular',
-                            ),
-                          ),
-                          SizedBox(height: size.height * 0.03),
-                          RatingBar(
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            glowColor: orangeColor,
-                            itemCount: 5,
-                            initialRating: 0.0,
-                            maxRating: 5.0,
-                            minRating: 0.5,
-                            ratingWidget: RatingWidget(
-                              full: SvgPicture.asset(
-                                  'assets/images/star-filled-icon.svg'),
-                              half: SvgPicture.asset(
-                                  'assets/images/star-half-filled-icon.svg'),
-                              empty: SvgPicture.asset(
-                                  'assets/images/star-empty-icon.svg'),
-                            ),
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            onRatingUpdate: (rating) {
-                              setState(() {
-                                ratingValue = rating;
-                              });
-                              print('ratingValue: $ratingValue');
-                            },
-                          ),
-                          SizedBox(height: size.height * 0.03),
-                          Container(
-                            height: size.height * 0.15,
-                            decoration: BoxDecoration(
-                              color: filledColor,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: filledColor,
-                                width: 1.0,
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            child: TextFormField(
-                              controller: additionalCommentsController,
-                              cursorColor: orangeColor,
-                              keyboardType: TextInputType.text,
-                              maxLines: null,
-                              // validator: (value) {
-                              //   if (value == null || value.isEmpty) {
-                              //     return 'Additional Comments field is required!';
-                              //   }
-                              //   return null;
-                              // },
+                            SizedBox(height: size.height * 0.03),
+                            Text(
+                              "Thank you!",
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: blackColor,
-                                fontSize: 14,
-                                fontFamily: 'Inter-Regular',
+                                fontSize: 16,
+                                fontFamily: 'Syne-Bold',
                               ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: filledColor,
-                                errorStyle: TextStyle(
-                                  color: redColor,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter-Bold',
+                            ),
+                            SizedBox(height: size.height * 0.04),
+                            Text(
+                              "Your feedback will improve our service.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 16,
+                                fontFamily: 'Syne-Regular',
+                              ),
+                            ),
+                            SizedBox(height: size.height * 0.03),
+                            RatingBar(
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              glowColor: orangeColor,
+                              itemCount: 5,
+                              initialRating: 0.0,
+                              maxRating: 5.0,
+                              minRating: 0.5,
+                              ratingWidget: RatingWidget(
+                                full: SvgPicture.asset(
+                                    'assets/images/star-filled-icon.svg'),
+                                half: SvgPicture.asset(
+                                    'assets/images/star-half-filled-icon.svg'),
+                                empty: SvgPicture.asset(
+                                    'assets/images/star-empty-icon.svg'),
+                              ),
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              onRatingUpdate: (rating) {
+                                setState(() {
+                                  ratingValue = rating;
+                                });
+                                print('ratingValue: $ratingValue');
+                              },
+                            ),
+                            SizedBox(height: size.height * 0.03),
+                            Container(
+                              height: size.height * 0.15,
+                              decoration: BoxDecoration(
+                                color: filledColor,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: filledColor,
+                                  width: 1.0,
                                 ),
-                                border: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
+                              ),
+                              child: TextFormField(
+                                controller: additionalCommentsController,
+                                cursorColor: orangeColor,
+                                keyboardType: TextInputType.text,
+                                maxLines: null,
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return 'Additional Comments field is required!';
+                                //   }
+                                //   return null;
+                                // },
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Inter-Regular',
                                 ),
-                                enabledBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedErrorBorder: const OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  borderSide: BorderSide(
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: filledColor,
+                                  errorStyle: TextStyle(
                                     color: redColor,
-                                    width: 1,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter-Bold',
                                   ),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                hintText: "Additional Comments",
-                                hintStyle: TextStyle(
-                                  color: hintColor,
-                                  fontSize: 12,
-                                  fontFamily: 'Inter-Light',
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedErrorBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    borderSide: BorderSide(
+                                      color: redColor,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  hintText: "Additional Comments",
+                                  hintStyle: TextStyle(
+                                    color: hintColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter-Light',
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: size.height * 0.04),
-                          GestureDetector(
-                            onTap: () async {
-                              if (additionalCommentsController.text.isEmpty ||
-                                  ratingValue == null) {
-                                if (ratingValue == null) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please rate the rider!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                } else if (additionalCommentsController
-                                    .text.isEmpty) {
-                                  Fluttertoast.showToast(
-                                    msg: "Please add a comment!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
-                                    fontSize: 12,
-                                  );
-                                }
-                              } else {
-                                await rateRider();
-                                if (rateRiderModel.status == "success") {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePageScreen()),
-                                      (Route<dynamic> route) => false);
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => PayTipScreen(
-                                  //       riderData: widget.riderData!,
-                                  //     ),
-                                  //   ),
-                                  // );
-                                  setState(() {
-                                    isLoading = false;
-                                  });
+                            SizedBox(height: size.height * 0.04),
+                            GestureDetector(
+                              onTap: () async {
+                                if (additionalCommentsController.text.isEmpty ||
+                                    ratingValue == null) {
+                                  if (ratingValue == null) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please rate the rider!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  } else if (additionalCommentsController
+                                      .text.isEmpty) {
+                                    Fluttertoast.showToast(
+                                      msg: "Please add a comment!",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
+                                  }
                                 } else {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                  print("Something went wrong!");
+                                  await rateRider();
+                                  if (rateRiderModel.status == "success") {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomePageScreen()),
+                                        (Route<dynamic> route) => false);
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => PayTipScreen(
+                                    //       riderData: widget.riderData!,
+                                    //     ),
+                                    //   ),
+                                    // );
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    print("Something went wrong!");
+                                  }
                                 }
-                              }
-                            },
-                            child: isLoading
-                                ? buttonGradientWithLoader(
-                                    "Please Wait...", context)
-                                : buttonGradient("SUBMIT", context),
-                          ),
-                          SizedBox(height: size.height * 0.02),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => rebookRide(context),
-                              );
-                            },
-                            child: buttonTransparentGradient("REBOOK", context),
-                          ),
-                          SizedBox(height: size.height * 0.02),
-                        ],
+                              },
+                              child: isLoading
+                                  ? buttonGradientWithLoader(
+                                      "Please Wait...", context)
+                                  : buttonGradient("SUBMIT", context),
+                            ),
+                            SizedBox(height: size.height * 0.02),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => rebookRide(context),
+                                );
+                              },
+                              child: buttonTransparentGradient("REBOOK", context),
+                            ),
+                            SizedBox(height: size.height * 0.02),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 40,
-              left: 20,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: SvgPicture.asset(
-                  'assets/images/back-icon.svg',
-                  fit: BoxFit.scaleDown,
-                ),
-              ),
-            ),
-          ],
+              // Positioned(
+              //   top: 40,
+              //   left: 20,
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       Navigator.pop(context);
+              //     },
+              //     child: SvgPicture.asset(
+              //       'assets/images/back-icon.svg',
+              //       fit: BoxFit.scaleDown,
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
     );

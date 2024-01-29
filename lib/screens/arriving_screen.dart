@@ -181,7 +181,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
   }
 
   getLocationSingle() {
-    if (widget.singleData != null) {
+    if (widget.singleData!.isNotEmpty) {
       latPickup = " ${widget.singleData!['pickup_latitude']}";
       lngPickup = "${widget.singleData!['pickup_longitude']}";
       pickupLat = double.parse(latPickup!);
@@ -200,7 +200,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
   }
 
   getLocationMultiple() {
-    if (widget.multipleData != null) {
+    if (widget.multipleData!.isNotEmpty) {
       latPickup = " ${widget.multipleData!['pickup_latitude0']}";
       lngPickup = "${widget.multipleData!['pickup_longitude0']}";
       pickupLat = double.parse(latPickup!);
@@ -374,7 +374,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     loadCustomMarker();
     // getPolyPoints();
     if (widget.singleData != null) {
-      getPolyPoints();
+      // getPolyPoints();
       getLocationSingle();
       loadCustomPickupMarker();
     } else {
@@ -461,19 +461,19 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                   BitmapDescriptor.defaultMarker,
                             ),
                           },
-                          polylines: {
-                            Polyline(
-                              polylineId: const PolylineId("polyline"),
-                              points: polylineCoordinates,
-                              color: orangeColor,
-                              geodesic: true,
-                              patterns: [
-                                PatternItem.dash(40),
-                                PatternItem.gap(10),
-                              ],
-                              width: 6,
-                            ),
-                          },
+                          // polylines: {
+                          //   Polyline(
+                          //     polylineId: const PolylineId("polyline"),
+                          //     points: polylineCoordinates,
+                          //     color: orangeColor,
+                          //     geodesic: true,
+                          //     patterns: [
+                          //       PatternItem.dash(40),
+                          //       PatternItem.gap(10),
+                          //     ],
+                          //     width: 6,
+                          //   ),
+                          // },
                         ),
                       ),
                       Positioned(

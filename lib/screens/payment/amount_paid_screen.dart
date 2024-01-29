@@ -39,10 +39,23 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
 
-  getLocation() {
-    if (widget.singleData != null) {
+  getLocationSingle() {
+    if (widget.singleData!.isNotEmpty) {
       latDest = "${widget.singleData!['destin_latitude']}";
       lngDest = "${widget.singleData!['destin_longitude']}";
+      destLat = double.parse(latDest!);
+      destLng = double.parse(lngDest!);
+      print("destLat: $destLat");
+      print("destLng: $destLng");
+    } else {
+      print("No LatLng Data");
+    }
+  }
+
+  getLocationMultiple() {
+    if (widget.multipleData!.isNotEmpty) {
+      latDest = "${widget.multipleData!['destin_latitude0']}";
+      lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
       print("destLat: $destLat");
@@ -64,7 +77,13 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
   @override
   void initState() {
     super.initState();
-    getLocation();
+    if (widget.singleData!.isNotEmpty) {
+      getLocationSingle();
+    } else {
+      getLocationMultiple();
+      print("Multiple data so no polyline will be shown!");
+      print("Multiple data so no custom marker will be shown!");
+    }
     loadCustomMarker();
   }
 
@@ -156,7 +175,9 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                             overflow: TextOverflow.clip,
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: "${widget.singleData!['total_charges']}",
+                              text: widget.singleData!.isNotEmpty
+                                  ? widget.singleData!['total_charges']
+                                  : widget.multipleData!['total_charges'],
                               style: TextStyle(
                                 color: orangeColor,
                                 fontSize: 26,
@@ -214,18 +235,33 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                                     ),
                                   ),
                                   SizedBox(width: size.width * 0.085),
-                                  Text(
-                                    widget.singleData!["payment_gateways_id"] ==
-                                            '1'
-                                        ? "Cash"
-                                        : "Card",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 18,
-                                      fontFamily: 'Syne-Medium',
-                                    ),
-                                  ),
+                                  widget.singleData!.isNotEmpty
+                                      ? Text(
+                                          widget.singleData![
+                                                      "payment_gateways_id"] ==
+                                                  '1'
+                                              ? "Cash"
+                                              : "Card",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 18,
+                                            fontFamily: 'Syne-Medium',
+                                          ),
+                                        )
+                                      : Text(
+                                          widget.multipleData![
+                                                      "payment_gateways_id"] ==
+                                                  '1'
+                                              ? "Cash"
+                                              : "Card",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 18,
+                                            fontFamily: 'Syne-Medium',
+                                          ),
+                                        ),
                                 ],
                               ),
                             ],

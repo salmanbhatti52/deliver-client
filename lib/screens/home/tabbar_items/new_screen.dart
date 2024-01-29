@@ -933,18 +933,15 @@ class _NewScreenState extends State<NewScreen> {
                                           getAddressesModel.data![index];
                                       return ListTile(
                                         title: Text("${addresses.name}"),
-                                        subtitle:
-                                            Text(addresses.address ?? ''),
+                                        subtitle: Text(addresses.address ?? ''),
                                         onTap: () {
                                           addressesVisible = false;
                                           pickupController.text =
                                               "${addresses.address}";
-                                          final double savedLat =
-                                              double.parse(
-                                                  "${addresses.latitude}");
-                                          final double savedLng =
-                                              double.parse(
-                                                  "${addresses.longitude}");
+                                          final double savedLat = double.parse(
+                                              "${addresses.latitude}");
+                                          final double savedLng = double.parse(
+                                              "${addresses.longitude}");
                                           const double zoomLevel = 15.0;
                                           onPickUpLocationSavedAddresses(
                                               LatLng(savedLat, savedLng),
@@ -1077,15 +1074,14 @@ class _NewScreenState extends State<NewScreen> {
                                       return ListTile(
                                         title: Text(prediction.name),
                                         subtitle: Text(
-                                            prediction.formattedAddress ??
-                                                ''),
+                                            prediction.formattedAddress ?? ''),
                                         onTap: () {
                                           pickupController.text =
                                               prediction.formattedAddress!;
-                                          final double lat = prediction
-                                              .geometry!.location.lat;
-                                          final double lng = prediction
-                                              .geometry!.location.lng;
+                                          final double lat =
+                                              prediction.geometry!.location.lat;
+                                          final double lng =
+                                              prediction.geometry!.location.lng;
                                           const double zoomLevel = 15.0;
                                           onPickUpLocationSelected(
                                               LatLng(lat, lng), zoomLevel);
@@ -1221,8 +1217,7 @@ class _NewScreenState extends State<NewScreen> {
                                       destinationPredictions.clear();
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
-                                      print(
-                                          "destinationLat: $destinationLat");
+                                      print("destinationLat: $destinationLat");
                                       print("destinationLng $destinationLng");
                                       print(
                                           "destinationLocation: ${prediction.formattedAddress}");
@@ -2791,7 +2786,7 @@ class _NewScreenState extends State<NewScreen> {
                                                           alignment:
                                                               Alignment.topLeft,
                                                           child: Text(
-                                                            "Just a moment",
+                                                            "Just a moment...",
                                                             textAlign:
                                                                 TextAlign.left,
                                                             style: TextStyle(
@@ -3315,9 +3310,9 @@ class _NewScreenState extends State<NewScreen> {
                                                                 size.height *
                                                                     0.03),
                                                         Text(
-                                                          'Please make sure data is available before proceeding.',
+                                                          'Please wait while we are collecting the delivery information before proceeding.',
                                                           textAlign:
-                                                              TextAlign.left,
+                                                              TextAlign.center,
                                                           style: TextStyle(
                                                             color: blackColor,
                                                             fontSize: 14,

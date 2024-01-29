@@ -149,10 +149,23 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
     }
   }
 
-  getLocation() {
-    if (widget.singleData != null) {
+  getLocationSingle() {
+    if (widget.singleData!.isNotEmpty) {
       latDest = "${widget.singleData!['destin_latitude']}";
       lngDest = "${widget.singleData!['destin_longitude']}";
+      destLat = double.parse(latDest!);
+      destLng = double.parse(lngDest!);
+      print("destLat: $destLat");
+      print("destLng: $destLng");
+    } else {
+      print("No LatLng Data");
+    }
+  }
+
+  getLocationMultiple() {
+    if (widget.multipleData!.isNotEmpty) {
+      latDest = "${widget.multipleData!['destin_latitude0']}";
+      lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
       print("destLat: $destLat");
@@ -175,12 +188,25 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
   void initState() {
     super.initState();
     sharedPref();
-    getLocation();
+    if (widget.singleData!.isNotEmpty) {
+      getLocationSingle();
+    } else {
+      getLocationMultiple();
+      print("Multiple data so no polyline will be shown!");
+      print("Multiple data so no custom marker will be shown!");
+    }
     startPayStack();
     loadCustomMarker();
-    double parsedValue = double.parse(widget.singleData!['total_charges']);
-    totalAmount = (parsedValue + 0.5).floor();
-    print("Rounded Integer: $totalAmount");
+    if (widget.singleData!.isNotEmpty) {
+      double parsedValue = double.parse(widget.singleData!['total_charges']);
+      totalAmount = (parsedValue + 0.5).floor();
+      print("Rounded Integer: $totalAmount");
+    } else {
+      double parsedValue = double.parse(widget.multipleData!['total_charges']);
+      totalAmount = (parsedValue + 0.5).floor();
+      print("Rounded Integer: $totalAmount");
+    }
+
     // getAllSystemData();
   }
 
@@ -272,7 +298,9 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                             overflow: TextOverflow.clip,
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: "${widget.singleData!['total_charges']}",
+                              text: widget.singleData!.isNotEmpty
+                                  ? widget.singleData!['total_charges']
+                                  : widget.multipleData!['total_charges'],
                               style: TextStyle(
                                 color: orangeColor,
                                 fontSize: 26,
@@ -333,19 +361,33 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                                         ),
                                       ),
                                       SizedBox(width: size.width * 0.085),
-                                      Text(
-                                        widget.singleData![
-                                                    "payment_gateways_id"] ==
-                                                '1'
-                                            ? "Cash"
-                                            : "Card",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: orangeColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Syne-Medium',
-                                        ),
-                                      ),
+                                      widget.singleData!.isNotEmpty
+                                          ? Text(
+                                              widget.singleData![
+                                                          "payment_gateways_id"] ==
+                                                      '1'
+                                                  ? "Cash"
+                                                  : "Card",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: orangeColor,
+                                                fontSize: 18,
+                                                fontFamily: 'Syne-Medium',
+                                              ),
+                                            )
+                                          : Text(
+                                              widget.multipleData![
+                                                          "payment_gateways_id"] ==
+                                                      '1'
+                                                  ? "Cash"
+                                                  : "Card",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: orangeColor,
+                                                fontSize: 18,
+                                                fontFamily: 'Syne-Medium',
+                                              ),
+                                            ),
                                     ],
                                   ),
                                 ],
@@ -368,23 +410,47 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () {
-                              if (widget.singleData!["payment_gateways_id"] ==
-                                  '1') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AmountPaidScreen(
-                                      riderData: widget.riderData!,
-                                      singleData: widget.singleData,
-                                      multipleData: widget.multipleData,
-                                      currentBookingId: widget.currentBookingId,
-                                      bookingDestinationId:
-                                          widget.bookingDestinationId,
+                              if (widget.singleData!.isNotEmpty) {
+                                if (widget.singleData!["payment_gateways_id"] ==
+                                    '1') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AmountPaidScreen(
+                                        riderData: widget.riderData!,
+                                        singleData: widget.singleData,
+                                        multipleData: widget.multipleData,
+                                        currentBookingId:
+                                            widget.currentBookingId,
+                                        bookingDestinationId:
+                                            widget.bookingDestinationId,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  makePayment();
+                                }
                               } else {
-                                makePayment();
+                                if (widget
+                                        .multipleData!["payment_gateways_id"] ==
+                                    '1') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AmountPaidScreen(
+                                        riderData: widget.riderData!,
+                                        singleData: widget.singleData,
+                                        multipleData: widget.multipleData,
+                                        currentBookingId:
+                                            widget.currentBookingId,
+                                        bookingDestinationId:
+                                            widget.bookingDestinationId,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  makePayment();
+                                }
                               }
                             },
                             child: buttonGradient("PAY", context),

@@ -161,7 +161,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   getLocationSingle() {
-    if (widget.singleData != null) {
+    if (widget.singleData!.isNotEmpty) {
       latDest = "${widget.singleData!['destin_latitude']}";
       lngDest = "${widget.singleData!['destin_longitude']}";
       destLat = double.parse(latDest!);
@@ -180,7 +180,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   getLocationMultiple() {
-    if (widget.multipleData != null) {
+    if (widget.multipleData!.isNotEmpty) {
       latDest = "${widget.multipleData!['destin_latitude0']}";
       lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
@@ -254,10 +254,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
-    // loadCustomDestMarker();
-    // getPolyPoints()
-    if (widget.singleData != null) {
-      getPolyPoints();
+    if (widget.singleData!.isNotEmpty) {
+      // getPolyPoints();
       getLocationSingle();
       loadCustomDestMarker();
     } else {
@@ -332,19 +330,19 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                 BitmapDescriptor.defaultMarker,
                           ),
                         },
-                        polylines: {
-                          Polyline(
-                            polylineId: const PolylineId("polyline"),
-                            points: polylineCoordinates,
-                            color: orangeColor,
-                            geodesic: true,
-                            patterns: [
-                              PatternItem.dash(40),
-                              PatternItem.gap(10),
-                            ],
-                            width: 6,
-                          ),
-                        },
+                        // polylines: {
+                        //   Polyline(
+                        //     polylineId: const PolylineId("polyline"),
+                        //     points: polylineCoordinates,
+                        //     color: orangeColor,
+                        //     geodesic: true,
+                        //     patterns: [
+                        //       PatternItem.dash(40),
+                        //       PatternItem.gap(10),
+                        //     ],
+                        //     width: 6,
+                        //   ),
+                        // },
                       ),
                     ),
                     Positioned(

@@ -143,10 +143,10 @@ class _PaymentMethodBySenderSheetState
                               setState(() {
                                 isApiCalled = true;
                                 isSelectedCard = true;
-                                print("cardId: $cardId");
-                                print("isApiCalled: $isApiCalled");
                               });
                               await getPaymentGateways();
+                              print("cardId: $cardId");
+                              print("isApiCalled: $isApiCalled");
                             }
                           },
                           child: Stack(
