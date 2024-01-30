@@ -2039,19 +2039,15 @@ class _NewScreenState extends State<NewScreen> {
                       if (selectedRadio == 1) singleTextField(),
                       if (selectedRadio == 2) multiPageView(),
                       SizedBox(height: size.height * 0.012),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 22),
-                            child: SvgPicture.asset(
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
                               "assets/images/info-icon.svg",
                             ),
-                          ),
-                          SizedBox(width: size.width * 0.02),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 1.5, right: 16),
+                            SizedBox(width: size.width * 0.02),
+                            Expanded(
                               child: ButtonTheme(
                                 alignedDropdown: true,
                                 child: DropdownButtonHideUnderline(
@@ -2158,23 +2154,19 @@ class _NewScreenState extends State<NewScreen> {
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       SizedBox(height: size.height * 0.015),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 22),
-                            child: SvgPicture.asset(
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
                               "assets/images/info-icon.svg",
                             ),
-                          ),
-                          SizedBox(width: size.width * 0.02),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 1.5, right: 16),
+                            SizedBox(width: size.width * 0.02),
+                            Expanded(
                               child: ButtonTheme(
                                 alignedDropdown: true,
                                 child: DropdownButtonHideUnderline(
@@ -2277,8 +2269,8 @@ class _NewScreenState extends State<NewScreen> {
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       if (selectedRadio == 2)
                         Column(
