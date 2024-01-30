@@ -279,15 +279,21 @@ class _ChatScreenState extends State<ChatScreen> {
                                     decoration: BoxDecoration(
                                       color: transparentColor,
                                     ),
-                                    child: FadeInImage(
-                                      placeholder: const AssetImage(
-                                        "assets/images/user-profile.png",
-                                      ),
-                                      image: NetworkImage(
-                                        '$imageUrl${widget.image}',
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: widget.image != 'null' &&
+                                            widget.image != null
+                                        ? FadeInImage(
+                                            placeholder: const AssetImage(
+                                              "assets/images/user-profile.png",
+                                            ),
+                                            image: NetworkImage(
+                                              '$imageUrl${widget.image}',
+                                            ),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            "assets/images/user-profile.png",
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                 ),
                                 Positioned(
@@ -308,7 +314,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                   color: transparentColor,
                                   width: size.width * 0.55,
                                   child: Text(
-                                    "${widget.name}",
+                                    widget.name != 'null' && widget.name != null
+                                        ? "${widget.name}"
+                                        : "Rider",
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: blackColor,
@@ -329,7 +337,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                       color: transparentColor,
                                       width: size.width * 0.5,
                                       child: AutoSizeText(
-                                        "${widget.address}",
+                                        widget.address != 'null' &&
+                                                widget.address != null
+                                            ? "${widget.address}"
+                                            : "Unknown Location",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: supportTextColor,
@@ -517,16 +528,25 @@ class _ChatScreenState extends State<ChatScreen> {
                                                       decoration: BoxDecoration(
                                                         color: transparentColor,
                                                       ),
-                                                      child: FadeInImage(
-                                                        placeholder:
-                                                            const AssetImage(
-                                                          "assets/images/user-profile.png",
-                                                        ),
-                                                        image: NetworkImage(
-                                                          '$imageUrl${widget.image}',
-                                                        ),
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                      child: widget.image !=
+                                                                  'null' &&
+                                                              widget.image !=
+                                                                  null
+                                                          ? FadeInImage(
+                                                              placeholder:
+                                                                  const AssetImage(
+                                                                "assets/images/user-profile.png",
+                                                              ),
+                                                              image:
+                                                                  NetworkImage(
+                                                                '$imageUrl${widget.image}',
+                                                              ),
+                                                              fit: BoxFit.cover,
+                                                            )
+                                                          : Image.asset(
+                                                              "assets/images/user-profile.png",
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                     ),
                                                   ),
                                                   SizedBox(

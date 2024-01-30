@@ -14,11 +14,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/update_location_model.dart';
 
 String? userId;
+String? firstName;
 
 class UpdateLocationScreen extends StatefulWidget {
-  final String? firstName;
-
-  const UpdateLocationScreen({super.key, this.firstName});
+  const UpdateLocationScreen({super.key});
 
   @override
   State<UpdateLocationScreen> createState() => _UpdateLocationScreenState();
@@ -48,9 +47,18 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         currentLocation = LatLng(position.latitude, position.longitude);
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
-        print("currentpickupLocation: $currentAddress");
+        print("currentPickUpLocation: $currentAddress");
       });
     }
+  }
+
+  sharedPrefs() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    userId = sharedPref.getString('userId');
+    firstName = sharedPref.getString('firstName');
+    print('sharedPrefs userId: $userId');
+    print('sharedPrefs firstName: $firstName');
+    setState(() {});
   }
 
   UpdateLocationModel updateLocationModel = UpdateLocationModel();
@@ -60,8 +68,6 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
       setState(() {
         isLoading = true;
       });
-      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-      userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/update_location_customers";
       print("apiUrl: $apiUrl");
       print("latitude: $currentLat");
@@ -105,6 +111,12 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    sharedPrefs();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
@@ -145,7 +157,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
           children: [
             SizedBox(height: size.height * 0.03),
             Text(
-              "Hi, there! ${widget.firstName}",
+              "Hi, there! $firstName",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: orangeColor,

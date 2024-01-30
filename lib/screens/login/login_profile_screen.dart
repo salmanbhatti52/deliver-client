@@ -78,11 +78,17 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
             'firstName', "${createProfileModel.data?.firstName}");
         await sharedPref.setString(
             'lastName', "${createProfileModel.data?.lastName}");
+        await sharedPref.setString(
+            'phoneNumber', "${createProfileModel.data?.phone}");
+        await sharedPref.setString(
+            'profilePic', "${createProfileModel.data?.profilePic}");
         print(
             "sharedPref userId: ${createProfileModel.data!.usersCustomersId.toString()}");
         print("sharedPref email: ${createProfileModel.data!.email}");
         print("sharedPref firstName: ${createProfileModel.data!.firstName}");
         print("sharedPref lastName: ${createProfileModel.data!.lastName}");
+        print("sharedPref phoneNumber: ${createProfileModel.data!.phone}");
+        print("sharedPref profilePic: ${createProfileModel.data!.profilePic}");
         print('createProfileModel status: ${createProfileModel.status}');
         setState(() {});
       }

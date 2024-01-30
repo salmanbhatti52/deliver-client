@@ -77,12 +77,15 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
             'lastName', "${checkNumberModel.data?.lastName}");
         await sharedPref.setString(
             'phoneNumber', "${checkNumberModel.data?.phone}");
+        await sharedPref.setString(
+            'profilePic', "${checkNumberModel.data?.profilePic}");
         print(
             "sharedPref userId: ${checkNumberModel.data!.usersCustomersId.toString()}");
         print("sharedPref email: ${checkNumberModel.data!.email}");
         print("sharedPref firstName: ${checkNumberModel.data!.firstName}");
         print("sharedPref lastName: ${checkNumberModel.data!.lastName}");
         print("sharedPref phoneNumber: ${checkNumberModel.data!.phone}");
+        print("sharedPref profilePic: ${checkNumberModel.data!.profilePic}");
         setState(() {});
       }
     } catch (e) {

@@ -68,8 +68,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         editProfileModel = editProfileModelFromJson(responseString);
-        setState(() {});
+        SharedPreferences sharedPref = await SharedPreferences.getInstance();
+        await sharedPref.setString(
+            'firstName', "${editProfileModel.data?.firstName}");
+        await sharedPref.setString(
+            'lastName', "${editProfileModel.data?.lastName}");
+        await sharedPref.setString(
+            'profilePic', "${editProfileModel.data?.profilePic}");
+        print("sharedPref firstName: ${editProfileModel.data!.firstName}");
+        print("sharedPref lastName: ${editProfileModel.data!.lastName}");
+        print("sharedPref profilePic: ${editProfileModel.data!.profilePic}");
         print('editProfileModel status: ${editProfileModel.status}');
+        setState(() {});
       }
     } catch (e) {
       print('Something went wrong = ${e.toString()}');
