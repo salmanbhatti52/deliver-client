@@ -1532,11 +1532,14 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                   width: size.width * 0.02),
                                               GestureDetector(
                                                 onTap: () {
+                                                  timer?.cancel();
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           ReportScreen(
+                                                        callbackFunction:
+                                                            startTimer,
                                                         riderData:
                                                             widget.riderData,
                                                         currentBookingId: widget

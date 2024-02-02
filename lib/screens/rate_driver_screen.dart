@@ -175,7 +175,8 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                   SizedBox(width: size.width * 0.02),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "${widget.riderData!.firstName}",
@@ -378,7 +379,15 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                     setState(() {
                                       isLoading = false;
                                     });
-                                    print("Something went wrong!");
+                                    Fluttertoast.showToast(
+                                      msg: "Please rate the driver",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor: toastColor,
+                                      textColor: whiteColor,
+                                      fontSize: 12,
+                                    );
                                   }
                                 }
                               },
@@ -396,7 +405,8 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                   builder: (context) => rebookRide(context),
                                 );
                               },
-                              child: buttonTransparentGradient("REBOOK", context),
+                              child:
+                                  buttonTransparentGradient("REBOOK", context),
                             ),
                             SizedBox(height: size.height * 0.02),
                           ],

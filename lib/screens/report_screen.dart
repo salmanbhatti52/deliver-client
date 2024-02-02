@@ -21,13 +21,15 @@ import 'package:deliver_client/models/search_rider_model.dart';
 String? userId;
 
 class ReportScreen extends StatefulWidget {
-  final SearchRiderData? riderData;
   final String? currentBookingId;
+  final SearchRiderData? riderData;
+  final Function()? callbackFunction;
   final String? bookingDestinationId;
 
   const ReportScreen({
     super.key,
     this.riderData,
+    this.callbackFunction,
     this.currentBookingId,
     this.bookingDestinationId,
   });
@@ -267,6 +269,9 @@ class _ReportScreenState extends State<ReportScreen> {
         print('reportRiderModel status: ${reportRiderModel.status}');
         setState(() {
           isLoading2 = false;
+          base64ImageString = null;
+          base64VideoString = null;
+          base64AudioString = null;
         });
       }
     } catch (e) {
@@ -284,498 +289,538 @@ class _ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
+    return WillPopScope(
+      onWillPop: () async {
+        widget.callbackFunction!();
+        return true;
       },
-      child: Scaffold(
-          backgroundColor: bgColor,
-          appBar: AppBar(
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
             backgroundColor: bgColor,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: SvgPicture.asset(
-                  'assets/images/back-icon.svg',
-                  width: 22,
-                  height: 22,
-                  fit: BoxFit.scaleDown,
+            appBar: AppBar(
+              backgroundColor: bgColor,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    widget.callbackFunction!();
+                  },
+                  child: SvgPicture.asset(
+                    'assets/images/back-icon.svg',
+                    width: 22,
+                    height: 22,
+                    fit: BoxFit.scaleDown,
+                  ),
                 ),
               ),
-            ),
-            title: Text(
-              "Report Driver",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: blackColor,
-                fontSize: 20,
-                fontFamily: 'Syne-Bold',
+              title: Text(
+                "Report Driver",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blackColor,
+                  fontSize: 20,
+                  fontFamily: 'Syne-Bold',
+                ),
               ),
+              centerTitle: true,
             ),
-            centerTitle: true,
-          ),
-          body: widget.riderData != null
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(height: size.height * 0.03),
-                        Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              width: size.width * 0.4,
-                              height: size.height * 0.2,
-                              decoration: BoxDecoration(
-                                color: transparentColor,
-                              ),
-                              child: FadeInImage(
-                                placeholder: const AssetImage(
-                                  "assets/images/user-profile.png",
+            body: widget.riderData != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(height: size.height * 0.03),
+                          Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                width: size.width * 0.4,
+                                height: size.height * 0.2,
+                                decoration: BoxDecoration(
+                                  color: transparentColor,
                                 ),
-                                image: NetworkImage(
-                                  '$imageUrl${widget.riderData!.profilePic}',
+                                child: FadeInImage(
+                                  placeholder: const AssetImage(
+                                    "assets/images/user-profile.png",
+                                  ),
+                                  image: NetworkImage(
+                                    '$imageUrl${widget.riderData!.profilePic}',
+                                  ),
+                                  fit: BoxFit.cover,
                                 ),
-                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: size.height * 0.03),
-                        Text(
-                          '${widget.riderData!.firstName} ${widget.riderData!.lastName}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: drawerTextColor,
-                            fontSize: 17,
-                            fontFamily: 'Syne-Bold',
-                          ),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        Card(
-                          color: whiteColor,
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/star-icon.svg',
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Text(
-                                      '${widget.riderData!.bookingsRatings}',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter-Medium',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/car-icon.svg',
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Text(
-                                      '${widget.riderData!.trips} Trips',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter-Medium',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/images/arrival-time-icon.svg',
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Text(
-                                      '${widget.riderData!.experience}',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: drawerTextColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter-Medium',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Select Reason',
-                            textAlign: TextAlign.left,
+                          SizedBox(height: size.height * 0.03),
+                          Text(
+                            '${widget.riderData!.firstName} ${widget.riderData!.lastName}',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               color: drawerTextColor,
-                              fontSize: 16,
+                              fontSize: 17,
                               fontFamily: 'Syne-Bold',
                             ),
                           ),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        isLoading
-                            ? Center(
-                                child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  color: transparentColor,
-                                  child: Lottie.asset(
-                                    'assets/images/loading-icon.json',
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              )
-                            : getReasonModel.data != null
-                                ? Column(
+                          SizedBox(height: size.height * 0.02),
+                          Card(
+                            color: whiteColor,
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
                                     children: [
-                                      ListView.builder(
-                                        physics: const BouncingScrollPhysics(),
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        itemCount: getReasonModel.data!.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                selectedReasonId = getReasonModel
-                                                    .data![index]
-                                                    .bookingsReportsReasonsId
-                                                    .toString();
-                                                print(
-                                                    "selectedReasonId: $selectedReasonId, ${getReasonModel.data![index].reason}");
-                                              });
-                                            },
-                                            child: Card(
-                                              color: whiteColor,
-                                              elevation: 3,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width,
-                                                height: size.height * 0.07,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 20),
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: Text(
-                                                          "${getReasonModel.data![index].reason}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color:
-                                                                drawerTextColor,
-                                                            fontSize: 16,
-                                                            fontFamily:
-                                                                'Syne-Medium',
+                                      SvgPicture.asset(
+                                        'assets/images/star-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        '${widget.riderData!.bookingsRatings}',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: drawerTextColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/car-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        '${widget.riderData!.trips} Trips',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: drawerTextColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/arrival-time-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        '${widget.riderData!.experience}',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: drawerTextColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Select Reason',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: drawerTextColor,
+                                fontSize: 16,
+                                fontFamily: 'Syne-Bold',
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          isLoading
+                              ? Center(
+                                  child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: transparentColor,
+                                    child: Lottie.asset(
+                                      'assets/images/loading-icon.json',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                              : getReasonModel.data != null
+                                  ? Column(
+                                      children: [
+                                        ListView.builder(
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemCount:
+                                              getReasonModel.data!.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedReasonId = getReasonModel
+                                                      .data![index]
+                                                      .bookingsReportsReasonsId
+                                                      .toString();
+                                                  print(
+                                                      "selectedReasonId: $selectedReasonId, ${getReasonModel.data![index].reason}");
+                                                });
+                                              },
+                                              child: Card(
+                                                color: whiteColor,
+                                                elevation: 3,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width,
+                                                  height: size.height * 0.07,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20),
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          color:
+                                                              transparentColor,
+                                                          width:
+                                                              size.width * 0.65,
+                                                          child: Text(
+                                                            "${getReasonModel.data![index].reason}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  drawerTextColor,
+                                                              fontSize: 16,
+                                                              fontFamily:
+                                                                  'Syne-Medium',
+                                                            ),
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
                                                         ),
-                                                      ),
-                                                      const Spacer(),
-                                                      if (selectedReasonId ==
-                                                          getReasonModel
-                                                              .data![index]
-                                                              .bookingsReportsReasonsId
-                                                              .toString())
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              // Deselect the item when the checkmark is tapped again
-                                                              selectedReasonId =
-                                                                  null;
-                                                            });
-                                                          },
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            'assets/images/round-checkmark-icon.svg',
-                                                            fit: BoxFit
-                                                                .scaleDown,
-                                                          ),
-                                                        )
-                                                    ],
+                                                        const Spacer(),
+                                                        if (selectedReasonId ==
+                                                            getReasonModel
+                                                                .data![index]
+                                                                .bookingsReportsReasonsId
+                                                                .toString())
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                // Deselect the item when the checkmark is tapped again
+                                                                selectedReasonId =
+                                                                    null;
+                                                              });
+                                                            },
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              'assets/images/round-checkmark-icon.svg',
+                                                              fit: BoxFit
+                                                                  .scaleDown,
+                                                            ),
+                                                          )
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                : Center(
-                                    child: Text(
-                                      "No Reason Available",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: textHaveAccountColor,
-                                        fontSize: 24,
-                                        fontFamily: 'Syne-SemiBold',
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : Center(
+                                      child: Text(
+                                        "No Reason Available",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: textHaveAccountColor,
+                                          fontSize: 24,
+                                          fontFamily: 'Syne-SemiBold',
+                                        ),
                                       ),
                                     ),
-                                  ),
-                        SizedBox(height: size.height * 0.02),
-                        Container(
-                          height: size.height * 0.15,
-                          decoration: BoxDecoration(
-                            color: filledColor,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
+                          SizedBox(height: size.height * 0.02),
+                          Container(
+                            height: size.height * 0.15,
+                            decoration: BoxDecoration(
                               color: filledColor,
-                              width: 1.0,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: filledColor,
+                                width: 1.0,
+                              ),
                             ),
-                          ),
-                          child: TextFormField(
-                            controller: otherController,
-                            cursorColor: orangeColor,
-                            keyboardType: TextInputType.text,
-                            maxLines: null,
-                            style: TextStyle(
-                              color: blackColor,
-                              fontSize: 14,
-                              fontFamily: 'Inter-Regular',
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: filledColor,
-                              errorStyle: TextStyle(
-                                color: redColor,
-                                fontSize: 12,
-                                fontFamily: 'Inter-Bold',
+                            child: TextFormField(
+                              controller: otherController,
+                              cursorColor: orangeColor,
+                              keyboardType: TextInputType.text,
+                              maxLines: null,
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 14,
+                                fontFamily: 'Inter-Regular',
                               ),
-                              border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedErrorBorder: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide.none,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: filledColor,
+                                errorStyle: TextStyle(
                                   color: redColor,
-                                  width: 1,
+                                  fontSize: 12,
+                                  fontFamily: 'Inter-Bold',
                                 ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              hintText: "Any Other Reason (Optional)",
-                              hintStyle: TextStyle(
-                                color: hintColor,
-                                fontSize: 12,
-                                fontFamily: 'Inter-Light',
+                                border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                focusedErrorBorder: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  borderSide: BorderSide(
+                                    color: redColor,
+                                    width: 1,
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                hintText: "Any Other Reason (Optional)",
+                                hintStyle: TextStyle(
+                                  color: hintColor,
+                                  fontSize: 12,
+                                  fontFamily: 'Inter-Light',
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Upload Evidence',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: drawerTextColor,
-                              fontSize: 16,
-                              fontFamily: 'Syne-Bold',
+                          SizedBox(height: size.height * 0.02),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Upload Evidence',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: drawerTextColor,
+                                fontSize: 16,
+                                fontFamily: 'Syne-Bold',
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                String? newImage = await pickImage();
-                                if (newImage != null) {
-                                  setState(() {
-                                    base64ImageString = newImage;
-                                  });
-                                }
-                              },
-                              child: Card(
-                                color: whiteColor,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    color: transparentColor,
-                                    width: size.width * 0.25,
-                                    height: size.height * 0.12,
-                                    child: base64ImageString != null
-                                        ? Image.memory(
-                                            // Display the selected image if available
-                                            base64Decode(base64ImageString!),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/images/evidence-picture-icon.svg',
-                                            fit: BoxFit.scaleDown,
-                                          ),
+                          SizedBox(height: size.height * 0.02),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  String? newImage = await pickImage();
+                                  if (newImage != null) {
+                                    setState(() {
+                                      base64ImageString = newImage;
+                                    });
+                                  }
+                                },
+                                child: Card(
+                                  color: whiteColor,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                pickVideo();
-                              },
-                              child: Card(
-                                color: whiteColor,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    color: transparentColor,
-                                    width: size.width * 0.25,
-                                    height: size.height * 0.12,
-                                    child: isVideoSelected
-                                        ? Image.memory(
-                                            videoThumbnailBytes!,
-                                            fit: BoxFit
-                                                .cover, // You can adjust the fit as needed
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/images/evidence-video-icon.svg',
-                                            // Replace with your default image
-                                            fit: BoxFit.scaleDown,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                pickAndSetAudio();
-                              },
-                              child: Card(
-                                color: whiteColor,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    color: transparentColor,
-                                    width: size.width * 0.25,
-                                    height: size.height * 0.12,
-                                    child: SvgPicture.asset(
-                                      svgImagePath, // Use the dynamic image path
-                                      fit: BoxFit.scaleDown,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      color: transparentColor,
+                                      width: size.width * 0.25,
+                                      height: size.height * 0.12,
+                                      child: base64ImageString != null
+                                          ? Image.memory(
+                                              // Display the selected image if available
+                                              base64Decode(base64ImageString!),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : SvgPicture.asset(
+                                              'assets/images/evidence-picture-icon.svg',
+                                              fit: BoxFit.scaleDown,
+                                            ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: size.height * 0.04),
-                        GestureDetector(
-                          onTap: () async {
-                            await reportRider();
-                            if (reportRiderModel.status == 'success') {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (context) => confirmDialog(),
-                              );
-                            } else {
-                              Fluttertoast.showToast(
-                                msg:
-                                    "Something went wrong. Please try again later!",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 2,
-                                backgroundColor: toastColor,
-                                textColor: whiteColor,
-                                fontSize: 12,
-                              );
-                            }
-                          },
-                          child: isLoading2
-                              ? buttonGradientWithLoader(
-                                  "Please Wait...", context)
-                              : buttonGradient("SUBMIT", context),
-                        ),
-                        SizedBox(height: size.height * 0.02),
-                      ],
+                              GestureDetector(
+                                onTap: () {
+                                  pickVideo();
+                                },
+                                child: Card(
+                                  color: whiteColor,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      color: transparentColor,
+                                      width: size.width * 0.25,
+                                      height: size.height * 0.12,
+                                      child: isVideoSelected
+                                          ? Image.memory(
+                                              videoThumbnailBytes!,
+                                              fit: BoxFit
+                                                  .cover, // You can adjust the fit as needed
+                                            )
+                                          : SvgPicture.asset(
+                                              'assets/images/evidence-video-icon.svg',
+                                              // Replace with your default image
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  pickAndSetAudio();
+                                },
+                                child: Card(
+                                  color: whiteColor,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      color: transparentColor,
+                                      width: size.width * 0.25,
+                                      height: size.height * 0.12,
+                                      child: SvgPicture.asset(
+                                        svgImagePath, // Use the dynamic image path
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: size.height * 0.04),
+                          GestureDetector(
+                            onTap: () async {
+                              if (selectedReasonId == null) {
+                                Fluttertoast.showToast(
+                                  msg: "Please select a reason!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: toastColor,
+                                  textColor: whiteColor,
+                                  fontSize: 12,
+                                );
+                              } else if (base64ImageString == null &&
+                                  base64AudioString == null &&
+                                  base64VideoString == null) {
+                                Fluttertoast.showToast(
+                                  msg: "Please upload at least one evidence!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 2,
+                                  backgroundColor: toastColor,
+                                  textColor: whiteColor,
+                                  fontSize: 12,
+                                );
+                                setState(() {
+                                  isLoading2 = false;
+                                });
+                                return;
+                              } else {
+                                await reportRider();
+                                if (reportRiderModel.status == 'success') {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) => confirmDialog(),
+                                  );
+                                } else {
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        "Something went wrong. Please try again later!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor: toastColor,
+                                    textColor: whiteColor,
+                                    fontSize: 12,
+                                  );
+                                }
+                              }
+                            },
+                            child: isLoading2
+                                ? buttonGradientWithLoader(
+                                    "Please Wait...", context)
+                                : buttonGradient("SUBMIT", context),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              : Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    color: transparentColor,
-                    child: Lottie.asset(
-                      'assets/images/loading-icon.json',
-                      fit: BoxFit.cover,
+                  )
+                : Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      color: transparentColor,
+                      child: Lottie.asset(
+                        'assets/images/loading-icon.json',
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                )),
+                  )),
+      ),
     );
   }
 
@@ -833,6 +878,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
+                    widget.callbackFunction!();
                     // Navigator.of(context).pushAndRemoveUntil(
                     //     MaterialPageRoute(
                     //         builder: (context) => const HomePageScreen()),
