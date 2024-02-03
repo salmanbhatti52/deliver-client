@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -138,16 +138,10 @@ class _PaymentMethodBySenderSheetState
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
-                          onTap: () async {
-                            if (!isApiCalled) {
-                              setState(() {
-                                isApiCalled = true;
-                                isSelectedCard = true;
-                              });
-                              await getPaymentGateways();
-                              print("cardId: $cardId");
-                              print("isApiCalled: $isApiCalled");
-                            }
+                          onTap: () {
+                            setState(() {
+                              isSelectedCard = true;
+                            });
                           },
                           child: Stack(
                             children: [
@@ -218,37 +212,53 @@ class _PaymentMethodBySenderSheetState
                   ),
                   SizedBox(height: size.height * 0.04),
                   GestureDetector(
-                    onTap: () {
-                      Map? updatedData = Map.from(widget.singleData!);
-                      Map? updatedData2 = Map.from(widget.multipleData!);
-                      if (widget.multipleData!["delivery_type"] == "Multiple") {
-                        if (updatedData2.isNotEmpty) {
-                          updatedData2.addAll({
-                            "payment_gateways_id": cardId,
+                    onTap: () async {
+                      if (!isApiCalled) {
+                        setState(() {
+                          isApiCalled = true;
+                        });
+
+                        await getPaymentGateways();
+                        print("cardId: $cardId");
+                        print("isApiCalled: $isApiCalled");
+
+                        if (getPaymentGatewaysModel.status == "success") {
+                          Map? updatedData = Map.from(widget.singleData!);
+                          Map? updatedData2 = Map.from(widget.multipleData!);
+                          if (widget.multipleData!["delivery_type"] ==
+                              "Multiple") {
+                            if (updatedData2.isNotEmpty) {
+                              updatedData2.addAll({
+                                "payment_gateways_id": cardId,
+                              });
+                            } else {
+                              updatedData2 = {};
+                            }
+                          } else {
+                            if (updatedData.isNotEmpty) {
+                              updatedData.addAll({
+                                "payment_gateways_id": cardId,
+                              });
+                            } else {
+                              updatedData = {};
+                            }
+                          }
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchRidersScreen(
+                                singleData: updatedData,
+                                multipleData: updatedData2,
+                              ),
+                            ),
+                          ).then((value) {
+                            setState(() {
+                              isApiCalled = false;
+                            });
                           });
-                        } else {
-                          updatedData2 = {};
-                        }
-                      } else {
-                        if (updatedData.isNotEmpty) {
-                          updatedData.addAll({
-                            "payment_gateways_id": cardId,
-                          });
-                        } else {
-                          updatedData = {};
                         }
                       }
-                      Future.delayed(const Duration(seconds: 2), () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SearchRidersScreen(
-                              singleData: updatedData,
-                              multipleData: updatedData2,
-                            ),
-                          ),
-                        );
-                      });
                     },
                     child: bottomSheetButtonGradientBig("NEXT", context),
                   ),

@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -209,17 +209,11 @@ class _PaymentMethodByReceiverSheetState
                         //   ),
                         // ),
                         GestureDetector(
-                          onTap: () async {
-                            if (!isApiCalled) {
-                              setState(() {
-                                // isSelectedBank = false;
-                                isApiCalled = true;
-                                isSelectedCash = true;
-                              });
-                              await getPaymentGateways();
-                              print("cashId: $cashId");
-                              print("isApiCalled: $isApiCalled");
-                            }
+                          onTap: () {
+                            setState(() {
+                              // isSelectedBank = false;
+                              isSelectedCash = true;
+                            });
                           },
                           child: Stack(
                             children: [
@@ -290,37 +284,38 @@ class _PaymentMethodByReceiverSheetState
                   ),
                   SizedBox(height: size.height * 0.04),
                   GestureDetector(
-                    onTap: () {
-                      // if (isSelectedBank == true) {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => const PayViaBankScreen(),
-                      //     ),
-                      //   );
-                      // }
-                      if (isSelectedCash == true) {
-                        Map? updatedData = Map.from(widget.singleData!);
-                        Map? updatedData2 = Map.from(widget.multipleData!);
-                        if (widget.multipleData!["delivery_type"] ==
-                            "Multiple") {
-                          if (updatedData2.isNotEmpty) {
-                            updatedData2.addAll({
-                              "payment_gateways_id": cashId,
-                            });
+                    onTap: () async {
+                      if (!isApiCalled) {
+                        setState(() {
+                          isApiCalled = true;
+                        });
+
+                        await getPaymentGateways();
+                        print("cashId: $cashId");
+                        print("isApiCalled: $isApiCalled");
+
+                        if (getPaymentGatewaysModel.status == "success") {
+                          Map? updatedData = Map.from(widget.singleData!);
+                          Map? updatedData2 = Map.from(widget.multipleData!);
+                          if (widget.multipleData!["delivery_type"] ==
+                              "Multiple") {
+                            if (updatedData2.isNotEmpty) {
+                              updatedData2.addAll({
+                                "payment_gateways_id": cashId,
+                              });
+                            } else {
+                              updatedData2 = {};
+                            }
                           } else {
-                            updatedData2 = {};
+                            if (updatedData.isNotEmpty) {
+                              updatedData.addAll({
+                                "payment_gateways_id": cashId,
+                              });
+                            } else {
+                              updatedData = {};
+                            }
                           }
-                        } else {
-                          if (updatedData.isNotEmpty) {
-                            updatedData.addAll({
-                              "payment_gateways_id": cashId,
-                            });
-                          } else {
-                            updatedData = {};
-                          }
-                        }
-                        Future.delayed(const Duration(seconds: 2), () {
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -329,8 +324,12 @@ class _PaymentMethodByReceiverSheetState
                                 multipleData: updatedData2,
                               ),
                             ),
-                          );
-                        });
+                          ).then((value) {
+                            setState(() {
+                              isApiCalled = false;
+                            });
+                          });
+                        }
                       }
                     },
                     child: bottomSheetButtonGradientBig("NEXT", context),
