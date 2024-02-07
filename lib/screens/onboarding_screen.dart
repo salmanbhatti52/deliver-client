@@ -45,7 +45,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                 );
               },
-              child: buttonGradient('LOG IN', context),
+              child: buttonGradient("Get Started", context),
             ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -457,7 +457,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: size.height * 0.02),
+                    SizedBox(height: size.height * 0.04),
                     GestureDetector(
                       onTap: () async {
                         if (otpController.text.isNotEmpty) {
