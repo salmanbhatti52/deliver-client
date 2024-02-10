@@ -2,6 +2,8 @@
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:deliver_client/screens/home/drawer/legal_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +29,7 @@ class LoginProfileScreen extends StatefulWidget {
 }
 
 class _LoginProfileScreenState extends State<LoginProfileScreen> {
+  bool checkmark = false;
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -482,48 +485,131 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: size.height * 0.03),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                checkmark = true;
+                              });
+                            },
+                            child: checkmark == true
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        checkmark = false;
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/images/checkmark-icon.svg',
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/images/uncheckmark-icon.svg',
+                                  ),
+                          ),
+                          SizedBox(width: size.width * 0.03),
+                          RichText(
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: "I agree to the  ",
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 12,
+                                fontFamily: 'Syne-Medium',
+                              ),
+                              children: [
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  // Handle the tap event, e.g., navigate to a new screen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LegalScreen(),
+                                    ),
+                                  );
+                                },
+                                  text: 'Terms and Conditions',
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Medium',
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: ' and\n',
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Medium',
+                                  ),
+                                ),
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  // Handle the tap event, e.g., navigate to a new screen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LegalScreen(),
+                                    ),
+                                  );
+                                },
+                                  text: 'Privacy Policy',
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Medium',
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '.',
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Medium',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: size.height * 0.08),
                     GestureDetector(
                       onTap: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        if (createProfileImageFormKey.currentState!
-                            .validate()) {
-                          if (base64imgGallery == null) {
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              dismissDirection: DismissDirection.horizontal,
-                              backgroundColor: transparentColor,
-                              content: AwesomeSnackbarContent(
-                                title: 'Oh Snap!',
-                                message: "Please Upload an Image",
-                                contentType: ContentType.help,
-                              ),
-                            );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
-                            setState(() {
-                              isLoading = false;
-                            });
-                          } else {
-                            await createProfile();
-
-                            if (createProfileModel.status == 'success') {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FirstSaveLocationScreen(),
-                                ),
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                            if (createProfileModel.status != 'success') {
+                        if (checkmark == false) {
+                          final snackBar = SnackBar(
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            dismissDirection: DismissDirection.horizontal,
+                            backgroundColor: transparentColor,
+                            content: AwesomeSnackbarContent(
+                              title: 'Oh Snap!',
+                              message:
+                                  "Please agree to the terms and conditions and privacy policy.",
+                              messageFontSize: 12,
+                              contentType: ContentType.help,
+                            ),
+                          );
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                        } else {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          if (createProfileImageFormKey.currentState!
+                              .validate()) {
+                            if (base64imgGallery == null) {
                               final snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
@@ -531,8 +617,8 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                                 backgroundColor: transparentColor,
                                 content: AwesomeSnackbarContent(
                                   title: 'Oh Snap!',
-                                  message: "Email already exists.",
-                                  contentType: ContentType.failure,
+                                  message: "Please Upload an Image",
+                                  contentType: ContentType.help,
                                 ),
                               );
                               ScaffoldMessenger.of(context)
@@ -541,6 +627,39 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               setState(() {
                                 isLoading = false;
                               });
+                            } else {
+                              await createProfile();
+                              if (createProfileModel.status == 'success') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        FirstSaveLocationScreen(),
+                                  ),
+                                );
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                              if (createProfileModel.status != 'success') {
+                                final snackBar = SnackBar(
+                                  elevation: 0,
+                                  behavior: SnackBarBehavior.floating,
+                                  dismissDirection: DismissDirection.horizontal,
+                                  backgroundColor: transparentColor,
+                                  content: AwesomeSnackbarContent(
+                                    title: 'Oh Snap!',
+                                    message: "Email already exists.",
+                                    contentType: ContentType.failure,
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(snackBar);
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
                             }
                           }
                         }
