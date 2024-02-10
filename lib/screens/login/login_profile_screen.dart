@@ -2,10 +2,12 @@
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/home/drawer/legal_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +21,10 @@ import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:deliver_client/screens/first_time_location_and_address/first_save_location_screen.dart';
 
+bool checkmark = false;
+bool checkmark2 = false;
+typedef void OnAcceptCallback(bool value);
+
 class LoginProfileScreen extends StatefulWidget {
   final String? contactNumber;
 
@@ -29,7 +35,6 @@ class LoginProfileScreen extends StatefulWidget {
 }
 
 class _LoginProfileScreenState extends State<LoginProfileScreen> {
-  bool checkmark = false;
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -38,8 +43,61 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   CountryCode? countryCode =
       const CountryCode(name: 'Nigeria', code: 'NG', dialCode: '+234');
 
+  String? termsText;
+  String? privacyText;
   bool isLoading = false;
   String? baseUrl = dotenv.env['BASE_URL'];
+
+  void handleTermsCheckmarkState(bool newValue) {
+    setState(() {
+      checkmark = newValue;
+    });
+  }
+
+  void handlePrivacyCheckmarkState(bool newValue) {
+    setState(() {
+      checkmark2 = newValue;
+    });
+  }
+
+  GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
+
+  getAllSystemData() async {
+    try {
+      String apiUrl = "$baseUrl/get_all_system_data";
+      print("apiUrl: $apiUrl");
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
+        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        print(
+            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+        for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
+          if (getAllSystemDataModel.data?[i].type == "terms_text") {
+            termsText = "${getAllSystemDataModel.data?[i].description}";
+            print("termsText: $termsText");
+          }
+          for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
+            if (getAllSystemDataModel.data?[i].type == "privacy_text") {
+              privacyText = "${getAllSystemDataModel.data?[i].description}";
+              print("privacyText: $privacyText");
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
 
   CreateProfileModel createProfileModel = CreateProfileModel();
 
@@ -199,6 +257,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   @override
   void initState() {
     super.initState();
+    getAllSystemData();
     print('contactNumber: ${widget.contactNumber}');
   }
 
@@ -492,9 +551,15 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              setState(() {
-                                checkmark = true;
-                              });
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => termsDialog(context,
+                                    '$termsText', handleTermsCheckmarkState),
+                              );
+                              // setState(() {
+                              //   checkmark = true;
+                              // });
                             },
                             child: checkmark == true
                                 ? GestureDetector(
@@ -525,15 +590,16 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               children: [
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  // Handle the tap event, e.g., navigate to a new screen
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LegalScreen(),
-                                    ),
-                                  );
-                                },
+                                    ..onTap = () {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) => termsDialog(
+                                            context,
+                                            '$termsText',
+                                            handleTermsCheckmarkState),
+                                      );
+                                    },
                                   text: 'Terms and Conditions',
                                   style: TextStyle(
                                     color: blackColor,
@@ -543,24 +609,77 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' and\n',
+                                  text: '.',
                                   style: TextStyle(
                                     color: blackColor,
                                     fontSize: 12,
                                     fontFamily: 'Syne-Medium',
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => privacyDialog(
+                                    context,
+                                    '$privacyText',
+                                    handlePrivacyCheckmarkState),
+                              );
+                              // setState(() {
+                              //   checkmark2 = true;
+                              // });
+                            },
+                            child: checkmark2 == true
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        checkmark2 = false;
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/images/checkmark-icon.svg',
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/images/uncheckmark-icon.svg',
+                                  ),
+                          ),
+                          SizedBox(width: size.width * 0.03),
+                          RichText(
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: "I agree to the  ",
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 12,
+                                fontFamily: 'Syne-Medium',
+                              ),
+                              children: [
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  // Handle the tap event, e.g., navigate to a new screen
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LegalScreen(),
-                                    ),
-                                  );
-                                },
+                                    ..onTap = () {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) => privacyDialog(
+                                            context,
+                                            '$privacyText',
+                                            handlePrivacyCheckmarkState),
+                                      );
+                                    },
                                   text: 'Privacy Policy',
                                   style: TextStyle(
                                     color: blackColor,
@@ -586,30 +705,44 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                     SizedBox(height: size.height * 0.08),
                     GestureDetector(
                       onTap: () async {
-                        if (checkmark == false) {
-                          final snackBar = SnackBar(
-                            elevation: 0,
-                            behavior: SnackBarBehavior.floating,
-                            dismissDirection: DismissDirection.horizontal,
-                            backgroundColor: transparentColor,
-                            content: AwesomeSnackbarContent(
-                              title: 'Oh Snap!',
-                              message:
-                                  "Please agree to the terms and conditions and privacy policy.",
-                              messageFontSize: 12,
-                              contentType: ContentType.help,
-                            ),
-                          );
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(snackBar);
-                        } else {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          if (createProfileImageFormKey.currentState!
-                              .validate()) {
-                            if (base64imgGallery == null) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        if (createProfileImageFormKey.currentState!
+                            .validate()) {
+                          if (base64imgGallery == null) {
+                            final snackBar = SnackBar(
+                              elevation: 0,
+                              behavior: SnackBarBehavior.floating,
+                              dismissDirection: DismissDirection.horizontal,
+                              backgroundColor: transparentColor,
+                              content: AwesomeSnackbarContent(
+                                title: 'Oh Snap!',
+                                message: "Please Upload an Image",
+                                contentType: ContentType.help,
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(snackBar);
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else {
+                            await createProfile();
+                            if (createProfileModel.status == 'success') {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      FirstSaveLocationScreen(),
+                                ),
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                            if (createProfileModel.status != 'success') {
                               final snackBar = SnackBar(
                                 elevation: 0,
                                 behavior: SnackBarBehavior.floating,
@@ -617,8 +750,8 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                                 backgroundColor: transparentColor,
                                 content: AwesomeSnackbarContent(
                                   title: 'Oh Snap!',
-                                  message: "Please Upload an Image",
-                                  contentType: ContentType.help,
+                                  message: "Email already exists.",
+                                  contentType: ContentType.failure,
                                 ),
                               );
                               ScaffoldMessenger.of(context)
@@ -627,39 +760,6 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               setState(() {
                                 isLoading = false;
                               });
-                            } else {
-                              await createProfile();
-                              if (createProfileModel.status == 'success') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        FirstSaveLocationScreen(),
-                                  ),
-                                );
-                                setState(() {
-                                  isLoading = false;
-                                });
-                              }
-                              if (createProfileModel.status != 'success') {
-                                final snackBar = SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  dismissDirection: DismissDirection.horizontal,
-                                  backgroundColor: transparentColor,
-                                  content: AwesomeSnackbarContent(
-                                    title: 'Oh Snap!',
-                                    message: "Email already exists.",
-                                    contentType: ContentType.failure,
-                                  ),
-                                );
-                                ScaffoldMessenger.of(context)
-                                  ..hideCurrentSnackBar()
-                                  ..showSnackBar(snackBar);
-                                setState(() {
-                                  isLoading = false;
-                                });
-                              }
                             }
                           }
                         }
@@ -678,6 +778,187 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
       ),
     );
   }
+}
+
+Widget termsDialog(
+    BuildContext context, String? text, OnAcceptCallback onAccept) {
+  var size = MediaQuery.of(context).size;
+  return WillPopScope(
+    onWillPop: () {
+      return Future.value(false);
+    },
+    child: GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          insetPadding: const EdgeInsets.only(left: 20, right: 20),
+          child: SizedBox(
+            height: size.height * 0.8,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(height: size.height * 0.04),
+                  Text(
+                    'Terms and Conditions',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: orangeColor,
+                      fontSize: 20,
+                      fontFamily: 'Syne-Bold',
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                  Container(
+                    width: size.width,
+                    height: size.height * 0.6,
+                    color: transparentColor,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Html(
+                            data: "$text",
+                            style: {
+                              "html": Style(
+                                fontSize: FontSize(16),
+                                color: blackColor,
+                                fontFamily: 'Syne-Regular',
+                              ),
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: dialogButtonGradientSmall("Decline", context),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            checkmark = true;
+                            print('checkmark: $checkmark');
+                          });
+                          onAccept(true);
+                          Navigator.pop(context);
+                        },
+                        child: dialogButtonGradientSmall("Accept", context),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
+  var size = MediaQuery.of(context).size;
+  return WillPopScope(
+    onWillPop: () {
+      return Future.value(false);
+    },
+    child: GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: StatefulBuilder(
+        builder: (context, setState) => Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          insetPadding: const EdgeInsets.only(left: 20, right: 20),
+          child: SizedBox(
+            height: size.height * 0.8,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(height: size.height * 0.04),
+                  Text(
+                    'Privacy Policy',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: orangeColor,
+                      fontSize: 20,
+                      fontFamily: 'Syne-Bold',
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                  Container(
+                    width: size.width,
+                    height: size.height * 0.6,
+                    color: transparentColor,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Html(
+                            data: "$text",
+                            style: {
+                              "html": Style(
+                                fontSize: FontSize(16),
+                                color: blackColor,
+                                fontFamily: 'Syne-Regular',
+                              ),
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: dialogButtonGradientSmall("Decline", context),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            checkmark2 = true;
+                            print('checkmark2: $checkmark2');
+                          });
+                          onAccept(true);
+                          Navigator.pop(context);
+                        },
+                        child: dialogButtonGradientSmall("Accept", context),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: size.height * 0.02),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 // // ignore_for_file: avoid_print, use_build_context_synchronously
