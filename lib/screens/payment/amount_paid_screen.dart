@@ -81,8 +81,6 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
       getLocationSingle();
     } else {
       getLocationMultiple();
-      print("Multiple data so no polyline will be shown!");
-      print("Multiple data so no custom marker will be shown!");
     }
     loadCustomMarker();
   }

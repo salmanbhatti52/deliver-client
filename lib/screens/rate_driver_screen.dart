@@ -134,7 +134,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                   ),
                   child: Container(
                     width: size.width,
-                    height: size.height * 0.7,
+                    height: size.height * 0.62,
                     decoration: BoxDecoration(
                       color: whiteColor,
                     ),
@@ -329,6 +329,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                             SizedBox(height: size.height * 0.04),
                             GestureDetector(
                               onTap: () async {
+                                FocusScope.of(context).unfocus();
                                 if (additionalCommentsController.text.isEmpty ||
                                     ratingValue == null) {
                                   if (ratingValue == null) {
@@ -396,18 +397,18 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                       "Please Wait...", context)
                                   : buttonGradient("SUBMIT", context),
                             ),
-                            SizedBox(height: size.height * 0.02),
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => rebookRide(context),
-                                );
-                              },
-                              child:
-                                  buttonTransparentGradient("REBOOK", context),
-                            ),
+                            // SizedBox(height: size.height * 0.02),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     showDialog(
+                            //       context: context,
+                            //       barrierDismissible: false,
+                            //       builder: (context) => rebookRide(context),
+                            //     );
+                            //   },
+                            //   child:
+                            //       buttonTransparentGradient("REBOOK", context),
+                            // ),
                             SizedBox(height: size.height * 0.02),
                           ],
                         ),
@@ -437,69 +438,69 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
   }
 }
 
-Widget rebookRide(BuildContext context) {
-  var size = MediaQuery.of(context).size;
-  return GestureDetector(
-    onTap: () {
-      FocusManager.instance.primaryFocus?.unfocus();
-    },
-    child: WillPopScope(
-      onWillPop: () {
-        return Future.value(false);
-      },
-      child: Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40),
-        ),
-        insetPadding: const EdgeInsets.only(left: 20, right: 20),
-        child: SizedBox(
-          height: size.height * 0.45,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: SvgPicture.asset("assets/images/close-icon.svg"),
-                    ),
-                  ),
-                ),
-                SizedBox(height: size.height * 0.01),
-                SvgPicture.asset('assets/images/hourglass-icon.svg'),
-                SizedBox(height: size.height * 0.03),
-                Text(
-                  'Time up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: orangeColor,
-                    fontSize: 20,
-                    fontFamily: 'Syne-Bold',
-                  ),
-                ),
-                SizedBox(height: size.height * 0.01),
-                Text(
-                  'You can not rebook this ride after 5\nmins of completing the ride.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: blackColor,
-                    fontSize: 18,
-                    fontFamily: 'Syne-Regular',
-                  ),
-                ),
-                SizedBox(height: size.height * 0.03),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
+// Widget rebookRide(BuildContext context) {
+//   var size = MediaQuery.of(context).size;
+//   return GestureDetector(
+//     onTap: () {
+//       FocusManager.instance.primaryFocus?.unfocus();
+//     },
+//     child: WillPopScope(
+//       onWillPop: () {
+//         return Future.value(false);
+//       },
+//       child: Dialog(
+//         backgroundColor: Colors.white,
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(40),
+//         ),
+//         insetPadding: const EdgeInsets.only(left: 20, right: 20),
+//         child: SizedBox(
+//           height: size.height * 0.45,
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 20),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.spaceAround,
+//               children: [
+//                 GestureDetector(
+//                   onTap: () {
+//                     Navigator.pop(context);
+//                   },
+//                   child: Align(
+//                     alignment: Alignment.centerRight,
+//                     child: Padding(
+//                       padding: const EdgeInsets.only(top: 15),
+//                       child: SvgPicture.asset("assets/images/close-icon.svg"),
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.01),
+//                 SvgPicture.asset('assets/images/hourglass-icon.svg'),
+//                 SizedBox(height: size.height * 0.03),
+//                 Text(
+//                   'Time up',
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(
+//                     color: orangeColor,
+//                     fontSize: 20,
+//                     fontFamily: 'Syne-Bold',
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.01),
+//                 Text(
+//                   'You can not rebook this ride after 5\nmins of completing the ride.',
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(
+//                     color: blackColor,
+//                     fontSize: 18,
+//                     fontFamily: 'Syne-Regular',
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.03),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }

@@ -16,6 +16,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
+import 'package:deliver_client/models/update_booking_transaction_model.dart';
+
+String? firstName;
+String? lastName;
+String? userEmail;
 
 class AmountToPayScreen extends StatefulWidget {
   final Map? singleData;
@@ -58,6 +63,51 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
   sharedPref() async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     userEmail = sharedPref.getString('email');
+    firstName = sharedPref.getString('firstName');
+    lastName = sharedPref.getString('lastName');
+  }
+
+  UpdateBookingTransactionModel updateBookingTransactionModel =
+      UpdateBookingTransactionModel();
+
+  updateBookingTransaction() async {
+    try {
+      String apiUrl = "$baseUrl/maintain_booking_transaction";
+      print("apiUrl: $apiUrl");
+      print("bookings_id: ${widget.currentBookingId}");
+      print("payer_name: $firstName $lastName");
+      print("payer_email: $userEmail");
+      print(
+          "total_amount: ${widget.singleData!.isNotEmpty ? widget.singleData!['total_charges'] : widget.multipleData!['total_charges']}");
+      print("payment_status: Paid");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.currentBookingId,
+          "payer_name": "$firstName $lastName",
+          "payer_email": userEmail,
+          "total_amount": widget.singleData!.isNotEmpty
+              ? widget.singleData!['total_charges']
+              : widget.multipleData!['total_charges'],
+          "payment_status": "Paid"
+        },
+      );
+      final responseString = response.body;
+      print("response: $responseString");
+      print("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        updateBookingTransactionModel =
+            updateBookingTransactionModelFromJson(responseString);
+        print(
+            'updateBookingTransactionModel status: ${updateBookingTransactionModel.status}');
+      }
+    } catch (e) {
+      print('Something went wrong = ${e.toString()}');
+      return null;
+    }
   }
 
   void startPayStack() {
@@ -91,6 +141,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
         textColor: whiteColor,
         fontSize: 12,
       );
+      await updateBookingTransaction();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -409,10 +460,11 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                           ),
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               if (widget.singleData!.isNotEmpty) {
                                 if (widget.singleData!["payment_gateways_id"] ==
                                     '1') {
+                                  await updateBookingTransaction();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -434,6 +486,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                                 if (widget
                                         .multipleData!["payment_gateways_id"] ==
                                     '1') {
+                                  await updateBookingTransaction();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

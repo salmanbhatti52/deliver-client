@@ -576,6 +576,7 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          FocusScope.of(context).unfocus();
                           if (nameLocationFormKey.currentState!.validate()) {
                             setState(() {
                               isLoading = true;

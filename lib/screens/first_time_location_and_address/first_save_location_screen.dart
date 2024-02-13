@@ -562,6 +562,7 @@ class _FirstSaveLocationScreenState extends State<FirstSaveLocationScreen> {
                       ),
                       GestureDetector(
                         onTap: () async {
+                          FocusScope.of(context).unfocus();
                           if (nameLocationFormKey.currentState!.validate()) {
                             setState(() {
                               isLoading = true;
@@ -577,7 +578,6 @@ class _FirstSaveLocationScreenState extends State<FirstSaveLocationScreen> {
                           }
                           setState(() {
                             isLoading = false;
-                            FocusManager.instance.primaryFocus?.unfocus();
                           });
                         },
                         child: isLoading

@@ -274,24 +274,24 @@ class _CompletedListState extends State<CompletedList> {
                                   ),
                                 ),
                               ),
+                              // Positioned(
+                              //   bottom: 55,
+                              //   right: 0,
+                              //   child: GestureDetector(
+                              //     onTap: () {
+                              //       showDialog(
+                              //         context: context,
+                              //         barrierDismissible: false,
+                              //         // barrierColor: sheetBarrierColor,
+                              //         builder: (context) => rebookRide(context),
+                              //       );
+                              //     },
+                              //     child: detailButtonTransparentGradientSmall(
+                              //         'Rebook', context),
+                              //   ),
+                              // ),
                               Positioned(
-                                bottom: 55,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      // barrierColor: sheetBarrierColor,
-                                      builder: (context) => rebookRide(context),
-                                    );
-                                  },
-                                  child: detailButtonTransparentGradientSmall(
-                                      'Rebook', context),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
+                                bottom: 18,
                                 right: 0,
                                 child: GestureDetector(
                                   onTap: () {
@@ -341,69 +341,69 @@ class _CompletedListState extends State<CompletedList> {
   }
 }
 
-Widget rebookRide(BuildContext context) {
-  var size = MediaQuery.of(context).size;
-  return GestureDetector(
-    onTap: () {
-      FocusManager.instance.primaryFocus?.unfocus();
-    },
-    child: WillPopScope(
-      onWillPop: () {
-        return Future.value(false);
-      },
-      child: Dialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40),
-        ),
-        insetPadding: const EdgeInsets.only(left: 20, right: 20),
-        child: SizedBox(
-          height: size.height * 0.45,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: SvgPicture.asset("assets/images/close-icon.svg"),
-                    ),
-                  ),
-                ),
-                SizedBox(height: size.height * 0.01),
-                SvgPicture.asset('assets/images/hourglass-icon.svg'),
-                SizedBox(height: size.height * 0.03),
-                Text(
-                  'Time up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: orangeColor,
-                    fontSize: 20,
-                    fontFamily: 'Syne-Bold',
-                  ),
-                ),
-                SizedBox(height: size.height * 0.01),
-                Text(
-                  'You can not rebook this ride after 5\nmins of completing the ride.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: blackColor,
-                    fontSize: 18,
-                    fontFamily: 'Syne-Regular',
-                  ),
-                ),
-                SizedBox(height: size.height * 0.03),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
+// Widget rebookRide(BuildContext context) {
+//   var size = MediaQuery.of(context).size;
+//   return GestureDetector(
+//     onTap: () {
+//       FocusManager.instance.primaryFocus?.unfocus();
+//     },
+//     child: WillPopScope(
+//       onWillPop: () {
+//         return Future.value(false);
+//       },
+//       child: Dialog(
+//         backgroundColor: Colors.white,
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(40),
+//         ),
+//         insetPadding: const EdgeInsets.only(left: 20, right: 20),
+//         child: SizedBox(
+//           height: size.height * 0.45,
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 20),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.spaceAround,
+//               children: [
+//                 GestureDetector(
+//                   onTap: () {
+//                     Navigator.pop(context);
+//                   },
+//                   child: Align(
+//                     alignment: Alignment.centerRight,
+//                     child: Padding(
+//                       padding: const EdgeInsets.only(top: 15),
+//                       child: SvgPicture.asset("assets/images/close-icon.svg"),
+//                     ),
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.01),
+//                 SvgPicture.asset('assets/images/hourglass-icon.svg'),
+//                 SizedBox(height: size.height * 0.03),
+//                 Text(
+//                   'Time up',
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(
+//                     color: orangeColor,
+//                     fontSize: 20,
+//                     fontFamily: 'Syne-Bold',
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.01),
+//                 Text(
+//                   'You can not rebook this ride after 5\nmins of completing the ride.',
+//                   textAlign: TextAlign.center,
+//                   style: TextStyle(
+//                     color: blackColor,
+//                     fontSize: 18,
+//                     fontFamily: 'Syne-Regular',
+//                   ),
+//                 ),
+//                 SizedBox(height: size.height * 0.03),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }

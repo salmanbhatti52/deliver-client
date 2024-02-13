@@ -18,6 +18,7 @@ Color dividerColor = const Color(0xFFEBEBEB);
 Color redStatusButtonColor = const Color(0xFFFC3636);
 Color greenStatusButtonColor = const Color(0xFF0ED18F);
 Color pendingColor = const Color(0xFFFF0000);
+Color grantPermissionColor = const Color(0xFF36454F);
 Color redColor = Colors.red;
 Color transparentColor = Colors.transparent;
 

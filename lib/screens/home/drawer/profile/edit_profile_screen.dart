@@ -14,7 +14,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/edit_profile_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 String? userId;
 
@@ -460,22 +459,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             });
                           }
                           if (editProfileModel.status != 'success') {
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              dismissDirection: DismissDirection.horizontal,
-                              backgroundColor: transparentColor,
-                              content: AwesomeSnackbarContent(
-                                title: 'Oh Snap!',
-                                message:
-                                    "An error occurred while uploading your image.\nPlease try again.",
-                                messageFontSize: 12,
-                                contentType: ContentType.failure,
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 0,
+                                width: size.width,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                duration: const Duration(seconds: 2),
+                                content: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.centerRight,
+                                      end: Alignment.centerLeft,
+                                      stops: const [0.1, 1.5],
+                                      colors: [
+                                        orangeColor,
+                                        yellowColor,
+                                      ],
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 2,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 3),
+                                        color: blackColor.withOpacity(0.2),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: borderColor,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "An error occurred while uploading the image.\nPlease try again.",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: whiteColor,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                ),
                               ),
                             );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
                             setState(() {
                               isLoading = false;
                             });

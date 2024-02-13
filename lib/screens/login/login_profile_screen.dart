@@ -2,14 +2,12 @@
 
 import 'dart:io';
 import 'dart:convert';
-import 'package:deliver_client/models/get_all_system_data_model.dart';
-import 'package:deliver_client/screens/home/drawer/legal_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -18,11 +16,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:deliver_client/models/create_profile_model.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/first_time_location_and_address/first_save_location_screen.dart';
 
 bool checkmark = false;
 bool checkmark2 = false;
+
 typedef void OnAcceptCallback(bool value);
 
 class LoginProfileScreen extends StatefulWidget {
@@ -209,46 +208,76 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   void showStoragePermissionSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: orangeColor,
+        elevation: 0,
+        width: double.infinity,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
         duration: const Duration(seconds: 5),
-        content: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Photo Library permission is required\nto change profile picture.',
-              style: TextStyle(
-                color: whiteColor,
-                fontSize: 12,
-                fontFamily: 'Syne-Regular',
-              ),
+        content: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              stops: const [0.1, 1.5],
+              colors: [
+                orangeColor,
+                yellowColor,
+              ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            GestureDetector(
-              onTap: () {
-                openAppSettings();
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.04,
-                width: MediaQuery.of(context).size.width * 0.33,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF36454F),
-                  borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 2,
+                spreadRadius: 2,
+                offset: const Offset(0, 3),
+                color: blackColor.withOpacity(0.2),
+              ),
+            ],
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 2,
+              color: borderColor,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Photo Library permission is required\nto change profile picture.',
+                style: TextStyle(
+                  color: whiteColor,
+                  fontSize: 12,
+                  fontFamily: 'Syne-Regular',
                 ),
-                child: Center(
-                  child: Text(
-                    'Grant Permission',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontSize: 12,
-                      fontFamily: 'Syne-Medium',
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+              GestureDetector(
+                onTap: () {
+                  openAppSettings();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  decoration: BoxDecoration(
+                    color: grantPermissionColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Grant Permission',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: whiteColor,
+                        fontSize: 12,
+                        fontFamily: 'Syne-Medium',
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -554,84 +583,6 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
-                                builder: (context) => termsDialog(context,
-                                    '$termsText', handleTermsCheckmarkState),
-                              );
-                              // setState(() {
-                              //   checkmark = true;
-                              // });
-                            },
-                            child: checkmark == true
-                                ? GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        checkmark = false;
-                                      });
-                                    },
-                                    child: SvgPicture.asset(
-                                      'assets/images/checkmark-icon.svg',
-                                    ),
-                                  )
-                                : SvgPicture.asset(
-                                    'assets/images/uncheckmark-icon.svg',
-                                  ),
-                          ),
-                          SizedBox(width: size.width * 0.03),
-                          RichText(
-                            overflow: TextOverflow.clip,
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              text: "I agree to the  ",
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 12,
-                                fontFamily: 'Syne-Medium',
-                              ),
-                              children: [
-                                TextSpan(
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (context) => termsDialog(
-                                            context,
-                                            '$termsText',
-                                            handleTermsCheckmarkState),
-                                      );
-                                    },
-                                  text: 'Terms and Conditions',
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Syne-Medium',
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: '.',
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Syne-Medium',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
                                 builder: (context) => privacyDialog(
                                     context,
                                     '$privacyText',
@@ -702,6 +653,84 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                         ],
                       ),
                     ),
+                    SizedBox(height: size.height * 0.02),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) => termsDialog(context,
+                                    '$termsText', handleTermsCheckmarkState),
+                              );
+                              // setState(() {
+                              //   checkmark = true;
+                              // });
+                            },
+                            child: checkmark == true
+                                ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        checkmark = false;
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/images/checkmark-icon.svg',
+                                    ),
+                                  )
+                                : SvgPicture.asset(
+                                    'assets/images/uncheckmark-icon.svg',
+                                  ),
+                          ),
+                          SizedBox(width: size.width * 0.03),
+                          RichText(
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              text: "I agree to the  ",
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 12,
+                                fontFamily: 'Syne-Medium',
+                              ),
+                              children: [
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) => termsDialog(
+                                            context,
+                                            '$termsText',
+                                            handleTermsCheckmarkState),
+                                      );
+                                    },
+                                  text: 'Terms and Conditions',
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Medium',
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: '.',
+                                  style: TextStyle(
+                                    color: blackColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Medium',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: size.height * 0.08),
                     GestureDetector(
                       onTap: () async {
@@ -711,20 +740,98 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                         if (createProfileImageFormKey.currentState!
                             .validate()) {
                           if (base64imgGallery == null) {
-                            final snackBar = SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              dismissDirection: DismissDirection.horizontal,
-                              backgroundColor: transparentColor,
-                              content: AwesomeSnackbarContent(
-                                title: 'Oh Snap!',
-                                message: "Please Upload an Image",
-                                contentType: ContentType.help,
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 0,
+                                width: double.infinity,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                duration: const Duration(seconds: 2),
+                                content: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.centerRight,
+                                      end: Alignment.centerLeft,
+                                      stops: const [0.1, 1.5],
+                                      colors: [
+                                        orangeColor,
+                                        yellowColor,
+                                      ],
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 2,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 3),
+                                        color: blackColor.withOpacity(0.2),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: borderColor,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Please Upload an Image',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: whiteColor,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                ),
                               ),
                             );
-                            ScaffoldMessenger.of(context)
-                              ..hideCurrentSnackBar()
-                              ..showSnackBar(snackBar);
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else if (!checkmark || !checkmark2) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                elevation: 0,
+                                width: size.width,
+                                behavior: SnackBarBehavior.floating,
+                                backgroundColor: Colors.transparent,
+                                duration: const Duration(seconds: 2),
+                                content: Container(
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.centerRight,
+                                      end: Alignment.centerLeft,
+                                      stops: const [0.1, 1.5],
+                                      colors: [
+                                        orangeColor,
+                                        yellowColor,
+                                      ],
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 2,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 3),
+                                        color: blackColor.withOpacity(0.2),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: borderColor,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Please accept our terms and conditions and privacy policy',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: whiteColor,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
                             setState(() {
                               isLoading = false;
                             });
@@ -743,20 +850,50 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               });
                             }
                             if (createProfileModel.status != 'success') {
-                              final snackBar = SnackBar(
-                                elevation: 0,
-                                behavior: SnackBarBehavior.floating,
-                                dismissDirection: DismissDirection.horizontal,
-                                backgroundColor: transparentColor,
-                                content: AwesomeSnackbarContent(
-                                  title: 'Oh Snap!',
-                                  message: "Email already exists.",
-                                  contentType: ContentType.failure,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  elevation: 0,
+                                  width: size.width,
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  duration: const Duration(seconds: 2),
+                                  content: Container(
+                                    padding: const EdgeInsets.all(15),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                        stops: const [0.1, 1.5],
+                                        colors: [
+                                          orangeColor,
+                                          yellowColor,
+                                        ],
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          blurRadius: 2,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0, 3),
+                                          color: blackColor.withOpacity(0.2),
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        width: 2,
+                                        color: borderColor,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Email already exists',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: whiteColor,
+                                        fontFamily: 'Syne-Bold',
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               );
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
                               setState(() {
                                 isLoading = false;
                               });
@@ -827,9 +964,9 @@ Widget termsDialog(
                             data: "$text",
                             style: {
                               "html": Style(
-                                fontSize: FontSize(16),
                                 color: blackColor,
-                                fontFamily: 'Syne-Regular',
+                                fontSize: FontSize(15),
+                                fontFamily: 'Syne-Medium',
                               ),
                             },
                           ),
@@ -917,9 +1054,9 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
                             data: "$text",
                             style: {
                               "html": Style(
-                                fontSize: FontSize(16),
                                 color: blackColor,
-                                fontFamily: 'Syne-Regular',
+                                fontSize: FontSize(15),
+                                fontFamily: 'Syne-Medium',
                               ),
                             },
                           ),
@@ -962,7 +1099,7 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 }
 
 // // ignore_for_file: avoid_print, use_build_context_synchronously
-
+//
 // import 'dart:io';
 // import 'dart:convert';
 // import 'package:flutter/material.dart';
@@ -976,33 +1113,33 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 // import 'package:permission_handler/permission_handler.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:deliver_client/models/profile_image_model.dart';
-// import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 // import 'package:deliver_client/screens/first_time_location_and_address/first_save_location_screen.dart';
-
+//
 // String? userId;
-
+//
 // class LoginProfileScreen extends StatefulWidget {
 //   final String? firstName;
 //   final String? lastName;
 //   final String? contactNumber;
 //   final String? email;
+//
 //   const LoginProfileScreen(
 //       {super.key,
 //       this.firstName,
 //       this.lastName,
 //       this.contactNumber,
 //       this.email});
-
+//
 //   @override
 //   State<LoginProfileScreen> createState() => _LoginProfileScreenState();
 // }
-
+//
 // class _LoginProfileScreenState extends State<LoginProfileScreen> {
 //   final GlobalKey<FormState> logInPofileImageFormKey = GlobalKey<FormState>();
 //   bool isLoading = false;
-
+//
 //   ProfileImageModel profileImageModel = ProfileImageModel();
-
+//
 //   profileImage() async {
 //     try {
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -1034,9 +1171,10 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //       return null;
 //     }
 //   }
-
+//
 //   File? imagePathGallery;
 //   String? base64imgGallery;
+//
 //   Future pickImageGallery() async {
 //     try {
 //       final ImagePicker picker = ImagePicker();
@@ -1048,9 +1186,9 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //         Uint8List imageByte = await xFile.readAsBytes();
 //         base64imgGallery = base64.encode(imageByte);
 //         print("base64img $base64imgGallery");
-
+//
 //         final imageTemporary = File(xFile.path);
-
+//
 //         setState(() {
 //           imagePathGallery = imageTemporary;
 //           print("newImage $imagePathGallery");
@@ -1068,10 +1206,10 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //       print('Failed to pick image: ${e.toString()}');
 //     }
 //   }
-
+//
 //   Future getStoragePermission() async {
 //     PermissionStatus status = await Permission.storage.request();
-
+//
 //     if (status.isGranted) {
 //       // Permission granted, navigate to the next screen
 //       pickImageGallery();
@@ -1083,7 +1221,7 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //       openAppSettings();
 //     }
 //   }
-
+//
 //   @override
 //   void initState() {
 //     super.initState();
@@ -1092,7 +1230,7 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //     print('initState contactNumber: ${widget.contactNumber}');
 //     print('initState email: ${widget.email}');
 //   }
-
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     var size = MediaQuery.of(context).size;
@@ -1273,22 +1411,50 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //                       onTap: () async {
 //                         if (logInPofileImageFormKey.currentState!.validate()) {
 //                           if (base64imgGallery == null) {
-//                             final snackBar = SnackBar(
-//                               elevation: 0,
-//                               behavior: SnackBarBehavior.floating,
-//                               dismissDirection: DismissDirection.horizontal,
-//                               backgroundColor: transparentColor,
-//                               content: AwesomeSnackbarContent(
-//                                 title: 'Oh Snap!',
-//                                 message: "Please Upload an Image",
-//                                 contentType: ContentType.help,
-//                                 // change contentType to ContentType.success,
-//                                 // ContentType.warning or ContentType.help for variants
+//                             ScaffoldMessenger.of(context).showSnackBar(
+//                               SnackBar(
+//                                 elevation: 0,
+//                                 width: double.infinity,
+//                                 behavior: SnackBarBehavior.floating,
+//                                 backgroundColor: Colors.transparent,
+//                                 duration: const Duration(seconds: 2),
+//                                 content: Container(
+//                                   padding: const EdgeInsets.all(15),
+//                                   decoration: BoxDecoration(
+//                                     gradient: LinearGradient(
+//                                       begin: Alignment.centerRight,
+//                                       end: Alignment.centerLeft,
+//                                       stops: const [0.1, 1.5],
+//                                       colors: [
+//                                         orangeColor,
+//                                         yellowColor,
+//                                       ],
+//                                     ),
+//                                     boxShadow: [
+//                                       BoxShadow(
+//                                         blurRadius: 2,
+//                                         spreadRadius: 2,
+//                                         offset: const Offset(0, 3),
+//                                         color: blackColor.withOpacity(0.2),
+//                                       ),
+//                                     ],
+//                                     borderRadius: BorderRadius.circular(10),
+//                                     border: Border.all(
+//                                       width: 2,
+//                                       color: borderColor,
+//                                     ),
+//                                   ),
+//                                   child: Text(
+//                                     'Please Upload an Image',
+//                                     style: TextStyle(
+//                                       fontSize: 12,
+//                                       color: whiteColor,
+//                                       fontFamily: 'Syne-Bold',
+//                                     ),
+//                                   ),
+//                                 ),
 //                               ),
 //                             );
-//                             ScaffoldMessenger.of(context)
-//                               ..hideCurrentSnackBar()
-//                               ..showSnackBar(snackBar);
 //                             setState(() {
 //                               isLoading = false;
 //                             });
@@ -1310,23 +1476,50 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //                               });
 //                             }
 //                             if (profileImageModel.status != 'success') {
-//                               final snackBar = SnackBar(
-//                                 elevation: 0,
-//                                 behavior: SnackBarBehavior.floating,
-//                                 dismissDirection: DismissDirection.horizontal,
-//                                 backgroundColor: transparentColor,
-//                                 content: AwesomeSnackbarContent(
-//                                   title: 'Oh Snap!',
-//                                   message:
-//                                       "An error occurred while uploading the image.\nPlease try again.",
-//                                   contentType: ContentType.failure,
-//                                   // change contentType to ContentType.success,
-//                                   // ContentType.warning or ContentType.help for variants
+//                               ScaffoldMessenger.of(context).showSnackBar(
+//                                 SnackBar(
+//                                   elevation: 0,
+//                                   width: size.width,
+//                                   behavior: SnackBarBehavior.floating,
+//                                   backgroundColor: Colors.transparent,
+//                                   duration: const Duration(seconds: 2),
+//                                   content: Container(
+//                                     padding: const EdgeInsets.all(15),
+//                                     decoration: BoxDecoration(
+//                                       gradient: LinearGradient(
+//                                         begin: Alignment.centerRight,
+//                                         end: Alignment.centerLeft,
+//                                         stops: const [0.1, 1.5],
+//                                         colors: [
+//                                           orangeColor,
+//                                           yellowColor,
+//                                         ],
+//                                       ),
+//                                       boxShadow: [
+//                                         BoxShadow(
+//                                           blurRadius: 2,
+//                                           spreadRadius: 2,
+//                                           offset: const Offset(0, 3),
+//                                           color: blackColor.withOpacity(0.2),
+//                                         ),
+//                                       ],
+//                                       borderRadius: BorderRadius.circular(10),
+//                                       border: Border.all(
+//                                         width: 2,
+//                                         color: borderColor,
+//                                       ),
+//                                     ),
+//                                     child: Text(
+//                                       'An error occurred while uploading the image.\nPlease try again.',
+//                                       style: TextStyle(
+//                                         fontSize: 12,
+//                                         color: whiteColor,
+//                                         fontFamily: 'Syne-Bold',
+//                                       ),
+//                                     ),
+//                                   ),
 //                                 ),
 //                               );
-//                               ScaffoldMessenger.of(context)
-//                                 ..hideCurrentSnackBar()
-//                                 ..showSnackBar(snackBar);
 //                               setState(() {
 //                                 isLoading = false;
 //                               });

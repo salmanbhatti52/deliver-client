@@ -495,7 +495,7 @@ class _RidersListState extends State<RidersList> {
 
   calculateDistance() {
     distanceKm = double.parse("${widget.searchRider?.distance}");
-    print('distanceKm in calculated: $distanceKm');
+    print('distanceKm: $distanceKm');
 
     if (distanceKm! > 10.00) {
       distanceKm = null; // Set distanceKm to null or another sentinel value
@@ -594,6 +594,7 @@ class _RidersListState extends State<RidersList> {
                       if (widget.singleData?["type"] == "booking" ||
                           widget.multipleData?["type"] == "booking") {
                         print("booking");
+                        calculateDistance();
                         await createBooking();
                         if (createBookingModel.data != null) {
                           if (createBookingModel.status == 'success') {
@@ -645,6 +646,7 @@ class _RidersListState extends State<RidersList> {
                         }
                       } else {
                         print("schedule");
+                        calculateDistance();
                         await scheduleBooking();
                         if (scheduleBookingModel.status == 'success') {
                           Navigator.pushReplacement(
