@@ -44,14 +44,14 @@
 //   userSignUp() async {
 //     try {
 //       String apiUrl = "$baseUrl/signup_customers";
-//       print("apiUrl: $apiUrl");
-//       print("firstName: ${firstNameController.text}");
-//       print("lastName: ${lastNameController.text}");
-//       print(
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("firstName: ${firstNameController.text}");
+//       debugPrint("lastName: ${lastNameController.text}");
+//       debugPrint(
 //           "contactNumber: ${countryCode!.dialCode + contactNumberController.text}");
-//       print("email: ${emailController.text}");
-//       print("password: ${passwordController.text}");
-//       print("confirmPassword: ${confirmPasswordController.text}");
+//       debugPrint("email: ${emailController.text}");
+//       debugPrint("password: ${passwordController.text}");
+//       debugPrint("confirmPassword: ${confirmPasswordController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -69,15 +69,15 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         signUpModel = signUpModelFromJson(responseString);
 //         setState(() {});
-//         print('signUpModel status: ${signUpModel.status}');
+//         debugPrint('signUpModel status: ${signUpModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -333,9 +333,9 @@
 //                           setState(() {
 //                             countryCode = code;
 //                           });
-//                           print('countryName: ${countryCode!.name}');
-//                           print('countryCode: ${countryCode!.code}');
-//                           print('countryDialCode: ${countryCode!.dialCode}');
+//                           debugPrint('countryName: ${countryCode!.name}');
+//                           debugPrint('countryCode: ${countryCode!.code}');
+//                           debugPrint('countryDialCode: ${countryCode!.dialCode}');
 //                         },
 //                         child: Row(
 //                           mainAxisSize: MainAxisSize.min,

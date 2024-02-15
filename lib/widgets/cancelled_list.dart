@@ -36,8 +36,8 @@ class _CancelledListState extends State<CancelledList> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_bookings_cancelled_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -48,17 +48,17 @@ class _CancelledListState extends State<CancelledList> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         cancelledRideModel = cancelledRideModelFromJson(responseString);
-        print('cancelledRideModel status: ${cancelledRideModel.status}');
+        debugPrint('cancelledRideModel status: ${cancelledRideModel.status}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       setState(() {
         isLoading = false;
       });

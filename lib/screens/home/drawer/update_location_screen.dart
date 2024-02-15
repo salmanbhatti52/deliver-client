@@ -47,7 +47,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         currentLocation = LatLng(position.latitude, position.longitude);
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
-        print("currentPickUpLocation: $currentAddress");
+        debugPrint("currentPickUpLocation: $currentAddress");
       });
     }
   }
@@ -56,8 +56,8 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     userId = sharedPref.getString('userId');
     firstName = sharedPref.getString('firstName');
-    print('sharedPrefs userId: $userId');
-    print('sharedPrefs firstName: $firstName');
+    debugPrint('sharedPrefs userId: $userId');
+    debugPrint('sharedPrefs firstName: $firstName');
     setState(() {});
   }
 
@@ -69,9 +69,9 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/update_location_customers";
-      print("apiUrl: $apiUrl");
-      print("latitude: $currentLat");
-      print("longitude: $currentLng");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("latitude: $currentLat");
+      debugPrint("longitude: $currentLng");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -84,11 +84,11 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         updateLocationModel = updateLocationModelFromJson(responseString);
-        print('updateLocationModel status: ${updateLocationModel.status}');
+        debugPrint('updateLocationModel status: ${updateLocationModel.status}');
         if (updateLocationModel.status == 'success') {
           Fluttertoast.showToast(
             msg: "Current Location Updated",
@@ -105,7 +105,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

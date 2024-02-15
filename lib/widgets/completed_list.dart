@@ -37,8 +37,8 @@ class _CompletedListState extends State<CompletedList> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_bookings_completed_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -49,17 +49,17 @@ class _CompletedListState extends State<CompletedList> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         completedRideModel = completedRideModelFromJson(responseString);
-        print('completedRideModel status: ${completedRideModel.status}');
+        debugPrint('completedRideModel status: ${completedRideModel.status}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       setState(() {
         isLoading = false;
       });

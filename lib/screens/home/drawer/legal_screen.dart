@@ -34,7 +34,7 @@ class _LegalScreenState extends State<LegalScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -42,22 +42,22 @@ class _LegalScreenState extends State<LegalScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "terms_text") {
             termsText = "${getAllSystemDataModel.data?[i].description}";
-            print("termsText: $termsText");
+            debugPrint("termsText: $termsText");
           }
           for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
             if (getAllSystemDataModel.data?[i].type == "privacy_text") {
               privacyText = "${getAllSystemDataModel.data?[i].description}";
-              print("privacyText: $privacyText");
+              debugPrint("privacyText: $privacyText");
             }
           }
         }
@@ -66,7 +66,7 @@ class _LegalScreenState extends State<LegalScreen> {
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

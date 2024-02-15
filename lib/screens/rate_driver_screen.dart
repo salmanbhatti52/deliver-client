@@ -48,13 +48,13 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/rate_booking";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
-      print("fleetId: ${widget.riderData!.usersFleetId.toString()}");
-      print("bookingId: ${widget.currentBookingId}");
-      print("bookingDestinationId: ${widget.bookingDestinationId}");
-      print("rating: ${ratingValue.toString()}");
-      print("comment: ${additionalCommentsController.text}");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("fleetId: ${widget.riderData!.usersFleetId.toString()}");
+      debugPrint("bookingId: ${widget.currentBookingId}");
+      debugPrint("bookingDestinationId: ${widget.bookingDestinationId}");
+      debugPrint("rating: ${ratingValue.toString()}");
+      debugPrint("comment: ${additionalCommentsController.text}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -71,14 +71,14 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         rateRiderModel = rateRiderModelFromJson(responseString);
-        print('rateRiderModel status: ${rateRiderModel.status}');
+        debugPrint('rateRiderModel status: ${rateRiderModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -86,8 +86,8 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
   @override
   void initState() {
     super.initState();
-    print("currentBookingId: ${widget.currentBookingId}");
-    print("bookingDestinationId: ${widget.bookingDestinationId}");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    debugPrint("bookingDestinationId: ${widget.bookingDestinationId}");
   }
 
   @override
@@ -244,7 +244,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                 setState(() {
                                   ratingValue = rating;
                                 });
-                                print('ratingValue: $ratingValue');
+                                debugPrint('ratingValue: $ratingValue');
                               },
                             ),
                             SizedBox(height: size.height * 0.03),

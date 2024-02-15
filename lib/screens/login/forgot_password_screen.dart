@@ -28,8 +28,8 @@
 //   forgotPassword() async {
 //     try {
 //       String apiUrl = "$baseUrl/forgot_password_customers";
-//       print("apiUrl: $apiUrl");
-//       print("email: ${emailController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("email: ${emailController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -40,8 +40,8 @@
 //         },
 //       );
 //       final responseString = jsonDecode(response.body);
-//       print("response: $responseString");
-//       print("status: ${responseString['status']}");
+//       debugPrint("response: $responseString");
+//       debugPrint("status: ${responseString['status']}");
 //       if (responseString["status"] == "success") {
 //         forgotPasswordModel = forgotPasswordModelFromJson(response.body);
 //         final snackBar = SnackBar(
@@ -89,7 +89,7 @@
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }

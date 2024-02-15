@@ -34,11 +34,11 @@
 //   resetPassword() async {
 //     try {
 //       String apiUrl = "$baseUrl/reset_password_customers";
-//       print("apiUrl: $apiUrl");
-//       print("email: ${widget.email}");
-//       print("otp: ${widget.otp}");
-//       print("password: ${newpasswordController.text}");
-//       print("confirmPassword: ${confirmPasswordController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("email: ${widget.email}");
+//       debugPrint("otp: ${widget.otp}");
+//       debugPrint("password: ${newpasswordController.text}");
+//       debugPrint("confirmPassword: ${confirmPasswordController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -52,15 +52,15 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         resetPasswordModel = resetPasswordModelFromJson(responseString);
 //         setState(() {});
-//         print('resetPasswordModel status: ${resetPasswordModel.status}');
+//         debugPrint('resetPasswordModel status: ${resetPasswordModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -68,8 +68,8 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     print("initState Email: ${widget.email}");
-//     print("initState OTP: ${widget.otp}");
+//     debugPrint("initState Email: ${widget.email}");
+//     debugPrint("initState OTP: ${widget.otp}");
 //   }
 
 //   @override

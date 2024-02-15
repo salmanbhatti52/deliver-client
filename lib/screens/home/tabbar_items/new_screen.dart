@@ -146,7 +146,7 @@ class _NewScreenState extends State<NewScreen> {
   getAllSystemData() async {
     try {
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -154,11 +154,12 @@ class _NewScreenState extends State<NewScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_latitude") {
             systemLat = "${getAllSystemDataModel.data?[i].description}";
@@ -182,7 +183,7 @@ class _NewScreenState extends State<NewScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -197,8 +198,8 @@ class _NewScreenState extends State<NewScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_addresses_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -209,11 +210,11 @@ class _NewScreenState extends State<NewScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAddressesModel = getAddressesModelFromJson(responseString);
-        print('getAddressesModel status: ${getAddressesModel.status}');
+        debugPrint('getAddressesModel status: ${getAddressesModel.status}');
         for (int i = 0; i < getAddressesModel.data!.length; i++) {
           addresses.add("${getAddressesModel.data?[i]}");
         }
@@ -222,7 +223,7 @@ class _NewScreenState extends State<NewScreen> {
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -232,7 +233,7 @@ class _NewScreenState extends State<NewScreen> {
   getServiceTypes() async {
     try {
       String apiUrl = "$baseUrl/get_service_types";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -240,11 +241,12 @@ class _NewScreenState extends State<NewScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getServiceTypesModel = getServiceTypesModelFromJson(responseString);
-        print('getServiceTypesModel status: ${getServiceTypesModel.status}');
+        debugPrint(
+            'getServiceTypesModel status: ${getServiceTypesModel.status}');
         setState(() {});
         for (int i = 0; i < getServiceTypesModel.data!.length; i++) {
           if (getServiceTypesModel.data?[i].name == "Deliver a Parcel") {
@@ -258,7 +260,7 @@ class _NewScreenState extends State<NewScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -271,8 +273,8 @@ class _NewScreenState extends State<NewScreen> {
   getVehiclesByServiceType(String? serviceId) async {
     try {
       String apiUrl = "$baseUrl/get_vehicles_by_service_type";
-      print("apiUrl: $apiUrl");
-      print("serviceTypesId: $serviceId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("serviceTypesId: $serviceId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -283,20 +285,20 @@ class _NewScreenState extends State<NewScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getVehiclesByServiceTypeModel =
             getVehiclesByServiceTypeModelFromJson(responseString);
         setState(() {});
-        print(
+        debugPrint(
             'getVehiclesByServiceTypeModel status: ${getVehiclesByServiceTypeModel.status}');
         for (int i = 0; i < getVehiclesByServiceTypeModel.data!.length; i++) {
           vehiclesType.add("${getVehiclesByServiceTypeModel.data?[i].name}");
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -306,7 +308,7 @@ class _NewScreenState extends State<NewScreen> {
   getBookingsType() async {
     try {
       String apiUrl = "$baseUrl/get_bookings_types";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -314,19 +316,20 @@ class _NewScreenState extends State<NewScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getBookingsTypeModel = getBookingsTypeModelFromJson(responseString);
         setState(() {});
-        print('getBookingsTypeModel status: ${getBookingsTypeModel.status}');
+        debugPrint(
+            'getBookingsTypeModel status: ${getBookingsTypeModel.status}');
         for (int i = 0; i < getBookingsTypeModel.data!.length; i++) {
           bookingName = getBookingsTypeModel.data?[i].name;
           bookingType.add("$bookingName");
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -343,9 +346,9 @@ class _NewScreenState extends State<NewScreen> {
         "bookings_types_id": bTypeId,
         "distance": distanceMap,
       };
-      print("apiUrl: $apiUrl");
-      print("bookingsTypeId: $bTypeId");
-      print("requestBody: $requestBody");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("bookingsTypeId: $bTypeId");
+      debugPrint("requestBody: $requestBody");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -355,19 +358,19 @@ class _NewScreenState extends State<NewScreen> {
         body: jsonEncode(requestBody),
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getChargesModel = getChargesModelFromJson(responseString);
-        print('getChargesModel status: ${getChargesModel.status}');
-        print('getChargesModel length: ${getChargesModel.data!.length}');
+        debugPrint('getChargesModel status: ${getChargesModel.status}');
+        debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
         toKm = "${getChargesModel.data![0].firstMilesTo}";
         fromKm = "${getChargesModel.data![0].firstMilesFrom}";
         perKmAmount = "${getChargesModel.data![0].firstMilesAmount}";
         setState(() {});
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -390,9 +393,9 @@ class _NewScreenState extends State<NewScreen> {
         "bookings_types_id": bTypeId,
         "distance": distanceMap,
       };
-      print("apiUrl: $apiUrl");
-      print("bookingsTypeId: $bTypeId");
-      print("requestBody: $requestBody");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("bookingsTypeId: $bTypeId");
+      debugPrint("requestBody: $requestBody");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -402,12 +405,12 @@ class _NewScreenState extends State<NewScreen> {
         body: jsonEncode(requestBody),
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getChargesModel = getChargesModelFromJson(responseString);
-        print('getChargesModel status: ${getChargesModel.status}');
-        print('getChargesModel length: ${getChargesModel.data!.length}');
+        debugPrint('getChargesModel status: ${getChargesModel.status}');
+        debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
         // for (int i = 0; i < getChargesModel.data!.length; i++) {
         toKm0 = "${getChargesModel.data![0].firstMilesTo}";
         fromKm0 = "${getChargesModel.data![0].firstMilesFrom}";
@@ -434,7 +437,7 @@ class _NewScreenState extends State<NewScreen> {
         setState(() {});
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -470,9 +473,9 @@ class _NewScreenState extends State<NewScreen> {
     } else if (from > 30.99) {
       totalAmount = distance * perKm;
     }
-    print("totalAmount: $totalAmount");
+    debugPrint("totalAmount: $totalAmount");
     roundedTotalAmount = totalAmount!.toStringAsFixed(2);
-    print("roundedTotalAmount: $roundedTotalAmount");
+    debugPrint("roundedTotalAmount: $roundedTotalAmount");
   }
 
   calculateStandardAmount0(
@@ -484,9 +487,9 @@ class _NewScreenState extends State<NewScreen> {
     } else if (from0 > 30.99) {
       totalAmount0 = distance0 * perKm0;
     }
-    print("totalAmount0: $totalAmount0");
+    debugPrint("totalAmount0: $totalAmount0");
     roundedTotalAmount0 = totalAmount0!.toStringAsFixed(2);
-    print("roundedTotalAmount0: $roundedTotalAmount0");
+    debugPrint("roundedTotalAmount0: $roundedTotalAmount0");
   }
 
   calculateStandardAmount1(
@@ -498,9 +501,9 @@ class _NewScreenState extends State<NewScreen> {
     } else if (from1 > 30.99) {
       totalAmount1 = distance1 * perKm1;
     }
-    print("totalAmount1: $totalAmount1");
+    debugPrint("totalAmount1: $totalAmount1");
     roundedTotalAmount1 = totalAmount1!.toStringAsFixed(2);
-    print("roundedTotalAmount1: $roundedTotalAmount1");
+    debugPrint("roundedTotalAmount1: $roundedTotalAmount1");
   }
 
   calculateStandardAmount2(
@@ -512,9 +515,9 @@ class _NewScreenState extends State<NewScreen> {
     } else if (from2 > 30.99) {
       totalAmount2 = distance2 * perKm2;
     }
-    print("totalAmount2: $totalAmount2");
+    debugPrint("totalAmount2: $totalAmount2");
     roundedTotalAmount2 = totalAmount2!.toStringAsFixed(2);
-    print("roundedTotalAmount2: $roundedTotalAmount2");
+    debugPrint("roundedTotalAmount2: $roundedTotalAmount2");
   }
 
   calculateStandardAmount3(
@@ -526,9 +529,9 @@ class _NewScreenState extends State<NewScreen> {
     } else if (from3 > 30.99) {
       totalAmount3 = distance3 * perKm3;
     }
-    print("totalAmount3: $totalAmount3");
+    debugPrint("totalAmount3: $totalAmount3");
     roundedTotalAmount3 = totalAmount3!.toStringAsFixed(2);
-    print("roundedTotalAmount3: $roundedTotalAmount3");
+    debugPrint("roundedTotalAmount3: $roundedTotalAmount3");
   }
 
   calculateStandardAmount4(
@@ -540,9 +543,9 @@ class _NewScreenState extends State<NewScreen> {
     } else if (from4 > 30.99) {
       totalAmount4 = distance4 * perKm4;
     }
-    print("totalAmount4: $totalAmount4");
+    debugPrint("totalAmount4: $totalAmount4");
     roundedTotalAmount4 = totalAmount4!.toStringAsFixed(2);
-    print("roundedTotalAmount4: $roundedTotalAmount4");
+    debugPrint("roundedTotalAmount4: $roundedTotalAmount4");
   }
 
   int currentIndex = 0;
@@ -631,9 +634,9 @@ class _NewScreenState extends State<NewScreen> {
         pickupController.text = currentAddress;
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
-        print("currentLat: $currentLat");
-        print("currentLng: $currentLng");
-        print("currentPickupLocation: $currentAddress");
+        debugPrint("currentLat: $currentLat");
+        debugPrint("currentLng: $currentLng");
+        debugPrint("currentPickupLocation: $currentAddress");
       });
 
       mapController
@@ -687,10 +690,10 @@ class _NewScreenState extends State<NewScreen> {
       final data = await api.getDistanceAndTime(origin, destination);
       distance = data['rows'][0]['elements'][0]['distance']['text'];
       duration = data['rows'][0]['elements'][0]['duration']['text'];
-      print("distance: $distance");
-      print("duration: $duration");
+      debugPrint("distance: $distance");
+      debugPrint("duration: $duration");
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
@@ -951,9 +954,11 @@ class _NewScreenState extends State<NewScreen> {
                                           setState(() {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            print("addressLat: $addressLat");
-                                            print("addressLng $addressLng");
-                                            print(
+                                            debugPrint(
+                                                "addressLat: $addressLat");
+                                            debugPrint(
+                                                "addressLng $addressLng");
+                                            debugPrint(
                                                 "addressLocation: ${addresses.address}");
                                           });
                                           // Move the map camera to the selected location
@@ -1091,9 +1096,9 @@ class _NewScreenState extends State<NewScreen> {
                                             pickUpPredictions.clear();
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            print("pickupLat: $pickupLat");
-                                            print("pickupLng $pickupLng");
-                                            print(
+                                            debugPrint("pickupLat: $pickupLat");
+                                            debugPrint("pickupLng $pickupLng");
+                                            debugPrint(
                                                 "pickupLocation: ${prediction.formattedAddress}");
                                           });
                                           // Move the map camera to the selected location
@@ -1217,9 +1222,11 @@ class _NewScreenState extends State<NewScreen> {
                                       destinationPredictions.clear();
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
-                                      print("destinationLat: $destinationLat");
-                                      print("destinationLng $destinationLng");
-                                      print(
+                                      debugPrint(
+                                          "destinationLat: $destinationLat");
+                                      debugPrint(
+                                          "destinationLng $destinationLng");
+                                      debugPrint(
                                           "destinationLocation: ${prediction.formattedAddress}");
                                     });
                                   },
@@ -1406,28 +1413,28 @@ class _NewScreenState extends State<NewScreen> {
               'duration': duration,
             }
           });
-          print("distanceDurationList $distanceDurationList");
+          debugPrint("distanceDurationList $distanceDurationList");
           for (var i = 0; i < distanceDurationList.length; i++) {
             dataForIndex1 = distanceDurationList[i];
             dataIndex1 = dataForIndex1.keys.first; // Get the index
             distanceData = dataForIndex1[dataIndex1];
             // Check if data contains null values
             if (distanceData!.containsValue(null)) {
-              print(
+              debugPrint(
                   "Data for Index in distanceDurationList $dataIndex1: Data contains null values");
             } else {
-              print(
+              debugPrint(
                   "Data for Index in distanceDurationList $dataIndex1: $distanceData");
               // Store the data in the distanceDataMap
               distanceDataMap[dataIndex1!] = distanceData!;
             }
           }
-          print("Delivery $i - Distance: $distance, Duration: $duration");
+          debugPrint("Delivery $i - Distance: $distance, Duration: $duration");
         } catch (e) {
-          print("Error for Delivery $i: $e");
+          debugPrint("Error for Delivery $i: $e");
         }
       } else {
-        print("Invalid coordinates for Delivery $i");
+        debugPrint("Invalid coordinates for Delivery $i");
       }
     }
   }
@@ -1451,16 +1458,16 @@ class _NewScreenState extends State<NewScreen> {
             'longitude': locations[0].longitude,
           };
         } else {
-          print('No results for address: $address');
+          debugPrint('No results for address: $address');
           return null;
         }
       } catch (e) {
-        print('Error geocoding address: $address');
+        debugPrint('Error geocoding address: $address');
         print(e);
         return null;
       }
     } else {
-      print('Empty address for geocoding');
+      debugPrint('Empty address for geocoding');
       return null;
     }
   }
@@ -1520,31 +1527,32 @@ class _NewScreenState extends State<NewScreen> {
         geocodingFutures.add(pickupLatLngFuture.then((pickupLatLng) {
           if (pickupLatLng != null) {
             data['pickupLatLng'] = pickupLatLng;
-            print('PickupLatLng for index $index: $pickupLatLng');
+            debugPrint('PickupLatLng for index $index: $pickupLatLng');
             pickupLatLngList[index] = pickupLatLng; // Store the pickupLatLng
           } else {
-            print('Invalid PickupLatLng for index $index');
+            debugPrint('Invalid PickupLatLng for index $index');
           }
         }));
 
         geocodingFutures.add(destinationLatLngFuture.then((destinationLatLng) {
           if (destinationLatLng != null) {
             data['destinationLatLng'] = destinationLatLng;
-            print('DestinationLatLng for index $index: $destinationLatLng');
+            debugPrint(
+                'DestinationLatLng for index $index: $destinationLatLng');
             destinationLatLngList[index] =
                 destinationLatLng; // Store the destinationLatLng
           } else {
-            print('Invalid DestinationLatLng for index $index');
+            debugPrint('Invalid DestinationLatLng for index $index');
           }
         }));
 
         await Future.wait([pickupLatLngFuture, destinationLatLngFuture]);
 
-        print("pickupController: ${data['pickupController']}");
-        print("destinationController: ${data['destinationController']}");
-        print("Data for index $index: $data");
+        debugPrint("pickupController: ${data['pickupController']}");
+        debugPrint("destinationController: ${data['destinationController']}");
+        debugPrint("Data for index $index: $data");
         allDataForIndexes1.add({'$index': data});
-        print(" allDataForIndexes Big: $allDataForIndexes1");
+        debugPrint(" allDataForIndexes Big: $allDataForIndexes1");
       }
 
       // Wait for all geocoding operations to complete before calculating distances and durations
@@ -1556,32 +1564,32 @@ class _NewScreenState extends State<NewScreen> {
       filteredData = allDataForIndexes1
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
-      print("filteredData: $filteredData");
+      debugPrint("filteredData: $filteredData");
       if (dataIndex1 == 0) {
         distance0 = distanceDataMap[0]!['distance'];
         duration0 = distanceDataMap[0]!['duration'];
-        print("distance 0: $distance0");
-        print("duration 0: $duration0");
+        debugPrint("distance 0: $distance0");
+        debugPrint("duration 0: $duration0");
       } else if (dataIndex1 == 1) {
         distance1 = distanceDataMap[1]!['distance'];
         duration1 = distanceDataMap[1]!['duration'];
-        print("distance 1: $distance1");
-        print("duration 1: $duration1");
+        debugPrint("distance 1: $distance1");
+        debugPrint("duration 1: $duration1");
       } else if (dataIndex1 == 2) {
         distance2 = distanceDataMap[2]!['distance'];
         duration2 = distanceDataMap[2]!['duration'];
-        print("distance 2: $distance2");
-        print("duration 2: $duration2");
+        debugPrint("distance 2: $distance2");
+        debugPrint("duration 2: $duration2");
       } else if (dataIndex1 == 3) {
         distance3 = distanceDataMap[3]!['distance'];
         duration3 = distanceDataMap[3]!['duration'];
-        print("distance 3: $distance3");
-        print("duration 3: $duration3");
+        debugPrint("distance 3: $distance3");
+        debugPrint("duration 3: $duration3");
       } else if (dataIndex1 == 4) {
         distance4 = distanceDataMap[4]!['distance'];
         duration4 = distanceDataMap[4]!['duration'];
-        print("distance 4: $distance4");
-        print("duration 4: $duration4");
+        debugPrint("distance 4: $distance4");
+        debugPrint("duration 4: $duration4");
       }
     }
 
@@ -1596,7 +1604,7 @@ class _NewScreenState extends State<NewScreen> {
           onPageChanged: (value) async {
             setState(() {
               currentIndex = value;
-              print('currentIndex: $currentIndex');
+              debugPrint('currentIndex: $currentIndex');
             });
             await fetchData();
           },
@@ -1610,12 +1618,13 @@ class _NewScreenState extends State<NewScreen> {
             TextEditingController receiversNumberController =
                 receiversNumberControllers[index];
 
-            print('pageIndex: $index');
-            print('isSelectedAddress: $isSelectedAddress');
-            print('pickupController: ${pickupController.text}');
-            print('destinationController: ${destinationController.text}');
-            print('receiversNameController: ${receiversNameController.text}');
-            print(
+            debugPrint('pageIndex: $index');
+            debugPrint('isSelectedAddress: $isSelectedAddress');
+            debugPrint('pickupController: ${pickupController.text}');
+            debugPrint('destinationController: ${destinationController.text}');
+            debugPrint(
+                'receiversNameController: ${receiversNameController.text}');
+            debugPrint(
                 'receiversNumberController: ${receiversNumberController.text}');
 
             if (index == 1 &&
@@ -1731,7 +1740,7 @@ class _NewScreenState extends State<NewScreen> {
                               setState(() {
                                 isSelectedBus = false;
                                 isSelectedCourier = true;
-                                print("courierId: $courierId");
+                                debugPrint("courierId: $courierId");
                               });
                             },
                             child: Stack(
@@ -1796,7 +1805,7 @@ class _NewScreenState extends State<NewScreen> {
                               setState(() {
                                 isSelectedBus = true;
                                 isSelectedCourier = false;
-                                print("otherId: $otherId");
+                                debugPrint("otherId: $otherId");
                               });
                             },
                             child: Stack(
@@ -1867,7 +1876,8 @@ class _NewScreenState extends State<NewScreen> {
                                       i < 5 && i < distanceDurationList.length;
                                       i++) {
                                     final entry = distanceDurationList[i];
-                                    print("distanceDurationList[$i]: $entry");
+                                    debugPrint(
+                                        "distanceDurationList[$i]: $entry");
                                   }
                                 });
                               },
@@ -2127,7 +2137,7 @@ class _NewScreenState extends State<NewScreen> {
                                     onChanged: (value) {
                                       setState(() {
                                         selectedVehicle = value;
-                                        print("selectedVehicle: $value");
+                                        debugPrint("selectedVehicle: $value");
                                         if (getVehiclesByServiceTypeModel
                                                 .data !=
                                             null) {
@@ -2143,7 +2153,7 @@ class _NewScreenState extends State<NewScreen> {
                                                   getVehiclesByServiceTypeModel
                                                       .data?[i].vehiclesId
                                                       .toString();
-                                              print(
+                                              debugPrint(
                                                   'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
                                             }
                                           }
@@ -2245,7 +2255,7 @@ class _NewScreenState extends State<NewScreen> {
                                     value: selectedBookingType,
                                     onChanged: (value) async {
                                       selectedBookingType = value;
-                                      print("selectedBookingType: $value");
+                                      debugPrint("selectedBookingType: $value");
                                       if (getBookingsTypeModel.data != null) {
                                         for (int i = 0;
                                             i <
@@ -2258,7 +2268,7 @@ class _NewScreenState extends State<NewScreen> {
                                                 getBookingsTypeModel
                                                     .data?[i].bookingsTypesId
                                                     .toString();
-                                            print(
+                                            debugPrint(
                                                 'bookingsTypeId: $bookingsTypeId');
                                           }
                                         }
@@ -2437,10 +2447,10 @@ class _NewScreenState extends State<NewScreen> {
                                     } else {
                                       await getChargesSingle(bookingsTypeId);
                                       if (bookingsTypeId == "1") {
-                                        print("fromKm: $fromKm");
-                                        print("toKm: $toKm");
-                                        print("perKmAmount: $perKmAmount");
-                                        print("totalDistance: $distance");
+                                        debugPrint("fromKm: $fromKm");
+                                        debugPrint("toKm: $toKm");
+                                        debugPrint("perKmAmount: $perKmAmount");
+                                        debugPrint("totalDistance: $distance");
                                         calculateStandardAmount(
                                             double.parse(fromKm!),
                                             toKm != "null"
@@ -2565,10 +2575,12 @@ class _NewScreenState extends State<NewScreen> {
                                         await getChargesMultiple(
                                             bookingsTypeId);
                                         if (bookingsTypeId == "1") {
-                                          print("fromKm0: $fromKm0");
-                                          print("toKm0: $toKm0");
-                                          print("perKmAmount0: $perKmAmount0");
-                                          print("totalDistance0: $distance0");
+                                          debugPrint("fromKm0: $fromKm0");
+                                          debugPrint("toKm0: $toKm0");
+                                          debugPrint(
+                                              "perKmAmount0: $perKmAmount0");
+                                          debugPrint(
+                                              "totalDistance0: $distance0");
                                           calculateStandardAmount0(
                                               double.parse(fromKm0!),
                                               toKm0 != "null"
@@ -2577,10 +2589,12 @@ class _NewScreenState extends State<NewScreen> {
                                               double.parse(perKmAmount0!),
                                               double.parse(
                                                   distance0!.split(" ")[0]));
-                                          print("fromKm1: $fromKm1");
-                                          print("toKm1: $toKm1");
-                                          print("perKmAmount1: $perKmAmount1");
-                                          print("totalDistance1: $distance1");
+                                          debugPrint("fromKm1: $fromKm1");
+                                          debugPrint("toKm1: $toKm1");
+                                          debugPrint(
+                                              "perKmAmount1: $perKmAmount1");
+                                          debugPrint(
+                                              "totalDistance1: $distance1");
                                           calculateStandardAmount1(
                                               double.parse(fromKm1!),
                                               toKm1 != "null"
@@ -2590,11 +2604,12 @@ class _NewScreenState extends State<NewScreen> {
                                               double.parse(
                                                   distance1!.split(" ")[0]));
                                           if (distance2 != null) {
-                                            print("fromKm2: $fromKm2");
-                                            print("toKm2: $toKm2");
-                                            print(
+                                            debugPrint("fromKm2: $fromKm2");
+                                            debugPrint("toKm2: $toKm2");
+                                            debugPrint(
                                                 "perKmAmount2: $perKmAmount2");
-                                            print("totalDistance2: $distance2");
+                                            debugPrint(
+                                                "totalDistance2: $distance2");
                                             calculateStandardAmount2(
                                                 double.parse(fromKm2!),
                                                 toKm2 != "null"
@@ -2605,11 +2620,12 @@ class _NewScreenState extends State<NewScreen> {
                                                     distance2!.split(" ")[0]));
                                           }
                                           if (distance3 != null) {
-                                            print("fromKm3: $fromKm3");
-                                            print("toKm3: $toKm3");
-                                            print(
+                                            debugPrint("fromKm3: $fromKm3");
+                                            debugPrint("toKm3: $toKm3");
+                                            debugPrint(
                                                 "perKmAmount3: $perKmAmount3");
-                                            print("totalDistance3: $distance3");
+                                            debugPrint(
+                                                "totalDistance3: $distance3");
                                             calculateStandardAmount3(
                                                 double.parse(fromKm3!),
                                                 toKm3 != "null"
@@ -2620,11 +2636,12 @@ class _NewScreenState extends State<NewScreen> {
                                                     distance3!.split(" ")[0]));
                                           }
                                           if (distance4 != null) {
-                                            print("fromKm4: $fromKm4");
-                                            print("toKm4: $toKm4");
-                                            print(
+                                            debugPrint("fromKm4: $fromKm4");
+                                            debugPrint("toKm4: $toKm4");
+                                            debugPrint(
                                                 "perKmAmount4: $perKmAmount4");
-                                            print("totalDistance4: $distance4");
+                                            debugPrint(
+                                                "totalDistance4: $distance4");
                                             calculateStandardAmount4(
                                                 double.parse(fromKm4!),
                                                 toKm3 != "null"
@@ -2712,7 +2729,7 @@ class _NewScreenState extends State<NewScreen> {
                                                 .map((key, value) => MapEntry(
                                                     int.parse(key), value));
                                           } else {
-                                            print(
+                                            debugPrint(
                                                 "Invalid or out of bounds index: $dataIndexString");
                                           }
                                         }
@@ -2939,10 +2956,10 @@ class _NewScreenState extends State<NewScreen> {
                                     } else {
                                       await getChargesSingle(bookingsTypeId);
                                       if (bookingsTypeId == "1") {
-                                        print("fromKm: $fromKm");
-                                        print("toKm: $toKm");
-                                        print("perKmAmount: $perKmAmount");
-                                        print("totalDistance: $distance");
+                                        debugPrint("fromKm: $fromKm");
+                                        debugPrint("toKm: $toKm");
+                                        debugPrint("perKmAmount: $perKmAmount");
+                                        debugPrint("totalDistance: $distance");
                                         calculateStandardAmount(
                                             double.parse(fromKm!),
                                             toKm != "null"
@@ -3066,10 +3083,12 @@ class _NewScreenState extends State<NewScreen> {
                                         await getChargesMultiple(
                                             bookingsTypeId);
                                         if (bookingsTypeId == "1") {
-                                          print("fromKm0: $fromKm0");
-                                          print("toKm0: $toKm0");
-                                          print("perKmAmount0: $perKmAmount0");
-                                          print("totalDistance0: $distance0");
+                                          debugPrint("fromKm0: $fromKm0");
+                                          debugPrint("toKm0: $toKm0");
+                                          debugPrint(
+                                              "perKmAmount0: $perKmAmount0");
+                                          debugPrint(
+                                              "totalDistance0: $distance0");
                                           calculateStandardAmount0(
                                               double.parse(fromKm0!),
                                               toKm0 != "null"
@@ -3078,10 +3097,12 @@ class _NewScreenState extends State<NewScreen> {
                                               double.parse(perKmAmount0!),
                                               double.parse(
                                                   distance0!.split(" ")[0]));
-                                          print("fromKm1: $fromKm1");
-                                          print("toKm1: $toKm1");
-                                          print("perKmAmount1: $perKmAmount1");
-                                          print("totalDistance1: $distance1");
+                                          debugPrint("fromKm1: $fromKm1");
+                                          debugPrint("toKm1: $toKm1");
+                                          debugPrint(
+                                              "perKmAmount1: $perKmAmount1");
+                                          debugPrint(
+                                              "totalDistance1: $distance1");
                                           calculateStandardAmount1(
                                               double.parse(fromKm1!),
                                               toKm1 != "null"
@@ -3091,11 +3112,12 @@ class _NewScreenState extends State<NewScreen> {
                                               double.parse(
                                                   distance1!.split(" ")[0]));
                                           if (distance2 != null) {
-                                            print("fromKm2: $fromKm2");
-                                            print("toKm2: $toKm2");
-                                            print(
+                                            debugPrint("fromKm2: $fromKm2");
+                                            debugPrint("toKm2: $toKm2");
+                                            debugPrint(
                                                 "perKmAmount2: $perKmAmount2");
-                                            print("totalDistance2: $distance2");
+                                            debugPrint(
+                                                "totalDistance2: $distance2");
                                             calculateStandardAmount2(
                                                 double.parse(fromKm2!),
                                                 toKm2 != "null"
@@ -3106,11 +3128,12 @@ class _NewScreenState extends State<NewScreen> {
                                                     distance2!.split(" ")[0]));
                                           }
                                           if (distance3 != null) {
-                                            print("fromKm3: $fromKm3");
-                                            print("toKm3: $toKm3");
-                                            print(
+                                            debugPrint("fromKm3: $fromKm3");
+                                            debugPrint("toKm3: $toKm3");
+                                            debugPrint(
                                                 "perKmAmount3: $perKmAmount3");
-                                            print("totalDistance3: $distance3");
+                                            debugPrint(
+                                                "totalDistance3: $distance3");
                                             calculateStandardAmount3(
                                                 double.parse(fromKm3!),
                                                 toKm3 != "null"
@@ -3121,11 +3144,12 @@ class _NewScreenState extends State<NewScreen> {
                                                     distance3!.split(" ")[0]));
                                           }
                                           if (distance4 != null) {
-                                            print("fromKm4: $fromKm4");
-                                            print("toKm4: $toKm4");
-                                            print(
+                                            debugPrint("fromKm4: $fromKm4");
+                                            debugPrint("toKm4: $toKm4");
+                                            debugPrint(
                                                 "perKmAmount4: $perKmAmount4");
-                                            print("totalDistance4: $distance4");
+                                            debugPrint(
+                                                "totalDistance4: $distance4");
                                             calculateStandardAmount4(
                                                 double.parse(fromKm4!),
                                                 toKm3 != "null"
@@ -3193,7 +3217,8 @@ class _NewScreenState extends State<NewScreen> {
                                           "destin_discounted_charges4": "0.00",
                                         };
 
-                                        print("filteredData: $filteredData");
+                                        debugPrint(
+                                            "filteredData: $filteredData");
 
                                         List<Map<int, dynamic>> indexData =
                                             List.filled(5, {});
@@ -3215,7 +3240,7 @@ class _NewScreenState extends State<NewScreen> {
                                                 .map((key, value) => MapEntry(
                                                     int.parse(key), value));
                                           } else {
-                                            print(
+                                            debugPrint(
                                                 "Invalid or out of bounds index: $dataIndexString");
                                           }
                                         }
@@ -3232,11 +3257,11 @@ class _NewScreenState extends State<NewScreen> {
                                         Map<int, dynamic> indexData4 =
                                             indexData[4];
 
-                                        print("indexData0: $indexData0");
-                                        print("indexData1: $indexData1");
-                                        print("indexData2: $indexData2");
-                                        print("indexData3: $indexData3");
-                                        print("indexData4: $indexData4");
+                                        debugPrint("indexData0: $indexData0");
+                                        debugPrint("indexData1: $indexData1");
+                                        debugPrint("indexData2: $indexData2");
+                                        debugPrint("indexData3: $indexData3");
+                                        debugPrint("indexData4: $indexData4");
 
                                         Navigator.push(
                                           context,

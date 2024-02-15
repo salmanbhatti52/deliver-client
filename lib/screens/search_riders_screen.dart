@@ -35,10 +35,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_riders_available";
-      print("apiUrl: $apiUrl");
-      print("vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
-      print("pickupLatitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"]}");
-      print("pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
+      debugPrint("pickupLatitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"]}");
+      debugPrint("pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -52,13 +52,13 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       );
       final responseString = response.body;
       var data = jsonDecode(responseString);
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (data["status"] == "success") {
         if (response.statusCode == 200) {
           searchRiderModel = searchRiderModelFromJson(responseString);
-          print('searchRiderModel status: ${searchRiderModel.status}');
-          print('searchRiderModel length: ${searchRiderModel.data!.length}');
+          debugPrint('searchRiderModel status: ${searchRiderModel.status}');
+          debugPrint('searchRiderModel length: ${searchRiderModel.data!.length}');
           setState(() {
             isLoading = false;
           });
@@ -69,7 +69,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -82,7 +82,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -90,22 +90,22 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "user_radius") {
             userRadius = "${getAllSystemDataModel.data?[i].description}";
-            print("userRadius: $userRadius");
+            debugPrint("userRadius: $userRadius");
           }
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -125,8 +125,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     super.initState();
     searchRider();
     getAllSystemData();
-    print('singleData: ${widget.singleData}');
-    print('multipleData: ${widget.multipleData}');
+    debugPrint('singleData: ${widget.singleData}');
+    debugPrint('multipleData: ${widget.multipleData}');
   }
 
   @override
@@ -223,7 +223,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                               searchRiderModel.data?.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {
-                                            print(
+                                            debugPrint(
                                                 "length: ${searchRiderModel.data?.length}");
                                             return RidersList(
                                               singleData: widget.singleData!.isNotEmpty ? widget.singleData : const {},

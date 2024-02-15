@@ -63,12 +63,12 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/add_address_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
-      print("name: ${nameController.text}");
-      print("address: ${searchController.text}");
-      print("latitude: ${addressLat ?? currentLat}");
-      print("longitude: ${addressLng ?? currentLng}");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("name: ${nameController.text}");
+      debugPrint("address: ${searchController.text}");
+      debugPrint("latitude: ${addressLat ?? currentLat}");
+      debugPrint("longitude: ${addressLng ?? currentLng}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -83,15 +83,15 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         addAddressesModel = addAddressesModelFromJson(responseString);
         setState(() {});
-        print('addAddressesModel status: ${addAddressesModel.status}');
+        debugPrint('addAddressesModel status: ${addAddressesModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -101,7 +101,7 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
   getAllSystemData() async {
     try {
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -109,29 +109,29 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_latitude") {
             systemLat = "${getAllSystemDataModel.data?[i].description}";
             doubleSystemLat = double.parse(systemLat!);
-            print("doubleSystemLat: $doubleSystemLat");
+            debugPrint("doubleSystemLat: $doubleSystemLat");
           }
           if (getAllSystemDataModel.data?[i].type == "system_longitude") {
             systemLng = "${getAllSystemDataModel.data?[i].description}";
             doubleSystemLng = double.parse(systemLng!);
-            print("doubleSystemLng: $doubleSystemLng");
+            debugPrint("doubleSystemLng: $doubleSystemLng");
           }
           setState(() {});
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -168,9 +168,9 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
         searchController.text = currentAddress;
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
-        print("currentLat: $currentLat");
-        print("currentLng: $currentLng");
-        print("currentpickupLocation: $currentAddress");
+        debugPrint("currentLat: $currentLat");
+        debugPrint("currentLng: $currentLng");
+        debugPrint("currentpickupLocation: $currentAddress");
       });
 
       mapController
@@ -386,9 +386,9 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
                                                 FocusManager
                                                     .instance.primaryFocus
                                                     ?.unfocus();
-                                                print("pickupLat: $addressLat");
-                                                print("pickupLng $addressLng");
-                                                print(
+                                                debugPrint("pickupLat: $addressLat");
+                                                debugPrint("pickupLng $addressLng");
+                                                debugPrint(
                                                     "pickupLocation: ${prediction.formattedAddress}");
                                               });
                                               // Move the map camera to the selected location

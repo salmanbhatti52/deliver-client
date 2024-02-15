@@ -34,8 +34,8 @@
 //   resendOTP() async {
 //     try {
 //       String apiUrl = "$baseUrl/forgot_password_customers";
-//       print("apiUrl: $apiUrl");
-//       print("email: ${widget.email}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("email: ${widget.email}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -46,8 +46,8 @@
 //         },
 //       );
 //       final responseString = jsonDecode(response.body);
-//       print("response: $responseString");
-//       print("status: ${responseString['status']}");
+//       debugPrint("response: $responseString");
+//       debugPrint("status: ${responseString['status']}");
 //       if (responseString["status"] == "success") {
 //         forgotPasswordModel = forgotPasswordModelFromJson(response.body);
 //         final snackBar = SnackBar(
@@ -87,7 +87,7 @@
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -97,9 +97,9 @@
 //   verifyOTP() async {
 //     try {
 //       String apiUrl = "$baseUrl/verify_forgot_password_otp_customers";
-//       print("apiUrl: $apiUrl");
-//       print("email: ${widget.email}");
-//       print("otp: ${otpController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("email: ${widget.email}");
+//       debugPrint("otp: ${otpController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -111,15 +111,15 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         verifyOtpModel = forgotPasswordVerifyOtpModelFromJson(responseString);
 //         setState(() {});
-//         print('forgotPasswordVerifyOtpModel status: ${verifyOtpModel.status}');
+//         debugPrint('forgotPasswordVerifyOtpModel status: ${verifyOtpModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -149,7 +149,7 @@
 //   void initState() {
 //     super.initState();
 //     startTimer();
-//     print("initState Email: ${widget.email}");
+//     debugPrint("initState Email: ${widget.email}");
 //   }
 
 //   @override
@@ -249,7 +249,7 @@
 //                   ),
 //                   onComplete: (output) {
 //                     // Your logic with pin code
-//                     // print(output);
+//                     // debugPrint(output);
 //                   },
 //                 ),
 //               ),

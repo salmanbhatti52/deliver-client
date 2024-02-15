@@ -60,7 +60,7 @@ class _ConfirmMultipleDetailsScreenState
   getAllSystemData() async {
     try {
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -68,29 +68,29 @@ class _ConfirmMultipleDetailsScreenState
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("currencyUnit: $currencyUnit");
+            debugPrint("currencyUnit: $currencyUnit");
           }
           if (getAllSystemDataModel.data?[i].type == "vat_charges") {
             vatCharges = "${getAllSystemDataModel.data?[i].description}";
             doubleVatCharges = double.parse(vatCharges!);
-            print("doubleVatCharges: $doubleVatCharges");
+            debugPrint("doubleVatCharges: $doubleVatCharges");
             setState(() {});
             calculateVATCharges(doubleVatCharges!);
           }
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -102,7 +102,7 @@ class _ConfirmMultipleDetailsScreenState
             double.parse(widget.multipleData!["destin_delivery_charges2"]) +
             double.parse(widget.multipleData!["destin_delivery_charges3"]) +
             double.parse(widget.multipleData!["destin_delivery_charges4"]);
-    print("deliveryCharges: $deliveryCharges");
+    debugPrint("deliveryCharges: $deliveryCharges");
   }
 
   allDiscountCharges() {
@@ -111,26 +111,26 @@ class _ConfirmMultipleDetailsScreenState
         double.parse(widget.multipleData!["destin_discount2"]) +
         double.parse(widget.multipleData!["destin_discount3"]) +
         double.parse(widget.multipleData!["destin_discount4"]);
-    print("discountCharges: $discountCharges");
+    debugPrint("discountCharges: $discountCharges");
   }
 
   calculateVATCharges(double vat) {
-    print("deliveryCharges: $deliveryCharges");
+    debugPrint("deliveryCharges: $deliveryCharges");
     double vatPercentage = vat / 100.0;
     totalVatCharges = deliveryCharges! - (deliveryCharges! * vatPercentage);
-    print("totalVatCharges: $totalVatCharges");
+    debugPrint("totalVatCharges: $totalVatCharges");
     totalVatAmount = deliveryCharges! - totalVatCharges!;
-    print("totalVatAmount: $totalVatAmount");
+    debugPrint("totalVatAmount: $totalVatAmount");
     roundedTotalVatAmount = double.parse(totalVatAmount!.toStringAsFixed(2));
-    print("roundedTotalVatAmount: $roundedTotalVatAmount");
+    debugPrint("roundedTotalVatAmount: $roundedTotalVatAmount");
     calculateTotalPrice(roundedTotalVatAmount!);
   }
 
   calculateTotalPrice(double roundedTotalVatAmount) {
     totalPrice = deliveryCharges! + roundedTotalVatAmount;
-    print("totalPrice: $totalPrice");
+    debugPrint("totalPrice: $totalPrice");
     roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
-    print("roundedTotalAmount: $roundedTotalPrice");
+    debugPrint("roundedTotalAmount: $roundedTotalPrice");
   }
 
   @override
@@ -139,7 +139,7 @@ class _ConfirmMultipleDetailsScreenState
     allCharges();
     getAllSystemData();
     allDiscountCharges();
-    print("multipleData:  ${widget.multipleData}");
+    debugPrint("multipleData:  ${widget.multipleData}");
     // if (widget.dataForIndexes != null) {
     //   for (var i = 0; i < widget.dataForIndexes!.length; i++) {
     //     final dataForIndex = widget.dataForIndexes![i];
@@ -148,28 +148,28 @@ class _ConfirmMultipleDetailsScreenState
     //
     //     // Check if data contains null values
     //     if (data.containsValue(null)) {
-    //       print("Data for Index $dataIndex: Data contains null values");
+    //       debugPrint("Data for Index $dataIndex: Data contains null values");
     //     } else {
-    //       print("Data for Index Number $dataIndex: $data");
+    //       debugPrint("Data for Index Number $dataIndex: $data");
     //     }
     //   }
     // }
 
     dataForIndex0 = widget.indexData0;
-    print("Data for Index 0: $dataForIndex0");
-    // print("pickupController for Index 0: ${dataForIndex0[0]["pickupController"]}");
+    debugPrint("Data for Index 0: $dataForIndex0");
+    // debugPrint("pickupController for Index 0: ${dataForIndex0[0]["pickupController"]}");
 
     dataForIndex1 = widget.indexData1;
-    print("Data for Index 1: $dataForIndex1");
+    debugPrint("Data for Index 1: $dataForIndex1");
 
     dataForIndex2 = widget.indexData2;
-    print("Data for Index 2: $dataForIndex2");
+    debugPrint("Data for Index 2: $dataForIndex2");
 
     dataForIndex3 = widget.indexData3;
-    print("Data for Index 3: $dataForIndex3");
+    debugPrint("Data for Index 3: $dataForIndex3");
 
     dataForIndex4 = widget.indexData4;
-    print("Data for Index 4: $dataForIndex4");
+    debugPrint("Data for Index 4: $dataForIndex4");
   }
 
   @override

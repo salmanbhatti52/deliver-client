@@ -41,13 +41,13 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
   @override
   initState() {
     super.initState();
-    print("Schedule indexData0: ${widget.indexData0}");
-    print("Schedule indexData1: ${widget.indexData1}");
-    print("Schedule indexData2: ${widget.indexData2}");
-    print("Schedule indexData3: ${widget.indexData3}");
-    print("Schedule indexData4: ${widget.indexData4}");
-    print("mapData Single: ${widget.scheduledSingleData}");
-    print("mapData Multiple: ${widget.scheduledMultipleData}");
+    debugPrint("Schedule indexData0: ${widget.indexData0}");
+    debugPrint("Schedule indexData1: ${widget.indexData1}");
+    debugPrint("Schedule indexData2: ${widget.indexData2}");
+    debugPrint("Schedule indexData3: ${widget.indexData3}");
+    debugPrint("Schedule indexData4: ${widget.indexData4}");
+    debugPrint("mapData Single: ${widget.scheduledSingleData}");
+    debugPrint("mapData Multiple: ${widget.scheduledMultipleData}");
   }
 
   DateTime? selectedDate;
@@ -174,7 +174,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                                   //     setState(() {
                                   //       selectedDate = date;
                                   //     });
-                                  //     print("selectedDate: $selectedDate");
+                                  //     debugPrint("selectedDate: $selectedDate");
                                   //   },
                                   //   currentTime: DateTime.now(),
                                   //   locale: picker.LocaleType.en,
@@ -250,7 +250,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                                       setState(() {
                                         selectedTime = time;
                                       });
-                                      print("selectedTime: $selectedTime");
+                                      debugPrint("selectedTime: $selectedTime");
                                     },
                                     currentTime: DateTime.now(),
                                     locale: picker.LocaleType.en,

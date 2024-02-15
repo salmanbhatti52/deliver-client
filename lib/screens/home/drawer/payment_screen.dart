@@ -50,12 +50,12 @@
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/add_bank_card_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
-//       print("cardHolderName: ${nameOnCardController.text}");
-//       print("cardNumber: ${cardNumberController.text}");
-//       print("expiryDate: ${mmYYController.text}");
-//       print("cvv: ${cvvController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
+//       debugPrint("cardHolderName: ${nameOnCardController.text}");
+//       debugPrint("cardNumber: ${cardNumberController.text}");
+//       debugPrint("expiryDate: ${mmYYController.text}");
+//       debugPrint("cvv: ${cvvController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -70,17 +70,17 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         addBankCardModel = addBankCardModelFromJson(responseString);
-//         print('addBankCardModel status: ${addBankCardModel.status}');
+//         debugPrint('addBankCardModel status: ${addBankCardModel.status}');
 //         setState(() {
 //           isLoading = false;
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -95,8 +95,8 @@
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/get_banks_cards_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -107,17 +107,17 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         getBankCardModel = getBankCardModelFromJson(responseString);
-//         print('getBankCardModel status: ${getBankCardModel.status}');
+//         debugPrint('getBankCardModel status: ${getBankCardModel.status}');
 //         setState(() {
 //           isLoading = false;
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -127,8 +127,8 @@
 //   deleteBankCard(int? bankCardId) async {
 //     try {
 //       String apiUrl = "$baseUrl/delete_bank_card_customers";
-//       print("apiUrl: $apiUrl");
-//       print("bankCardId: $bankCardId");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("bankCardId: $bankCardId");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -139,17 +139,17 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         deleteBankCardModel = deleteBankCardModelFromJson(responseString);
-//         print('deleteBankCardModel status: ${deleteBankCardModel.status}');
+//         debugPrint('deleteBankCardModel status: ${deleteBankCardModel.status}');
 //         setState(() {
 //           getBankCard();
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -337,7 +337,7 @@
 //                                             String formattedText = '${segments.first} ${segments.sublist(1, segments.length - 1).map((segment) {
 //                                                   return 'XXXX';
 //                                                 }).join(' ')} ${segments.last}';
-//                                             print(formattedText);
+//                                             debugPrint(formattedText);
 //                                             return Card(
 //                                               color: whiteColor,
 //                                               elevation: 5,

@@ -38,8 +38,8 @@
 //                   GetVehiclesByServiceTypeModel();
 //               try {
 //                 String apiUrl = "$baseUrl/get_vehicles_by_service_type";
-//                 print("apiUrl: $apiUrl");
-//                 print("serviceTypesId: $otherId");
+//                 debugPrint("apiUrl: $apiUrl");
+//                 debugPrint("serviceTypesId: $otherId");
 //                 final response = await http.post(
 //                   Uri.parse(apiUrl),
 //                   headers: {
@@ -50,15 +50,15 @@
 //                   },
 //                 );
 //                 final responseString = response.body;
-//                 print("response: $responseString");
-//                 print("statusCode: ${response.statusCode}");
+//                 debugPrint("response: $responseString");
+//                 debugPrint("statusCode: ${response.statusCode}");
 //                 if (response.statusCode == 200) {
 //                   getVehiclesByServiceTypeModel =
 //                       getVehiclesByServiceTypeModelFromJson(responseString);
 
-//                   print(
+//                   debugPrint(
 //                       'getVehiclesByServiceTypeModel status: ${getVehiclesByServiceTypeModel.status}');
-//                   print(
+//                   debugPrint(
 //                       'getVehiclesByServiceTypeModel length: ${getVehiclesByServiceTypeModel.data!.length}');
 //                   vehiclesType1.clear();
 //                   for (int i = 0;
@@ -71,7 +71,7 @@
 //                   setState(() {});
 //                 }
 //               } catch (e) {
-//                 print('Something went wrong = ${e.toString()}');
+//                 debugPrint('Something went wrong = ${e.toString()}');
 //               }
 //               setState(() {
 //                 isSelectedTruck = true;
@@ -135,8 +135,8 @@
 //                   GetVehiclesByServiceTypeModel();
 //               try {
 //                 String apiUrl = "$baseUrl/get_vehicles_by_service_type";
-//                 print("apiUrl: $apiUrl");
-//                 print("serviceTypesId: $otherId");
+//                 debugPrint("apiUrl: $apiUrl");
+//                 debugPrint("serviceTypesId: $otherId");
 //                 final response = await http.post(
 //                   Uri.parse(apiUrl),
 //                   headers: {
@@ -147,15 +147,15 @@
 //                   },
 //                 );
 //                 final responseString = response.body;
-//                 print("response: $responseString");
-//                 print("statusCode: ${response.statusCode}");
+//                 debugPrint("response: $responseString");
+//                 debugPrint("statusCode: ${response.statusCode}");
 //                 if (response.statusCode == 200) {
 //                   getVehiclesByServiceTypeModel =
 //                       getVehiclesByServiceTypeModelFromJson(responseString);
 
-//                   print(
+//                   debugPrint(
 //                       'getVehiclesByServiceTypeModel status: ${getVehiclesByServiceTypeModel.status}');
-//                   print(
+//                   debugPrint(
 //                       'getVehiclesByServiceTypeModel length: ${getVehiclesByServiceTypeModel.data!.length}');
 //                   vehiclesType1.clear();
 //                   for (int i = 0;
@@ -167,7 +167,7 @@
 //                   setState(() {});
 //                 }
 //               } catch (e) {
-//                 print('Something went wrong = ${e.toString()}');
+//                 debugPrint('Something went wrong = ${e.toString()}');
 //               }
 //               setState(() {
 //                 isSelectedTruck = false;
@@ -231,8 +231,8 @@
 //                   GetVehiclesByServiceTypeModel();
 //               try {
 //                 String apiUrl = "$baseUrl/get_vehicles_by_service_type";
-//                 print("apiUrl: $apiUrl");
-//                 print("serviceTypesId: $courierId");
+//                 debugPrint("apiUrl: $apiUrl");
+//                 debugPrint("serviceTypesId: $courierId");
 //                 final response = await http.post(
 //                   Uri.parse(apiUrl),
 //                   headers: {
@@ -243,15 +243,15 @@
 //                   },
 //                 );
 //                 final responseString = response.body;
-//                 print("response: $responseString");
-//                 print("statusCode: ${response.statusCode}");
+//                 debugPrint("response: $responseString");
+//                 debugPrint("statusCode: ${response.statusCode}");
 //                 if (response.statusCode == 200) {
 //                   getVehiclesByServiceTypeModel =
 //                       getVehiclesByServiceTypeModelFromJson(responseString);
 
-//                   print(
+//                   debugPrint(
 //                       'getVehiclesByServiceTypeModel status: ${getVehiclesByServiceTypeModel.status}');
-//                   print(
+//                   debugPrint(
 //                       'getVehiclesByServiceTypeModel length: ${getVehiclesByServiceTypeModel.data!.length}');
 //                   vehiclesType2.clear();
 //                   for (int i = 0;
@@ -259,13 +259,13 @@
 //                       i++) {
 //                     vehiclesType2
 //                         .add("${getVehiclesByServiceTypeModel.data?[i].name}");
-//                     print("vehiclesType2: $vehiclesType2");
+//                     debugPrint("vehiclesType2: $vehiclesType2");
 //                     callback!(vehiclesType2);
 //                   }
 //                   setState(() {});
 //                 }
 //               } catch (e) {
-//                 print('Something went wrong = ${e.toString()}');
+//                 debugPrint('Something went wrong = ${e.toString()}');
 //               }
 //               setState(() {
 //                 isSelectedTruck = false;

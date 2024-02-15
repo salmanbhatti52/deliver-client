@@ -124,13 +124,13 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         selectedMarker = const MarkerId('currentLocation');
         currentLat = position.latitude.toString();
         currentLng = position.longitude.toString();
-        print("currentLat: $currentLat");
-        print("currentLng: $currentLng");
+        debugPrint("currentLat: $currentLat");
+        debugPrint("currentLng: $currentLng");
         // widget.currentLats = position.latitude.toString();
         // widget.currentLngs = position.longitude.toString();
-        // print("currentLat: ${widget.currentLats}");
-        // print("currentLng: ${widget.currentLngs}");
-        print("currentPickupLocation: $currentAddress");
+        // debugPrint("currentLat: ${widget.currentLats}");
+        // debugPrint("currentLng: ${widget.currentLngs}");
+        debugPrint("currentPickupLocation: $currentAddress");
       });
       mapController
           ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
@@ -173,8 +173,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_addresses_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -185,11 +185,11 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAddressesModel = getAddressesModelFromJson(responseString);
-        print('getAddressesModel status: ${getAddressesModel.status}');
+        debugPrint('getAddressesModel status: ${getAddressesModel.status}');
         for (int i = 0; i < getAddressesModel.data!.length; i++) {
           addresses.add("${getAddressesModel.data?[i]}");
         }
@@ -198,7 +198,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -339,9 +339,9 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                           setState(() {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            print("addressLat: $addressLat");
-                                            print("addressLng $addressLng");
-                                            print(
+                                            debugPrint("addressLat: $addressLat");
+                                            debugPrint("addressLng $addressLng");
+                                            debugPrint(
                                                 "addressLocation: ${addresses.address}");
                                           });
                                           // Move the map camera to the selected location
@@ -431,7 +431,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                 suffixIcon: GestureDetector(
                                   onTap: () {
                                     getCurrentLocation();
-                                    print("index: ${widget.currentIndex}");
+                                    debugPrint("index: ${widget.currentIndex}");
                                     widget.pickupController.text =
                                         currentAddress;
                                   },
@@ -484,9 +484,9 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                             pickUpPredictions.clear();
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            print("pickupLat: $pickupLat");
-                                            print("pickupLng $pickupLng");
-                                            print(
+                                            debugPrint("pickupLat: $pickupLat");
+                                            debugPrint("pickupLng $pickupLng");
+                                            debugPrint(
                                                 "pickupLocation: ${prediction.formattedAddress}");
                                           });
                                           // Move the map camera to the selected location
@@ -613,11 +613,11 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                       destinationPredictions.clear();
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
-                                      print("destinationLat: $destinationLat");
-                                      print("destinationLng $destinationLng");
-                                      // print("destinationLat: ${widget.destinationLats}");
-                                      // print("destinationLng ${widget.destinationLngs}");
-                                      print(
+                                      debugPrint("destinationLat: $destinationLat");
+                                      debugPrint("destinationLng $destinationLng");
+                                      // debugPrint("destinationLat: ${widget.destinationLats}");
+                                      // debugPrint("destinationLng ${widget.destinationLngs}");
+                                      debugPrint(
                                           "destinationLocation: ${prediction.formattedAddress}");
                                     });
                                   },

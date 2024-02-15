@@ -50,9 +50,9 @@ class _SupportScreenState extends State<SupportScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/user_chat_live";
-      print("apiUrlStartChat: $apiUrl");
-      print("userId: $userId");
-      print("OtherUserId: ${widget.getAdminId}");
+      debugPrint("apiUrlStartChat: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("OtherUserId: ${widget.getAdminId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -67,10 +67,10 @@ class _SupportScreenState extends State<SupportScreen> {
         },
       );
       final responseString = jsonDecode(response.body);
-      print("response: $responseString");
-      print("status: ${responseString['status']}");
+      debugPrint("response: $responseString");
+      debugPrint("status: ${responseString['status']}");
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -85,9 +85,9 @@ class _SupportScreenState extends State<SupportScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/user_chat_live";
-      print("apiUrlGetChat: $apiUrl");
-      print("userId: $userId");
-      print("OtherUserId: ${widget.getAdminId}");
+      debugPrint("apiUrlGetChat: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("OtherUserId: ${widget.getAdminId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -102,20 +102,20 @@ class _SupportScreenState extends State<SupportScreen> {
         },
       );
       final responseString = response.body;
-      print("response: ${response.body}");
-      print("status Code getSupportMessageModel: ${response.statusCode}");
+      debugPrint("response: ${response.body}");
+      debugPrint("status Code getSupportMessageModel: ${response.statusCode}");
       if (response.statusCode == 200) {
         getSupportMessageModel = getSupportMessageModelFromJson(responseString);
-        print(
+        debugPrint(
             'getSupportMessageModel status: ${getSupportMessageModel.status}');
-        print(
+        debugPrint(
             'getSupportMessageModel message: ${getSupportMessageModel.data?[0].message}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -130,10 +130,10 @@ class _SupportScreenState extends State<SupportScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/user_chat_live";
-      print("apiUrlSend: $apiUrl");
-      print("userId: $userId");
-      print("OtherUserId: ${widget.getAdminId}");
-      print("message: ${messageController.text}");
+      debugPrint("apiUrlSend: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("OtherUserId: ${widget.getAdminId}");
+      debugPrint("message: ${messageController.text}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -150,14 +150,14 @@ class _SupportScreenState extends State<SupportScreen> {
         },
       );
       final responseString = jsonDecode(response.body);
-      print("response: $responseString");
-      print("status: ${responseString['status']}");
+      debugPrint("response: $responseString");
+      debugPrint("status: ${responseString['status']}");
       setState(() {
         isLoading = false;
         getSupportMessage();
       });
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -192,10 +192,10 @@ class _SupportScreenState extends State<SupportScreen> {
     startSupportChat();
     getSupportMessage();
     onPageEnter();
-    print("getAdminId: ${widget.getAdminId}");
-    print("getAdminName: ${widget.getAdminName}");
-    print("getAdminImage: ${widget.getAdminImage}");
-    print("getAdminAddress: ${widget.getAdminAddress}");
+    debugPrint("getAdminId: ${widget.getAdminId}");
+    debugPrint("getAdminName: ${widget.getAdminName}");
+    debugPrint("getAdminImage: ${widget.getAdminImage}");
+    debugPrint("getAdminAddress: ${widget.getAdminAddress}");
   }
 
   @override

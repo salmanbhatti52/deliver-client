@@ -51,11 +51,11 @@
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/update_password_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
-//       print("oldPassword: ${oldpasswordController.text}");
-//       print("newPassword: ${newpasswordController.text}");
-//       print("confirmPassword: ${confirmPasswordController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
+//       debugPrint("oldPassword: ${oldpasswordController.text}");
+//       debugPrint("newPassword: ${newpasswordController.text}");
+//       debugPrint("confirmPassword: ${confirmPasswordController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -69,8 +69,8 @@
 //         },
 //       );
 //       final responseString = jsonDecode(response.body);
-//       print("response: $responseString");
-//       print("status: ${responseString['status']}");
+//       debugPrint("response: $responseString");
+//       debugPrint("status: ${responseString['status']}");
 //       if (responseString["status"] == "success") {
 //         updatePasswordModel = updatePasswordModelFromJson(response.body);
 //         Navigator.of(context).pushAndRemoveUntil(
@@ -99,7 +99,7 @@
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -111,10 +111,10 @@
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/update_email_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
-//       print("currentEmail: ${currentEmailController.text}");
-//       print("newEmail: ${newEmailController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
+//       debugPrint("currentEmail: ${currentEmailController.text}");
+//       debugPrint("newEmail: ${newEmailController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -127,15 +127,15 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         updateEmailModel = updateEmailModelFromJson(responseString);
 //         setState(() {});
-//         print('updateEmailModel status: ${updateEmailModel.status}');
+//         debugPrint('updateEmailModel status: ${updateEmailModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -145,8 +145,8 @@
 //   sendOtp() async {
 //     try {
 //       String apiUrl = "$baseUrl/verify_email_customers";
-//       print("apiUrl: $apiUrl");
-//       print("email: ${newEmailController.text}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("email: ${newEmailController.text}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -157,15 +157,15 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         sendOtpModel = sendOtpModelFromJson(responseString);
 //         setState(() {});
-//         print('sendOtpModel status: ${sendOtpModel.status}');
+//         debugPrint('sendOtpModel status: ${sendOtpModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -173,9 +173,9 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     print("firstName: ${widget.firstName}");
-//     print("lastName: ${widget.lastName}");
-//     print("imageUrl: ${widget.image}");
+//     debugPrint("firstName: ${widget.firstName}");
+//     debugPrint("lastName: ${widget.lastName}");
+//     debugPrint("imageUrl: ${widget.image}");
 //   }
 
 //   @override

@@ -67,7 +67,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -75,15 +75,15 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("distanceUnit: $distanceUnit");
+            debugPrint("distanceUnit: $distanceUnit");
             setState(() {
               isLoading = false;
             });
@@ -91,7 +91,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -102,8 +102,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   updateBookingStatus() async {
     try {
       String apiUrl = "$baseUrl/get_updated_status_booking";
-      print("apiUrl: $apiUrl");
-      print("currentBookingId: ${widget.currentBookingId}");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("currentBookingId: ${widget.currentBookingId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -114,13 +114,13 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         setState(() {});
         updateBookingStatusModel =
             updateBookingStatusModelFromJson(responseString);
-        print(
+        debugPrint(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         if (updateBookingStatusModel.data?.status == "Completed") {
           timer?.cancel();
@@ -155,7 +155,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -166,16 +166,16 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       lngDest = "${widget.singleData!['destin_longitude']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
-      print("destLat: $destLat");
-      print("destLng: $destLng");
+      debugPrint("destLat: $destLat");
+      debugPrint("destLng: $destLng");
       latRider = "${widget.riderData!.latitude}";
       lngRider = "${widget.riderData!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
-      print("riderLat: $riderLat");
-      print("riderLng: $riderLng");
+      debugPrint("riderLat: $riderLat");
+      debugPrint("riderLng: $riderLng");
     } else {
-      print("No LatLng Data");
+      debugPrint("No LatLng Data");
     }
   }
 
@@ -185,16 +185,16 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
-      print("destLat: $destLat");
-      print("destLng: $destLng");
+      debugPrint("destLat: $destLat");
+      debugPrint("destLng: $destLng");
       latRider = "${widget.riderData!.latitude}";
       lngRider = "${widget.riderData!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
-      print("riderLat: $riderLat");
-      print("riderLng: $riderLng");
+      debugPrint("riderLat: $riderLat");
+      debugPrint("riderLng: $riderLng");
     } else {
-      print("No LatLng Data");
+      debugPrint("No LatLng Data");
     }
   }
 
@@ -230,7 +230,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         PointLatLng(destLat!, destLng!),
       );
       if (result.points.isNotEmpty) {
-        print("polylineCoordinates: $polylineCoordinates");
+        debugPrint("polylineCoordinates: $polylineCoordinates");
         for (var point in result.points) {
           polylineCoordinates.add(
             LatLng(point.latitude, point.longitude),
@@ -239,7 +239,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         setState(() {});
       }
     } else {
-      print("No Polyline Data");
+      debugPrint("No Polyline Data");
     }
   }
 
@@ -260,8 +260,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       loadCustomDestMarker();
     } else {
       getLocationMultiple();
-      print("Multiple data so no polyline will be shown!");
-      print("Multiple data so no custom marker will be shown!");
+      debugPrint("Multiple data so no polyline will be shown!");
+      debugPrint("Multiple data so no custom marker will be shown!");
     }
     startTimer();
   }

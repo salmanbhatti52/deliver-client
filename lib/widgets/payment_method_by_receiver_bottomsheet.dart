@@ -35,7 +35,7 @@ class _PaymentMethodByReceiverSheetState
   getPaymentGateways() async {
     try {
       String apiUrl = "$baseUrl/get_payment_gateways";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       cashId = "";
       final response = await http.get(
         Uri.parse(apiUrl),
@@ -44,14 +44,14 @@ class _PaymentMethodByReceiverSheetState
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getPaymentGatewaysModel =
             getPaymentGatewaysModelFromJson(responseString);
-        print(
+        debugPrint(
             'getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
-        print(
+        debugPrint(
             'getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
         for (int i = 0; i < getPaymentGatewaysModel.data!.length; i++) {
           if (getPaymentGatewaysModel.data?[i].name == "Cash") {
@@ -61,7 +61,7 @@ class _PaymentMethodByReceiverSheetState
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -80,8 +80,8 @@ class _PaymentMethodByReceiverSheetState
         select: "Select",
       );
     });
-    print("mapData Single: ${widget.singleData}");
-    print("mapData Multiple: ${widget.multipleData}");
+    debugPrint("mapData Single: ${widget.singleData}");
+    debugPrint("mapData Multiple: ${widget.multipleData}");
   }
 
   @override
@@ -291,8 +291,8 @@ class _PaymentMethodByReceiverSheetState
                         });
 
                         await getPaymentGateways();
-                        print("cashId: $cashId");
-                        print("isApiCalled: $isApiCalled");
+                        debugPrint("cashId: $cashId");
+                        debugPrint("isApiCalled: $isApiCalled");
 
                         if (getPaymentGatewaysModel.status == "success") {
                           Map? updatedData = Map.from(widget.singleData!);

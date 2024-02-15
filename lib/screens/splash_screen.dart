@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
         context,
         MaterialPageRoute(builder: (context) => const HomePageScreen()),
       );
-      print("current session starts with userId = $userId");
+      debugPrint("current session starts with userId = $userId");
     } else {
       if (!isOnboardingShown) {
         Navigator.pushReplacement(
@@ -50,13 +50,13 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
         );
         markOnboardingAsShown(); // Mark onboarding as shown
-        print("Navigating to OnboardingScreen");
+        debugPrint("Navigating to OnboardingScreen");
       } else {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
-        print("userId value is = $userId");
+        debugPrint("userId value is = $userId");
       }
     }
   }
@@ -142,16 +142,16 @@ class _SplashScreenState extends State<SplashScreen> {
 //   sharedPrefs() async {
 //     SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //     userId = (sharedPref.getString('userId'));
-//     print("userId in LoginPrefs is = $userId");
+//     debugPrint("userId in LoginPrefs is = $userId");
 //
 //     if (userId != null) {
 //       Navigator.pushReplacement(context,
 //           MaterialPageRoute(builder: (context) => const HomePageScreen()));
-//       print("current session starts with userId = $userId");
+//       debugPrint("current session starts with userId = $userId");
 //     } else {
 //       Navigator.pushReplacement(context,
 //           MaterialPageRoute(builder: (context) => const LoginScreen()));
-//       print("userId value is = $userId");
+//       debugPrint("userId value is = $userId");
 //     }
 //   }
 //

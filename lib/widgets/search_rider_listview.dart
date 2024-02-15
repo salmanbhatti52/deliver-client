@@ -237,8 +237,8 @@ class _RidersListState extends State<RidersList> {
         "payment_status": "Unpaid"
       };
       String apiUrl = "$baseUrl/send_request_booking";
-      print("apiUrl: $apiUrl");
-      print("requestData: $requestData");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("requestData: $requestData");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -248,19 +248,19 @@ class _RidersListState extends State<RidersList> {
         body: jsonEncode(requestData),
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         createBookingModel = createBookingModelFromJson(responseString);
-        print('createBookingModel status: ${createBookingModel.status}');
+        debugPrint('createBookingModel status: ${createBookingModel.status}');
         currentBookingId = createBookingModel.data?.bookingsId.toString();
-        print('currentBookingId: $currentBookingId');
+        debugPrint('currentBookingId: $currentBookingId');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -465,8 +465,8 @@ class _RidersListState extends State<RidersList> {
         "payment_status": "Unpaid"
       };
       String apiUrl = "$baseUrl/send_request_booking_scheduled";
-      print("apiUrl: $apiUrl");
-      print("requestData: $requestData");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("requestData: $requestData");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -476,33 +476,33 @@ class _RidersListState extends State<RidersList> {
         body: jsonEncode(requestData),
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         scheduleBookingModel = scheduleBookingModelFromJson(responseString);
-        print('scheduleBookingModel status: ${scheduleBookingModel.status}');
+        debugPrint('scheduleBookingModel status: ${scheduleBookingModel.status}');
         currentBookingId = scheduleBookingModel.data?.bookingsId.toString();
-        print('currentBookingId: $currentBookingId');
+        debugPrint('currentBookingId: $currentBookingId');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
 
   calculateDistance() {
     distanceKm = double.parse("${widget.searchRider?.distance}");
-    print('distanceKm: $distanceKm');
+    debugPrint('distanceKm: $distanceKm');
 
     if (distanceKm! > 10.00) {
       distanceKm = null; // Set distanceKm to null or another sentinel value
     } else {
       distanceMeters = distanceKm! * 1000;
       distanceFormatted = distanceMeters!.toStringAsFixed(0);
-      print('distanceFormatted: $distanceFormatted');
+      debugPrint('distanceFormatted: $distanceFormatted');
     }
   }
 
@@ -510,8 +510,8 @@ class _RidersListState extends State<RidersList> {
   initState() {
     super.initState();
     calculateDistance();
-    print('singleData: ${widget.singleData}');
-    print('multipleData: ${widget.multipleData}');
+    debugPrint('singleData: ${widget.singleData}');
+    debugPrint('multipleData: ${widget.multipleData}');
   }
 
   @override
@@ -593,7 +593,7 @@ class _RidersListState extends State<RidersList> {
                     onTap: () async {
                       if (widget.singleData?["type"] == "booking" ||
                           widget.multipleData?["type"] == "booking") {
-                        print("booking");
+                        debugPrint("booking");
                         calculateDistance();
                         await createBooking();
                         if (createBookingModel.data != null) {
@@ -645,7 +645,7 @@ class _RidersListState extends State<RidersList> {
                           );
                         }
                       } else {
-                        print("schedule");
+                        debugPrint("schedule");
                         calculateDistance();
                         await scheduleBooking();
                         if (scheduleBookingModel.status == 'success') {

@@ -39,8 +39,8 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     print("getAdminName: ${widget.getAdminName}");
-//     print("getAdminImage: ${widget.getAdminImage}");
+//     debugPrint("getAdminName: ${widget.getAdminName}");
+//     debugPrint("getAdminImage: ${widget.getAdminImage}");
 //   }
 //
 //   @override

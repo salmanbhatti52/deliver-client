@@ -45,11 +45,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/update_profile_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
-      print("firstName: ${firstNameController.text}");
-      print("lastName: ${lastNameController.text}");
-      print("profilePic: $base64imgGallery");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("firstName: ${firstNameController.text}");
+      debugPrint("lastName: ${lastNameController.text}");
+      debugPrint("profilePic: $base64imgGallery");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -63,8 +63,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         editProfileModel = editProfileModelFromJson(responseString);
         SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -74,14 +74,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             'lastName', "${editProfileModel.data?.lastName}");
         await sharedPref.setString(
             'profilePic', "${editProfileModel.data?.profilePic}");
-        print("sharedPref firstName: ${editProfileModel.data!.firstName}");
-        print("sharedPref lastName: ${editProfileModel.data!.lastName}");
-        print("sharedPref profilePic: ${editProfileModel.data!.profilePic}");
-        print('editProfileModel status: ${editProfileModel.status}');
+        debugPrint("sharedPref firstName: ${editProfileModel.data!.firstName}");
+        debugPrint("sharedPref lastName: ${editProfileModel.data!.lastName}");
+        debugPrint("sharedPref profilePic: ${editProfileModel.data!.profilePic}");
+        debugPrint('editProfileModel status: ${editProfileModel.status}');
         setState(() {});
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -99,14 +99,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       } else {
         Uint8List imageByte = await xFile.readAsBytes();
         base64imgGallery = base64.encode(imageByte);
-        print("base64img $base64imgGallery");
+        debugPrint("base64img $base64imgGallery");
 
         final imageTemporary = File(xFile.path);
 
         setState(() {
           imagePathGallery = imageTemporary;
-          print("newImage $imagePathGallery");
-          print("newImage64 $base64imgGallery");
+          debugPrint("newImage $imagePathGallery");
+          debugPrint("newImage64 $base64imgGallery");
           // Navigator.push(
           //     context,
           //     MaterialPageRoute(
@@ -117,7 +117,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
       }
     } on PlatformException catch (e) {
-      print('Failed to pick image: ${e.toString()}');
+      debugPrint('Failed to pick image: ${e.toString()}');
     }
   }
 
@@ -197,9 +197,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     getStoragePermission();
-    print("firstName: ${widget.firstName}");
-    print("lastName: ${widget.lastName}");
-    print("imageUrl: ${widget.image}");
+    debugPrint("firstName: ${widget.firstName}");
+    debugPrint("lastName: ${widget.lastName}");
+    debugPrint("imageUrl: ${widget.image}");
   }
 
   @override
@@ -575,13 +575,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/update_profile_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
-//       print("firstName: ${firstNameController.text}");
-//       print("lastName: ${lastNameController.text}");
-//       print(
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
+//       debugPrint("firstName: ${firstNameController.text}");
+//       debugPrint("lastName: ${lastNameController.text}");
+//       debugPrint(
 //           "contactNumber: ${countryCode!.dialCode + contactNumberController.text}");
-//       print("profilePic: $base64imgGallery");
+//       debugPrint("profilePic: $base64imgGallery");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -596,15 +596,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         editProfileModel = editProfileModelFromJson(responseString);
 //         setState(() {});
-//         print('editProfileModel status: ${editProfileModel.status}');
+//         debugPrint('editProfileModel status: ${editProfileModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -621,14 +621,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //       } else {
 //         Uint8List imageByte = await xFile.readAsBytes();
 //         base64imgGallery = base64.encode(imageByte);
-//         print("base64img $base64imgGallery");
+//         debugPrint("base64img $base64imgGallery");
 
 //         final imageTemporary = File(xFile.path);
 
 //         setState(() {
 //           imagePathGallery = imageTemporary;
-//           print("newImage $imagePathGallery");
-//           print("newImage64 $base64imgGallery");
+//           debugPrint("newImage $imagePathGallery");
+//           debugPrint("newImage64 $base64imgGallery");
 //           // Navigator.push(
 //           //     context,
 //           //     MaterialPageRoute(
@@ -639,7 +639,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //         });
 //       }
 //     } on PlatformException catch (e) {
-//       print('Failed to pick image: ${e.toString()}');
+//       debugPrint('Failed to pick image: ${e.toString()}');
 //     }
 //   }
 
@@ -660,9 +660,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //   void initState() {
 //     super.initState();
 //     getStoragePermission();
-//     print("firstName: ${widget.firstName}");
-//     print("lastName: ${widget.lastName}");
-//     print("imageUrl: ${widget.image}");
+//     debugPrint("firstName: ${widget.firstName}");
+//     debugPrint("lastName: ${widget.lastName}");
+//     debugPrint("imageUrl: ${widget.image}");
 //   }
 
 //   @override
@@ -984,9 +984,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //                               setState(() {
 //                                 countryCode = code;
 //                               });
-//                               print('countryName: ${countryCode!.name}');
-//                               print('countryCode: ${countryCode!.code}');
-//                               print(
+//                               debugPrint('countryName: ${countryCode!.name}');
+//                               debugPrint('countryCode: ${countryCode!.code}');
+//                               debugPrint(
 //                                   'countryDialCode: ${countryCode!.dialCode}');
 //                             },
 //                             child: Row(

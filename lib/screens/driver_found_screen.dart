@@ -79,7 +79,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -87,21 +87,21 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("currencyUnit: $currencyUnit");
+            debugPrint("currencyUnit: $currencyUnit");
           }
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("distanceUnit: $distanceUnit");
+            debugPrint("distanceUnit: $distanceUnit");
             setState(() {
               isLoading = false;
             });
@@ -109,7 +109,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -121,9 +121,9 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/cancel_booking";
-      print("apiUrl: $apiUrl");
-      print("bookings_id: ${widget.bookingId}");
-      print("users_fleet_id: ${widget.fleetId}");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("bookings_id: ${widget.bookingId}");
+      debugPrint("users_fleet_id: ${widget.fleetId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -136,15 +136,15 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         cancelBookingModel = cancelBookingModelFromJson(responseString);
         setState(() {});
-        print('cancelBookingModel status: ${cancelBookingModel.status}');
+        debugPrint('cancelBookingModel status: ${cancelBookingModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -155,8 +155,8 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   updateBookingStatus() async {
     try {
       String apiUrl = "$baseUrl/get_updated_status_booking";
-      print("apiUrl: $apiUrl");
-      print("currentBookingId: ${widget.currentBookingId}");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("currentBookingId: ${widget.currentBookingId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -167,12 +167,12 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         updateBookingStatusModel =
             updateBookingStatusModelFromJson(responseString);
-        print(
+        debugPrint(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         if (updateBookingStatusModel.data?.status == "Accepted" ||
             updateBookingStatusModel.data?.status == "Ongoing") {
@@ -195,7 +195,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
         setState(() {});
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -317,7 +317,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   @override
   void initState() {
     super.initState();
-    print("passCode: ${widget.passCode}");
+    debugPrint("passCode: ${widget.passCode}");
     Future.delayed(Duration.zero, () {
       showPasscodeDialog();
     });
@@ -327,10 +327,10 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     lng = "${widget.riderData!.longitude}";
     riderLat = double.parse(lat!);
     riderLng = double.parse(lng!);
-    print("riderLat: $riderLat");
-    print("riderLng: $riderLng");
-    print("currentBookingId: ${widget.currentBookingId}");
-    print("bookingDestinationId;: ${widget.bookingDestinationId}");
+    debugPrint("riderLat: $riderLat");
+    debugPrint("riderLng: $riderLng");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    debugPrint("bookingDestinationId;: ${widget.bookingDestinationId}");
     startTimer();
     scrollController.addListener(() {
       setState(() {

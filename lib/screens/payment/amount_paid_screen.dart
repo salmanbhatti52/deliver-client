@@ -45,10 +45,10 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
       lngDest = "${widget.singleData!['destin_longitude']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
-      print("destLat: $destLat");
-      print("destLng: $destLng");
+      debugPrint("destLat: $destLat");
+      debugPrint("destLng: $destLng");
     } else {
-      print("No LatLng Data");
+      debugPrint("No LatLng Data");
     }
   }
 
@@ -58,10 +58,10 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
       lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
-      print("destLat: $destLat");
-      print("destLng: $destLng");
+      debugPrint("destLat: $destLat");
+      debugPrint("destLng: $destLng");
     } else {
-      print("No LatLng Data");
+      debugPrint("No LatLng Data");
     }
   }
 

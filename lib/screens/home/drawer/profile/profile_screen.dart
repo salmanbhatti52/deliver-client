@@ -32,8 +32,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_profile_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -44,15 +44,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getProfileModel = getProfileModelFromJson(responseString);
         setState(() {});
-        print('getProfileModel status: ${getProfileModel.status}');
+        debugPrint('getProfileModel status: ${getProfileModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -378,8 +378,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/get_profile_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -390,15 +390,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         getProfileModel = getProfileModelFromJson(responseString);
 //         setState(() {});
-//         print('getProfileModel status: ${getProfileModel.status}');
+//         debugPrint('getProfileModel status: ${getProfileModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }

@@ -60,10 +60,10 @@ class _AppDrawerState extends State<AppDrawer> {
     firstName = sharedPref.getString('firstName');
     lastName = sharedPref.getString('lastName');
     profilePic = sharedPref.getString('profilePic');
-    print('sharedPrefs userId: $userId');
-    print('sharedPrefs firstName: $firstName');
-    print('sharedPrefs lastName: $lastName');
-    print('sharedPrefs profilePic: $profilePic');
+    debugPrint('sharedPrefs userId: $userId');
+    debugPrint('sharedPrefs firstName: $firstName');
+    debugPrint('sharedPrefs lastName: $lastName');
+    debugPrint('sharedPrefs profilePic: $profilePic');
     setState(() {});
   }
 
@@ -74,8 +74,8 @@ class _AppDrawerState extends State<AppDrawer> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_profile_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -86,15 +86,15 @@ class _AppDrawerState extends State<AppDrawer> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getProfileModel = getProfileModelFromJson(responseString);
         setState(() {});
-        print('getProfileModel status: ${getProfileModel.status}');
+        debugPrint('getProfileModel status: ${getProfileModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -109,7 +109,7 @@ class _AppDrawerState extends State<AppDrawer> {
   getSupportAdmin() async {
     try {
       String apiUrl = "$baseUrl/get_admin_list";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -117,13 +117,13 @@ class _AppDrawerState extends State<AppDrawer> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getSupportAdminModel = getSupportAdminModelFromJson(responseString);
         setState(() {});
-        print('getSupportAdminModel status: ${getSupportAdminModel.status}');
-        print(
+        debugPrint('getSupportAdminModel status: ${getSupportAdminModel.status}');
+        debugPrint(
             'getSupportAdminModel length: ${getSupportAdminModel.data!.length}');
         for (int i = 0; i < getSupportAdminModel.data!.length; i++) {
           getAdminId = "${getSupportAdminModel.data![i].usersSystemId}";
@@ -131,13 +131,13 @@ class _AppDrawerState extends State<AppDrawer> {
           getAdminImage = "${getSupportAdminModel.data![i].profilePic}";
           getAdminAddress = "${getSupportAdminModel.data![i].address}";
         }
-        print('getAdminId: $getAdminId');
-        print('getAdminName: $getAdminName');
-        print('getAdminImage: $getAdminImage');
-        print('getAdminAddress: $getAdminAddress');
+        debugPrint('getAdminId: $getAdminId');
+        debugPrint('getAdminName: $getAdminName');
+        debugPrint('getAdminImage: $getAdminImage');
+        debugPrint('getAdminAddress: $getAdminAddress');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

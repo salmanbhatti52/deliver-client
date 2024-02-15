@@ -36,8 +36,8 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
         receiver: "Receiver",
       );
     });
-    print("mapData Single: ${widget.singleData}");
-    print("mapData Multiple: ${widget.multipleData}");
+    debugPrint("mapData Single: ${widget.singleData}");
+    debugPrint("mapData Multiple: ${widget.multipleData}");
   }
 
   @override

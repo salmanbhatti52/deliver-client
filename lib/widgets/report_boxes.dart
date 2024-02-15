@@ -33,7 +33,7 @@
 //         isLoading = true;
 //       });
 //       String apiUrl = "$baseUrl/get_bookings_reports_reasons";
-//       print("apiUrl: $apiUrl");
+//       debugPrint("apiUrl: $apiUrl");
 //       final response = await http.get(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -41,18 +41,18 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         getReasonModel = getReasonModelFromJson(responseString);
-//         print('getReasonModel status: ${getReasonModel.status}');
-//         print('getSupportAdminModel length: ${getReasonModel.data!.length}');
+//         debugPrint('getReasonModel status: ${getReasonModel.status}');
+//         debugPrint('getSupportAdminModel length: ${getReasonModel.data!.length}');
 //         setState(() {
 //           isLoading = false;
 //         });
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -93,7 +93,7 @@
 //                             selectedReasonId = getReasonModel
 //                                 .data![index].bookingsReportsReasonsId
 //                                 .toString();
-//                             print(
+//                             debugPrint(
 //                                 "selectedReasonId: $selectedReasonId, ${getReasonModel.data![index].reason}");
 //                           });
 //                         },

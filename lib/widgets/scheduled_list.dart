@@ -41,8 +41,8 @@ class _ScheduledListState extends State<ScheduledList> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_bookings_scheduled_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -53,19 +53,19 @@ class _ScheduledListState extends State<ScheduledList> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getScheduledBookingModel =
             getScheduledBookingModelFromJson(responseString);
-        print(
+        debugPrint(
             'getScheduledBookingModel status: ${getScheduledBookingModel.status}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       setState(() {
         isLoading = false;
       });
@@ -80,9 +80,9 @@ class _ScheduledListState extends State<ScheduledList> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/cancel_booking";
-      print("apiUrl: $apiUrl");
-      // print("bookings_id: ${widget.bookingId}");
-      // print("users_fleet_id: ${widget.fleetId}");
+      debugPrint("apiUrl: $apiUrl");
+      // debugPrint("bookings_id: ${widget.bookingId}");
+      // debugPrint("users_fleet_id: ${widget.fleetId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -95,15 +95,15 @@ class _ScheduledListState extends State<ScheduledList> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         cancelBookingModel = cancelBookingModelFromJson(responseString);
         setState(() {});
-        print('cancelBookingModel status: ${cancelBookingModel.status}');
+        debugPrint('cancelBookingModel status: ${cancelBookingModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

@@ -68,7 +68,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -76,21 +76,21 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("currencyUnit: $currencyUnit");
+            debugPrint("currencyUnit: $currencyUnit");
           }
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("distanceUnit: $distanceUnit");
+            debugPrint("distanceUnit: $distanceUnit");
             setState(() {
               isLoading = false;
             });
@@ -98,7 +98,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -243,8 +243,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     lng = "${widget.riderData!.longitude}";
     riderLat = double.parse(lat!);
     riderLng = double.parse(lng!);
-    print("riderLat: $riderLat");
-    print("riderLng: $riderLng");
+    debugPrint("riderLat: $riderLat");
+    debugPrint("riderLng: $riderLng");
     startTimer();
     scrollController.addListener(() {
       setState(() {

@@ -35,8 +35,8 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/get_addresses_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -47,17 +47,17 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAddressesModel = getAddressesModelFromJson(responseString);
-        print('getAddressesModel status: ${getAddressesModel.status}');
+        debugPrint('getAddressesModel status: ${getAddressesModel.status}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       setState(() {
         isLoading = false;
       });
@@ -73,8 +73,8 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/delete_address_customers";
-      print("apiUrl: $apiUrl");
-      print("addressesId: $addressesId");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("addressesId: $addressesId");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -85,18 +85,18 @@ class _FirstAddressScreenState extends State<FirstAddressScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         deleteAddressModel = deleteAddressModelFromJson(responseString);
-        print('deleteAddressModel status: ${deleteAddressModel.status}');
+        debugPrint('deleteAddressModel status: ${deleteAddressModel.status}');
         setState(() {
           isLoading = false;
           getAddresses();
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

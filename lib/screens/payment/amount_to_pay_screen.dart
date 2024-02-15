@@ -73,13 +73,13 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
   updateBookingTransaction() async {
     try {
       String apiUrl = "$baseUrl/maintain_booking_transaction";
-      print("apiUrl: $apiUrl");
-      print("bookings_id: ${widget.currentBookingId}");
-      print("payer_name: $firstName $lastName");
-      print("payer_email: $userEmail");
-      print(
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("bookings_id: ${widget.currentBookingId}");
+      debugPrint("payer_name: $firstName $lastName");
+      debugPrint("payer_email: $userEmail");
+      debugPrint(
           "total_amount: ${widget.singleData!.isNotEmpty ? widget.singleData!['total_charges'] : widget.multipleData!['total_charges']}");
-      print("payment_status: Paid");
+      debugPrint("payment_status: Paid");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -96,16 +96,16 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         updateBookingTransactionModel =
             updateBookingTransactionModelFromJson(responseString);
-        print(
+        debugPrint(
             'updateBookingTransactionModel status: ${updateBookingTransactionModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -131,7 +131,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
     );
 
     if (response.status && response.reference == reference) {
-      print("response: $response");
+      debugPrint("response: $response");
       Fluttertoast.showToast(
         msg: "Transaction Successful!",
         toastLength: Toast.LENGTH_SHORT,
@@ -172,7 +172,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
   getAllSystemData() async {
     try {
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -180,22 +180,22 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("currencyUnit: $currencyUnit");
+            debugPrint("currencyUnit: $currencyUnit");
           }
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -206,10 +206,10 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
       lngDest = "${widget.singleData!['destin_longitude']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
-      print("destLat: $destLat");
-      print("destLng: $destLng");
+      debugPrint("destLat: $destLat");
+      debugPrint("destLng: $destLng");
     } else {
-      print("No LatLng Data");
+      debugPrint("No LatLng Data");
     }
   }
 
@@ -219,10 +219,10 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
       lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
       destLng = double.parse(lngDest!);
-      print("destLat: $destLat");
-      print("destLng: $destLng");
+      debugPrint("destLat: $destLat");
+      debugPrint("destLng: $destLng");
     } else {
-      print("No LatLng Data");
+      debugPrint("No LatLng Data");
     }
   }
 
@@ -243,19 +243,19 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
       getLocationSingle();
     } else {
       getLocationMultiple();
-      print("Multiple data so no polyline will be shown!");
-      print("Multiple data so no custom marker will be shown!");
+      debugPrint("Multiple data so no polyline will be shown!");
+      debugPrint("Multiple data so no custom marker will be shown!");
     }
     startPayStack();
     loadCustomMarker();
     if (widget.singleData!.isNotEmpty) {
       double parsedValue = double.parse(widget.singleData!['total_charges']);
       totalAmount = (parsedValue + 0.5).floor();
-      print("Rounded Integer: $totalAmount");
+      debugPrint("Rounded Integer: $totalAmount");
     } else {
       double parsedValue = double.parse(widget.multipleData!['total_charges']);
       totalAmount = (parsedValue + 0.5).floor();
-      print("Rounded Integer: $totalAmount");
+      debugPrint("Rounded Integer: $totalAmount");
     }
 
     // getAllSystemData();

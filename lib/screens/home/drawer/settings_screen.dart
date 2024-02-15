@@ -43,9 +43,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/update_notification_switch_customers";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
-      print("notifications: $notificationStatus");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("notifications: $notificationStatus");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -57,17 +57,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         notificationSwitchModel =
             notificationSwitchModelFromJson(responseString);
         setState(() {});
-        print(
+        debugPrint(
             'notificationSwitchModel status: ${notificationSwitchModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   sharedPrefs() async {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     notificationStatus = sharedPref.getString('notificationStatus');
-    print("notificationStatus in sharedPrefs is: $notificationStatus");
+    debugPrint("notificationStatus in sharedPrefs is: $notificationStatus");
   }
 
   @override
@@ -163,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       setState(() {
                         switchStatus = val;
                         checkSwitch();
-                        print("switchStatus: $switchStatus");
+                        debugPrint("switchStatus: $switchStatus");
                       });
                     },
                   ),

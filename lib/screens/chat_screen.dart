@@ -54,9 +54,9 @@ class _ChatScreenState extends State<ChatScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/user_chat";
-      print("apiUrlStartChat: $apiUrl");
-      print("userId: $userId");
-      print("OtherUserId: ${widget.riderId}");
+      debugPrint("apiUrlStartChat: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("OtherUserId: ${widget.riderId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -71,10 +71,10 @@ class _ChatScreenState extends State<ChatScreen> {
         },
       );
       final responseString = jsonDecode(response.body);
-      print("response: $responseString");
-      print("status: ${responseString['status']}");
+      debugPrint("response: $responseString");
+      debugPrint("status: ${responseString['status']}");
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -89,9 +89,9 @@ class _ChatScreenState extends State<ChatScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/user_chat";
-      print("apiUrlGetChat: $apiUrl");
-      print("userId: $userId");
-      print("OtherUserId: ${widget.riderId}");
+      debugPrint("apiUrlGetChat: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("OtherUserId: ${widget.riderId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -106,18 +106,18 @@ class _ChatScreenState extends State<ChatScreen> {
         },
       );
       final responseString = response.body;
-      print("response: ${response.body}");
-      print("status Code getUserChatModel: ${response.statusCode}");
+      debugPrint("response: ${response.body}");
+      debugPrint("status Code getUserChatModel: ${response.statusCode}");
       if (response.statusCode == 200) {
         getUserChatModel = getUserChatModelFromJson(responseString);
-        print('getUserChatModel status: ${getUserChatModel.status}');
-        print('getUserChatModel message: ${getUserChatModel.data?[0].message}');
+        debugPrint('getUserChatModel status: ${getUserChatModel.status}');
+        debugPrint('getUserChatModel message: ${getUserChatModel.data?[0].message}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -132,10 +132,10 @@ class _ChatScreenState extends State<ChatScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/user_chat";
-      print("apiUrlSend: $apiUrl");
-      print("userId: $userId");
-      print("OtherUserId: ${widget.riderId}");
-      print("message: $msg");
+      debugPrint("apiUrlSend: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("OtherUserId: ${widget.riderId}");
+      debugPrint("message: $msg");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -152,14 +152,14 @@ class _ChatScreenState extends State<ChatScreen> {
         },
       );
       final responseString = jsonDecode(response.body);
-      print("response: $responseString");
-      print("status: ${responseString['status']}");
+      debugPrint("response: $responseString");
+      debugPrint("status: ${responseString['status']}");
       setState(() {
         isLoading = false;
         getUserChat();
       });
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

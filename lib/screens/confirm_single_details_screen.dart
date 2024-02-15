@@ -39,7 +39,7 @@ class _ConfirmSingleDetailsScreenState
   getAllSystemData() async {
     try {
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -47,22 +47,22 @@ class _ConfirmSingleDetailsScreenState
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("currencyUnit: $currencyUnit");
+            debugPrint("currencyUnit: $currencyUnit");
           }
           if (getAllSystemDataModel.data?[i].type == "vat_charges") {
             vatCharges = "${getAllSystemDataModel.data?[i].description}";
             doubleVatCharges = double.parse(vatCharges!);
-            print("doubleVatCharges: $doubleVatCharges");
+            debugPrint("doubleVatCharges: $doubleVatCharges");
             setState(() {});
             calculateVATCharges(doubleVatCharges!,
                 double.parse(widget.singleData!["destin_total_charges"]));
@@ -70,35 +70,35 @@ class _ConfirmSingleDetailsScreenState
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
 
   calculateVATCharges(double vat, double deliveryCharges) {
-    print("deliveryCharges: $deliveryCharges");
+    debugPrint("deliveryCharges: $deliveryCharges");
     double vatPercentage = vat / 100.0;
     totalVatCharges = deliveryCharges - (deliveryCharges * vatPercentage);
-    print("totalVatCharges: $totalVatCharges");
+    debugPrint("totalVatCharges: $totalVatCharges");
     totalVatAmount = deliveryCharges - totalVatCharges!;
-    print("totalVatAmount: $totalVatAmount");
+    debugPrint("totalVatAmount: $totalVatAmount");
     roundedTotalVatAmount = double.parse(totalVatAmount!.toStringAsFixed(2));
-    print("roundedTotalVatAmount: $roundedTotalVatAmount");
+    debugPrint("roundedTotalVatAmount: $roundedTotalVatAmount");
     calculateTotalPrice(deliveryCharges, roundedTotalVatAmount!);
   }
 
   calculateTotalPrice(double deliveryCharges, double roundedTotalVatAmount) {
     totalPrice = deliveryCharges + roundedTotalVatAmount;
-    print("totalPrice: $totalPrice");
+    debugPrint("totalPrice: $totalPrice");
     roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
-    print("roundedTotalAmount: $roundedTotalPrice");
+    debugPrint("roundedTotalAmount: $roundedTotalPrice");
   }
 
   @override
   initState() {
     super.initState();
     getAllSystemData();
-    print("mapData: ${widget.singleData}");
+    debugPrint("mapData: ${widget.singleData}");
   }
 
   @override

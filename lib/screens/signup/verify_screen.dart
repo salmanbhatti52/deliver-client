@@ -31,8 +31,8 @@
 //   sendOtp() async {
 //     try {
 //       String apiUrl = "$baseUrl/verify_email_customers";
-//       print("apiUrl: $apiUrl");
-//       print("email: ${widget.email}");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("email: ${widget.email}");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -43,15 +43,15 @@
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         sendOtpModel = sendOtpModelFromJson(responseString);
 //         setState(() {});
-//         print('sendOtpModel status: ${sendOtpModel.status}');
+//         debugPrint('sendOtpModel status: ${sendOtpModel.status}');
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -59,8 +59,8 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     print("initState Email: ${widget.email}");
-//     print("initState PhoneNumber: ${widget.phoneNumber}");
+//     debugPrint("initState Email: ${widget.email}");
+//     debugPrint("initState PhoneNumber: ${widget.phoneNumber}");
 //   }
 
 //   @override

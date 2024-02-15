@@ -64,7 +64,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   getAllSystemData() async {
     try {
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -72,28 +72,28 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "terms_text") {
             termsText = "${getAllSystemDataModel.data?[i].description}";
-            print("termsText: $termsText");
+            debugPrint("termsText: $termsText");
           }
           for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
             if (getAllSystemDataModel.data?[i].type == "privacy_text") {
               privacyText = "${getAllSystemDataModel.data?[i].description}";
-              print("privacyText: $privacyText");
+              debugPrint("privacyText: $privacyText");
             }
           }
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -103,12 +103,12 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   createProfile() async {
     try {
       String apiUrl = "$baseUrl/create_profile_customers";
-      print("apiUrl: $apiUrl");
-      print("firstName: ${firstNameController.text}");
-      print("lastName: ${lastNameController.text}");
-      print("contactNumber: ${widget.contactNumber}");
-      print("email: ${emailController.text}");
-      print("profile_pic: $base64imgGallery");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("firstName: ${firstNameController.text}");
+      debugPrint("lastName: ${lastNameController.text}");
+      debugPrint("contactNumber: ${widget.contactNumber}");
+      debugPrint("email: ${emailController.text}");
+      debugPrint("profile_pic: $base64imgGallery");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -125,8 +125,8 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         createProfileModel = createProfileModelFromJson(responseString);
         SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -142,18 +142,18 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
             'phoneNumber', "${createProfileModel.data?.phone}");
         await sharedPref.setString(
             'profilePic', "${createProfileModel.data?.profilePic}");
-        print(
+        debugPrint(
             "sharedPref userId: ${createProfileModel.data!.usersCustomersId.toString()}");
-        print("sharedPref email: ${createProfileModel.data!.email}");
-        print("sharedPref firstName: ${createProfileModel.data!.firstName}");
-        print("sharedPref lastName: ${createProfileModel.data!.lastName}");
-        print("sharedPref phoneNumber: ${createProfileModel.data!.phone}");
-        print("sharedPref profilePic: ${createProfileModel.data!.profilePic}");
-        print('createProfileModel status: ${createProfileModel.status}');
+        debugPrint("sharedPref email: ${createProfileModel.data!.email}");
+        debugPrint("sharedPref firstName: ${createProfileModel.data!.firstName}");
+        debugPrint("sharedPref lastName: ${createProfileModel.data!.lastName}");
+        debugPrint("sharedPref phoneNumber: ${createProfileModel.data!.phone}");
+        debugPrint("sharedPref profilePic: ${createProfileModel.data!.profilePic}");
+        debugPrint('createProfileModel status: ${createProfileModel.status}');
         setState(() {});
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -171,14 +171,14 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
       } else {
         Uint8List imageByte = await xFile.readAsBytes();
         base64imgGallery = base64.encode(imageByte);
-        print("base64img $base64imgGallery");
+        debugPrint("base64img $base64imgGallery");
 
         final imageTemporary = File(xFile.path);
 
         setState(() {
           imagePathGallery = imageTemporary;
-          print("newImage $imagePathGallery");
-          print("newImage64 $base64imgGallery");
+          debugPrint("newImage $imagePathGallery");
+          debugPrint("newImage64 $base64imgGallery");
           // Navigator.push(
           //     context,
           //     MaterialPageRoute(
@@ -189,7 +189,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
         });
       }
     } on PlatformException catch (e) {
-      print('Failed to pick image: ${e.toString()}');
+      debugPrint('Failed to pick image: ${e.toString()}');
     }
   }
 
@@ -287,7 +287,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   void initState() {
     super.initState();
     getAllSystemData();
-    print('contactNumber: ${widget.contactNumber}');
+    debugPrint('contactNumber: ${widget.contactNumber}');
   }
 
   @override
@@ -988,7 +988,7 @@ Widget termsDialog(
                         onTap: () {
                           setState(() {
                             checkmark = true;
-                            print('checkmark: $checkmark');
+                            debugPrint('checkmark: $checkmark');
                           });
                           onAccept(true);
                           Navigator.pop(context);
@@ -1078,7 +1078,7 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
                         onTap: () {
                           setState(() {
                             checkmark2 = true;
-                            print('checkmark2: $checkmark2');
+                            debugPrint('checkmark2: $checkmark2');
                           });
                           onAccept(true);
                           Navigator.pop(context);
@@ -1145,9 +1145,9 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //       SharedPreferences sharedPref = await SharedPreferences.getInstance();
 //       userId = sharedPref.getString('userId');
 //       String apiUrl = "$baseUrl/update_profile_image_customers";
-//       print("apiUrl: $apiUrl");
-//       print("userId: $userId");
-//       print("profile_pic: $base64imgGallery");
+//       debugPrint("apiUrl: $apiUrl");
+//       debugPrint("userId: $userId");
+//       debugPrint("profile_pic: $base64imgGallery");
 //       final response = await http.post(
 //         Uri.parse(apiUrl),
 //         headers: {
@@ -1159,15 +1159,15 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         profileImageModel = profileImageModelFromJson(responseString);
-//         print('profileImageModel status: ${profileImageModel.status}');
+//         debugPrint('profileImageModel status: ${profileImageModel.status}');
 //         setState(() {});
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -1185,14 +1185,14 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //       } else {
 //         Uint8List imageByte = await xFile.readAsBytes();
 //         base64imgGallery = base64.encode(imageByte);
-//         print("base64img $base64imgGallery");
+//         debugPrint("base64img $base64imgGallery");
 //
 //         final imageTemporary = File(xFile.path);
 //
 //         setState(() {
 //           imagePathGallery = imageTemporary;
-//           print("newImage $imagePathGallery");
-//           print("newImage64 $base64imgGallery");
+//           debugPrint("newImage $imagePathGallery");
+//           debugPrint("newImage64 $base64imgGallery");
 //           // Navigator.push(
 //           //     context,
 //           //     MaterialPageRoute(
@@ -1203,7 +1203,7 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //         });
 //       }
 //     } on PlatformException catch (e) {
-//       print('Failed to pick image: ${e.toString()}');
+//       debugPrint('Failed to pick image: ${e.toString()}');
 //     }
 //   }
 //
@@ -1225,10 +1225,10 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
 //   @override
 //   void initState() {
 //     super.initState();
-//     print('initState firstName: ${widget.firstName}');
-//     print('initState lastName: ${widget.lastName}');
-//     print('initState contactNumber: ${widget.contactNumber}');
-//     print('initState email: ${widget.email}');
+//     debugPrint('initState firstName: ${widget.firstName}');
+//     debugPrint('initState lastName: ${widget.lastName}');
+//     debugPrint('initState contactNumber: ${widget.contactNumber}');
+//     debugPrint('initState email: ${widget.email}');
 //   }
 //
 //   @override

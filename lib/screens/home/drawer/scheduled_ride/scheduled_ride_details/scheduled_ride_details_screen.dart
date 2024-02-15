@@ -45,7 +45,7 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_all_system_data";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -53,22 +53,22 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel =
             systemdata.getAllSystemDataModelFromJson(responseString);
-        print('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
-        print(
+        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("currencyUnit: $currencyUnit");
+            debugPrint("currencyUnit: $currencyUnit");
           }
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
-            print("distanceUnit: $distanceUnit");
+            debugPrint("distanceUnit: $distanceUnit");
             setState(() {
               isLoading = false;
             });
@@ -76,7 +76,7 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -88,9 +88,9 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/cancel_booking";
-      print("apiUrl: $apiUrl");
-      // print("bookings_id: ${widget.bookingId}");
-      // print("users_fleet_id: ${widget.fleetId}");
+      debugPrint("apiUrl: $apiUrl");
+      // debugPrint("bookings_id: ${widget.bookingId}");
+      // debugPrint("users_fleet_id: ${widget.fleetId}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -103,15 +103,15 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         cancelBookingModel = cancelBookingModelFromJson(responseString);
         setState(() {});
-        print('cancelBookingModel status: ${cancelBookingModel.status}');
+        debugPrint('cancelBookingModel status: ${cancelBookingModel.status}');
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }

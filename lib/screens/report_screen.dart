@@ -72,8 +72,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
         // Convert the bytes to a Base64 encoded string
         base64ImageString = base64Encode(bytes);
-        print("Selected image file path: ${file.path}");
-        print("base64ImageString: $base64ImageString");
+        debugPrint("Selected image file path: ${file.path}");
+        debugPrint("base64ImageString: $base64ImageString");
 
         return base64ImageString;
       } else {
@@ -123,8 +123,8 @@ class _ReportScreenState extends State<ReportScreen> {
           isVideoSelected = true;
         });
 
-        print("Selected video file path: ${file.path}");
-        print("base64VideoString: $base64VideoString");
+        debugPrint("Selected video file path: ${file.path}");
+        debugPrint("base64VideoString: $base64VideoString");
       } else {
         // Handle unsupported file type
         Fluttertoast.showToast(
@@ -159,8 +159,8 @@ class _ReportScreenState extends State<ReportScreen> {
 
         // Convert the bytes to a Base64 encoded string
         base64AudioString = base64Encode(bytes);
-        print("Selected audio file path: ${file.path}");
-        print("base64AudioString: $base64AudioString");
+        debugPrint("Selected audio file path: ${file.path}");
+        debugPrint("base64AudioString: $base64AudioString");
 
         return base64AudioString;
       } else {
@@ -200,7 +200,7 @@ class _ReportScreenState extends State<ReportScreen> {
         isLoading = true;
       });
       String apiUrl = "$baseUrl/get_bookings_reports_reasons";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -208,18 +208,18 @@ class _ReportScreenState extends State<ReportScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getReasonModel = getReasonModelFromJson(responseString);
-        print('getReasonModel status: ${getReasonModel.status}');
-        print('getReasonModel length: ${getReasonModel.data!.length}');
+        debugPrint('getReasonModel status: ${getReasonModel.status}');
+        debugPrint('getReasonModel length: ${getReasonModel.data!.length}');
         setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -234,16 +234,16 @@ class _ReportScreenState extends State<ReportScreen> {
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/report_rider";
-      print("apiUrl: $apiUrl");
-      print("userId: $userId");
-      print("fleetId: ${widget.riderData!.usersFleetId}");
-      print("bookingId: ${widget.currentBookingId}");
-      print("bookingsDestinationsId: ${widget.bookingDestinationId}");
-      print("reportsReasonsId: $selectedReasonId");
-      print("otherReasons: ${otherController.text}");
-      print("evidenceImage: $base64ImageString");
-      print("evidenceAudio: $base64AudioString");
-      print("evidenceVideo: $base64VideoString");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
+      debugPrint("fleetId: ${widget.riderData!.usersFleetId}");
+      debugPrint("bookingId: ${widget.currentBookingId}");
+      debugPrint("bookingsDestinationsId: ${widget.bookingDestinationId}");
+      debugPrint("reportsReasonsId: $selectedReasonId");
+      debugPrint("otherReasons: ${otherController.text}");
+      debugPrint("evidenceImage: $base64ImageString");
+      debugPrint("evidenceAudio: $base64AudioString");
+      debugPrint("evidenceVideo: $base64VideoString");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -262,11 +262,11 @@ class _ReportScreenState extends State<ReportScreen> {
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         reportRiderModel = reportRiderModelFromJson(responseString);
-        print('reportRiderModel status: ${reportRiderModel.status}');
+        debugPrint('reportRiderModel status: ${reportRiderModel.status}');
         setState(() {
           isLoading2 = false;
           base64ImageString = null;
@@ -275,7 +275,7 @@ class _ReportScreenState extends State<ReportScreen> {
         });
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -481,7 +481,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                                       .data![index]
                                                       .bookingsReportsReasonsId
                                                       .toString();
-                                                  print(
+                                                  debugPrint(
                                                       "selectedReasonId: $selectedReasonId, ${getReasonModel.data![index].reason}");
                                                 });
                                               },

@@ -19,7 +19,7 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     print("mapData: ${widget.singleData}");
+//     debugPrint("mapData: ${widget.singleData}");
 //   }
 
 //   @override

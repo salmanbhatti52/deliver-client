@@ -34,7 +34,7 @@ class _PaymentMethodBySenderSheetState
   getPaymentGateways() async {
     try {
       String apiUrl = "$baseUrl/get_payment_gateways";
-      print("apiUrl: $apiUrl");
+      debugPrint("apiUrl: $apiUrl");
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
@@ -42,14 +42,14 @@ class _PaymentMethodBySenderSheetState
         },
       );
       final responseString = response.body;
-      print("response: $responseString");
-      print("statusCode: ${response.statusCode}");
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getPaymentGatewaysModel =
             getPaymentGatewaysModelFromJson(responseString);
-        print(
+        debugPrint(
             'getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
-        print(
+        debugPrint(
             'getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
         for (int i = 0; i < getPaymentGatewaysModel.data!.length; i++) {
           if (getPaymentGatewaysModel.data?[i].name == "Card") {
@@ -59,7 +59,7 @@ class _PaymentMethodBySenderSheetState
         }
       }
     } catch (e) {
-      print('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
   }
@@ -76,8 +76,8 @@ class _PaymentMethodBySenderSheetState
         select: "Select",
       );
     });
-    print("mapData Single: ${widget.singleData}");
-    print("mapData Multiple: ${widget.multipleData}");
+    debugPrint("mapData Single: ${widget.singleData}");
+    debugPrint("mapData Multiple: ${widget.multipleData}");
   }
 
   @override
@@ -219,8 +219,8 @@ class _PaymentMethodBySenderSheetState
                         });
 
                         await getPaymentGateways();
-                        print("cardId: $cardId");
-                        print("isApiCalled: $isApiCalled");
+                        debugPrint("cardId: $cardId");
+                        debugPrint("isApiCalled: $isApiCalled");
 
                         if (getPaymentGatewaysModel.status == "success") {
                           Map? updatedData = Map.from(widget.singleData!);
@@ -307,7 +307,7 @@ class _PaymentMethodBySenderSheetState
 //   getPaymentGateways() async {
 //     try {
 //       String apiUrl = "$baseUrl/get_payment_gateways";
-//       print("apiUrl: $apiUrl");
+//       debugPrint("apiUrl: $apiUrl");
 //       cashId = "";
 //       final response = await http.get(
 //         Uri.parse(apiUrl),
@@ -316,14 +316,14 @@ class _PaymentMethodBySenderSheetState
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         getPaymentGatewaysModel =
 //             getPaymentGatewaysModelFromJson(responseString);
-//         print(
+//         debugPrint(
 //             'getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
-//         print(
+//         debugPrint(
 //             'getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
 //         for (int i = 0; i < getPaymentGatewaysModel.data!.length; i++) {
 //           if (getPaymentGatewaysModel.data?[i].name == "Cash") {
@@ -335,7 +335,7 @@ class _PaymentMethodBySenderSheetState
 //         }
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -355,7 +355,7 @@ class _PaymentMethodBySenderSheetState
 //         select: "Select",
 //       );
 //     });
-//     print(widget.singleData);
+//     debugPrint(widget.singleData);
 //   }
 //
 //   @override
@@ -421,7 +421,7 @@ class _PaymentMethodBySenderSheetState
 //                             setState(() {
 //                               isSelectedCard = true;
 //                               isSelectedCash = false;
-//                               print("cardId: $cardId");
+//                               debugPrint("cardId: $cardId");
 //                             });
 //                           },
 //                           child: Stack(
@@ -494,7 +494,7 @@ class _PaymentMethodBySenderSheetState
 //                             setState(() {
 //                               isSelectedCard = false;
 //                               isSelectedCash = true;
-//                               print("cashId: $cashId");
+//                               debugPrint("cashId: $cashId");
 //                             });
 //                           },
 //                           child: Stack(
@@ -643,7 +643,7 @@ class _PaymentMethodBySenderSheetState
 //   getPaymentGateways() async {
 //     try {
 //       String apiUrl = "$baseUrl/get_payment_gateways";
-//       print("apiUrl: $apiUrl");
+//       debugPrint("apiUrl: $apiUrl");
 //       bankId = "";
 //       final response = await http.get(
 //         Uri.parse(apiUrl),
@@ -652,31 +652,31 @@ class _PaymentMethodBySenderSheetState
 //         },
 //       );
 //       final responseString = response.body;
-//       print("response: $responseString");
-//       print("statusCode: ${response.statusCode}");
+//       debugPrint("response: $responseString");
+//       debugPrint("statusCode: ${response.statusCode}");
 //       if (response.statusCode == 200) {
 //         getPaymentGatewaysModel =
 //             getPaymentGatewaysModelFromJson(responseString);
-//         print(
+//         debugPrint(
 //             'getPaymentGatewaysModel status: ${getPaymentGatewaysModel.status}');
-//         print(
+//         debugPrint(
 //             'getPaymentGatewaysModel length: ${getPaymentGatewaysModel.data!.length}');
 //         for (int i = 0; i < getPaymentGatewaysModel.data!.length; i++) {
 //           if (getPaymentGatewaysModel.data?[i].name == "Bank") {
 //             bankId = "${getPaymentGatewaysModel.data?[i].paymentGatewaysId}";
-//             print("bankId: $bankId");
+//             debugPrint("bankId: $bankId");
 //           } else if (getPaymentGatewaysModel.data?[i].name == "Flutterwave") {
 //             cardId = "${getPaymentGatewaysModel.data?[i].paymentGatewaysId}";
-//             print("cardId: $cardId");
+//             debugPrint("cardId: $cardId");
 //           } else if (getPaymentGatewaysModel.data?[i].name == "Wallet") {
 //             walletId = "${getPaymentGatewaysModel.data?[i].paymentGatewaysId}";
-//             print("walletId: $walletId");
+//             debugPrint("walletId: $walletId");
 //           }
 //           setState(() {});
 //         }
 //       }
 //     } catch (e) {
-//       print('Something went wrong = ${e.toString()}');
+//       debugPrint('Something went wrong = ${e.toString()}');
 //       return null;
 //     }
 //   }
@@ -696,7 +696,7 @@ class _PaymentMethodBySenderSheetState
 //         imageWallet: "assets/images/pay-wallet-icon.svg",
 //         select: "Select",
 //       );
-//       print("mapData: ${widget.singleData}");
+//       debugPrint("mapData: ${widget.singleData}");
 //     });
 //   }
 
