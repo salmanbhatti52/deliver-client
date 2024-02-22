@@ -11,11 +11,11 @@ import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/models/get_support_admin_model.dart';
 import 'package:deliver_client/screens/home/drawer/legal_screen.dart';
-import 'package:deliver_client/screens/home/drawer/settings_screen.dart';
 import 'package:deliver_client/screens/home/drawer/loyalty_point_screen.dart';
 import 'package:deliver_client/screens/home/drawer/profile/profile_screen.dart';
 import 'package:deliver_client/screens/home/drawer/support/support_screen.dart';
 import 'package:deliver_client/screens/home/drawer/update_location_screen.dart';
+import 'package:deliver_client/screens/home/drawer/settings/settings_screen.dart';
 import 'package:deliver_client/screens/home/drawer/address/drawer_address_screen.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/ride_history_screen.dart';
 import 'package:deliver_client/screens/home/drawer/scheduled_ride/scheduled_ride_screen.dart';
@@ -122,7 +122,8 @@ class _AppDrawerState extends State<AppDrawer> {
       if (response.statusCode == 200) {
         getSupportAdminModel = getSupportAdminModelFromJson(responseString);
         setState(() {});
-        debugPrint('getSupportAdminModel status: ${getSupportAdminModel.status}');
+        debugPrint(
+            'getSupportAdminModel status: ${getSupportAdminModel.status}');
         debugPrint(
             'getSupportAdminModel length: ${getSupportAdminModel.data!.length}');
         for (int i = 0; i < getSupportAdminModel.data!.length; i++) {

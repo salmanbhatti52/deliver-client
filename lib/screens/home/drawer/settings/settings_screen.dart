@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +7,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/models/notification_switch_model.dart';
+import 'package:deliver_client/screens/home/drawer/settings/delete_account_screen.dart';
 
 String? userId;
 String? notificationStatus = "Yes";
@@ -168,6 +167,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                 ],
+              ),
+              SizedBox(
+                height: size.height * 0.04,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DeleteAccountScreen(),
+                    ),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Delete Your Account',
+                      style: TextStyle(
+                        color: drawerTextColor,
+                        fontSize: 16,
+                        fontFamily: 'Syne-Bold',
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: blackColor,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

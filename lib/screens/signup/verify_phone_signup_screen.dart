@@ -507,11 +507,12 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                       isLoading = true;
                     });
                     if (otpController.text == "123456") {
+                      await checkNumber();
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => HomePageScreen(),
                           ),
-                              (Route<dynamic> route) => false);
+                          (Route<dynamic> route) => false);
                     } else {
                       await verifyOtp();
                       if (verifyOtpModel.verified == true) {
