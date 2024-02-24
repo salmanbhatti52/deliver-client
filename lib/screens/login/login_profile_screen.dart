@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
 import 'dart:convert';
@@ -1098,7 +1098,7 @@ privacyDialog(BuildContext context, String? text, OnAcceptCallback onAccept) {
   );
 }
 
-// // ignore_for_file: avoid_print, use_build_context_synchronously
+// // ignore_for_file: use_build_context_synchronously
 //
 // import 'dart:io';
 // import 'dart:convert';

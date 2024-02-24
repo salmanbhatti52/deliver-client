@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -223,46 +223,76 @@ class _LoginScreenState extends State<LoginScreen> {
   void showLocationPermissionSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: orangeColor,
+        elevation: 0,
+        width: MediaQuery.of(context).size.width,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
         duration: const Duration(seconds: 5),
-        content: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Location permission is required\nto continue.',
-              style: TextStyle(
-                color: whiteColor,
-                fontSize: 12,
-                fontFamily: 'Syne-Regular',
-              ),
+        content: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              stops: const [0.1, 1.5],
+              colors: [
+                orangeColor,
+                yellowColor,
+              ],
             ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            GestureDetector(
-              onTap: () {
-                openAppSettings();
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.04,
-                width: MediaQuery.of(context).size.width * 0.33,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF36454F),
-                  borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 2,
+                spreadRadius: 2,
+                offset: const Offset(0, 3),
+                color: blackColor.withOpacity(0.2),
+              ),
+            ],
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              width: 2,
+              color: borderColor,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Location permission is required\nto continue.',
+                style: TextStyle(
+                  color: whiteColor,
+                  fontSize: 12,
+                  fontFamily: 'Syne-Regular',
                 ),
-                child: Center(
-                  child: Text(
-                    'Grant Permission',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontSize: 12,
-                      fontFamily: 'Syne-Medium',
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              GestureDetector(
+                onTap: () {
+                  openAppSettings();
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.04,
+                  width: MediaQuery.of(context).size.width * 0.33,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF36454F),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Grant Permission',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: whiteColor,
+                        fontSize: 12,
+                        fontFamily: 'Syne-Medium',
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -532,7 +562,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// // ignore_for_file: avoid_print, use_build_context_synchronously
+// // ignore_for_file: use_build_context_synchronously
 //
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
@@ -920,7 +950,7 @@ class _LoginScreenState extends State<LoginScreen> {
 //   }
 // }
 //
-// // // ignore_for_file: avoid_print, use_build_context_synchronously
+// // // ignore_for_file: use_build_context_synchronously
 // //
 // // import 'package:flutter/material.dart';
 // // import 'package:flutter/services.dart';
@@ -1267,7 +1297,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // //   }
 // // }
 //
-// // // ignore_for_file: avoid_print, use_build_context_synchronously
+// // // ignore_for_file: use_build_context_synchronously
 //
 // // import 'dart:convert';
 // // import 'package:flutter/gestures.dart';

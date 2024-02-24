@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
 import 'dart:convert';
@@ -525,7 +525,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 }
 
-// // ignore_for_file: avoid_print, use_build_context_synchronously
+// // ignore_for_file: use_build_context_synchronously
 
 // import 'dart:io';
 // import 'dart:convert';

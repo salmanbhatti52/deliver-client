@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors, unused_local_variable
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, unused_local_variable
 
 import 'dart:async';
 import 'package:pinput/pinput.dart';
@@ -576,7 +576,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   }
 }
 
-// // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors, unused_local_variable
+// // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, unused_local_variable
 //
 // import 'dart:async';
 // import 'package:lottie/lottie.dart';
