@@ -79,7 +79,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "distance_unit") {
             distanceUnit = "${getAllSystemDataModel.data?[i].description}";
@@ -180,7 +181,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   getLocationMultiple() {
-    if (widget.multipleData!.isNotEmpty) {
+    if (widget.multipleData?.isNotEmpty ?? false) {
       latDest = "${widget.multipleData!['destin_latitude0']}";
       lngDest = "${widget.multipleData!['destin_longitude0']}";
       destLat = double.parse(latDest!);
@@ -245,7 +246,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
 
   startTimer() {
     timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      updateBookingStatus();
+      if (widget.currentBookingId != null &&
+          widget.currentBookingId!.isNotEmpty) {
+        updateBookingStatus();
+      }
     });
   }
 
@@ -254,7 +258,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
-    if (widget.singleData!.isNotEmpty) {
+    if (widget.singleData?.isNotEmpty ?? false) {
       // getPolyPoints();
       getLocationSingle();
       loadCustomDestMarker();
