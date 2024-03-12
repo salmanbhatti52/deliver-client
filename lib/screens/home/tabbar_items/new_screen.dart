@@ -731,6 +731,7 @@ class _NewScreenState extends State<NewScreen> {
 
   @override
   void dispose() {
+    dragController.dispose();
     pageController.dispose(); // Don't forget to dispose the controller
     super.dispose();
   }
