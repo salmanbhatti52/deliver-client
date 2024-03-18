@@ -34,20 +34,29 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       setState(() {
         isLoading = true;
       });
-      String apiUrl = "$baseUrl/get_riders_available";
+      String apiUrl = "$baseUrl/get_riders_reachable";
       debugPrint("apiUrl: $apiUrl");
-      debugPrint("vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
-      debugPrint("pickupLatitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"]}");
-      debugPrint("pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
+      debugPrint(
+          "vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
+      debugPrint(
+          "pickupLatitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"]}");
+      debugPrint(
+          "pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
           'Accept': 'application/json',
         },
         body: {
-          "pickup_latitude": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"].toString(),
-          "pickup_longitude": widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"].toString(),
-          "vehicles_id": widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"].toString(),
+          "vehicles_id": widget.singleData!.isNotEmpty
+              ? widget.singleData!["vehicles_id"]
+              : widget.multipleData!["vehicles_id"].toString(),
+          "pickup_latitude": widget.singleData!.isNotEmpty
+              ? widget.singleData!["pickup_latitude"]
+              : widget.multipleData!["pickup_latitude0"].toString(),
+          "pickup_longitude": widget.singleData!.isNotEmpty
+              ? widget.singleData!["pickup_longitude"]
+              : widget.multipleData!["pickup_longitude0"].toString(),
         },
       );
       final responseString = response.body;
@@ -58,7 +67,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
         if (response.statusCode == 200) {
           searchRiderModel = searchRiderModelFromJson(responseString);
           debugPrint('searchRiderModel status: ${searchRiderModel.status}');
-          debugPrint('searchRiderModel length: ${searchRiderModel.data!.length}');
+          debugPrint(
+              'searchRiderModel length: ${searchRiderModel.data!.length}');
           setState(() {
             isLoading = false;
           });
@@ -94,7 +104,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -226,9 +237,16 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                             debugPrint(
                                                 "length: ${searchRiderModel.data?.length}");
                                             return RidersList(
-                                              singleData: widget.singleData!.isNotEmpty ? widget.singleData : const {},
-                                              multipleData: widget.multipleData!.isNotEmpty ? widget.multipleData : const {},
-                                              searchRider: searchRiderModel.data?[index],
+                                              singleData:
+                                                  widget.singleData!.isNotEmpty
+                                                      ? widget.singleData
+                                                      : const {},
+                                              multipleData: widget
+                                                      .multipleData!.isNotEmpty
+                                                  ? widget.multipleData
+                                                  : const {},
+                                              searchRider:
+                                                  searchRiderModel.data?[index],
                                             );
                                           },
                                         ),
