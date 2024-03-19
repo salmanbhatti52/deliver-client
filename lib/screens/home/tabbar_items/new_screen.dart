@@ -1482,6 +1482,7 @@ class _NewScreenState extends State<NewScreen> {
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
+    bool fetchingData = false;
 
     List<String> pickupAddresses =
         getAddressesFromControllers(pickupControllers);
@@ -1495,17 +1496,19 @@ class _NewScreenState extends State<NewScreen> {
     // Create a list to store all the geocoding futures
 
     Future<void> fetchData() async {
+      fetchingData = true;
+
       allDataForIndexes1.clear();
       filteredData.clear();
       // Create a list to hold all geocoding futures
       List<Future<void>> geocodingFutures = [];
       List<Map<String, double>?> pickupLatLngList =
-      List.filled(pickupAddresses.length, null);
+          List.filled(pickupAddresses.length, null);
       List<Map<String, double>?> destinationLatLngList =
-      List.filled(destinationAddresses.length, null);
+          List.filled(destinationAddresses.length, null);
       for (int index = 0;
-      index < pickupAddresses.length && index < destinationAddresses.length;
-      index++) {
+          index < pickupAddresses.length && index < destinationAddresses.length;
+          index++) {
         String pickupAddress = pickupAddresses[index];
         String destinationAddress = destinationAddresses[index];
         String receiverName = receiversName[index];
@@ -1590,34 +1593,52 @@ class _NewScreenState extends State<NewScreen> {
         debugPrint("duration 4: $duration4");
       }
 
-      if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
-        CustomToast.showToast(
-          fontSize: 12,
-          message: "Distance of delivery first should be greater than 1.0 Km!",
-        );
-      } else if (double.parse(distance1!.split(" ")[0]) <= 1.0) {
-        CustomToast.showToast(
-          fontSize: 12,
-          message: "Distance of delivery second should be greater than 1.0 Km!",
-        );
-      } else if (distance2 != null && double.parse(distance2!.split(" ")[0]) <= 1.0) {
-        CustomToast.showToast(
-          fontSize: 12,
-          message: "Distance of delivery third should be greater than 1.0 Km!",
-        );
-      } else if (distance3 != null && double.parse(distance3!.split(" ")[0]) <= 1.0) {
-        CustomToast.showToast(
-          fontSize: 12,
-          message: "Distance of delivery fourth should be greater than 1.0 Km!",
-        );
-      } else if (distance4 != null && double.parse(distance4!.split(" ")[0]) <= 1.0) {
-        CustomToast.showToast(
-          fontSize: 12,
-          message: "Distance of delivery fifth should be greater than 1.0 Km!",
-        );
-      } else {
-        debugPrint("All distances are greater than 1.0 Km");
-      }
+      //   if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
+      //     print("receiversNumberController ${receiversNumberController.text}");
+      //     CustomToast.showToast(
+      //       fontSize: 12,
+      //       message: "Distance of delivery first should be greater than 1.0 Km!",
+      //     );
+      //     receiversNumberController.clear();
+
+      //     fetchingData = false;
+      //   } else if (distance1 != null &&
+      //       double.parse(distance1!.split(" ")[0]) <= 1.0) {
+      //     receiversNumberController.clear();
+
+      //     CustomToast.showToast(
+      //       fontSize: 12,
+      //       message: "Distance of delivery second should be greater than 1.0 Km!",
+      //     );
+      //     fetchingData = false;
+      //   } else if (distance2 != null &&
+      //       double.parse(distance2!.split(" ")[0]) <= 1.0) {
+      //     receiversNumberController.clear();
+      //     CustomToast.showToast(
+      //       fontSize: 12,
+      //       message: "Distance of delivery third should be greater than 1.0 Km!",
+      //     );
+      //     fetchingData = false;
+      //   } else if (distance3 != null &&
+      //       double.parse(distance3!.split(" ")[0]) <= 1.0) {
+      //     receiversNumberController.clear();
+      //     CustomToast.showToast(
+      //       fontSize: 12,
+      //       message: "Distance of delivery fourth should be greater than 1.0 Km!",
+      //     );
+      //     fetchingData = false;
+      //   } else if (distance4 != null &&
+      //       double.parse(distance4!.split(" ")[0]) <= 1.0) {
+      //     receiversNumberController.clear();
+      //     CustomToast.showToast(
+      //       fontSize: 12,
+      //       message: "Distance of delivery fifth should be greater than 1.0 Km!",
+      //     );
+      //     fetchingData = false;
+      //   } else {
+      //     debugPrint("All distances are greater than 1.0 Km");
+      //     fetchingData = false;
+      //   }
     }
 
     return Padding(
@@ -1627,6 +1648,7 @@ class _NewScreenState extends State<NewScreen> {
         height: size.height * 0.295,
         child: PageView.builder(
           controller: pageController,
+          physics: fetchingData ? const NeverScrollableScrollPhysics() : null,
           scrollDirection: Axis.horizontal,
           onPageChanged: (value) async {
             setState(() {
@@ -1653,7 +1675,121 @@ class _NewScreenState extends State<NewScreen> {
                 'receiversNameController: ${receiversNameController.text}');
             debugPrint(
                 'receiversNumberController: ${receiversNumberController.text}');
+            if (index == 0 && receiversNameController.text.isNotEmpty) {
+              fetchData();
+              Future.delayed(const Duration(seconds: 2), () {
+                if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
+                  print(
+                      "receiversNumberController Zain ${receiversNumberController.text}");
+                  CustomToast.showToast(
+                    fontSize: 12,
+                    message:
+                        "Distance of delivery first should be greater than 1.0 Km!",
+                  );
+                  setState(() {
+                    receiversNameController.clear();
+                    destinationController.clear();
+                    receiversNumberController
+                        .clear(); // Clear the controller value
+                  });
 
+                  setState(() {
+                    fetchingData = false;
+                  });
+                }
+                // Your code here
+              });
+            }
+// else if (index == 1 && receiversNameController.text.isNotEmpty) {
+//               fetchData();
+//               Future.delayed(const Duration(seconds: 2), () {
+//                 // Your code here
+//                 if (distance1 != null &&
+//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
+//                   CustomToast.showToast(
+//                     fontSize: 12,
+//                     message:
+//                         "Distance of delivery second should be greater than 1.0 Km!",
+//                   );
+//                   setState(() {
+//                     receiversNameController.clear();
+//                     destinationController.clear();
+//                     receiversNumberController
+//                         .clear(); // Clear the controller value
+//                   });
+
+//                   setState(() {
+//                     fetchingData = false;
+//                   });
+//                 }
+//               });
+//             } else if (index == 2 && receiversNameController.text.isNotEmpty) {
+//               fetchData();
+//               Future.delayed(const Duration(seconds: 2), () {
+//                 // Your code here
+//                 if (distance2 != null &&
+//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
+//                   CustomToast.showToast(
+//                     fontSize: 12,
+//                     message:
+//                         "Distance of delivery Third should be greater than 1.0 Km!",
+//                   );
+//                   fetchingData = false;
+//                   setState(() {
+//                     receiversNameController.clear();
+//                     destinationController.clear();
+//                     receiversNumberController
+//                         .clear(); // Clear the controller value
+//                   });
+//                 }
+//               });
+//             } else if (index == 3 && receiversNameController.text.isNotEmpty) {
+//               fetchData();
+//               Future.delayed(const Duration(seconds: 2), () {
+//                 // Your code here
+//                 if (distance3 != null &&
+//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
+//                   CustomToast.showToast(
+//                     fontSize: 12,
+//                     message:
+//                         "Distance of delivery Forth should be greater than 1.0 Km!",
+//                   );
+//                   setState(() {
+//                     receiversNameController.clear();
+//                     destinationController.clear();
+//                     receiversNumberController
+//                         .clear(); // Clear the controller value
+//                   });
+
+//                   setState(() {
+//                     fetchingData = false;
+//                   });
+//                 }
+//               });
+//             } else if (index == 4 && receiversNameController.text.isNotEmpty) {
+//               fetchData();
+//               Future.delayed(const Duration(seconds: 2), () {
+//                 // Your code here
+//                 if (distance4 != null &&
+//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
+//                   CustomToast.showToast(
+//                     fontSize: 12,
+//                     message:
+//                         "Distance of delivery Fifth should be greater than 1.0 Km!",
+//                   );
+//                   setState(() {
+//                     receiversNameController.clear();
+//                     destinationController.clear();
+//                     receiversNumberController
+//                         .clear(); // Clear the controller value
+//                   });
+
+//                   setState(() {
+//                     fetchingData = false;
+//                   });
+//                 }
+//               });
+//             }
             if (index == 1 &&
                 pickupController.text.isNotEmpty &&
                 destinationController.text.isNotEmpty &&

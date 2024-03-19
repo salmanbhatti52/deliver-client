@@ -7,14 +7,13 @@ class CustomToast {
     double fontSize = 12,
   }) {
     Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 2,
-      fontSize: fontSize,
-      textColor: whiteColor,
-      backgroundColor: toastColor,
-
-    );
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 2,
+        fontSize: fontSize,
+        textColor: whiteColor,
+        backgroundColor: toastColor,
+        webPosition: "top");
   }
 }

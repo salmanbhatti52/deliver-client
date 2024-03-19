@@ -339,8 +339,10 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                           setState(() {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            debugPrint("addressLat: $addressLat");
-                                            debugPrint("addressLng $addressLng");
+                                            debugPrint(
+                                                "addressLat: $addressLat");
+                                            debugPrint(
+                                                "addressLng $addressLng");
                                             debugPrint(
                                                 "addressLocation: ${addresses.address}");
                                           });
@@ -613,8 +615,10 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                       destinationPredictions.clear();
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
-                                      debugPrint("destinationLat: $destinationLat");
-                                      debugPrint("destinationLng $destinationLng");
+                                      debugPrint(
+                                          "destinationLat: $destinationLat");
+                                      debugPrint(
+                                          "destinationLng $destinationLng");
                                       // debugPrint("destinationLat: ${widget.destinationLats}");
                                       // debugPrint("destinationLng ${widget.destinationLngs}");
                                       debugPrint(
