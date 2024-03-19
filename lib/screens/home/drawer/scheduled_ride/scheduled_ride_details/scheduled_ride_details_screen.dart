@@ -4,11 +4,11 @@ import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/cancel_booking_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
@@ -58,7 +58,8 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
       if (response.statusCode == 200) {
         getAllSystemDataModel =
             systemdata.getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -148,7 +149,8 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    timeAdded = DateTime.parse("${widget.getScheduledBookingModel?.dateModified}");
+    timeAdded =
+        DateTime.parse("${widget.getScheduledBookingModel?.dateModified}");
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
@@ -698,14 +700,10 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
                               isLoading = false;
                             });
                           } else {
-                            Fluttertoast.showToast(
-                              msg: "You have already cancelled this booking.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: toastColor,
-                              textColor: whiteColor,
+                            CustomToast.showToast(
                               fontSize: 12,
+                              message:
+                                  "You have already cancelled this booking.",
                             );
                             setState(() {
                               isLoading = false;

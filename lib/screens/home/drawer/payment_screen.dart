@@ -796,15 +796,10 @@
 //                                     if (addBankCardModel.status == 'success') {
 //                                       getBankCard();
 //                                     } else {
-//                                       Fluttertoast.showToast(
-//                                         msg: "Please try again! ",
-//                                         toastLength: Toast.LENGTH_SHORT,
-//                                         gravity: ToastGravity.BOTTOM,
-//                                         timeInSecForIosWeb: 2,
-//                                         backgroundColor: toastColor,
-//                                         textColor: whiteColor,
-//                                         fontSize: 12,
-//                                       );
+//                                     CustomToast.showToast(
+//                                     fontSize: 12,
+//                                     message: "Please try again!",
+//                                     );
 //                                     }
 //                                   }
 //                                 },

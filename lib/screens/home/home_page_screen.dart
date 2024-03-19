@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/app_drawer.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/tabbar_items/new_screen.dart';
 import 'package:deliver_client/screens/home/tabbar_items/inprogress_screen.dart';
@@ -41,14 +41,9 @@ class _HomePageScreenState extends State<HomePageScreen>
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Fluttertoast.showToast(
-        msg: "Tap again to exit",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: toastColor,
-        textColor: whiteColor,
+      CustomToast.showToast(
         fontSize: 12,
+        message: "Tap again to exit",
       );
       return Future.value(false);
     }
@@ -106,53 +101,53 @@ class _HomePageScreenState extends State<HomePageScreen>
                 child: Column(
                   children: [
                     Container(
-                        height: MediaQuery.of(context).size.height * 0.06,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: borderColor,
-                            width: 1,
-                          ),
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: borderColor,
+                          width: 1,
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 3, vertical: 3),
-                          child: TabBar(
-                            // controller: tabController,
-                            indicator: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerRight,
-                                end: Alignment.centerLeft,
-                                stops: const [0.1, 1.5],
-                                colors: [
-                                  orangeColor,
-                                  yellowColor,
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 3, vertical: 3),
+                        child: TabBar(
+                          // controller: tabController,
+                          indicator: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerRight,
+                              end: Alignment.centerLeft,
+                              stops: const [0.1, 1.5],
+                              colors: [
+                                orangeColor,
+                                yellowColor,
+                              ],
                             ),
-                            isScrollable: true,
-                            labelPadding:
-                                const EdgeInsets.symmetric(horizontal: 12),
-                            labelColor: whiteColor,
-                            labelStyle: TextStyle(
-                              color: whiteColor,
-                              fontSize: 14,
-                              fontFamily: 'Syne-Medium',
-                            ),
-                            unselectedLabelColor: const Color(0xFF929292),
-                            unselectedLabelStyle: const TextStyle(
-                              color: Color(0xFF929292),
-                              fontSize: 14,
-                              fontFamily: 'Syne-Regular',
-                            ),
-                            tabs: const [
-                              Tab(text: "    New    "),
-                              Tab(text: "In Progress"),
-                            ],
+                            borderRadius: BorderRadius.circular(10),
                           ),
+                          isScrollable: true,
+                          labelPadding:
+                              const EdgeInsets.symmetric(horizontal: 12),
+                          labelColor: whiteColor,
+                          labelStyle: TextStyle(
+                            color: whiteColor,
+                            fontSize: 14,
+                            fontFamily: 'Syne-Medium',
+                          ),
+                          unselectedLabelColor: const Color(0xFF929292),
+                          unselectedLabelStyle: const TextStyle(
+                            color: Color(0xFF929292),
+                            fontSize: 14,
+                            fontFamily: 'Syne-Regular',
+                          ),
+                          tabs: const [
+                            Tab(text: "    New    "),
+                            Tab(text: "In Progress"),
+                          ],
                         ),
+                      ),
                     ),
                     Container(
                       color: transparentColor,

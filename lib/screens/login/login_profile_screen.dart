@@ -14,15 +14,17 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:deliver_client/widgets/custom_snackbar.dart';
 import 'package:deliver_client/models/create_profile_model.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
+import 'package:deliver_client/widgets/custom_snackbar_with_btn.dart';
 import 'package:deliver_client/screens/first_time_location_and_address/first_save_location_screen.dart';
 
 bool checkmark = false;
 bool checkmark2 = false;
 
-typedef void OnAcceptCallback(bool value);
+typedef OnAcceptCallback = void Function(bool value);
 
 class LoginProfileScreen extends StatefulWidget {
   final String? contactNumber;
@@ -76,7 +78,8 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -145,10 +148,12 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
         debugPrint(
             "sharedPref userId: ${createProfileModel.data!.usersCustomersId.toString()}");
         debugPrint("sharedPref email: ${createProfileModel.data!.email}");
-        debugPrint("sharedPref firstName: ${createProfileModel.data!.firstName}");
+        debugPrint(
+            "sharedPref firstName: ${createProfileModel.data!.firstName}");
         debugPrint("sharedPref lastName: ${createProfileModel.data!.lastName}");
         debugPrint("sharedPref phoneNumber: ${createProfileModel.data!.phone}");
-        debugPrint("sharedPref profilePic: ${createProfileModel.data!.profilePic}");
+        debugPrint(
+            "sharedPref profilePic: ${createProfileModel.data!.profilePic}");
         debugPrint('createProfileModel status: ${createProfileModel.status}');
         setState(() {});
       }
@@ -207,78 +212,13 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
 
   void showStoragePermissionSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        elevation: 0,
-        width: double.infinity,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 5),
-        content: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerRight,
-              end: Alignment.centerLeft,
-              stops: const [0.1, 1.5],
-              colors: [
-                orangeColor,
-                yellowColor,
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 2,
-                spreadRadius: 2,
-                offset: const Offset(0, 3),
-                color: blackColor.withOpacity(0.2),
-              ),
-            ],
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 2,
-              color: borderColor,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Photo Library permission is required\nto change profile picture.',
-                style: TextStyle(
-                  color: whiteColor,
-                  fontSize: 12,
-                  fontFamily: 'Syne-Regular',
-                ),
-              ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-              GestureDetector(
-                onTap: () {
-                  openAppSettings();
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  decoration: BoxDecoration(
-                    color: grantPermissionColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Grant Permission',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: whiteColor,
-                        fontSize: 12,
-                        fontFamily: 'Syne-Medium',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      CustomSnackBarWithBtn(
+        message:
+            "Photo Library permission is required\nto change profile picture.",
+        buttonText: "Grant Permission",
+        onPressed: () {
+          openAppSettings();
+        },
       ),
     );
   }
@@ -734,54 +674,16 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                     SizedBox(height: size.height * 0.08),
                     GestureDetector(
                       onTap: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
                         if (createProfileImageFormKey.currentState!
                             .validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
                           if (base64imgGallery == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                elevation: 0,
-                                width: double.infinity,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                duration: const Duration(seconds: 2),
-                                content: Container(
-                                  padding: const EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerRight,
-                                      end: Alignment.centerLeft,
-                                      stops: const [0.1, 1.5],
-                                      colors: [
-                                        orangeColor,
-                                        yellowColor,
-                                      ],
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 2,
-                                        spreadRadius: 2,
-                                        offset: const Offset(0, 3),
-                                        color: blackColor.withOpacity(0.2),
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 2,
-                                      color: borderColor,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Please Upload an Image',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: whiteColor,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ),
+                              CustomSnackBar(
+                                message: "Please upload an image",
+                                size: MediaQuery.of(context).size,
                               ),
                             );
                             setState(() {
@@ -789,47 +691,10 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                             });
                           } else if (!checkmark || !checkmark2) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                elevation: 0,
-                                width: size.width,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                duration: const Duration(seconds: 2),
-                                content: Container(
-                                  padding: const EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerRight,
-                                      end: Alignment.centerLeft,
-                                      stops: const [0.1, 1.5],
-                                      colors: [
-                                        orangeColor,
-                                        yellowColor,
-                                      ],
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 2,
-                                        spreadRadius: 2,
-                                        offset: const Offset(0, 3),
-                                        color: blackColor.withOpacity(0.2),
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 2,
-                                      color: borderColor,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Please accept our terms and conditions and privacy policy',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: whiteColor,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ),
+                              CustomSnackBar(
+                                message:
+                                    "Please accept our terms and conditions and privacy policy",
+                                size: MediaQuery.of(context).size,
                               ),
                             );
                             setState(() {
@@ -848,50 +713,11 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               setState(() {
                                 isLoading = false;
                               });
-                            }
-                            if (createProfileModel.status != 'success') {
+                            } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  elevation: 0,
-                                  width: size.width,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  duration: const Duration(seconds: 2),
-                                  content: Container(
-                                    padding: const EdgeInsets.all(15),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.centerRight,
-                                        end: Alignment.centerLeft,
-                                        stops: const [0.1, 1.5],
-                                        colors: [
-                                          orangeColor,
-                                          yellowColor,
-                                        ],
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 2,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 3),
-                                          color: blackColor.withOpacity(0.2),
-                                        ),
-                                      ],
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        width: 2,
-                                        color: borderColor,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Email already exists',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: whiteColor,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                    ),
-                                  ),
+                                CustomSnackBar(
+                                  message: "Email already exists",
+                                  size: MediaQuery.of(context).size,
                                 ),
                               );
                               setState(() {

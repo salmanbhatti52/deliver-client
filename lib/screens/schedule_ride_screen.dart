@@ -3,9 +3,9 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/screens/confirm_single_details_screen.dart';
 import 'package:deliver_client/screens/confirm_multiple_details_screen.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
@@ -209,7 +209,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                             children: [
                               Text(
                                 selectedTime != null
-                                    ? DateFormat('h:mm').format(selectedTime!)
+                                    ? DateFormat('h:mm a').format(selectedTime!)
                                     : 'Select Time',
                                 style: TextStyle(
                                   color: hintColor,
@@ -219,7 +219,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  picker.DatePicker.showTime12hPicker(
+                                  picker.DatePicker.showTimePicker(
                                     context,
                                     showTitleActions: true,
                                     theme: picker.DatePickerTheme(
@@ -284,14 +284,9 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
             child: GestureDetector(
               onTap: () {
                 if (selectedDate == null || selectedTime == null) {
-                  Fluttertoast.showToast(
-                    msg: "Please select date and time!",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 2,
-                    backgroundColor: toastColor,
-                    textColor: whiteColor,
+                  CustomToast.showToast(
                     fontSize: 12,
+                    message: "Please select date and time!",
                   );
                 } else {
                   if (widget.selectedRadio == 1) {
@@ -302,7 +297,7 @@ class _ScheduleRideScreenState extends State<ScheduleRideScreen> {
                           .format(selectedDate!)
                           .toString(),
                       "delivery_time":
-                          DateFormat('h:mm').format(selectedTime!).toString(),
+                          DateFormat('HH:mm').format(selectedTime!).toString(),
                     });
                     Navigator.push(
                       context,

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:deliver_client/models/rate_rider_model.dart';
@@ -333,25 +333,15 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                 if (additionalCommentsController.text.isEmpty ||
                                     ratingValue == null) {
                                   if (ratingValue == null) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please rate the rider!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
+                                    CustomToast.showToast(
                                       fontSize: 12,
+                                      message: "Please rate the rider!",
                                     );
                                   } else if (additionalCommentsController
                                       .text.isEmpty) {
-                                    Fluttertoast.showToast(
-                                      msg: "Please add a comment!",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
+                                    CustomToast.showToast(
                                       fontSize: 12,
+                                      message: "Please add a comment!",
                                     );
                                   }
                                 } else {
@@ -380,14 +370,9 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                     setState(() {
                                       isLoading = false;
                                     });
-                                    Fluttertoast.showToast(
-                                      msg: "Please rate the driver",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      timeInSecForIosWeb: 2,
-                                      backgroundColor: toastColor,
-                                      textColor: whiteColor,
+                                    CustomToast.showToast(
                                       fontSize: 12,
+                                      message: "Please rate the driver!",
                                     );
                                   }
                                 }

@@ -12,8 +12,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:deliver_client/widgets/custom_snackbar.dart';
 import 'package:deliver_client/models/edit_profile_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
+import 'package:deliver_client/widgets/custom_snackbar_with_btn.dart';
 
 String? userId;
 
@@ -76,7 +78,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             'profilePic', "${editProfileModel.data?.profilePic}");
         debugPrint("sharedPref firstName: ${editProfileModel.data!.firstName}");
         debugPrint("sharedPref lastName: ${editProfileModel.data!.lastName}");
-        debugPrint("sharedPref profilePic: ${editProfileModel.data!.profilePic}");
+        debugPrint(
+            "sharedPref profilePic: ${editProfileModel.data!.profilePic}");
         debugPrint('editProfileModel status: ${editProfileModel.status}');
         setState(() {});
       }
@@ -147,48 +150,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void showStoragePermissionSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: orangeColor,
-        duration: const Duration(seconds: 5),
-        content: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Photo Library permission is required\nto change profile picture.',
-              style: TextStyle(
-                color: whiteColor,
-                fontSize: 12,
-                fontFamily: 'Syne-Regular',
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-            GestureDetector(
-              onTap: () {
-                openAppSettings();
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.04,
-                width: MediaQuery.of(context).size.width * 0.33,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF36454F),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: Text(
-                    'Grant Permission',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: whiteColor,
-                      fontSize: 12,
-                      fontFamily: 'Syne-Medium',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+      CustomSnackBarWithBtn(
+        message:
+            "Photo Library permission is required\nto change profile picture.",
+        buttonText: "Grant Permission",
+        onPressed: () {
+          openAppSettings();
+        },
       ),
     );
   }
@@ -460,47 +428,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           }
                           if (editProfileModel.status != 'success') {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                elevation: 0,
-                                width: size.width,
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: Colors.transparent,
-                                duration: const Duration(seconds: 2),
-                                content: Container(
-                                  padding: const EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerRight,
-                                      end: Alignment.centerLeft,
-                                      stops: const [0.1, 1.5],
-                                      colors: [
-                                        orangeColor,
-                                        yellowColor,
-                                      ],
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        blurRadius: 2,
-                                        spreadRadius: 2,
-                                        offset: const Offset(0, 3),
-                                        color: blackColor.withOpacity(0.2),
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      width: 2,
-                                      color: borderColor,
-                                    ),
-                                  ),
-                                  child: Text(
+                              CustomSnackBar(
+                                message:
                                     "An error occurred while uploading the image.\nPlease try again.",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: whiteColor,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ),
+                                size: MediaQuery.of(context).size,
                               ),
                             );
                             setState(() {

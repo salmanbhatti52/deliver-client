@@ -5,10 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/update_location_model.dart';
@@ -90,14 +90,9 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
         updateLocationModel = updateLocationModelFromJson(responseString);
         debugPrint('updateLocationModel status: ${updateLocationModel.status}');
         if (updateLocationModel.status == 'success') {
-          Fluttertoast.showToast(
-            msg: "Current Location Updated",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 2,
-            backgroundColor: toastColor,
-            textColor: whiteColor,
+          CustomToast.showToast(
             fontSize: 12,
+            message: "Current Location Updated!",
           );
         }
         setState(() {

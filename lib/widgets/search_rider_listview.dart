@@ -3,11 +3,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/create_booking_model.dart';
@@ -480,7 +480,8 @@ class _RidersListState extends State<RidersList> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         scheduleBookingModel = scheduleBookingModelFromJson(responseString);
-        debugPrint('scheduleBookingModel status: ${scheduleBookingModel.status}');
+        debugPrint(
+            'scheduleBookingModel status: ${scheduleBookingModel.status}');
         currentBookingId = scheduleBookingModel.data?.bookingsId.toString();
         debugPrint('currentBookingId: $currentBookingId');
         setState(() {
@@ -623,25 +624,15 @@ class _RidersListState extends State<RidersList> {
                               ),
                             );
                           } else {
-                            Fluttertoast.showToast(
-                              msg: "Please try again.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: toastColor,
-                              textColor: whiteColor,
+                            CustomToast.showToast(
                               fontSize: 12,
+                              message: "Please try again.",
                             );
                           }
                         } else {
-                          Fluttertoast.showToast(
-                            msg: "Please try again.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 2,
-                            backgroundColor: toastColor,
-                            textColor: whiteColor,
+                          CustomToast.showToast(
                             fontSize: 12,
+                            message: "Please try again.",
                           );
                         }
                       } else {
@@ -655,14 +646,9 @@ class _RidersListState extends State<RidersList> {
                                   builder: (context) =>
                                       const HomePageScreen()));
                         } else {
-                          Fluttertoast.showToast(
-                            msg: "Please try again.",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 2,
-                            backgroundColor: toastColor,
-                            textColor: whiteColor,
+                          CustomToast.showToast(
                             fontSize: 12,
+                            message: "Please try again.",
                           );
                         }
                       }

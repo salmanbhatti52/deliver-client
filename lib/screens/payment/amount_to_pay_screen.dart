@@ -5,12 +5,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
@@ -132,14 +132,9 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
 
     if (response.status && response.reference == reference) {
       debugPrint("response: $response");
-      Fluttertoast.showToast(
-        msg: "Transaction Successful!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: toastColor,
-        textColor: whiteColor,
+      CustomToast.showToast(
         fontSize: 12,
+        message: "Transaction Successful!",
       );
       await updateBookingTransaction();
       Navigator.push(
@@ -155,14 +150,9 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
         ),
       );
     } else {
-      Fluttertoast.showToast(
-        msg: "Transaction Failed!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: toastColor,
-        textColor: whiteColor,
+      CustomToast.showToast(
         fontSize: 12,
+        message: "Transaction Failed!",
       );
     }
   }
@@ -184,7 +174,8 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {

@@ -8,11 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/get_reason_model.dart';
 import 'package:deliver_client/models/report_rider_model.dart';
@@ -78,14 +78,9 @@ class _ReportScreenState extends State<ReportScreen> {
         return base64ImageString;
       } else {
         // Handle unsupported file type
-        Fluttertoast.showToast(
-          msg: "Unsupported file format!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: toastColor,
-          textColor: whiteColor,
+        CustomToast.showToast(
           fontSize: 12,
+          message: "Unsupported file format!",
         );
       }
     } else {
@@ -127,14 +122,9 @@ class _ReportScreenState extends State<ReportScreen> {
         debugPrint("base64VideoString: $base64VideoString");
       } else {
         // Handle unsupported file type
-        Fluttertoast.showToast(
-          msg: "Unsupported file format!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: toastColor,
-          textColor: whiteColor,
+        CustomToast.showToast(
           fontSize: 12,
+          message: "Unsupported file format!",
         );
       }
     } else {
@@ -165,14 +155,9 @@ class _ReportScreenState extends State<ReportScreen> {
         return base64AudioString;
       } else {
         // Handle unsupported file type
-        Fluttertoast.showToast(
-          msg: "Unsupported file format!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: toastColor,
-          textColor: whiteColor,
+        CustomToast.showToast(
           fontSize: 12,
+          message: "Unsupported file format!",
         );
       }
     } else {
@@ -752,26 +737,17 @@ class _ReportScreenState extends State<ReportScreen> {
                           GestureDetector(
                             onTap: () async {
                               if (selectedReasonId == null) {
-                                Fluttertoast.showToast(
-                                  msg: "Please select a reason!",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 2,
-                                  backgroundColor: toastColor,
-                                  textColor: whiteColor,
+                                CustomToast.showToast(
                                   fontSize: 12,
+                                  message: "Please select a reason!",
                                 );
                               } else if (base64ImageString == null &&
                                   base64AudioString == null &&
                                   base64VideoString == null) {
-                                Fluttertoast.showToast(
-                                  msg: "Please upload at least one evidence!",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 2,
-                                  backgroundColor: toastColor,
-                                  textColor: whiteColor,
+                                CustomToast.showToast(
                                   fontSize: 12,
+                                  message:
+                                      "Please upload at least one evidence!",
                                 );
                                 setState(() {
                                   isLoading2 = false;
@@ -786,15 +762,10 @@ class _ReportScreenState extends State<ReportScreen> {
                                     builder: (context) => confirmDialog(),
                                   );
                                 } else {
-                                  Fluttertoast.showToast(
-                                    msg:
-                                        "Something went wrong. Please try again later!",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 2,
-                                    backgroundColor: toastColor,
-                                    textColor: whiteColor,
+                                  CustomToast.showToast(
                                     fontSize: 12,
+                                    message:
+                                        "Something went wrong. Please try again later!",
                                   );
                                 }
                               }

@@ -5,10 +5,10 @@ import 'package:pinput/pinput.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/models/send_otp_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/verify_otp_model.dart';
@@ -76,7 +76,8 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
         debugPrint(
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
-            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+            'getAllSystemDataModel length: ${getAllSystemDataModel.data!
+                .length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "termii_api_key") {
             termiiApiKey = "${getAllSystemDataModel.data?[i].description}";
@@ -240,7 +241,8 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
         await sharedPref.setString(
             'profilePic', "${checkNumberModel.data?.profilePic}");
         debugPrint(
-            "sharedPref userId: ${checkNumberModel.data!.usersCustomersId.toString()}");
+            "sharedPref userId: ${checkNumberModel.data!.usersCustomersId
+                .toString()}");
         debugPrint("sharedPref email: ${checkNumberModel.data!.email}");
         debugPrint("sharedPref firstName: ${checkNumberModel.data!.firstName}");
         debugPrint("sharedPref lastName: ${checkNumberModel.data!.lastName}");
@@ -296,7 +298,9 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   @override
   Widget build(BuildContext context) {
     var code = "";
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery
+        .of(context)
+        .size;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -347,7 +351,8 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
               ),
               SizedBox(height: size.height * 0.1),
               Text(
-                "We will send you OTP verification code at\nthis ${widget.phoneNumber}. Put your OTP code\nbelow for verification.",
+                "We will send you OTP verification code at\nthis ${widget
+                    .phoneNumber}. Put your OTP code\nbelow for verification.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: blackColor,
@@ -437,11 +442,11 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                   SizedBox(width: size.width * 0.02),
                   secondsRemaining == 0
                       ? SvgPicture.asset(
-                          'assets/images/clock-inactive-icon.svg',
-                        )
+                    'assets/images/clock-inactive-icon.svg',
+                  )
                       : SvgPicture.asset(
-                          'assets/images/clock-active-icon.svg',
-                        ),
+                    'assets/images/clock-active-icon.svg',
+                  ),
                   SizedBox(width: size.width * 0.02),
                   Text(
                     getTimerText(),
@@ -470,32 +475,32 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                     ),
                     secondsRemaining == 0
                         ? GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                secondsRemaining = 120;
-                                startTimer();
-                              });
-                              sendOtp();
-                            },
-                            child: Text(
-                              'Resend Code',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: orangeColor,
-                                fontSize: 16,
-                                fontFamily: 'Syne-SemiBold',
-                              ),
-                            ),
-                          )
+                      onTap: () {
+                        setState(() {
+                          secondsRemaining = 120;
+                          startTimer();
+                        });
+                        sendOtp();
+                      },
+                      child: Text(
+                        'Resend Code',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: orangeColor,
+                          fontSize: 16,
+                          fontFamily: 'Syne-SemiBold',
+                        ),
+                      ),
+                    )
                         : Text(
-                            'Resend Code',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: supportTextColor,
-                              fontSize: 16,
-                              fontFamily: 'Syne-SemiBold',
-                            ),
-                          ),
+                      'Resend Code',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: supportTextColor,
+                        fontSize: 16,
+                        fontFamily: 'Syne-SemiBold',
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -508,11 +513,27 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                     });
                     if (otpController.text == "123456") {
                       await checkNumber();
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => HomePageScreen(),
-                          ),
-                          (Route<dynamic> route) => false);
+                      if (checkNumberModel.status == "success") {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => HomePageScreen(),
+                            ),
+                                (Route<dynamic> route) => false);
+                      } else {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  LoginProfileScreen(
+                                    contactNumber: widget.phoneNumber,
+                                  ),
+                            ),
+                                (Route<dynamic> route) => false);
+                      }
+                      // Navigator.of(context).pushAndRemoveUntil(
+                      //     MaterialPageRoute(
+                      //       builder: (context) => HomePageScreen(),
+                      //     ),
+                      //     (Route<dynamic> route) => false);
                     } else {
                       await verifyOtp();
                       if (verifyOtpModel.verified == true) {
@@ -522,26 +543,22 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                               MaterialPageRoute(
                                 builder: (context) => HomePageScreen(),
                               ),
-                              (Route<dynamic> route) => false);
+                                  (Route<dynamic> route) => false);
                         } else {
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                builder: (context) => LoginProfileScreen(
-                                  contactNumber: widget.phoneNumber,
-                                ),
+                                builder: (context) =>
+                                    LoginProfileScreen(
+                                      contactNumber: widget.phoneNumber,
+                                    ),
                               ),
-                              (Route<dynamic> route) => false);
+                                  (Route<dynamic> route) => false);
                         }
                       } else {
-                        Fluttertoast.showToast(
-                          msg:
-                              "The provided verification code is invalid or expired",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 2,
-                          backgroundColor: toastColor,
-                          textColor: whiteColor,
+                        CustomToast.showToast(
                           fontSize: 12,
+                          message:
+                          "The provided verification code is invalid or expired",
                         );
                       }
                     }
@@ -549,14 +566,9 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                       isLoading = false;
                     });
                   } else {
-                    Fluttertoast.showToast(
-                      msg: "Please Enter OTP!",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 2,
-                      backgroundColor: toastColor,
-                      textColor: whiteColor,
+                    CustomToast.showToast(
                       fontSize: 12,
+                      message: "Please Enter OTP!",
                     );
                     setState(() {
                       isLoading = false;
@@ -686,15 +698,10 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
 //       },
 //       verificationFailed: (FirebaseAuthException e) async {
 //         if (e.code == 'invalid-phone-number') {
-//           Fluttertoast.showToast(
-//             msg: "The provided phone number is invalid",
-//             toastLength: Toast.LENGTH_SHORT,
-//             gravity: ToastGravity.BOTTOM,
-//             timeInSecForIosWeb: 2,
-//             backgroundColor: toastColor,
-//             textColor: whiteColor,
-//             fontSize: 12,
-//           );
+//         CustomToast.showToast(
+//         fontSize: 12,
+//         message: "The provided phone number is invalid",
+//         );
 //           debugPrint('The provided phone number is invalid.');
 //           setState(() {
 //             isLoading = false;
@@ -756,15 +763,10 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
 //         });
 //       });
 //     } catch (e) {
-//       Fluttertoast.showToast(
-//         msg: "The provided verification code is invalid or expired",
-//         toastLength: Toast.LENGTH_SHORT,
-//         gravity: ToastGravity.BOTTOM,
-//         timeInSecForIosWeb: 2,
-//         backgroundColor: toastColor,
-//         textColor: whiteColor,
-//         fontSize: 12,
-//       );
+//     CustomToast.showToast(
+//     fontSize: 12,
+//     message: "The provided verification code is invalid or expired",
+//     );
 //       debugPrint('Something went wrong = ${e.toString()}');
 //       setState(() {
 //         isLoading = false;
@@ -1041,15 +1043,10 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
 //                         if (otpController.text.isNotEmpty) {
 //                           verifyOTPCode();
 //                         } else {
-//                           Fluttertoast.showToast(
-//                             msg: "Please Enter OTP!",
-//                             toastLength: Toast.LENGTH_SHORT,
-//                             gravity: ToastGravity.BOTTOM,
-//                             timeInSecForIosWeb: 2,
-//                             backgroundColor: toastColor,
-//                             textColor: whiteColor,
-//                             fontSize: 12,
-//                           );
+//                         CustomToast.showToast(
+//                         fontSize: 12,
+//                         message: "Please Enter OTP!",
+//                          );
 //                         }
 //                       },
 //                       child: isLoading

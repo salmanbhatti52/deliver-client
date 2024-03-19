@@ -6,15 +6,16 @@ import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/models/send_otp_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
+import 'package:deliver_client/widgets/custom_snackbar_with_btn.dart';
 import 'package:deliver_client/screens/signup/verify_phone_signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -107,14 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         }
       } else {
-        Fluttertoast.showToast(
-          msg: "Something went wrong. Please restart the application",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: toastColor,
-          textColor: whiteColor,
+        CustomToast.showToast(
           fontSize: 12,
+          message: "Something went wrong. Please restart the application",
         );
       }
     } catch (e) {
@@ -175,40 +171,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // void locationPermission() async {
-  //   PermissionStatus status = await Permission.location.request();
-  //
-  //   if (status.isGranted) {
-  //     // Permission granted, navigate to the next screen
-  //   } else if (status.isDenied) {
-  //     // Permission denied, show a message and ask for permission again
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         backgroundColor: orangeColor,
-  //         duration: const Duration(seconds: 2),
-  //         content: Text(
-  //           'Location permission is required to continue.',
-  //           style: TextStyle(
-  //             color: whiteColor,
-  //             fontSize: 12,
-  //             fontFamily: 'Syne-Regular',
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //     PermissionStatus reRequestStatus = await Permission.location.request();
-  //     if (reRequestStatus.isGranted) {
-  //       // Permission granted after re-request, navigate to the next screen
-  //     } else if (reRequestStatus.isPermanentlyDenied) {
-  //       // Permission denied permanently, open app settings
-  //       openAppSettings();
-  //     }
-  //   } else if (status.isPermanentlyDenied) {
-  //     // Permission denied permanently, open app settings
-  //     openAppSettings();
-  //   }
-  // }
-
   void locationPermission() async {
     PermissionStatus status = await Permission.location.request();
 
@@ -222,78 +184,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void showLocationPermissionSnackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        elevation: 0,
-        width: MediaQuery.of(context).size.width,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        duration: const Duration(seconds: 5),
-        content: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerRight,
-              end: Alignment.centerLeft,
-              stops: const [0.1, 1.5],
-              colors: [
-                orangeColor,
-                yellowColor,
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 2,
-                spreadRadius: 2,
-                offset: const Offset(0, 3),
-                color: blackColor.withOpacity(0.2),
-              ),
-            ],
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              width: 2,
-              color: borderColor,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Location permission is required\nto continue.',
-                style: TextStyle(
-                  color: whiteColor,
-                  fontSize: 12,
-                  fontFamily: 'Syne-Regular',
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              GestureDetector(
-                onTap: () {
-                  openAppSettings();
-                },
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.04,
-                  width: MediaQuery.of(context).size.width * 0.33,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF36454F),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Grant Permission',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: whiteColor,
-                        fontSize: 12,
-                        fontFamily: 'Syne-Medium',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      CustomSnackBarWithBtn(
+        message: "Location permission is required\nto continue.",
+        buttonText: "Grant Permission",
+        onPressed: () {
+          openAppSettings();
+        },
       ),
     );
   }
@@ -596,39 +492,35 @@ class _LoginScreenState extends State<LoginScreen> {
 //   bool isLoading = false;
 //   LatLng? currentLocation;
 //
-//   // void locationPermission() async {
-//   //   PermissionStatus status = await Permission.location.request();
-//   //
-//   //   if (status.isGranted) {
-//   //     // Permission granted, navigate to the next screen
-//   //   } else if (status.isDenied) {
-//   //     // Permission denied, show a message and ask for permission again
-//   //     ScaffoldMessenger.of(context).showSnackBar(
-//   //       SnackBar(
-//   //         backgroundColor: orangeColor,
-//   //         duration: const Duration(seconds: 2),
-//   //         content: Text(
-//   //           'Location permission is required to continue.',
-//   //           style: TextStyle(
-//   //             color: whiteColor,
-//   //             fontSize: 12,
-//   //             fontFamily: 'Syne-Regular',
-//   //           ),
-//   //         ),
-//   //       ),
-//   //     );
-//   //     PermissionStatus reRequestStatus = await Permission.location.request();
-//   //     if (reRequestStatus.isGranted) {
-//   //       // Permission granted after re-request, navigate to the next screen
-//   //     } else if (reRequestStatus.isPermanentlyDenied) {
-//   //       // Permission denied permanently, open app settings
-//   //       openAppSettings();
-//   //     }
-//   //   } else if (status.isPermanentlyDenied) {
-//   //     // Permission denied permanently, open app settings
-//   //     openAppSettings();
-//   //   }
-//   // }
+//   void locationPermission() async {
+//     PermissionStatus status = await Permission.location.request();
+//
+//     if (status.isGranted) {
+//       // Permission granted, navigate to the next screen
+//     } else if (status.isDenied) {
+//       // Permission denied, show a message and ask for permission again
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         CustomSnackBarWithBtn(
+//           message:
+//           "Location permission is required to continue.",
+//           buttonText: "Grant Permission",
+//           onPressed: () {
+//             openAppSettings();
+//           },
+//         ),
+//       );
+//       PermissionStatus reRequestStatus = await Permission.location.request();
+//       if (reRequestStatus.isGranted) {
+//         // Permission granted after re-request, navigate to the next screen
+//       } else if (reRequestStatus.isPermanentlyDenied) {
+//         // Permission denied permanently, open app settings
+//         openAppSettings();
+//       }
+//     } else if (status.isPermanentlyDenied) {
+//       // Permission denied permanently, open app settings
+//       openAppSettings();
+//     }
+//   }
 //
 //   void locationPermission() async {
 //     PermissionStatus status = await Permission.location.request();
@@ -643,48 +535,13 @@ class _LoginScreenState extends State<LoginScreen> {
 //
 //   void showLocationPermissionSnackBar() {
 //     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(
-//         backgroundColor: orangeColor,
-//         duration: const Duration(seconds: 5),
-//         content: Row(
-//           mainAxisSize: MainAxisSize.min,
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Text(
-//               'Location permission is required\nto continue.',
-//               style: TextStyle(
-//                 color: whiteColor,
-//                 fontSize: 12,
-//                 fontFamily: 'Syne-Regular',
-//               ),
-//             ),
-//             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-//             GestureDetector(
-//               onTap: () {
-//                 openAppSettings();
-//               },
-//               child: Container(
-//                 height: MediaQuery.of(context).size.height * 0.04,
-//                 width: MediaQuery.of(context).size.width * 0.33,
-//                 decoration: BoxDecoration(
-//                   color: const Color(0xFF36454F),
-//                   borderRadius: BorderRadius.circular(10),
-//                 ),
-//                 child: Center(
-//                   child: Text(
-//                     'Grant Permission',
-//                     textAlign: TextAlign.center,
-//                     style: TextStyle(
-//                       color: whiteColor,
-//                       fontSize: 12,
-//                       fontFamily: 'Syne-Medium',
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
+//       CustomSnackBarWithBtn(
+//         message:
+//         "Location permission is required to continue.",
+//         buttonText: "Grant Permission",
+//         onPressed: () {
+//           openAppSettings();
+//         },
 //       ),
 //     );
 //   }
@@ -992,17 +849,9 @@ class _LoginScreenState extends State<LoginScreen> {
 // //     } else if (status.isDenied) {
 // //       // Permission denied, show a message and ask for permission again
 // //       ScaffoldMessenger.of(context).showSnackBar(
-// //         SnackBar(
-// //           backgroundColor: orangeColor,
-// //           duration: const Duration(seconds: 2),
-// //           content: Text(
-// //             'Location permission is required to continue.',
-// //             style: TextStyle(
-// //               color: whiteColor,
-// //               fontSize: 12,
-// //               fontFamily: 'Syne-Regular',
-// //             ),
-// //           ),
+// //         CustomSnackBar(
+// //           message: "Location permission is required to continue.",
+// //           size: MediaQuery.of(context).size,
 // //         ),
 // //       );
 // //       PermissionStatus reRequestStatus = await Permission.location.request();
@@ -1451,17 +1300,9 @@ class _LoginScreenState extends State<LoginScreen> {
 // //     } else if (status.isDenied) {
 // //       // Permission denied, show a message and ask for permission again
 // //       ScaffoldMessenger.of(context).showSnackBar(
-// //         SnackBar(
-// //           backgroundColor: orangeColor,
-// //           duration: const Duration(seconds: 2),
-// //           content: Text(
-// //             'Location permission is required to continue.',
-// //             style: TextStyle(
-// //               color: whiteColor,
-// //               fontSize: 12,
-// //               fontFamily: 'Syne-Regular',
-// //             ),
-// //           ),
+// //         CustomSnackBar(
+// //           message: "Please upload an image",
+// //           size: MediaQuery.of(context).size,
 // //         ),
 // //       );
 // //       PermissionStatus reRequestStatus = await Permission.location.request();

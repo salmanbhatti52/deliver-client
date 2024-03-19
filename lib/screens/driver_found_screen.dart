@@ -8,13 +8,13 @@ import 'package:share_plus/share_plus.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:deliver_client/screens/chat_screen.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
@@ -91,7 +91,8 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -2009,14 +2010,10 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                               isLoading = false;
                             });
                           } else {
-                            Fluttertoast.showToast(
-                              msg: "You have already cancelled this booking.",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: toastColor,
-                              textColor: whiteColor,
+                            CustomToast.showToast(
                               fontSize: 12,
+                              message:
+                                  "You have already cancelled this booking.",
                             );
                             setState(() {
                               isLoading = false;
