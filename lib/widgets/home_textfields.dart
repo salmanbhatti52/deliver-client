@@ -340,9 +340,9 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
                                             debugPrint(
-                                                "addressLat: $addressLat");
+                                                "addressLat Multiple: $addressLat");
                                             debugPrint(
-                                                "addressLng $addressLng");
+                                                "addressLng Multiple: $addressLng");
                                             debugPrint(
                                                 "addressLocation: ${addresses.address}");
                                           });
@@ -486,8 +486,10 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                             pickUpPredictions.clear();
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
-                                            debugPrint("pickupLat: $pickupLat");
-                                            debugPrint("pickupLng $pickupLng");
+                                            debugPrint(
+                                                "pickupLat Mutlipe: $pickupLat");
+                                            debugPrint(
+                                                "pickupLng Mutiple: $pickupLng");
                                             debugPrint(
                                                 "pickupLocation: ${prediction.formattedAddress}");
                                           });
@@ -520,10 +522,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                         controller: widget.destinationController,
                         onChanged: (value) {
                           searchDestinationPlaces(value);
-                        },
-                        onTap: () {
-                          // destinationController.clear();
-                          destinationPredictions.clear();
                         },
                         cursorColor: orangeColor,
                         keyboardType: TextInputType.text,
@@ -568,7 +566,9 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                             ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
                           hintText: "Destination",
                           hintStyle: TextStyle(
                             color: hintColor,
@@ -576,6 +576,13 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                             fontFamily: 'Inter-Light',
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a destination';
+                          }
+                          // You can add more complex validation logic here if needed
+                          return null; // Return null if validation succeeds
+                        },
                       ),
                       if (destinationPredictions.isNotEmpty)
                         Padding(
@@ -609,18 +616,14 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                         prediction.geometry!.location.lng;
                                     destinationLat = lat.toString();
                                     destinationLng = lng.toString();
-                                    // widget.destinationLats = lat.toString();
-                                    // widget.destinationLngs = lng.toString();
                                     setState(() {
                                       destinationPredictions.clear();
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
                                       debugPrint(
-                                          "destinationLat: $destinationLat");
+                                          "destinationLat Multiple: $destinationLat");
                                       debugPrint(
-                                          "destinationLng $destinationLng");
-                                      // debugPrint("destinationLat: ${widget.destinationLats}");
-                                      // debugPrint("destinationLng ${widget.destinationLngs}");
+                                          "destinationLng Multiple: $destinationLng");
                                       debugPrint(
                                           "destinationLocation: ${prediction.formattedAddress}");
                                     });

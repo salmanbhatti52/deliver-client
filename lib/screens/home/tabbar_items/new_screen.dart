@@ -1675,31 +1675,31 @@ class _NewScreenState extends State<NewScreen> {
                 'receiversNameController: ${receiversNameController.text}');
             debugPrint(
                 'receiversNumberController: ${receiversNumberController.text}');
-            if (index == 0 && receiversNameController.text.isNotEmpty) {
-              fetchData();
-              Future.delayed(const Duration(seconds: 2), () {
-                if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
-                  print(
-                      "receiversNumberController Zain ${receiversNumberController.text}");
-                  CustomToast.showToast(
-                    fontSize: 12,
-                    message:
-                        "Distance of delivery first should be greater than 1.0 Km!",
-                  );
-                  setState(() {
-                    receiversNameController.clear();
-                    destinationController.clear();
-                    receiversNumberController
-                        .clear(); // Clear the controller value
-                  });
+            // if (index == 0 && receiversNameController.text.isNotEmpty) {
+            //   fetchData();
+            //   Future.delayed(const Duration(seconds: 2), () {
+            //     if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
+            //       print(
+            //           "receiversNumberController Zain ${receiversNumberController.text}");
+            //       CustomToast.showToast(
+            //         fontSize: 12,
+            //         message:
+            //             "Distance of delivery first should be greater than 1.0 Km!",
+            //       );
+            //       setState(() {
+            //         receiversNameController.clear();
+            //         destinationController.clear();
+            //         receiversNumberController
+            //             .clear(); // Clear the controller value
+            //       });
 
-                  setState(() {
-                    fetchingData = false;
-                  });
-                }
-                // Your code here
-              });
-            }
+            //       setState(() {
+            //         fetchingData = false;
+            //       });
+            //     }
+            //     // Your code here
+            //   });
+            // }
 // else if (index == 1 && receiversNameController.text.isNotEmpty) {
 //               fetchData();
 //               Future.delayed(const Duration(seconds: 2), () {
@@ -1790,6 +1790,7 @@ class _NewScreenState extends State<NewScreen> {
 //                 }
 //               });
 //             }
+
             if (index == 1 &&
                 pickupController.text.isNotEmpty &&
                 destinationController.text.isNotEmpty &&
