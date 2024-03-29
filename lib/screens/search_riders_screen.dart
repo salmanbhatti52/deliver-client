@@ -103,6 +103,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       debugPrint("response: $responseString");
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
+        await searchRider();
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
         debugPrint(
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
@@ -198,7 +199,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             ),
             centerTitle: true,
           ),
-          body: isLoading
+          body: isLoading == true
               ? Center(
                   child: Container(
                     width: 100,

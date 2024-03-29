@@ -2665,7 +2665,7 @@ class _NewScreenState extends State<NewScreen> {
                                     },
                                   );
                                   // Add a delay to ensure data is populated in allDataForIndexes1
-                                  Future.delayed(const Duration(seconds: 3),
+                                  Future.delayed(const Duration(seconds: 2),
                                       () async {
                                     // Close the loading dialog
                                     Navigator.of(context).pop();
@@ -3434,6 +3434,26 @@ class _NewScreenState extends State<NewScreen> {
                                       "FIND RIDER",
                                       context,
                                     ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/info-icon.svg",
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            Text(
+                              'Note: Distance should be greater than 1 KM',
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 10,
+                                fontFamily: 'Inter-Bold',
+                              ),
                             ),
                           ],
                         ),
