@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:deliver_client/models/get_distance_addresses_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
@@ -137,7 +138,15 @@ class _NewScreenState extends State<NewScreen> {
   Map<int, Map<String, String>> dataForIndex1 = {};
   Map<int, Map<String, dynamic>> distanceDataMap = {};
   List<Map<int, Map<String, String>>> distanceDurationList = [];
-
+  var indexData0;
+  var indexData1;
+  var indexData2;
+  var indexData3;
+  var indexData4;
+  List<Map<String, dynamic>> filteredData = [];
+  List<Map<String, dynamic>> dataForIndexes = [];
+  List<Map<String, dynamic>> allDataForIndexes1 = [];
+  List<List<Map<String, dynamic>>> allDataForIndexes = [];
   bool isLoading = false;
   bool isLoading2 = false;
 
@@ -370,32 +379,48 @@ class _NewScreenState extends State<NewScreen> {
         setState(() {});
       }
     } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
+      debugPrint('Something went wrong  = ${e.toString()}');
       return null;
     }
   }
 
-  getChargesMultiple(String? bTypeId) async {
+  GetDistanceAddressesModel getDistanceAddressesModel =
+      GetDistanceAddressesModel();
+  getDistanceAddress() async {
+    Map<String, dynamic>? requestBody;
     try {
-      String apiUrl = "$baseUrl/get_charges_parameters";
-      Map<String, String> distanceMap = {
-        "0": distance0!.split(" ")[0],
-        "1": distance1!.split(" ")[0],
-        // "2": distance2!.split(" ")[0],
-        // "3": distance3!.split(" ")[0],
-        // "4": distance4!.split(" ")[0],
-      };
-      if (distance2 != null) distanceMap["2"] = distance2!.split(" ")[0];
-      if (distance3 != null) distanceMap["3"] = distance3!.split(" ")[0];
-      if (distance4 != null) distanceMap["4"] = distance4!.split(" ")[0];
-      // Create the request body as a map
-      Map<String, dynamic> requestBody = {
-        "bookings_types_id": bTypeId,
-        "distance": distanceMap,
-      };
+      String apiUrl = "$baseUrl/get_distance_by_addresses";
+
+      List<Map<String, String>> addresses = [];
+
+      for (var i = 0; i < filteredData.length; i++) {
+        String? pickupAddress = filteredData[i]["$i"]["pickupController"];
+        String? destinationAddress =
+            filteredData[i]["$i"]["destinationController"];
+
+        if (pickupAddress != null &&
+            destinationAddress != null &&
+            pickupAddress.isNotEmpty &&
+            destinationAddress.isNotEmpty) {
+          addresses.add({
+            "pickup": pickupAddress,
+            "destin": destinationAddress,
+          });
+        }
+      }
+
+      if (addresses.isNotEmpty) {
+        requestBody = {"addresses": addresses};
+      }
+
+      if (requestBody == null) {
+        debugPrint("Request body is null");
+        return;
+      }
+
       debugPrint("apiUrl: $apiUrl");
-      debugPrint("bookingsTypeId: $bTypeId");
       debugPrint("requestBody: $requestBody");
+
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -404,43 +429,199 @@ class _NewScreenState extends State<NewScreen> {
         },
         body: jsonEncode(requestBody),
       );
+
       final responseString = response.body;
       debugPrint("response: $responseString");
       debugPrint("statusCode: ${response.statusCode}");
+
       if (response.statusCode == 200) {
-        getChargesModel = getChargesModelFromJson(responseString);
-        debugPrint('getChargesModel status: ${getChargesModel.status}');
-        debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
-        // for (int i = 0; i < getChargesModel.data!.length; i++) {
-        toKm0 = "${getChargesModel.data![0].firstMilesTo}";
-        fromKm0 = "${getChargesModel.data![0].firstMilesFrom}";
-        perKmAmount0 = "${getChargesModel.data![0].firstMilesAmount}";
-        toKm1 = "${getChargesModel.data![1].firstMilesTo}";
-        fromKm1 = "${getChargesModel.data![1].firstMilesFrom}";
-        perKmAmount1 = "${getChargesModel.data![1].firstMilesAmount}";
-        if (distance2 != null) {
-          toKm2 = "${getChargesModel.data![2].firstMilesTo}";
-          fromKm2 = "${getChargesModel.data![2].firstMilesFrom}";
-          perKmAmount2 = "${getChargesModel.data![2].firstMilesAmount}";
+        final getDistanceAddressesModel =
+            getDistanceAddressesModelFromJson(responseString);
+        if (getDistanceAddressesModel.data != null) {
+          for (int i = 0; i < getDistanceAddressesModel.data!.length; i++) {
+            final distance = getDistanceAddressesModel.data![i].distance;
+            print('Distance $i: $distance');
+            switch (i) {
+              case 0:
+                distance0 = distance;
+                break;
+              case 1:
+                distance1 = distance;
+                break;
+              case 2:
+                distance2 = distance;
+                break;
+              case 3:
+                distance3 = distance;
+                break;
+              case 4:
+                distance4 = distance;
+                break;
+              default:
+                // Handle if there are more distances than predefined variables
+                break;
+            }
+          }
         }
-        if (distance3 != null) {
-          toKm3 = "${getChargesModel.data![3].firstMilesTo}";
-          fromKm3 = "${getChargesModel.data![3].firstMilesFrom}";
-          perKmAmount3 = "${getChargesModel.data![3].firstMilesAmount}";
-        }
-        if (distance4 != null) {
-          toKm4 = "${getChargesModel.data![4].firstMilesTo}";
-          fromKm4 = "${getChargesModel.data![4].firstMilesFrom}";
-          perKmAmount4 = "${getChargesModel.data![4].firstMilesAmount}";
-        }
-        // }
-        setState(() {});
+      } else {
+        debugPrint("Non-200 status code received: ${response.statusCode}");
+        // Handle other status codes as needed
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
+    } catch (e, stackTrace) {
+      debugPrint('Something went wrong: $e\n$stackTrace');
     }
   }
+
+  getChargesMultiple(String? bTypeId) async {
+    // try {
+    String apiUrl = "$baseUrl/get_charges_parameters";
+
+    // Create distance map with non-null distances
+    Map<String, String> distanceMap = {};
+    if (distance0 != null) distanceMap["0"] = distance0!.split(" ")[0];
+    if (distance1 != null) distanceMap["1"] = distance1!.split(" ")[0];
+    if (distance2 != null) distanceMap["2"] = distance2!.split(" ")[0];
+    if (distance3 != null) distanceMap["3"] = distance3!.split(" ")[0];
+    if (distance4 != null) distanceMap["4"] = distance4!.split(" ")[0];
+
+    // Create the request body as a map
+    Map<String, dynamic> requestBody = {
+      "bookings_types_id": bTypeId,
+      "distance": distanceMap,
+    };
+
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("bookingsTypeId: $bTypeId");
+    debugPrint("requestBody: $requestBody");
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    final responseString = response.body;
+    debugPrint("getChargesResponse: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      getChargesModel = getChargesModelFromJson(responseString);
+      debugPrint('getChargesModel status: ${getChargesModel.status}');
+      debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
+
+      // Assign values based on data availability
+      if (getChargesModel.data != null) {
+        for (int i = 0; i < getChargesModel.data!.length; i++) {
+          switch (i) {
+            case 0:
+              toKm0 = "${getChargesModel.data![i].firstMilesTo}";
+              fromKm0 = "${getChargesModel.data![i].firstMilesFrom}";
+              perKmAmount0 = "${getChargesModel.data![i].firstMilesAmount}";
+              break;
+            case 1:
+              toKm1 = "${getChargesModel.data![i].firstMilesTo}";
+              fromKm1 = "${getChargesModel.data![i].firstMilesFrom}";
+              perKmAmount1 = "${getChargesModel.data![i].firstMilesAmount}";
+              break;
+            case 2:
+              toKm2 = "${getChargesModel.data![i].firstMilesTo}";
+              fromKm2 = "${getChargesModel.data![i].firstMilesFrom}";
+              perKmAmount2 = "${getChargesModel.data![i].firstMilesAmount}";
+              break;
+            case 3:
+              toKm3 = "${getChargesModel.data![i].firstMilesTo}";
+              fromKm3 = "${getChargesModel.data![i].firstMilesFrom}";
+              perKmAmount3 = "${getChargesModel.data![i].firstMilesAmount}";
+              break;
+            case 4:
+              toKm4 = "${getChargesModel.data![i].firstMilesTo}";
+              fromKm4 = "${getChargesModel.data![i].firstMilesFrom}";
+              perKmAmount4 = "${getChargesModel.data![i].firstMilesAmount}";
+              break;
+            default:
+              // Handle if there are more charges than predefined variables
+              break;
+          }
+        }
+      }
+
+      setState(() {});
+    }
+    // } catch (e) {
+    //   debugPrint('Something went wrong in Multiple = ${e.toString()}');
+    //   return null;
+    // }
+  }
+
+  // getChargesMultiple(String? bTypeId) async {
+  //   try {
+  //     String apiUrl = "$baseUrl/get_charges_parameters";
+  //     Map<String, String> distanceMap = {
+  //       "0": distance0!.split(" ")[0],
+  //       "1": distance1!.split(" ")[0],
+  //       // "2": distance2!.split(" ")[0],
+  //       // "3": distance3!.split(" ")[0],
+  //       // "4": distance4!.split(" ")[0],
+  //     };
+  //     if (distance2 != null) distanceMap["2"] = distance2!.split(" ")[0];
+  //     if (distance3 != null) distanceMap["3"] = distance3!.split(" ")[0];
+  //     if (distance4 != null) distanceMap["4"] = distance4!.split(" ")[0];
+  //     // Create the request body as a map
+  //     Map<String, dynamic> requestBody = {
+  //       "bookings_types_id": bTypeId,
+  //       "distance": distanceMap,
+  //     };
+  //     debugPrint("apiUrl: $apiUrl");
+  //     debugPrint("bookingsTypeId: $bTypeId");
+  //     debugPrint("requestBody: $requestBody");
+  //     final response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       },
+  //       body: jsonEncode(requestBody),
+  //     );
+  //     final responseString = response.body;
+  //     debugPrint("response: $responseString");
+  //     debugPrint("statusCode: ${response.statusCode}");
+  //     if (response.statusCode == 200) {
+  //       getChargesModel = getChargesModelFromJson(responseString);
+  //       debugPrint('getChargesModel status: ${getChargesModel.status}');
+  //       debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
+  //       // for (int i = 0; i < getChargesModel.data!.length; i++) {
+  //       toKm0 = "${getChargesModel.data![0].firstMilesTo}";
+  //       fromKm0 = "${getChargesModel.data![0].firstMilesFrom}";
+  //       perKmAmount0 = "${getChargesModel.data![0].firstMilesAmount}";
+  //       toKm1 = "${getChargesModel.data![1].firstMilesTo}";
+  //       fromKm1 = "${getChargesModel.data![1].firstMilesFrom}";
+  //       perKmAmount1 = "${getChargesModel.data![1].firstMilesAmount}";
+  //       if (distance2 != null) {
+  //         toKm2 = "${getChargesModel.data![2].firstMilesTo}";
+  //         fromKm2 = "${getChargesModel.data![2].firstMilesFrom}";
+  //         perKmAmount2 = "${getChargesModel.data![2].firstMilesAmount}";
+  //       }
+  //       if (distance3 != null) {
+  //         toKm3 = "${getChargesModel.data![3].firstMilesTo}";
+  //         fromKm3 = "${getChargesModel.data![3].firstMilesFrom}";
+  //         perKmAmount3 = "${getChargesModel.data![3].firstMilesAmount}";
+  //       }
+  //       if (distance4 != null) {
+  //         toKm4 = "${getChargesModel.data![4].firstMilesTo}";
+  //         fromKm4 = "${getChargesModel.data![4].firstMilesFrom}";
+  //         perKmAmount4 = "${getChargesModel.data![4].firstMilesAmount}";
+  //       }
+  //       // }
+  //       setState(() {});
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Something went wrong in Multiple = ${e.toString()}');
+  //     return null;
+  //   }
+  // }
 
   Future<Map<String, dynamic>> getDistanceAndTime(
     String origin,
@@ -732,7 +913,7 @@ class _NewScreenState extends State<NewScreen> {
   @override
   void dispose() {
     dragController.dispose();
-    pageController.dispose(); // Don't forget to dispose the controller
+    pageController.dispose();
     super.dispose();
   }
 
@@ -1382,60 +1563,60 @@ class _NewScreenState extends State<NewScreen> {
 //-----------------#################### IN USE FUNCTION ###############--------------------//
 // Function to calculate distance and time for multiple deliveries
 
-  Future<void> calculateDistanceTimeMultiple(
-      List<Map<String, double>?> pickupCoordinates,
-      List<Map<String, double>?> destinationCoordinates) async {
-    for (int i = 0; i < pickupCoordinates.length; i++) {
-      final pickupLatLng = pickupCoordinates[i];
-      final destinationLatLng = destinationCoordinates[i];
-
-      if (pickupLatLng != null && destinationLatLng != null) {
-        final origin =
-            '${pickupLatLng['latitude']},${pickupLatLng['longitude']}';
-        final destination =
-            '${destinationLatLng['latitude']},${destinationLatLng['longitude']}';
-
-        try {
-          final data = await getDistanceAndTime(origin, destination);
-
-          String distance = data['rows'][0]['elements'][0]['distance']['text'];
-          String duration = data['rows'][0]['elements'][0]['duration']['text'];
-
-          distances.add(distance);
-          durations.add(duration);
-
-          // Store distances and durations in the list of maps
-          distanceDurationList.add({
-            i: {
-              'distance': distance,
-              'duration': duration,
-            }
-          });
-          debugPrint("distanceDurationList $distanceDurationList");
-          for (var i = 0; i < distanceDurationList.length; i++) {
-            dataForIndex1 = distanceDurationList[i];
-            dataIndex1 = dataForIndex1.keys.first; // Get the index
-            distanceData = dataForIndex1[dataIndex1];
-            // Check if data contains null values
-            if (distanceData!.containsValue(null)) {
-              debugPrint(
-                  "Data for Index in distanceDurationList $dataIndex1: Data contains null values");
-            } else {
-              debugPrint(
-                  "Data for Index in distanceDurationList $dataIndex1: $distanceData");
-              // Store the data in the distanceDataMap
-              distanceDataMap[dataIndex1!] = distanceData!;
-            }
-          }
-          debugPrint("Delivery $i - Distance: $distance, Duration: $duration");
-        } catch (e) {
-          debugPrint("Error for Delivery $i: $e");
-        }
-      } else {
-        debugPrint("Invalid coordinates for Delivery $i");
-      }
-    }
-  }
+  // Future<void> calculateDistanceTimeMultiple(
+  //     List<Map<String, double>?> pickupCoordinates,
+  //     List<Map<String, double>?> destinationCoordinates) async {
+  //   for (int i = 0; i < pickupCoordinates.length; i++) {
+  //     final pickupLatLng = pickupCoordinates[i];
+  //     final destinationLatLng = destinationCoordinates[i];
+  //
+  //     if (pickupLatLng != null && destinationLatLng != null) {
+  //       final origin =
+  //           '${pickupLatLng['latitude']},${pickupLatLng['longitude']}';
+  //       final destination =
+  //           '${destinationLatLng['latitude']},${destinationLatLng['longitude']}';
+  //
+  //       try {
+  //         final data = await getDistanceAndTime(origin, destination);
+  //
+  //         String distance = data['rows'][0]['elements'][0]['distance']['text'];
+  //         String duration = data['rows'][0]['elements'][0]['duration']['text'];
+  //
+  //         distances.add(distance);
+  //         durations.add(duration);
+  //
+  //         // Store distances and durations in the list of maps
+  //         distanceDurationList.add({
+  //           i: {
+  //             'distance': distance,
+  //             'duration': duration,
+  //           }
+  //         });
+  //         debugPrint("distanceDurationList $distanceDurationList");
+  //         for (var i = 0; i < distanceDurationList.length; i++) {
+  //           dataForIndex1 = distanceDurationList[i];
+  //           dataIndex1 = dataForIndex1.keys.first; // Get the index
+  //           distanceData = dataForIndex1[dataIndex1];
+  //           // Check if data contains null values
+  //           if (distanceData!.containsValue(null)) {
+  //             debugPrint(
+  //                 "Data for Index in distanceDurationList $dataIndex1: Data contains null values");
+  //           } else {
+  //             debugPrint(
+  //                 "Data for Index in distanceDurationList $dataIndex1: $distanceData");
+  //             // Store the data in the distanceDataMap
+  //             distanceDataMap[dataIndex1!] = distanceData!;
+  //           }
+  //         }
+  //         debugPrint("Delivery $i - Distance: $distance, Duration: $duration");
+  //       } catch (e) {
+  //         debugPrint("Error for Delivery $i: $e");
+  //       }
+  //     } else {
+  //       debugPrint("Invalid coordinates for Delivery $i");
+  //     }
+  //   }
+  // }
 
   List<String> getAddressesFromControllers(
       List<TextEditingController> controllers) {
@@ -1446,44 +1627,32 @@ class _NewScreenState extends State<NewScreen> {
     return addresses;
   }
 
-  Future<Map<String, double>?> getLatLongForAddress(String address) async {
-    if (address.isNotEmpty) {
-      try {
-        final locations = await locationFromAddress(address);
-        if (locations.isNotEmpty) {
-          return {
-            'latitude': locations[0].latitude,
-            'longitude': locations[0].longitude,
-          };
-        } else {
-          debugPrint('No results for address: $address');
-          return null;
-        }
-      } catch (e) {
-        debugPrint('Error geocoding address: $address');
-        print(e);
-        return null;
-      }
-    } else {
-      debugPrint('Empty address for geocoding');
-      return null;
-    }
-  }
-
-  var indexData0;
-  var indexData1;
-  var indexData2;
-  var indexData3;
-  var indexData4;
-  List<Map<String, dynamic>> filteredData = [];
-  List<Map<String, dynamic>> dataForIndexes = [];
-  List<Map<String, dynamic>> allDataForIndexes1 = [];
-  List<List<Map<String, dynamic>>> allDataForIndexes = [];
+  // Future<Map<String, double>?> getLatLongForAddress(String address) async {
+  //   if (address.isNotEmpty) {
+  //     try {
+  //       final locations = await locationFromAddress(address);
+  //       if (locations.isNotEmpty) {
+  //         return {
+  //           'latitude': locations[0].latitude,
+  //           'longitude': locations[0].longitude,
+  //         };
+  //       } else {
+  //         debugPrint('No results for address: $address');
+  //         return null;
+  //       }
+  //     } catch (e) {
+  //       debugPrint('Error geocoding address: $address');
+  //       print(e);
+  //       return null;
+  //     }
+  //   } else {
+  //     debugPrint('Empty address for geocoding');
+  //     return null;
+  //   }
+  // }
 
   Widget multiPageView() {
     var size = MediaQuery.of(context).size;
-    bool fetchingData = false;
-
     List<String> pickupAddresses =
         getAddressesFromControllers(pickupControllers);
     List<String> destinationAddresses =
@@ -1496,16 +1665,14 @@ class _NewScreenState extends State<NewScreen> {
     // Create a list to store all the geocoding futures
 
     Future<void> fetchData() async {
-      fetchingData = true;
-
       allDataForIndexes1.clear();
       filteredData.clear();
       // Create a list to hold all geocoding futures
-      List<Future<void>> geocodingFutures = [];
-      List<Map<String, double>?> pickupLatLngList =
-          List.filled(pickupAddresses.length, null);
-      List<Map<String, double>?> destinationLatLngList =
-          List.filled(destinationAddresses.length, null);
+      // List<Future<void>> geocodingFutures = [];
+      // List<Map<String, double>?> pickupLatLngList =
+      //     List.filled(pickupAddresses.length, null);
+      // List<Map<String, double>?> destinationLatLngList =
+      //     List.filled(destinationAddresses.length, null);
       for (int index = 0;
           index < pickupAddresses.length && index < destinationAddresses.length;
           index++) {
@@ -1516,38 +1683,38 @@ class _NewScreenState extends State<NewScreen> {
         Map<String, dynamic> data = {
           'pickupController': pickupAddress,
           'destinationController': destinationAddress,
-          'pickupLatLng': null,
-          'destinationLatLng': null,
+          // 'pickupLatLng': null,
+          // 'destinationLatLng': null,
           'receiversNameController': receiverName,
           'receiversNumberController': receiverNumber,
         };
 
-        var pickupLatLngFuture = getLatLongForAddress(pickupAddress);
-        var destinationLatLngFuture = getLatLongForAddress(destinationAddress);
-
-        geocodingFutures.add(pickupLatLngFuture.then((pickupLatLng) {
-          if (pickupLatLng != null) {
-            data['pickupLatLng'] = pickupLatLng;
-            debugPrint('PickupLatLng for index $index: $pickupLatLng');
-            pickupLatLngList[index] = pickupLatLng; // Store the pickupLatLng
-          } else {
-            debugPrint('Invalid PickupLatLng for index $index');
-          }
-        }));
-
-        geocodingFutures.add(destinationLatLngFuture.then((destinationLatLng) {
-          if (destinationLatLng != null) {
-            data['destinationLatLng'] = destinationLatLng;
-            debugPrint(
-                'DestinationLatLng for index $index: $destinationLatLng');
-            destinationLatLngList[index] =
-                destinationLatLng; // Store the destinationLatLng
-          } else {
-            debugPrint('Invalid DestinationLatLng for index $index');
-          }
-        }));
-
-        await Future.wait([pickupLatLngFuture, destinationLatLngFuture]);
+        // var pickupLatLngFuture = getLatLongForAddress(pickupAddress);
+        // var destinationLatLngFuture = getLatLongForAddress(destinationAddress);
+        //
+        // geocodingFutures.add(pickupLatLngFuture.then((pickupLatLng) {
+        //   if (pickupLatLng != null) {
+        //     data['pickupLatLng'] = pickupLatLng;
+        //     debugPrint('PickupLatLng for index $index: $pickupLatLng');
+        //     pickupLatLngList[index] = pickupLatLng; // Store the pickupLatLng
+        //   } else {
+        //     debugPrint('Invalid PickupLatLng for index $index');
+        //   }
+        // }));
+        //
+        // geocodingFutures.add(destinationLatLngFuture.then((destinationLatLng) {
+        //   if (destinationLatLng != null) {
+        //     data['destinationLatLng'] = destinationLatLng;
+        //     debugPrint(
+        //         'DestinationLatLng for index $index: $destinationLatLng');
+        //     destinationLatLngList[index] =
+        //         destinationLatLng; // Store the destinationLatLng
+        //   } else {
+        //     debugPrint('Invalid DestinationLatLng for index $index');
+        //   }
+        // }));
+        //
+        // await Future.wait([pickupLatLngFuture, destinationLatLngFuture]);
 
         debugPrint("pickupController: ${data['pickupController']}");
         debugPrint("destinationController: ${data['destinationController']}");
@@ -1557,42 +1724,43 @@ class _NewScreenState extends State<NewScreen> {
       }
 
       // Wait for all geocoding operations to complete before calculating distances and durations
-      await Future.wait(geocodingFutures);
-
-      // Ensure that all geocoding has completed before calculating distances and durations
-      await calculateDistanceTimeMultiple(
-          pickupLatLngList, destinationLatLngList);
+      // await Future.wait(geocodingFutures);
+      //
+      // // Ensure that all geocoding has completed before calculating distances and durations
+      // await calculateDistanceTimeMultiple(
+      //     pickupLatLngList, destinationLatLngList);
       filteredData = allDataForIndexes1
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
       debugPrint("filteredData: $filteredData");
-      if (dataIndex1 == 0) {
-        distance0 = distanceDataMap[0]!['distance'];
-        duration0 = distanceDataMap[0]!['duration'];
-        debugPrint("distance 0: $distance0");
-        debugPrint("duration 0: $duration0");
-      } else if (dataIndex1 == 1) {
-        distance1 = distanceDataMap[1]!['distance'];
-        duration1 = distanceDataMap[1]!['duration'];
-        debugPrint("distance 1: $distance1");
-        debugPrint("duration 1: $duration1");
-      } else if (dataIndex1 == 2) {
-        distance2 = distanceDataMap[2]!['distance'];
-        duration2 = distanceDataMap[2]!['duration'];
-        debugPrint("distance 2: $distance2");
-        debugPrint("duration 2: $duration2");
-      } else if (dataIndex1 == 3) {
-        distance3 = distanceDataMap[3]!['distance'];
-        duration3 = distanceDataMap[3]!['duration'];
-        debugPrint("distance 3: $distance3");
-        debugPrint("duration 3: $duration3");
-      } else if (dataIndex1 == 4) {
-        distance4 = distanceDataMap[4]!['distance'];
-        duration4 = distanceDataMap[4]!['duration'];
-        debugPrint("distance 4: $distance4");
-        debugPrint("duration 4: $duration4");
-      }
+      // if (dataIndex1 == 0) {
+      //   distance0 = distanceDataMap[0]!['distance'];
+      //   duration0 = distanceDataMap[0]!['duration'];
+      //   debugPrint("distance 0: $distance0");
+      //   debugPrint("duration 0: $duration0");
+      // } else if (dataIndex1 == 1) {
+      //   distance1 = distanceDataMap[1]!['distance'];
+      //   duration1 = distanceDataMap[1]!['duration'];
+      //   debugPrint("distance 1: $distance1");
+      //   debugPrint("duration 1: $duration1");
+      // } else if (dataIndex1 == 2) {
+      //   distance2 = distanceDataMap[2]!['distance'];
+      //   duration2 = distanceDataMap[2]!['duration'];
+      //   debugPrint("distance 2: $distance2");
+      //   debugPrint("duration 2: $duration2");
+      // } else if (dataIndex1 == 3) {
+      //   distance3 = distanceDataMap[3]!['distance'];
+      //   duration3 = distanceDataMap[3]!['duration'];
+      //   debugPrint("distance 3: $distance3");
+      //   debugPrint("duration 3: $duration3");
+      // } else if (dataIndex1 == 4) {
+      //   distance4 = distanceDataMap[4]!['distance'];
+      //   duration4 = distanceDataMap[4]!['duration'];
+      //   debugPrint("distance 4: $distance4");
+      //   debugPrint("duration 4: $duration4");
+      // }
 
+      // Oldest Code
       //   if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
       //     print("receiversNumberController ${receiversNumberController.text}");
       //     CustomToast.showToast(
@@ -1648,7 +1816,6 @@ class _NewScreenState extends State<NewScreen> {
         height: size.height * 0.295,
         child: PageView.builder(
           controller: pageController,
-          physics: fetchingData ? const NeverScrollableScrollPhysics() : null,
           scrollDirection: Axis.horizontal,
           onPageChanged: (value) async {
             setState(() {
@@ -1675,121 +1842,6 @@ class _NewScreenState extends State<NewScreen> {
                 'receiversNameController: ${receiversNameController.text}');
             debugPrint(
                 'receiversNumberController: ${receiversNumberController.text}');
-            // if (index == 0 && receiversNameController.text.isNotEmpty) {
-            //   fetchData();
-            //   Future.delayed(const Duration(seconds: 2), () {
-            //     if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
-            //       print(
-            //           "receiversNumberController Zain ${receiversNumberController.text}");
-            //       CustomToast.showToast(
-            //         fontSize: 12,
-            //         message:
-            //             "Distance of delivery first should be greater than 1.0 Km!",
-            //       );
-            //       setState(() {
-            //         receiversNameController.clear();
-            //         destinationController.clear();
-            //         receiversNumberController
-            //             .clear(); // Clear the controller value
-            //       });
-
-            //       setState(() {
-            //         fetchingData = false;
-            //       });
-            //     }
-            //     // Your code here
-            //   });
-            // }
-// else if (index == 1 && receiversNameController.text.isNotEmpty) {
-//               fetchData();
-//               Future.delayed(const Duration(seconds: 2), () {
-//                 // Your code here
-//                 if (distance1 != null &&
-//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
-//                   CustomToast.showToast(
-//                     fontSize: 12,
-//                     message:
-//                         "Distance of delivery second should be greater than 1.0 Km!",
-//                   );
-//                   setState(() {
-//                     receiversNameController.clear();
-//                     destinationController.clear();
-//                     receiversNumberController
-//                         .clear(); // Clear the controller value
-//                   });
-
-//                   setState(() {
-//                     fetchingData = false;
-//                   });
-//                 }
-//               });
-//             } else if (index == 2 && receiversNameController.text.isNotEmpty) {
-//               fetchData();
-//               Future.delayed(const Duration(seconds: 2), () {
-//                 // Your code here
-//                 if (distance2 != null &&
-//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
-//                   CustomToast.showToast(
-//                     fontSize: 12,
-//                     message:
-//                         "Distance of delivery Third should be greater than 1.0 Km!",
-//                   );
-//                   fetchingData = false;
-//                   setState(() {
-//                     receiversNameController.clear();
-//                     destinationController.clear();
-//                     receiversNumberController
-//                         .clear(); // Clear the controller value
-//                   });
-//                 }
-//               });
-//             } else if (index == 3 && receiversNameController.text.isNotEmpty) {
-//               fetchData();
-//               Future.delayed(const Duration(seconds: 2), () {
-//                 // Your code here
-//                 if (distance3 != null &&
-//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
-//                   CustomToast.showToast(
-//                     fontSize: 12,
-//                     message:
-//                         "Distance of delivery Forth should be greater than 1.0 Km!",
-//                   );
-//                   setState(() {
-//                     receiversNameController.clear();
-//                     destinationController.clear();
-//                     receiversNumberController
-//                         .clear(); // Clear the controller value
-//                   });
-
-//                   setState(() {
-//                     fetchingData = false;
-//                   });
-//                 }
-//               });
-//             } else if (index == 4 && receiversNameController.text.isNotEmpty) {
-//               fetchData();
-//               Future.delayed(const Duration(seconds: 2), () {
-//                 // Your code here
-//                 if (distance4 != null &&
-//                     double.parse(distance1!.split(" ")[0]) <= 1.0) {
-//                   CustomToast.showToast(
-//                     fontSize: 12,
-//                     message:
-//                         "Distance of delivery Fifth should be greater than 1.0 Km!",
-//                   );
-//                   setState(() {
-//                     receiversNameController.clear();
-//                     destinationController.clear();
-//                     receiversNumberController
-//                         .clear(); // Clear the controller value
-//                   });
-
-//                   setState(() {
-//                     fetchingData = false;
-//                   });
-//                 }
-//               });
-//             }
 
             if (index == 1 &&
                 pickupController.text.isNotEmpty &&
@@ -2641,34 +2693,57 @@ class _NewScreenState extends State<NewScreen> {
                                 if (selectedRadio == 2) {
                                   showDialog(
                                     context: context,
+                                    // barrierDismissible:
+                                    //     false, // Prevents dialog from closing when tapping outside
                                     builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          'Loading Data...',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: orangeColor,
-                                            fontSize: 20,
-                                            fontFamily: 'Inter-Bold',
+                                      return Dialog(
+                                        backgroundColor: Colors
+                                            .transparent, // Make dialog transparent
+                                        elevation: 0, // Remove shadow
+                                        child: Container(
+                                          padding: const EdgeInsets.all(20),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                        ),
-                                        content: Text(
-                                          'Please wait while data is being loaded.',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Regular',
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                color: orangeColor,
+                                                strokeWidth: 2,
+                                              ), // Your progress indicator
+                                              const SizedBox(height: 20),
+                                              const Text(
+                                                'Loading Data...',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                  fontFamily: 'Inter-Bold',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              const Text(
+                                                'Please wait while data is being loaded.',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       );
                                     },
                                   );
+                                  await getDistanceAddress();
                                   // Add a delay to ensure data is populated in allDataForIndexes1
                                   Future.delayed(const Duration(seconds: 2),
                                       () async {
                                     // Close the loading dialog
-                                    Navigator.of(context).pop();
 
                                     if (filteredData.isNotEmpty) {
                                       if (distance0 != null &&
@@ -3111,34 +3186,59 @@ class _NewScreenState extends State<NewScreen> {
                                 if (selectedRadio == 2) {
                                   showDialog(
                                     context: context,
+                                    // barrierDismissible:
+                                    //     false, // Prevents dialog from closing when tapping outside
                                     builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          'Loading Data...',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: orangeColor,
-                                            fontSize: 20,
-                                            fontFamily: 'Inter-Bold',
+                                      return Dialog(
+                                        backgroundColor: Colors
+                                            .transparent, // Make dialog transparent
+                                        elevation: 0, // Remove shadow
+                                        child: Container(
+                                          padding: const EdgeInsets.all(20),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                        ),
-                                        content: Text(
-                                          'Please wait while data is being loaded.',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Regular',
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                color: orangeColor,
+                                                strokeWidth: 2,
+                                              ), // Your progress indicator
+                                              const SizedBox(height: 20),
+                                              const Text(
+                                                'Loading Data...',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                  fontFamily: 'Inter-Bold',
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              const Text(
+                                                'Please wait while data is being loaded.',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       );
                                     },
                                   );
+
+                                  await getDistanceAddress();
                                   // Add a delay to ensure data is populated in allDataForIndexes1
-                                  Future.delayed(const Duration(seconds: 1),
+                                  Future.delayed(const Duration(seconds: 2),
                                       () async {
                                     // Close the loading dialog
-                                    Navigator.of(context).pop();
+                                    // Navigator.of(context).pop();
 
                                     if (filteredData.isNotEmpty) {
                                       await getChargesMultiple(bookingsTypeId);
@@ -3434,26 +3534,6 @@ class _NewScreenState extends State<NewScreen> {
                                       "FIND RIDER",
                                       context,
                                     ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/info-icon.svg",
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            Text(
-                              'Note: Distance should be greater than 1 KM',
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 10,
-                                fontFamily: 'Inter-Bold',
-                              ),
                             ),
                           ],
                         ),
