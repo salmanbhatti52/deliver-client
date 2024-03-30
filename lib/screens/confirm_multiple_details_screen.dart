@@ -72,7 +72,8 @@ class _ConfirmMultipleDetailsScreenState
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -1203,31 +1204,23 @@ class _ConfirmMultipleDetailsScreenState
                       Map? updatedData2 = Map.from(widget.multipleData!);
                       updatedData2.addAll({
                         "pickup_address0": dataForIndex0[0]["pickupController"],
-                        "pickup_latitude0": dataForIndex0[0]["pickupLatLng"]
-                            ["latitude"],
-                        "pickup_longitude0": dataForIndex0[0]["pickupLatLng"]
-                            ["longitude"],
+                        "pickup_latitude0": "0",
+                        "pickup_longitude0": "0",
                         "destin_address0": dataForIndex0[0]
                             ["destinationController"],
-                        "destin_latitude0": dataForIndex0[0]
-                            ["destinationLatLng"]["latitude"],
-                        "destin_longitude0": dataForIndex0[0]
-                            ["destinationLatLng"]["longitude"],
+                        "destin_latitude0": "0",
+                        "destin_longitude0": "0",
                         "receiver_name0": dataForIndex0[0]
                             ["receiversNameController"],
                         "receiver_phone0": dataForIndex0[0]
                             ["receiversNumberController"],
                         "pickup_address1": dataForIndex1[1]["pickupController"],
-                        "pickup_latitude1": dataForIndex1[1]["pickupLatLng"]
-                            ["latitude"],
-                        "pickup_longitude1": dataForIndex1[1]["pickupLatLng"]
-                            ["longitude"],
+                        "pickup_latitude1": "0",
+                        "pickup_longitude1": "0",
                         "destin_address1": dataForIndex1[1]
                             ['destinationController'],
-                        "destin_latitude1": dataForIndex1[1]
-                            ['destinationLatLng']["latitude"],
-                        "destin_longitude1": dataForIndex1[1]
-                            ['destinationLatLng']["longitude"],
+                        "destin_latitude1": "0",
+                        "destin_longitude1": "0",
                         "receiver_name1": dataForIndex1[1]
                             ["receiversNameController"],
                         "receiver_phone1": dataForIndex1[1]

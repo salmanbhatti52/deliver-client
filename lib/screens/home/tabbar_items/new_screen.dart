@@ -3548,6 +3548,26 @@ class _NewScreenState extends State<NewScreen> {
                             ),
                             SizedBox(width: size.width * 0.02),
                             Text(
+                              'Note: Distance must me grater than 1KM',
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 10,
+                                fontFamily: 'Inter-Bold',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              "assets/images/info-icon.svg",
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            Text(
                               'Note: Please drag down to see your location on the map.',
                               style: TextStyle(
                                 color: blackColor,
