@@ -39,7 +39,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       debugPrint(
           "vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
       debugPrint(
-          "pickupLatitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_latitude"] : widget.multipleData!["pickup_latitude0"]}");
+          "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_latitude0"]}");
       debugPrint(
           "pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
       final response = await http.post(
@@ -51,12 +51,12 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           "vehicles_id": widget.singleData!.isNotEmpty
               ? widget.singleData!["vehicles_id"]
               : widget.multipleData!["vehicles_id"].toString(),
-          "pickup_latitude": widget.singleData!.isNotEmpty
-              ? widget.singleData!["pickup_latitude"]
-              : widget.multipleData!["pickup_latitude0"].toString(),
-          "pickup_longitude": widget.singleData!.isNotEmpty
-              ? widget.singleData!["pickup_longitude"]
-              : widget.multipleData!["pickup_longitude0"].toString(),
+          "pickup_address": widget.singleData!.isNotEmpty
+              ? widget.singleData!["pickup_address"]
+              : widget.multipleData!["pickup_address"].toString(),
+          // "pickup_longitude": widget.singleData!.isNotEmpty
+          //     ? widget.singleData!["pickup_longitude"]
+          //     : widget.multipleData!["pickup_longitude0"].toString(),
         },
       );
       final responseString = response.body;

@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-GetDistanceAddressesModel getDistanceAddressesModelFromJson(String str) => GetDistanceAddressesModel.fromJson(json.decode(str));
+GetDistanceAddressesModel getDistanceAddressesModelFromJson(String str) =>
+    GetDistanceAddressesModel.fromJson(json.decode(str));
 
-String getDistanceAddressesModelToJson(GetDistanceAddressesModel data) => json.encode(data.toJson());
+String getDistanceAddressesModelToJson(GetDistanceAddressesModel data) =>
+    json.encode(data.toJson());
 
 class GetDistanceAddressesModel {
   String? status;
@@ -17,29 +19,34 @@ class GetDistanceAddressesModel {
     this.data,
   });
 
-  factory GetDistanceAddressesModel.fromJson(Map<String, dynamic> json) => GetDistanceAddressesModel(
-    status: json["status"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-  );
+  factory GetDistanceAddressesModel.fromJson(Map<String, dynamic> json) =>
+      GetDistanceAddressesModel(
+        status: json["status"],
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-  };
+        "status": status,
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
+      };
 }
 
 class Datum {
   String? distance;
+  String? duration;
 
   Datum({
     this.distance,
+    this.duration,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    distance: json["distance"],
-  );
+        distance: json["distance"],
+        duration: json["travel_time"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "distance": distance,
-  };
+        "distance": distance,
+        "travel_time": duration,
+      };
 }

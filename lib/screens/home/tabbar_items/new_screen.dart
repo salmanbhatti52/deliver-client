@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:deliver_client/models/get_distance_addresses_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -440,22 +441,43 @@ class _NewScreenState extends State<NewScreen> {
         if (getDistanceAddressesModel.data != null) {
           for (int i = 0; i < getDistanceAddressesModel.data!.length; i++) {
             final distance = getDistanceAddressesModel.data![i].distance;
+            final duration = getDistanceAddressesModel.data![i].duration;
+
+            if (distance == null || duration == null) {
+              Fluttertoast.showToast(
+                msg: "Distance fetching problem",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.TOP,
+                timeInSecForIosWeb: 2,
+                fontSize: 16.0,
+                textColor: Colors.white,
+                backgroundColor: Colors.red,
+              );
+              continue;
+            }
+
             print('Distance $i: $distance');
+            print('Duration $i: $duration');
             switch (i) {
               case 0:
                 distance0 = distance;
+                duration0 = duration;
                 break;
               case 1:
                 distance1 = distance;
+                duration1 = duration;
                 break;
               case 2:
                 distance2 = distance;
+                duration2 = duration;
                 break;
               case 3:
                 distance3 = distance;
+                duration3 = duration;
                 break;
               case 4:
                 distance4 = distance;
+                duration4 = duration;
                 break;
               default:
                 // Handle if there are more distances than predefined variables
@@ -3323,6 +3345,7 @@ class _NewScreenState extends State<NewScreen> {
                                       addMultipleData = {
                                         "type": "booking",
                                         "vehicles_id": vehicleId,
+                                        "pickup_address":"${filteredData[0]["0"]["pickupController"]}", 
                                         "bookings_types_id": bookingsTypeId,
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"
