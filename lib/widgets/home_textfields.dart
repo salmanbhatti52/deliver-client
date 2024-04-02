@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
@@ -71,6 +74,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   bool addressesVisible = false;
 
   var places;
+  int apiHitCount = 0;
   List<PlacesSearchResult> pickUpPredictions = [];
   List<PlacesSearchResult> destinationPredictions = [];
   GoogleMapController? mapController;
@@ -79,28 +83,76 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   LatLng? selectedLocation;
   LatLng? selectedAddressLocation;
   BitmapDescriptor? customMarkerIcon;
+  Future<void> googleAnalytics(String input) async {
+    var headersList = {
+      'Accept': '*/*',
+      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.parse('https://deliver.eigix.net/api/add_google_api_hit');
 
+    var body = {"url": input};
+
+    var req = http.Request('POST', url);
+    req.headers.addAll(headersList);
+    req.body = json.encode(body);
+
+    var res = await req.send();
+    final resBody = await res.stream.bytesToString();
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      print(resBody);
+    } else {
+      print(res.reasonPhrase);
+    }
+  }
+
+  Timer? _debounceTimer;
   Future<void> searchPickUpPlaces(String input) async {
     if (input.isNotEmpty) {
-      final response = await places.searchByText(input);
-
-      if (response.isOkay) {
-        setState(() {
-          pickUpPredictions = response.results;
-        });
+      // Cancel previous debounce timer
+      if (_debounceTimer != null) {
+        _debounceTimer!.cancel();
       }
+
+      // Start a new debounce timer
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+        final response = await places.searchByText(input);
+        apiHitCount++; // Increment API hit count
+
+        // Track analytics event
+        await googleAnalytics(input);
+
+        if (response.isOkay) {
+          setState(() {
+            pickUpPredictions = response.results;
+          });
+        }
+      });
     }
   }
 
   Future<void> searchDestinationPlaces(String input) async {
     if (input.isNotEmpty) {
-      final response = await places.searchByText(input);
-
-      if (response.isOkay) {
-        setState(() {
-          destinationPredictions = response.results;
-        });
+      // Cancel previous debounce timer
+      if (_debounceTimer != null) {
+        _debounceTimer!.cancel();
       }
+
+      // Start a new debounce timer
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+        final response = await places.searchByText(input);
+        apiHitCount++; // Increment API hit count
+
+        // Track analytics event
+        await googleAnalytics(input);
+
+        if (response.isOkay) {
+          setState(() {
+            destinationPredictions = response.results;
+          });
+        }
+      });
     }
   }
 
@@ -209,6 +261,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
     getAddresses();
     api = DistanceMatrixAPI("$mapsKey");
     places = GoogleMapsPlaces(apiKey: mapsKey);
+    print("placesssssssssssssssssssssssssssssss: $places");
     for (int i = 0; i < 5; i++) {
       pickupControllers.add(TextEditingController());
       destinationControllers.add(TextEditingController());
@@ -231,6 +284,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // Text('API Hits: $apiHitCount'),
                 widget.isSelectedAddress == true
                     ? Container(
                         color: transparentColor,

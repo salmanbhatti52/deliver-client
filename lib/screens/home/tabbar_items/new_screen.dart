@@ -791,28 +791,49 @@ class _NewScreenState extends State<NewScreen> {
   LatLng? selectedLocation;
   LatLng? selectedAddressLocation;
   BitmapDescriptor? customMarkerIcon;
-
+  Timer? _debounceTimer;
+  int apiHitCount = 0;
   Future<void> searchPickUpPlaces(String input) async {
     if (input.isNotEmpty) {
-      final response = await places.searchByText(input);
-
-      if (response.isOkay) {
-        setState(() {
-          pickUpPredictions = response.results;
-        });
+      // Cancel previous debounce timer
+      if (_debounceTimer != null) {
+        _debounceTimer!.cancel();
       }
+
+      // Start a new debounce timer
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+        final response = await places.searchByText(input);
+        apiHitCount++; // Increment API hit count
+
+        // Track analytics event
+        if (response.isOkay) {
+          setState(() {
+            pickUpPredictions = response.results;
+          });
+        }
+      });
     }
   }
 
   Future<void> searchDestinationPlaces(String input) async {
     if (input.isNotEmpty) {
-      final response = await places.searchByText(input);
-
-      if (response.isOkay) {
-        setState(() {
-          destinationPredictions = response.results;
-        });
+      // Cancel previous debounce timer
+      if (_debounceTimer != null) {
+        _debounceTimer!.cancel();
       }
+
+      // Start a new debounce timer
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+        final response = await places.searchByText(input);
+        apiHitCount++; // Increment API hit count
+
+        // Track analytics event
+        if (response.isOkay) {
+          setState(() {
+            destinationPredictions = response.results;
+          });
+        }
+      });
     }
   }
 
@@ -1047,6 +1068,7 @@ class _NewScreenState extends State<NewScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
+                // Text('API Hits: $apiHitCount'),
                 isSelectedAddress == true
                     ? Container(
                         color: transparentColor,
@@ -3345,7 +3367,8 @@ class _NewScreenState extends State<NewScreen> {
                                       addMultipleData = {
                                         "type": "booking",
                                         "vehicles_id": vehicleId,
-                                        "pickup_address":"${filteredData[0]["0"]["pickupController"]}", 
+                                        "pickup_address":
+                                            "${filteredData[0]["0"]["pickupController"]}",
                                         "bookings_types_id": bookingsTypeId,
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"

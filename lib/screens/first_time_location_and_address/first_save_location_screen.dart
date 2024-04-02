@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously, prefer_typing_uninitialized_variables
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -134,16 +136,27 @@ class _FirstSaveLocationScreenState extends State<FirstSaveLocationScreen> {
       return null;
     }
   }
-
+ Timer? _debounceTimer;
+  int apiHitCount = 0;
   Future<void> searchAddressPlaces(String input) async {
     if (input.isNotEmpty) {
-      final response = await places.searchByText(input);
-
-      if (response.isOkay) {
-        setState(() {
-          addressPredictions = response.results;
-        });
+      // Cancel previous debounce timer
+      if (_debounceTimer != null) {
+        _debounceTimer!.cancel();
       }
+
+      // Start a new debounce timer
+      _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+        final response = await places.searchByText(input);
+        apiHitCount++; // Increment API hit count
+
+        // Track analytics event
+        if (response.isOkay) {
+          setState(() {
+            addressPredictions = response.results;
+          });
+        }
+      });
     }
   }
 
