@@ -86,7 +86,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   Future<void> googleAnalytics(String input) async {
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('https://deliver.eigix.net/api/add_google_api_hit');
@@ -100,7 +99,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
     var res = await req.send();
     final resBody = await res.stream.bytesToString();
 
-    if (res.statusCode >= 200 && res.statusCode < 300) {
+    if (res.statusCode == 200 ) {
       print(resBody);
     } else {
       print(res.reasonPhrase);
@@ -273,6 +272,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    Text('API Hits in Multiple: $apiHitCount');
     return Container(
       color: transparentColor,
       height: size.height * 0.3,
@@ -284,7 +284,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Text('API Hits: $apiHitCount'),
+                Text('API Hits: $apiHitCount'),
                 widget.isSelectedAddress == true
                     ? Container(
                         color: transparentColor,

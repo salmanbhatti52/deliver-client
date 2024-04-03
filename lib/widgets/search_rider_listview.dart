@@ -495,7 +495,9 @@ class _RidersListState extends State<RidersList> {
   }
 
   calculateDistance() {
-    distanceKm = double.parse("${widget.searchRider?.distance}");
+    distanceKm = widget.searchRider?.distance != null
+        ? double.parse("${widget.searchRider?.distance}")
+        : 0.0;
     debugPrint('distanceKm: $distanceKm');
 
     if (distanceKm! > 10.00) {

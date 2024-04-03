@@ -39,7 +39,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       debugPrint(
           "vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
       debugPrint(
-          "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_latitude0"]}");
+          "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_address"]}");
       debugPrint(
           "pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
       final response = await http.post(
@@ -197,6 +197,21 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                 ),
               ),
             ),
+            actions: [
+              InkWell(
+                onTap: () async {
+                  await searchRider();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Icon(
+                    Icons.refresh,
+                    color: blackColor,
+                    size: 22,
+                  ),
+                ),
+              ),
+            ],
             centerTitle: true,
           ),
           body: isLoading == true

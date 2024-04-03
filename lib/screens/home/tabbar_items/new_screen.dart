@@ -16,7 +16,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:google_maps_webservice_ex/places.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show SystemNavigator, rootBundle;
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/widgets/home_textfields.dart';
@@ -69,6 +69,7 @@ class _NewScreenState extends State<NewScreen> {
   String? systemLng;
   String? pickupLat;
   String? pickupLng;
+
   String? addressLat;
   String? addressLng;
   String? currentLat;
@@ -130,6 +131,7 @@ class _NewScreenState extends State<NewScreen> {
   String? duration4;
   String? minPageLength;
   String? maxPageLength;
+
   int? minPageLen;
   int? maxPageLen;
   int? dataIndex1;
@@ -152,6 +154,42 @@ class _NewScreenState extends State<NewScreen> {
   bool isLoading2 = false;
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
+  void showCustomDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Timeout',
+            style: TextStyle(
+              color: Color(0xFFFF6302), // Theme color
+              fontWeight: FontWeight.bold, // Font weight
+            ),
+          ),
+          content: const Text(
+            'Please check your internet connection or try again later.',
+            style: TextStyle(
+              color: Colors.black87, // Default color
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                SystemNavigator.pop(); // Exiting the application
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  color: Color(0xFFFF6302), // Theme color
+                  fontWeight: FontWeight.bold, // Font weight
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   getAllSystemData() async {
     try {
@@ -191,7 +229,29 @@ class _NewScreenState extends State<NewScreen> {
           }
           setState(() {});
         }
+      } else if (response.statusCode == 500) {
+        showCustomDialog(context);
       }
+    } on TimeoutException catch (_) {
+      // Handle timeout exception
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Timeout'),
+            content: const Text(
+                'Please check your internet connection or try again later.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
       return null;
@@ -385,6 +445,35 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
+  String? pickupLatt;
+  String? pickupLong;
+  String? destinLatt;
+  String? destinLong;
+
+  String? pickupLat0;
+  String? pickupLng0;
+  String? destinLat0;
+  String? destinLng0;
+
+  String? pickupLat1;
+  String? pickupLng1;
+  String? destinLat1;
+  String? destinLng1;
+
+  String? pickupLat2;
+  String? pickupLng2;
+  String? destinLat2;
+  String? destinLng2;
+
+  String? pickupLat3;
+  String? pickupLng3;
+  String? destinLat3;
+  String? destinLng3;
+
+  String? pickupLat4;
+  String? pickupLng4;
+  String? destinLat4;
+  String? destinLng4;
   GetDistanceAddressesModel getDistanceAddressesModel =
       GetDistanceAddressesModel();
   getDistanceAddress() async {
@@ -442,6 +531,14 @@ class _NewScreenState extends State<NewScreen> {
           for (int i = 0; i < getDistanceAddressesModel.data!.length; i++) {
             final distance = getDistanceAddressesModel.data![i].distance;
             final duration = getDistanceAddressesModel.data![i].duration;
+            pickupLatt =
+                getDistanceAddressesModel.data![i].pickupLat.toString();
+            pickupLong =
+                getDistanceAddressesModel.data![i].pickupLong.toString();
+            destinLatt =
+                getDistanceAddressesModel.data![i].destinLat.toString();
+            destinLong =
+                getDistanceAddressesModel.data![i].destinLong.toString();
 
             if (distance == null || duration == null) {
               Fluttertoast.showToast(
@@ -458,26 +555,50 @@ class _NewScreenState extends State<NewScreen> {
 
             print('Distance $i: $distance');
             print('Duration $i: $duration');
+            print('Pickup Latitude $i: $pickupLatt');
+            print('Pickup Longitude $i: $pickupLong');
+            print('Destination Latitude $i: $destinLatt');
+            print('Destination Longitude $i: $destinLong');
             switch (i) {
               case 0:
                 distance0 = distance;
                 duration0 = duration;
+                pickupLat0 = pickupLatt;
+                pickupLng0 = pickupLong;
+                destinLat0 = destinLatt;
+                destinLng0 = destinLong;
                 break;
               case 1:
                 distance1 = distance;
                 duration1 = duration;
+                pickupLat1 = pickupLatt;
+                pickupLng1 = pickupLong;
+                destinLat1 = destinLatt;
+                destinLng1 = destinLong;
                 break;
               case 2:
                 distance2 = distance;
                 duration2 = duration;
+                pickupLat2 = pickupLatt;
+                pickupLng2 = pickupLong;
+                destinLat2 = destinLatt;
+                destinLng2 = destinLong;
                 break;
               case 3:
                 distance3 = distance;
                 duration3 = duration;
+                pickupLat3 = pickupLatt;
+                pickupLng3 = pickupLong;
+                destinLat3 = destinLatt;
+                destinLng3 = destinLong;
                 break;
               case 4:
                 distance4 = distance;
                 duration4 = duration;
+                pickupLat4 = pickupLatt;
+                pickupLng4 = pickupLong;
+                destinLat4 = destinLatt;
+                destinLng4 = destinLong;
                 break;
               default:
                 // Handle if there are more distances than predefined variables
@@ -488,6 +609,10 @@ class _NewScreenState extends State<NewScreen> {
       } else {
         debugPrint("Non-200 status code received: ${response.statusCode}");
         // Handle other status codes as needed
+        CustomToast.showToast(
+          fontSize: 12,
+          message: "${getDistanceAddressesModel.message}",
+        );
       }
     } catch (e, stackTrace) {
       debugPrint('Something went wrong: $e\n$stackTrace');
@@ -1056,6 +1181,7 @@ class _NewScreenState extends State<NewScreen> {
 
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
+    Text('API Hits in Single: $apiHitCount');
     return Container(
       color: transparentColor,
       width: size.width,
@@ -1068,7 +1194,7 @@ class _NewScreenState extends State<NewScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // Text('API Hits: $apiHitCount'),
+                Text('API Hits: $apiHitCount'),
                 isSelectedAddress == true
                     ? Container(
                         color: transparentColor,
@@ -1842,10 +1968,10 @@ class _NewScreenState extends State<NewScreen> {
       //   } else if (distance4 != null &&
       //       double.parse(distance4!.split(" ")[0]) <= 1.0) {
       //     receiversNumberController.clear();
-      //     CustomToast.showToast(
-      //       fontSize: 12,
-      //       message: "Distance of delivery fifth should be greater than 1.0 Km!",
-      //     );
+      // CustomToast.showToast(
+      //   fontSize: 12,
+      //   message: "Distance of delivery fifth should be greater than 1.0 Km!",
+      // );
       //     fetchingData = false;
       //   } else {
       //     debugPrint("All distances are greater than 1.0 Km");
@@ -2903,6 +3029,86 @@ class _NewScreenState extends State<NewScreen> {
                                           "delivery_type": selectedRadio == 1
                                               ? "Single"
                                               : "Multiple",
+                                          "pickup_latitude0":
+                                              "$pickupLat0" != 'null'
+                                                  ? "$pickupLat0"
+                                                  : "0",
+                                          "pickup_longitude0":
+                                              "$pickupLng0" != 'null'
+                                                  ? "$pickupLng0"
+                                                  : "0",
+                                          "destin_latitude0":
+                                              "$destinLat0" != 'null'
+                                                  ? "$destinLat0"
+                                                  : "0",
+                                          "destin_longitude0":
+                                              "$destinLng0" != 'null'
+                                                  ? "$destinLng0"
+                                                  : "0",
+                                          "pickup_latitude1":
+                                              "$pickupLat1" != 'null'
+                                                  ? "$pickupLat1"
+                                                  : "0",
+                                          "pickup_longitude1":
+                                              "$pickupLng1" != 'null'
+                                                  ? "$pickupLng1"
+                                                  : "0",
+                                          "destin_latitude1":
+                                              "$destinLat1" != 'null'
+                                                  ? "$destinLat1"
+                                                  : "0",
+                                          "destin_longitude1":
+                                              "$destinLng1" != 'null'
+                                                  ? "$destinLng1"
+                                                  : "0",
+                                          "pickup_latitude2":
+                                              "$pickupLat2" != 'null'
+                                                  ? "$pickupLat2"
+                                                  : "0",
+                                          "pickup_longitude2":
+                                              "$pickupLat2" != 'null'
+                                                  ? "$pickupLat2"
+                                                  : "0",
+                                          "destin_latitude2":
+                                              "$destinLat2" != 'null'
+                                                  ? "$destinLat2"
+                                                  : "0",
+                                          "destin_longitude2":
+                                              "$destinLng2" != 'null'
+                                                  ? "$destinLng2"
+                                                  : "0",
+                                          "pickup_latitude3":
+                                              "$pickupLat3" != 'null'
+                                                  ? "$pickupLat3"
+                                                  : "0",
+                                          "pickup_longitude3":
+                                              "$pickupLng3" != 'null'
+                                                  ? "$pickupLng3"
+                                                  : "0",
+                                          "destin_latitude3":
+                                              "$destinLat3" != 'null'
+                                                  ? "$destinLat3"
+                                                  : "0",
+                                          "destin_longitude3":
+                                              "$destinLng3" != 'null'
+                                                  ? "$destinLng3"
+                                                  : "0",
+                                          "pickup_latitude4":
+                                              "$pickupLng4" != 'null'
+                                                  ? "$pickupLng4"
+                                                  : "0",
+                                          "pickup_longitude4":
+                                              "$pickupLng4" != 'null'
+                                                  ? "$pickupLng4"
+                                                  : "0",
+                                          "destin_latitude4":
+                                              "$destinLat4" != 'null'
+                                                  ? "$destinLat4"
+                                                  : "0",
+                                          "destin_longitude4":
+                                              "$destinLng4" != 'null'
+                                                  ? "$destinLng4"
+                                                  : "0",
                                           "destin_distance0":
                                               distance0!.split(" ")[0],
                                           "destin_time0": duration0,
@@ -3373,6 +3579,86 @@ class _NewScreenState extends State<NewScreen> {
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"
                                             : "Multiple",
+                                        "pickup_latitude0":
+                                            "$pickupLat0" != 'null'
+                                                ? "$pickupLat0"
+                                                : "0",
+                                        "pickup_longitude0":
+                                            "$pickupLng0" != 'null'
+                                                ? "$pickupLng0"
+                                                : "0",
+                                        "destin_latitude0":
+                                            "$destinLat0" != 'null'
+                                                ? "$destinLat0"
+                                                : "0",
+                                        "destin_longitude0":
+                                            "$destinLng0" != 'null'
+                                                ? "$destinLng0"
+                                                : "0",
+                                        "pickup_latitude1":
+                                            "$pickupLat1" != 'null'
+                                                ? "$pickupLat1"
+                                                : "0",
+                                        "pickup_longitude1":
+                                            "$pickupLng1" != 'null'
+                                                ? "$pickupLng1"
+                                                : "0",
+                                        "destin_latitude1":
+                                            "$destinLat1" != 'null'
+                                                ? "$destinLat1"
+                                                : "0",
+                                        "destin_longitude1":
+                                            "$destinLng1" != 'null'
+                                                ? "$destinLng1"
+                                                : "0",
+                                        "pickup_latitude2":
+                                            "$pickupLat2" != 'null'
+                                                ? "$pickupLat2"
+                                                : "0",
+                                        "pickup_longitude2":
+                                            "$pickupLat2" != 'null'
+                                                ? "$pickupLat2"
+                                                : "0",
+                                        "destin_latitude2":
+                                            "$destinLat2" != 'null'
+                                                ? "$destinLat2"
+                                                : "0",
+                                        "destin_longitude2":
+                                            "$destinLng2" != 'null'
+                                                ? "$destinLng2"
+                                                : "0",
+                                        "pickup_latitude3":
+                                            "$pickupLat3" != 'null'
+                                                ? "$pickupLat3"
+                                                : "0",
+                                        "pickup_longitude3":
+                                            "$pickupLng3" != 'null'
+                                                ? "$pickupLng3"
+                                                : "0",
+                                        "destin_latitude3":
+                                            "$destinLat3" != 'null'
+                                                ? "$destinLat3"
+                                                : "0",
+                                        "destin_longitude3":
+                                            "$destinLng3" != 'null'
+                                                ? "$destinLng3"
+                                                : "0",
+                                        "pickup_latitude4":
+                                            "$pickupLng4" != 'null'
+                                                ? "$pickupLng4"
+                                                : "0",
+                                        "pickup_longitude4":
+                                            "$pickupLng4" != 'null'
+                                                ? "$pickupLng4"
+                                                : "0",
+                                        "destin_latitude4":
+                                            "$destinLat4" != 'null'
+                                                ? "$destinLat4"
+                                                : "0",
+                                        "destin_longitude4":
+                                            "$destinLng4" != 'null'
+                                                ? "$destinLng4"
+                                                : "0",
                                         "destin_distance0":
                                             distance0!.split(" ")[0],
                                         "destin_time0": duration0,
@@ -3467,7 +3753,8 @@ class _NewScreenState extends State<NewScreen> {
                                       debugPrint("indexData2: $indexData2");
                                       debugPrint("indexData3: $indexData3");
                                       debugPrint("indexData4: $indexData4");
-
+                                      print(
+                                          "addMultipleData: $addMultipleData");
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

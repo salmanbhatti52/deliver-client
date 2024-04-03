@@ -160,7 +160,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
                 fontFamily: 'Syne-SemiBold',
               ),
             ),
-            SizedBox(height: size.height * 0.02),
+            SizedBox(height: size.height * 0.01),
             Text(
               "Update your location to find nearby riders\nand ensure swift and convenient \ndeliveries.",
               textAlign: TextAlign.center,
@@ -180,7 +180,7 @@ class _UpdateLocationScreenState extends State<UpdateLocationScreen> {
                   ? buttonGradientWithLoader("Please Wait...", context)
                   : buttonGradient('Update Location', context),
             ),
-            SizedBox(height: size.height * 0.03),
+            SizedBox(height: size.height * 0.01),
           ],
         ),
       ),

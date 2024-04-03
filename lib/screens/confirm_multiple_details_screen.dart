@@ -1204,95 +1204,95 @@ class _ConfirmMultipleDetailsScreenState
                       Map? updatedData2 = Map.from(widget.multipleData!);
                       updatedData2.addAll({
                         "pickup_address0": dataForIndex0[0]["pickupController"],
-                        "pickup_latitude0": "0",
-                        "pickup_longitude0": "0",
+                        // "pickup_latitude0": "0",
+                        // "pickup_longitude0": "0",
                         "destin_address0": dataForIndex0[0]
                             ["destinationController"],
-                        "destin_latitude0": "0",
-                        "destin_longitude0": "0",
+                        // "destin_latitude0": "0",
+                        // "destin_longitude0": "0",
                         "receiver_name0": dataForIndex0[0]
                             ["receiversNameController"],
                         "receiver_phone0": dataForIndex0[0]
                             ["receiversNumberController"],
                         "pickup_address1": dataForIndex1[1]["pickupController"],
-                        "pickup_latitude1": "0",
-                        "pickup_longitude1": "0",
+                        // "pickup_latitude1": "0",
+                        // "pickup_longitude1": "0",
                         "destin_address1": dataForIndex1[1]
                             ['destinationController'],
-                        "destin_latitude1": "0",
-                        "destin_longitude1": "0",
+                        // "destin_latitude1": "0",
+                        // "destin_longitude1": "0",
                         "receiver_name1": dataForIndex1[1]
                             ["receiversNameController"],
                         "receiver_phone1": dataForIndex1[1]
                             ["receiversNumberController"],
                         "pickup_address2":
                             dataForIndex2[2]["pickupController"] ?? "",
-                        "pickup_latitude2":
-                            dataForIndex2[2]["pickupLatLng"] != 'null'
-                                ? dataForIndex2[2]["pickupLatLng"]
-                                : "0",
-                        "pickup_longitude2":
-                            dataForIndex2[2]["pickupLatLng"] != 'null'
-                                ? dataForIndex2[2]["pickupLatLng"]
-                                : "0",
+                        // "pickup_latitude2":
+                        //     dataForIndex2[2]["pickupLatLng"] != 'null'
+                        //         ? dataForIndex2[2]["pickupLatLng"]
+                        //         : "0",
+                        // "pickup_longitude2":
+                        //     dataForIndex2[2]["pickupLatLng"] != 'null'
+                        //         ? dataForIndex2[2]["pickupLatLng"]
+                        //         : "0",
                         "destin_address2":
                             dataForIndex2[2]['destinationController'] ?? "",
-                        "destin_latitude2":
-                            dataForIndex2[2]['destinationLatLng'] != 'null'
-                                ? dataForIndex2[2]['destinationLatLng']
-                                : "0",
-                        "destin_longitude2":
-                            dataForIndex2[2]['destinationLatLng'] != 'null'
-                                ? dataForIndex2[2]['destinationLatLng']
-                                : "0",
+                        // "destin_latitude2":
+                        //     dataForIndex2[2]['destinationLatLng'] != 'null'
+                        //         ? dataForIndex2[2]['destinationLatLng']
+                        //         : "0",
+                        // "destin_longitude2":
+                        //     dataForIndex2[2]['destinationLatLng'] != 'null'
+                        //         ? dataForIndex2[2]['destinationLatLng']
+                        //         : "0",
                         "receiver_name2":
                             dataForIndex2[2]["receiversNameController"] ?? "",
                         "receiver_phone2":
                             dataForIndex2[2]["receiversNumberController"] ?? "",
                         "pickup_address3":
                             dataForIndex3[3]["pickupController"] ?? "",
-                        "pickup_latitude3":
-                            dataForIndex3[3]["pickupLatLng"] != 'null'
-                                ? dataForIndex3[3]["pickupLatLng"]
-                                : "0",
-                        "pickup_longitude3":
-                            dataForIndex3[3]["pickupLatLng"] != 'null'
-                                ? dataForIndex3[3]["pickupLatLng"]
-                                : "0",
+                        // "pickup_latitude3":
+                        //     dataForIndex3[3]["pickupLatLng"] != 'null'
+                        //         ? dataForIndex3[3]["pickupLatLng"]
+                        //         : "0",
+                        // "pickup_longitude3":
+                        //     dataForIndex3[3]["pickupLatLng"] != 'null'
+                        //         ? dataForIndex3[3]["pickupLatLng"]
+                        //         : "0",
                         "destin_address3":
                             dataForIndex3[3]['destinationController'] ?? "",
-                        "destin_latitude3":
-                            dataForIndex3[3]['destinationLatLng'] != 'null'
-                                ? dataForIndex3[3]['destinationLatLng']
-                                : "0",
-                        "destin_longitude3":
-                            dataForIndex3[3]['destinationLatLng'] != 'null'
-                                ? dataForIndex3[3]['destinationLatLng']
-                                : "0",
+                        // "destin_latitude3":
+                        //     dataForIndex3[3]['destinationLatLng'] != 'null'
+                        //         ? dataForIndex3[3]['destinationLatLng']
+                        //         : "0",
+                        // "destin_longitude3":
+                        //     dataForIndex3[3]['destinationLatLng'] != 'null'
+                        //         ? dataForIndex3[3]['destinationLatLng']
+                        //         : "0",
                         "receiver_name3":
                             dataForIndex3[3]["receiversNameController"] ?? "",
                         "receiver_phone3":
                             dataForIndex3[3]["receiversNumberController"] ?? "",
                         "pickup_address4":
                             dataForIndex4[4]["pickupController"] ?? "",
-                        "pickup_latitude4":
-                            dataForIndex4[4]["pickupLatLng"] != 'null'
-                                ? dataForIndex4[4]["pickupLatLng"]
-                                : "0",
-                        "pickup_longitude4":
-                            dataForIndex4[4]["pickupLatLng"] != 'null'
-                                ? dataForIndex4[4]["pickupLatLng"]
-                                : "0",
+                        // "pickup_latitude4":
+                        //     dataForIndex4[4]["pickupLatLng"] != 'null'
+                        //         ? dataForIndex4[4]["pickupLatLng"]
+                        //         : "0",
+                        // "pickup_longitude4":
+                        //     dataForIndex4[4]["pickupLatLng"] != 'null'
+                        //         ? dataForIndex4[4]["pickupLatLng"]
+                        //         : "0",
                         "destin_address4":
                             dataForIndex4[4]['destinationController'] ?? "",
-                        "destin_latitude4":
-                            dataForIndex4[4]['destinationLatLng'] != 'null'
-                                ? dataForIndex4[4]['destinationLatLng']
-                                : "0",
-                        "destin_longitude4":
-                            dataForIndex4[4]['destinationLatLng'] != 'null'
-                                ? dataForIndex4[4]['destinationLatLng']
-                                : "0",
+                        // "destin_latitude4":
+                        //     dataForIndex4[4]['destinationLatLng'] != 'null'
+                        //         ? dataForIndex4[4]['destinationLatLng']
+                        //         : "0",
+                        // "destin_longitude4":
+                        //     dataForIndex4[4]['destinationLatLng'] != 'null'
+                        //         ? dataForIndex4[4]['destinationLatLng']
+                        //         : "0",
                         "receiver_name4":
                             dataForIndex4[4]["receiversNameController"] ?? "",
                         "receiver_phone4":
