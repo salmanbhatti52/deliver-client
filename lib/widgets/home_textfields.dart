@@ -284,7 +284,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('API Hits: $apiHitCount'),
+                // Text('API Hits: $apiHitCount'),
                 widget.isSelectedAddress == true
                     ? Container(
                         color: transparentColor,

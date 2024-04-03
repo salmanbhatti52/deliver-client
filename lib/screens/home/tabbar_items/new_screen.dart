@@ -1194,7 +1194,7 @@ class _NewScreenState extends State<NewScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                Text('API Hits: $apiHitCount'),
+                // Text('API Hits: $apiHitCount'),
                 isSelectedAddress == true
                     ? Container(
                         color: transparentColor,
