@@ -76,8 +76,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
         debugPrint(
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
-            'getAllSystemDataModel length: ${getAllSystemDataModel.data!
-                .length}');
+            'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "termii_api_key") {
             termiiApiKey = "${getAllSystemDataModel.data?[i].description}";
@@ -227,29 +226,32 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         checkNumberModel = checkNumberModelFromJson(responseString);
-        debugPrint('checkNumberModel status: ${checkNumberModel.status}');
-        SharedPreferences sharedPref = await SharedPreferences.getInstance();
-        await sharedPref.setString(
-            'userId', "${checkNumberModel.data?.usersCustomersId.toString()}");
-        await sharedPref.setString('email', "${checkNumberModel.data?.email}");
-        await sharedPref.setString(
-            'firstName', "${checkNumberModel.data?.firstName}");
-        await sharedPref.setString(
-            'lastName', "${checkNumberModel.data?.lastName}");
-        await sharedPref.setString(
-            'phoneNumber', "${checkNumberModel.data?.phone}");
-        await sharedPref.setString(
-            'profilePic', "${checkNumberModel.data?.profilePic}");
-        debugPrint(
-            "sharedPref userId: ${checkNumberModel.data!.usersCustomersId
-                .toString()}");
-        debugPrint("sharedPref email: ${checkNumberModel.data!.email}");
-        debugPrint("sharedPref firstName: ${checkNumberModel.data!.firstName}");
-        debugPrint("sharedPref lastName: ${checkNumberModel.data!.lastName}");
-        debugPrint("sharedPref phoneNumber: ${checkNumberModel.data!.phone}");
-        debugPrint(
-            "sharedPref profilePic: ${checkNumberModel.data!.profilePic}");
-        setState(() {});
+        if (checkNumberModel.status == "success") {
+          debugPrint('checkNumberModel status: ${checkNumberModel.status}');
+          SharedPreferences sharedPref = await SharedPreferences.getInstance();
+          await sharedPref.setString('userId',
+              "${checkNumberModel.data?.usersCustomersId.toString()}");
+          await sharedPref.setString(
+              'email', "${checkNumberModel.data?.email}");
+          await sharedPref.setString(
+              'firstName', "${checkNumberModel.data?.firstName}");
+          await sharedPref.setString(
+              'lastName', "${checkNumberModel.data?.lastName}");
+          await sharedPref.setString(
+              'phoneNumber', "${checkNumberModel.data?.phone}");
+          await sharedPref.setString(
+              'profilePic', "${checkNumberModel.data?.profilePic}");
+          debugPrint(
+              "sharedPref userId: ${checkNumberModel.data!.usersCustomersId.toString()}");
+          debugPrint("sharedPref email: ${checkNumberModel.data!.email}");
+          debugPrint(
+              "sharedPref firstName: ${checkNumberModel.data!.firstName}");
+          debugPrint("sharedPref lastName: ${checkNumberModel.data!.lastName}");
+          debugPrint("sharedPref phoneNumber: ${checkNumberModel.data!.phone}");
+          debugPrint(
+              "sharedPref profilePic: ${checkNumberModel.data!.profilePic}");
+          setState(() {});
+        }
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
@@ -298,9 +300,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
   @override
   Widget build(BuildContext context) {
     var code = "";
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -351,8 +351,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
               ),
               SizedBox(height: size.height * 0.1),
               Text(
-                "We will send you OTP verification code at\nthis ${widget
-                    .phoneNumber}. Put your OTP code\nbelow for verification.",
+                "We will send you OTP verification code at\nthis ${widget.phoneNumber}. Put your OTP code\nbelow for verification.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: blackColor,
@@ -442,11 +441,11 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                   SizedBox(width: size.width * 0.02),
                   secondsRemaining == 0
                       ? SvgPicture.asset(
-                    'assets/images/clock-inactive-icon.svg',
-                  )
+                          'assets/images/clock-inactive-icon.svg',
+                        )
                       : SvgPicture.asset(
-                    'assets/images/clock-active-icon.svg',
-                  ),
+                          'assets/images/clock-active-icon.svg',
+                        ),
                   SizedBox(width: size.width * 0.02),
                   Text(
                     getTimerText(),
@@ -475,32 +474,32 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                     ),
                     secondsRemaining == 0
                         ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          secondsRemaining = 120;
-                          startTimer();
-                        });
-                        sendOtp();
-                      },
-                      child: Text(
-                        'Resend Code',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: orangeColor,
-                          fontSize: 16,
-                          fontFamily: 'Syne-SemiBold',
-                        ),
-                      ),
-                    )
+                            onTap: () {
+                              setState(() {
+                                secondsRemaining = 120;
+                                startTimer();
+                              });
+                              sendOtp();
+                            },
+                            child: Text(
+                              'Resend Code',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: orangeColor,
+                                fontSize: 16,
+                                fontFamily: 'Syne-SemiBold',
+                              ),
+                            ),
+                          )
                         : Text(
-                      'Resend Code',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: supportTextColor,
-                        fontSize: 16,
-                        fontFamily: 'Syne-SemiBold',
-                      ),
-                    ),
+                            'Resend Code',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              color: supportTextColor,
+                              fontSize: 16,
+                              fontFamily: 'Syne-SemiBold',
+                            ),
+                          ),
                   ],
                 ),
               ),
@@ -518,16 +517,15 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                             MaterialPageRoute(
                               builder: (context) => HomePageScreen(),
                             ),
-                                (Route<dynamic> route) => false);
+                            (Route<dynamic> route) => false);
                       } else {
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  LoginProfileScreen(
-                                    contactNumber: widget.phoneNumber,
-                                  ),
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => LoginProfileScreen(
+                              contactNumber: widget.phoneNumber,
                             ),
-                                (Route<dynamic> route) => false);
+                          ),
+                        );
                       }
                       // Navigator.of(context).pushAndRemoveUntil(
                       //     MaterialPageRoute(
@@ -543,22 +541,21 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                               MaterialPageRoute(
                                 builder: (context) => HomePageScreen(),
                               ),
-                                  (Route<dynamic> route) => false);
+                              (Route<dynamic> route) => false);
                         } else {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    LoginProfileScreen(
-                                      contactNumber: widget.phoneNumber,
-                                    ),
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LoginProfileScreen(
+                                contactNumber: widget.phoneNumber,
                               ),
-                                  (Route<dynamic> route) => false);
+                            ),
+                          );
                         }
                       } else {
                         CustomToast.showToast(
                           fontSize: 12,
                           message:
-                          "The provided verification code is invalid or expired",
+                              "The provided verification code is invalid or expired",
                         );
                       }
                     }

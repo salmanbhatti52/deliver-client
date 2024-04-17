@@ -22,7 +22,7 @@ class CheckNumberModel {
   factory CheckNumberModel.fromJson(Map<String, dynamic> json) =>
       CheckNumberModel(
         status: json["status"],
-        data: Data.fromJson(json["data"]),
+        data: json["data"] != null ? Data.fromJson(json["data"]) : null,
       );
 
   Map<String, dynamic> toJson() => {

@@ -242,8 +242,11 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
         appBar: AppBar(
           backgroundColor: bgColor,
           elevation: 0,
-          scrolledUnderElevation: 0,
           automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           title: Text(
             "Create Profile",
             textAlign: TextAlign.center,
@@ -703,12 +706,13 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                           } else {
                             await createProfile();
                             if (createProfileModel.status == 'success') {
-                              Navigator.push(
+                              Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       FirstSaveLocationScreen(),
                                 ),
+                                (Route<dynamic> route) => false,
                               );
                               setState(() {
                                 isLoading = false;
@@ -716,7 +720,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 CustomSnackBar(
-                                  message: "Email already exists",
+                                  message: "Something Went Wrong",
                                   size: MediaQuery.of(context).size,
                                 ),
                               );

@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'package:deliver_client/utils/buttondown.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +13,7 @@ import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
+import 'dart:convert' as convert;
 
 class ConfirmSingleDetailsScreen extends StatefulWidget {
   final Map? singleData;
@@ -51,7 +54,8 @@ class _ConfirmSingleDetailsScreenState
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -94,11 +98,33 @@ class _ConfirmSingleDetailsScreenState
     debugPrint("roundedTotalAmount: $roundedTotalPrice");
   }
 
+  Future<String> getEncodedPolyline() async {
+    var url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.singleData!["pickup_latitude"]},${widget.singleData!["pickup_longitude"]}&destination=${widget.singleData!["destin_latitude"]},${widget.singleData!["destin_longitude"]}&key${dotenv.env['MAPS_KEY']}',
+    );
+
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var routes = jsonResponse['routes'] as List;
+      var overviewPolyline = routes[0]['overview_polyline'];
+      var points = overviewPolyline['points'];
+      return points;
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      return '';
+    }
+  }
+
+  bool opened = false;
+  bool closed = false;
   @override
   initState() {
     super.initState();
     getAllSystemData();
     debugPrint("mapData: ${widget.singleData}");
+    // getEncodedPolyline();
   }
 
   @override
@@ -114,9 +140,16 @@ class _ConfirmSingleDetailsScreenState
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  child: Image.asset(
-                    'assets/images/home-location-background.png',
-                    fit: BoxFit.cover,
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        double.parse(
+                            widget.singleData!["destin_latitude"].toString()),
+                        double.parse(
+                            widget.singleData!["destin_longitude"].toString()),
+                      ),
+                      zoom: 14.4746,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -132,20 +165,20 @@ class _ConfirmSingleDetailsScreenState
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 240,
-                  right: 120,
-                  child: Image.asset(
-                    'assets/images/bike-icon.png',
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-                Positioned(
-                  top: 101,
-                  right: 4,
-                  child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
-                ),
+                // Positioned(
+                //   top: 240,
+                //   right: 120,
+                //   child: Image.asset(
+                //     'assets/images/bike-icon.png',
+                //     width: 100,
+                //     height: 100,
+                //   ),
+                // ),
+                // Positioned(
+                //   top: 101,
+                //   right: 4,
+                //   child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
+                // ),
                 Positioned(
                   top: 225,
                   right: 135,
@@ -171,316 +204,345 @@ class _ConfirmSingleDetailsScreenState
                     ),
                   ),
                 ),
-                Positioned(
-                  left: 20,
-                  right: 20,
-                  bottom: size.height * 0.1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: size.width * 0.6,
-                      height: size.height * 0.38,
-                      color: whiteColor,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            SizedBox(height: size.height * 0.02),
-                            Container(
-                              color: transparentColor,
-                              width: size.width,
-                              height: size.height * 0.08,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                Stack(
+                  children: [
+                    Positioned(
+                      left: 20,
+                      right: 20,
+                      bottom: size.height * 0.1,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          width: double.infinity,
+                          height: opened ? 325 : 150,
+                          color: whiteColor,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: SingleChildScrollView(
+                              child: Column(
                                 children: [
-                                  Text(
-                                    "Fare",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 32,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Text(
-                                    "$currencyUnit",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 38,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Tooltip(
-                                    message: roundedTotalPrice.toString(),
-                                    child: Container(
-                                      color: transparentColor,
-                                      child: AutoSizeText(
-                                        roundedTotalPrice.toString(),
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 32,
-                                          fontFamily: 'Inter-Bold',
-                                        ),
-                                        maxLines: 1,
-                                        maxFontSize: 32,
-                                        minFontSize: 24,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Discount: ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '$currencyUnit ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: orangeColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                Text(
-                                  "${widget.singleData?["destin_discount"]}",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                SizedBox(width: size.width * 0.05),
-                              ],
-                            ),
-                            SizedBox(height: size.height * 0.005),
-                            Row(
-                              children: [
-                                Text(
-                                  'VAT Fee ($doubleVatCharges%): ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '$currencyUnit ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: orangeColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                Text(
-                                  "$roundedTotalVatAmount",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                SizedBox(width: size.width * 0.05),
-                              ],
-                            ),
-                            SizedBox(height: size.height * 0.005),
-                            Row(
-                              children: [
-                                Text(
-                                  'Total Price: ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '$currencyUnit ',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: orangeColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                Text(
-                                  '$totalPrice',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Inter-Medium',
-                                  ),
-                                ),
-                                SizedBox(width: size.width * 0.05),
-                              ],
-                            ),
-                            SizedBox(height: size.height * 0.03),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/images/orange-location-big-icon.svg',
-                                ),
-                                SizedBox(width: size.width * 0.04),
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Pickup',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: textHaveAccountColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Syne-Regular',
-                                      ),
-                                    ),
-                                    SizedBox(height: size.height * 0.01),
-                                    Tooltip(
-                                      message:
-                                          "${widget.singleData?["pickup_address"]}",
-                                      child: Container(
-                                        color: transparentColor,
-                                        width: size.width * 0.62,
-                                        child: AutoSizeText(
-                                          "${widget.singleData?["pickup_address"]}",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Medium',
-                                          ),
-                                          minFontSize: 14,
-                                          maxFontSize: 14,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: size.height * 0.01),
-                            Divider(
-                              thickness: 1,
-                              color: dividerColor,
-                              indent: 30,
-                              endIndent: 30,
-                            ),
-                            SizedBox(height: size.height * 0.01),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/images/send-small-icon.svg',
-                                ),
-                                SizedBox(width: size.width * 0.04),
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
+                                  SizedBox(height: size.height * 0.02),
+                                  Container(
+                                    color: transparentColor,
+                                    width: size.width,
+                                    height: size.height * 0.08,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Dropoff',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: textHaveAccountColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Syne-Regular',
-                                          ),
-                                        ),
-                                        SizedBox(width: size.width * 0.3),
-                                        Text(
-                                          '$currencyUnit ',
+                                          "Fare",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: orangeColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Medium',
+                                            fontSize: 32,
+                                            fontFamily: 'Syne-Bold',
                                           ),
                                         ),
+                                        SizedBox(width: size.width * 0.02),
+                                        Text(
+                                          "$currencyUnit",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 38,
+                                            fontFamily: 'Syne-Bold',
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(width: size.width * 0.02),
                                         Tooltip(
-                                          message:
-                                              "${widget.singleData?["destin_total_charges"]}",
+                                          message: roundedTotalPrice.toString(),
                                           child: Container(
                                             color: transparentColor,
-                                            width: size.width * 0.18,
                                             child: AutoSizeText(
-                                              "${widget.singleData?["destin_total_charges"]}",
+                                              roundedTotalPrice.toString(),
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: blackColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Inter-Medium',
+                                                fontSize: 32,
+                                                fontFamily: 'Inter-Bold',
                                               ),
-                                              maxFontSize: 14,
-                                              minFontSize: 12,
                                               maxLines: 1,
+                                              maxFontSize: 32,
+                                              minFontSize: 24,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: size.height * 0.01),
-                                    Tooltip(
-                                      message:
-                                          "${widget.singleData?["destin_address"]}",
-                                      child: Container(
-                                        color: transparentColor,
-                                        width: size.width * 0.62,
-                                        child: AutoSizeText(
-                                          "${widget.singleData?["destin_address"]}",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: blackColor,
-                                            fontSize: 14,
-                                            fontFamily: 'Inter-Medium',
-                                          ),
-                                          minFontSize: 14,
-                                          maxFontSize: 14,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Discount: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(height: size.height * 0.01),
-                                  ],
-                                ),
-                              ],
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.singleData?["destin_discount"]}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'VAT Fee ($doubleVatCharges%): ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "$roundedTotalVatAmount",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Total Price: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        '$totalPrice',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.03),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/orange-location-big-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Pickup',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              color: textHaveAccountColor,
+                                              fontSize: 14,
+                                              fontFamily: 'Syne-Regular',
+                                            ),
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${widget.singleData?["pickup_address"]}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.62,
+                                              child: AutoSizeText(
+                                                "${widget.singleData?["pickup_address"]}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                                minFontSize: 14,
+                                                maxFontSize: 14,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  Divider(
+                                    thickness: 1,
+                                    color: dividerColor,
+                                    indent: 30,
+                                    endIndent: 30,
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/send-small-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Dropoff',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: textHaveAccountColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Syne-Regular',
+                                                ),
+                                              ),
+                                              SizedBox(width: size.width * 0.3),
+                                              Text(
+                                                '$currencyUnit ',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: orangeColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                              ),
+                                              Tooltip(
+                                                message:
+                                                    "${widget.singleData?["destin_total_charges"]}",
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.18,
+                                                  child: AutoSizeText(
+                                                    "${widget.singleData?["destin_total_charges"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                    maxFontSize: 14,
+                                                    minFontSize: 12,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${widget.singleData?["destin_address"]}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.62,
+                                              child: AutoSizeText(
+                                                "${widget.singleData?["destin_address"]}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                                minFontSize: 14,
+                                                maxFontSize: 14,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    Positioned(
+                      top: 680,
+                      left: 165,
+                      child: Align(
+                        alignment: const Alignment(0.5, 0.5),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              opened = !opened;
+                            });
+                          },
+                          child: opened
+                              ? detailsButtonUp(context)
+                              : detailsButtonDown(context),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+
                 Positioned(
                   bottom: 15,
                   left: 0,

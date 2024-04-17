@@ -11,6 +11,7 @@ import 'package:deliver_client/models/get_payment_getaways_model.dart';
 
 // bool isSelectedBank = true;
 bool isSelectedCash = false;
+bool isSelectedCard = false;
 
 class PaymentMethodByReceiverSheet extends StatefulWidget {
   final Map? singleData;
@@ -73,8 +74,8 @@ class _PaymentMethodByReceiverSheetState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       paymentMethodByReceiverSheet(
         context,
-        // bank: "Bank",
-        // imageBank: "assets/images/pay-bank-icon.svg",
+        card: "Card",
+        imageCard: "assets/images/pay-card-icon.svg",
         cash: "Cash",
         imageCash: "assets/images/pay-cash-icon.svg",
         select: "Select",
@@ -96,6 +97,8 @@ class _PaymentMethodByReceiverSheetState
     cash,
     imageCash,
     select,
+    imageCard,
+    card,
   }) {
     var size = MediaQuery.of(context).size;
     return showModalBottomSheet(
@@ -134,153 +137,239 @@ class _PaymentMethodByReceiverSheetState
                     ),
                   ),
                   SizedBox(height: size.height * 0.04),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        // GestureDetector(
-                        //   onTap: () async {
-                        //     await getPaymentGateways();
-                        //     setState(() {
-                        //       isSelectedBank = true;
-                        //       isSelectedCash = false;
-                        //     });
-                        //   },
-                        //   child: Stack(
-                        //     children: [
-                        //       Container(
-                        //         color: transparentColor,
-                        //         width: MediaQuery.of(context).size.width * 0.42,
-                        //         height: MediaQuery.of(context).size.height * 0.15,
-                        //       ),
-                        //       Positioned(
-                        //         bottom: 0,
-                        //         child: Container(
-                        //           width: MediaQuery.of(context).size.width * 0.42,
-                        //           height: MediaQuery.of(context).size.height * 0.12,
-                        //           decoration: BoxDecoration(
-                        //             color: isSelectedBank == true
-                        //                 ? orangeColor
-                        //                 : const Color(0xFFEBEBEB),
-                        //             borderRadius: BorderRadius.circular(15),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Positioned(
-                        //         bottom: 35,
-                        //         left: 0,
-                        //         right: 0,
-                        //         child: Text(
-                        //           bank,
-                        //           textAlign: TextAlign.center,
-                        //           style: TextStyle(
-                        //             color: isSelectedBank == true
-                        //                 ? whiteColor
-                        //                 : drawerTextColor,
-                        //             fontSize: 16,
-                        //             fontFamily: 'Syne-Bold',
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Positioned(
-                        //         bottom: 15,
-                        //         left: 0,
-                        //         right: 0,
-                        //         child: Text(
-                        //           select,
-                        //           textAlign: TextAlign.center,
-                        //           style: TextStyle(
-                        //             color: isSelectedBank == true
-                        //                 ? whiteColor
-                        //                 : supportTextColor,
-                        //             fontSize: 14,
-                        //             fontFamily: 'Syne-Regular',
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Positioned(
-                        //         top: 0,
-                        //         left: 0,
-                        //         right: 0,
-                        //         child: SvgPicture.asset(imageBank),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              // isSelectedBank = false;
-                              isSelectedCash = true;
-                            });
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                color: transparentColor,
-                                width: MediaQuery.of(context).size.width * 0.5,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //   children: [
+                      //     GestureDetector(
+                      //       onTap: () {
+                      //         setState(() {
+                      //           isSelectedCard = true;
+                      //         });
+                      //       },
+                      //       child: Stack(
+                      //         children: [
+                      //           Container(
+                      //             color: transparentColor,
+                      //             width:
+                      //                 MediaQuery.of(context).size.width * 0.42,
+                      //             height:
+                      //                 MediaQuery.of(context).size.height * 0.15,
+                      //             // width: MediaQuery.of(context).size.width *
+                      //             //     0.5,
+                      //             // height:
+                      //             //     MediaQuery.of(context).size.height *
+                      //             //         0.17,
+                      //           ),
+                      //           Positioned(
+                      //             bottom: 0,
+                      //             child: Container(
+                      //               width: MediaQuery.of(context).size.width *
+                      //                   0.42,
+                      //               height: MediaQuery.of(context).size.height *
+                      //                   0.12,
+                      //               // width:
+                      //               //     MediaQuery.of(context).size.width * 0.5,
+                      //               // height: MediaQuery.of(context).size.height *
+                      //               //     0.14,
+                      //               decoration: BoxDecoration(
+                      //                 color: isSelectedCard == true
+                      //                     ? orangeColor
+                      //                     : const Color(0xFFEBEBEB),
+                      //                 borderRadius: BorderRadius.circular(15),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Positioned(
+                      //             top: 68,
+                      //             left: 0,
+                      //             right: 0,
+                      //             child: Text(
+                      //               card,
+                      //               textAlign: TextAlign.center,
+                      //               style: TextStyle(
+                      //                 color: isSelectedCard == true
+                      //                     ? whiteColor
+                      //                     : drawerTextColor,
+                      //                 fontSize: 16,
+                      //                 fontFamily: 'Syne-Bold',
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Positioned(
+                      //             top: 90,
+                      //             left: 0,
+                      //             right: 0,
+                      //             child: Text(
+                      //               select,
+                      //               textAlign: TextAlign.center,
+                      //               style: TextStyle(
+                      //                 color: isSelectedCard == true
+                      //                     ? whiteColor
+                      //                     : supportTextColor,
+                      //                 fontSize: 14,
+                      //                 fontFamily: 'Syne-Regular',
+                      //               ),
+                      //             ),
+                      //           ),
+                      //           Positioned(
+                      //             top: 0,
+                      //             left: 0,
+                      //             right: 0,
+                      //             child: SvgPicture.asset(imageCard),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // GestureDetector(
+                      //   onTap: () async {
+                      //     await getPaymentGateways();
+                      //     setState(() {
+                      //       isSelectedBank = true;
+                      //       isSelectedCash = false;
+                      //     });
+                      //   },
+                      //   child: Stack(
+                      //     children: [
+                      //       Container(
+                      //         color: transparentColor,
+                      //         width: MediaQuery.of(context).size.width * 0.42,
+                      //         height: MediaQuery.of(context).size.height * 0.15,
+                      //       ),
+                      //       Positioned(
+                      //         bottom: 0,
+                      //         child: Container(
+                      //           width: MediaQuery.of(context).size.width * 0.42,
+                      //           height: MediaQuery.of(context).size.height * 0.12,
+                      //           decoration: BoxDecoration(
+                      //             color: isSelectedBank == true
+                      //                 ? orangeColor
+                      //                 : const Color(0xFFEBEBEB),
+                      //             borderRadius: BorderRadius.circular(15),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         bottom: 35,
+                      //         left: 0,
+                      //         right: 0,
+                      //         child: Text(
+                      //           bank,
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //             color: isSelectedBank == true
+                      //                 ? whiteColor
+                      //                 : drawerTextColor,
+                      //             fontSize: 16,
+                      //             fontFamily: 'Syne-Bold',
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         bottom: 15,
+                      //         left: 0,
+                      //         right: 0,
+                      //         child: Text(
+                      //           select,
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //             color: isSelectedBank == true
+                      //                 ? whiteColor
+                      //                 : supportTextColor,
+                      //             fontSize: 14,
+                      //             fontFamily: 'Syne-Regular',
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         top: 0,
+                      //         left: 0,
+                      //         right: 0,
+                      //         child: SvgPicture.asset(imageBank),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            // isSelectedBank = false;
+                            isSelectedCash = true;
+                          });
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              color: transparentColor,
+                              width: MediaQuery.of(context).size.width * 0.42,
+                              height: MediaQuery.of(context).size.height * 0.15,
+                              // width: MediaQuery.of(context).size.width * 0.5,
+                              // height:
+                              //     MediaQuery.of(context).size.height * 0.17,
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.42,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.17,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.14,
-                                  decoration: BoxDecoration(
-                                    color: isSelectedCash == true
-                                        ? orangeColor
-                                        : const Color(0xFFEBEBEB),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
+                                    MediaQuery.of(context).size.height * 0.12,
+                                // width: MediaQuery.of(context).size.width * 0.5,
+                                // height:
+                                //     MediaQuery.of(context).size.height * 0.14,
+                                decoration: BoxDecoration(
+                                  color: isSelectedCash == true
+                                      ? orangeColor
+                                      : const Color(0xFFEBEBEB),
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
                               ),
-                              Positioned(
-                                top: 68,
-                                left: 0,
-                                right: 0,
-                                child: Text(
-                                  cash,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: isSelectedCash == true
-                                        ? whiteColor
-                                        : drawerTextColor,
-                                    fontSize: 16,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
+                            ),
+                            Positioned(
+                              top: 68,
+                              left: 0,
+                              right: 0,
+                              child: Text(
+                                cash,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isSelectedCash == true
+                                      ? whiteColor
+                                      : drawerTextColor,
+                                  fontSize: 16,
+                                  fontFamily: 'Syne-Bold',
                                 ),
                               ),
-                              Positioned(
-                                top: 90,
-                                left: 0,
-                                right: 0,
-                                child: Text(
-                                  select,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: isSelectedCash == true
-                                        ? whiteColor
-                                        : supportTextColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Syne-Regular',
-                                  ),
+                            ),
+                            Positioned(
+                              top: 90,
+                              left: 0,
+                              right: 0,
+                              child: Text(
+                                select,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isSelectedCash == true
+                                      ? whiteColor
+                                      : supportTextColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Syne-Regular',
                                 ),
                               ),
-                              Positioned(
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                child: SvgPicture.asset(imageCash),
-                              ),
-                            ],
-                          ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: SvgPicture.asset(imageCash),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: size.height * 0.04),
                   GestureDetector(

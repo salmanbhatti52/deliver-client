@@ -137,37 +137,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   //   }
   // }
 
-  void getStoragePermission() async {
-    PermissionStatus status = await Permission.storage.request();
+  // void getStoragePermission() async {
+  //   PermissionStatus status = await Permission.storage.request();
 
-    if (status.isGranted) {
-      // Permission granted, navigate to the next screen
-    } else if (status.isDenied || status.isPermanentlyDenied) {
-      // Permission denied, show a message and provide information
-      showStoragePermissionSnackBar();
-    }
-  }
+  //   if (status.isGranted) {
+  //     // Permission granted, navigate to the next screen
+  //   } else if (status.isDenied || status.isPermanentlyDenied) {
+  //     // Permission denied, show a message and provide information
+  //     showStoragePermissionSnackBar();
+  //   }
+  // }
 
-  void showStoragePermissionSnackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      CustomSnackBarWithBtn(
-        message:
-            "Photo Library permission is required\nto change profile picture.",
-        buttonText: "Grant Permission",
-        onPressed: () {
-          openAppSettings();
-        },
-      ),
-    );
-  }
+  // void showStoragePermissionSnackBar() {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     CustomSnackBarWithBtn(
+  //       message:
+  //           "Photo Library permission is required\nto change profile picture.",
+  //       buttonText: "Grant Permission",
+  //       onPressed: () {
+  //         openAppSettings();
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   void initState() {
     super.initState();
-    getStoragePermission();
+    // getStoragePermission();
     debugPrint("firstName: ${widget.firstName}");
     debugPrint("lastName: ${widget.lastName}");
     debugPrint("imageUrl: ${widget.image}");
+    firstNameController.text = widget.firstName!;
+    lastNameController.text = widget.lastName!;
   }
 
   @override
@@ -222,26 +224,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            width: 180,
-                            height: 180,
-                            decoration: BoxDecoration(
-                              color: transparentColor,
+                          child: GestureDetector(
+                            onTap: () {
+                              pickImageGallery();
+                            },
+                            child: Container(
+                              width: 180,
+                              height: 180,
+                              decoration: BoxDecoration(
+                                color: transparentColor,
+                              ),
+                              child: imagePathGallery != null
+                                  ? Image.file(
+                                      imagePathGallery!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : FadeInImage(
+                                      placeholder: const AssetImage(
+                                        "assets/images/user-profile.png",
+                                      ),
+                                      image: NetworkImage(
+                                        '$imageUrl${widget.image}',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
-                            child: imagePathGallery != null
-                                ? Image.file(
-                                    imagePathGallery!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : FadeInImage(
-                                    placeholder: const AssetImage(
-                                      "assets/images/user-profile.png",
-                                    ),
-                                    image: NetworkImage(
-                                      '$imageUrl${widget.image}',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
                           ),
                         ),
                         Positioned(

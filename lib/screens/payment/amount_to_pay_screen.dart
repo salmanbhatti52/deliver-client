@@ -340,21 +340,23 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                             overflow: TextOverflow.clip,
                             textAlign: TextAlign.center,
                             text: TextSpan(
-                              text: widget.singleData!.isNotEmpty
-                                  ? widget.singleData!['total_charges']
-                                  : widget.multipleData!['total_charges'],
-                              style: TextStyle(
-                                color: orangeColor,
-                                fontSize: 26,
-                                fontFamily: 'Inter-Bold',
-                              ),
                               children: [
                                 TextSpan(
                                   text: '₦',
                                   style: TextStyle(
                                     color: orangeColor,
-                                    fontSize: 20,
+                                    fontSize: 26,
                                     fontFamily: 'Inter-Regular',
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: widget.singleData!.isNotEmpty
+                                      ? widget.singleData!['total_charges']
+                                      : widget.multipleData!['total_charges'],
+                                  style: TextStyle(
+                                    color: orangeColor,
+                                    fontSize: 26,
+                                    fontFamily: 'Inter-Bold',
                                   ),
                                 ),
                               ],

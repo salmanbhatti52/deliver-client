@@ -3,7 +3,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -84,10 +86,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   LatLng? selectedAddressLocation;
   BitmapDescriptor? customMarkerIcon;
   Future<void> googleAnalytics(String input) async {
-    var headersList = {
-      'Accept': '*/*',
-      'Content-Type': 'application/json'
-    };
+    var headersList = {'Accept': '*/*', 'Content-Type': 'application/json'};
     var url = Uri.parse('https://deliver.eigix.net/api/add_google_api_hit');
 
     var body = {"url": input};
@@ -99,7 +98,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
     var res = await req.send();
     final resBody = await res.stream.bytesToString();
 
-    if (res.statusCode == 200 ) {
+    if (res.statusCode == 200) {
       print(resBody);
     } else {
       print(res.reasonPhrase);
@@ -760,14 +759,25 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                     ),
                   ),
                 ),
+
                 SizedBox(height: size.height * 0.015),
                 Container(
                   color: transparentColor,
-                  width: size.width * 0.8,
+                  width: size.width * 0.80,
                   child: TextFormField(
                     controller: widget.receiversNumberController,
                     cursorColor: orangeColor,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Contact Number is required!';
+                      }
+                      return null;
+                    },
                     style: TextStyle(
                       color: blackColor,
                       fontSize: 14,
@@ -814,17 +824,138 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                           width: 1,
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      hintText: "Receiver's Phone Number",
+                      // contentPadding: EdgeInsets.symmetric(
+                      //   horizontal: screenWidth * 0.04,
+                      //   vertical: screenHeight * 0.02,
+                      // ),
+                      hintText: "Contact Number",
                       hintStyle: TextStyle(
                         color: hintColor,
                         fontSize: 12,
                         fontFamily: 'Inter-Light',
                       ),
+                      prefixIcon: GestureDetector(
+                        onTap: () async {
+                          final code =
+                              await countryPicker.showPicker(context: context);
+                          setState(() {
+                            countryCode = code;
+                          });
+                          debugPrint('countryName: ${countryCode!.name}');
+                          debugPrint('countryCode: ${countryCode!.code}');
+                          debugPrint(
+                              'countryDialCode: ${countryCode!.dialCode}');
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Container(
+                                child: countryCode != null
+                                    ? Image.asset(
+                                        countryCode!.flagUri,
+                                        package: countryCode!.flagImagePackage,
+                                        width: 25,
+                                        height: 20,
+                                      )
+                                    : SvgPicture.asset(
+                                        'assets/images/flag-icon.svg',
+                                      ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                countryCode?.dialCode ?? "+234",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: hintColor,
+                                  fontSize: 12,
+                                  fontFamily: 'Inter-Light',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            Text(
+                              '|',
+                              style: TextStyle(
+                                color: hintColor,
+                                fontSize: 12,
+                                fontFamily: 'Inter-SemiBold',
+                              ),
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
+                // Container(
+                //   color: transparentColor,
+                //   width: size.width * 0.8,
+                //   child: TextFormField(
+                //     controller: widget.receiversNumberController,
+                //     cursorColor: orangeColor,
+                //     keyboardType: TextInputType.phone,
+                //     style: TextStyle(
+                //       color: blackColor,
+                //       fontSize: 14,
+                //       fontFamily: 'Inter-Regular',
+                //     ),
+                //     decoration: InputDecoration(
+                //       filled: true,
+                //       fillColor: filledColor,
+                //       errorStyle: TextStyle(
+                //         color: redColor,
+                //         fontSize: 10,
+                //         fontFamily: 'Inter-Bold',
+                //       ),
+                //       border: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       enabledBorder: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       focusedBorder: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       focusedErrorBorder: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       errorBorder: OutlineInputBorder(
+                //         borderRadius: const BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide(
+                //           color: redColor,
+                //           width: 1,
+                //         ),
+                //       ),
+                //       contentPadding: const EdgeInsets.symmetric(
+                //           horizontal: 20, vertical: 10),
+                //       hintText: "Receiver's Phone Number",
+                //       hintStyle: TextStyle(
+                //         color: hintColor,
+                //         fontSize: 12,
+                //         fontFamily: 'Inter-Light',
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -832,4 +963,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
       ),
     );
   }
+
+  final countryPicker = const FlCountryCodePicker();
+  CountryCode? countryCode =
+      const CountryCode(name: 'Nigeria', code: 'NG', dialCode: '+234');
 }

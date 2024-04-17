@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:deliver_client/models/get_distance_addresses_model.dart';
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +17,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:google_maps_webservice_ex/places.dart';
-import 'package:flutter/services.dart' show SystemNavigator, rootBundle;
+import 'package:flutter/services.dart'
+    show
+        FilteringTextInputFormatter,
+        LengthLimitingTextInputFormatter,
+        SystemNavigator,
+        rootBundle;
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/widgets/home_textfields.dart';
@@ -43,7 +49,7 @@ class NewScreen extends StatefulWidget {
   State<NewScreen> createState() => _NewScreenState();
 }
 
-class _NewScreenState extends State<NewScreen> {
+class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   TextEditingController pickupController = TextEditingController();
   TextEditingController searchController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
@@ -1046,9 +1052,11 @@ class _NewScreenState extends State<NewScreen> {
     }
   }
 
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     getAddresses();
     getServiceTypes();
     getBookingsType();
@@ -1082,93 +1090,1997 @@ class _NewScreenState extends State<NewScreen> {
   void dispose() {
     dragController.dispose();
     pageController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
+  void didChangeMetrics() {
+    final value = WidgetsBinding.instance.window.viewInsets.bottom;
+    if (value > 0) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
+
+  final countryPicker = const FlCountryCodePicker();
+  CountryCode? countryCode =
+      const CountryCode(name: 'Nigeria', code: 'NG', dialCode: '+234');
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-        backgroundColor: bgColor,
-        body: doubleSystemLat != null
-            ? Container(
-                color: transparentColor,
-                width: size.width,
-                height: size.height,
-                child: Stack(
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    double fontSize = screenHeight * 0.02;
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: doubleSystemLat != null
+          ? ListView(
+              controller: _scrollController,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      color: transparentColor,
-                      width: size.width,
-                      height: size.height * 0.631,
-                      child: GoogleMap(
-                        onMapCreated: (controller) {
-                          mapController = controller;
-                        },
-                        mapType: MapType.normal,
-                        myLocationEnabled: true,
-                        zoomControlsEnabled: false,
-                        padding: const EdgeInsets.only(top: 410, right: 10),
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            doubleSystemLat != null ? doubleSystemLat! : 0.0,
-                            doubleSystemLng != null ? doubleSystemLng! : 0.0,
-                          ),
-                          zoom: 6,
+                    SizedBox(height: size.height * 0.03),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "Select service type",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: drawerTextColor,
+                          fontSize: 20,
+                          fontFamily: 'Syne-Bold',
                         ),
-                        markers: {
-                          if (currentLocation != null)
-                            Marker(
-                              markerId: const MarkerId('currentLocation'),
-                              position: currentLocation!,
-                              icon: customMarkerIcon ??
-                                  BitmapDescriptor.defaultMarker,
-                            ),
-                          if (selectedLocation != null)
-                            Marker(
-                              markerId: const MarkerId('selectedLocation'),
-                              position: selectedLocation!,
-                              icon: customMarkerIcon ??
-                                  BitmapDescriptor.defaultMarker,
-                            ),
-                          if (selectedAddressLocation != null)
-                            Marker(
-                              markerId:
-                                  const MarkerId('selectedAddressLocation'),
-                              position: selectedAddressLocation!,
-                              icon: customMarkerIcon ??
-                                  BitmapDescriptor.defaultMarker,
-                            ),
-                        },
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: bottomDetailsSheet(
-                        context,
-                      ), // Add the bottom sheet here
+                    SizedBox(height: size.height * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            vehiclesType.clear();
+                            selectedVehicle = null;
+                            getVehiclesByServiceType(courierId);
+                            setState(() {
+                              isSelectedBus = false;
+                              isSelectedCourier = true;
+                              debugPrint("courierId: $courierId");
+                            });
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                color: transparentColor,
+                                width: MediaQuery.of(context).size.width * 0.43,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.14,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.43,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                  decoration: BoxDecoration(
+                                    color: isSelectedCourier == true
+                                        ? orangeColor
+                                        : const Color(0xFFEBEBEB),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 20,
+                                left: 0,
+                                right: 0,
+                                child: Text(
+                                  "Deliver a Parcel",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: isSelectedCourier == true
+                                        ? whiteColor
+                                        : drawerTextColor,
+                                    fontSize: fontSize,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 5,
+                                left: 0,
+                                right: 0,
+                                child: SvgPicture.asset(
+                                  "assets/images/login-parcel-icon.svg",
+                                  width: size.width * 0.07,
+                                  height: size.height * 0.07,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: size.width * 0.04),
+                        GestureDetector(
+                          onTap: () async {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Service Unavailable',
+                                    style: TextStyle(
+                                      color: orangeColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  content: const Text(
+                                    'This service is not available at the moment.',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                  backgroundColor: Colors.white,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                  ),
+                                );
+                              },
+                            );
+                            // vehiclesType.clear();
+                            // selectedVehicle = null;
+                            // getVehiclesByServiceType(otherId);
+                            // setState(() {
+                            //   isSelectedBus = true;
+                            //   isSelectedCourier = false;
+                            //   debugPrint("otherId: $otherId");
+                            // });
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                color: transparentColor,
+                                width: MediaQuery.of(context).size.width * 0.43,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.14,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.43,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                  decoration: BoxDecoration(
+                                    color: isSelectedBus == true
+                                        ? orangeColor
+                                        : const Color(0xFFEBEBEB),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 20,
+                                left: 0,
+                                right: 0,
+                                child: Text(
+                                  "Book a Van",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: isSelectedBus == true
+                                        ? whiteColor
+                                        : drawerTextColor,
+                                    fontSize: fontSize,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                top: 5,
+                                left: 0,
+                                right: 0,
+                                child: SvgPicture.asset(
+                                  "assets/images/login-truck-icon.svg",
+                                  width: size.width * 0.07,
+                                  height: size.height * 0.07,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
+                    SizedBox(height: size.height * 0.03),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                for (int i = 0;
+                                    i < 5 && i < distanceDurationList.length;
+                                    i++) {
+                                  final entry = distanceDurationList[i];
+                                  debugPrint(
+                                      "distanceDurationList[$i]: $entry");
+                                }
+                              });
+                            },
+                            child: Text(
+                              "Find best rider?",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: drawerTextColor,
+                                fontSize: 20,
+                                fontFamily: 'Syne-Bold',
+                              ),
+                            ),
+                          ),
+                          if (selectedRadio == 1)
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelectedAddress = true;
+                                    });
+                                  },
+                                  child: isSelectedAddress == true
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isSelectedAddress = false;
+                                            });
+                                          },
+                                          child: SvgPicture.asset(
+                                            'assets/images/checkmark-icon.svg',
+                                          ),
+                                        )
+                                      : SvgPicture.asset(
+                                          'assets/images/uncheckmark-icon.svg',
+                                        ),
+                                ),
+                                SizedBox(width: size.width * 0.01),
+                                Text(
+                                  "Saved Addresses",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: drawerTextColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if (selectedRadio == 2)
+                            Row(
+                              children: [
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     removePage();
+                                //     setState(() {});
+                                //   },
+                                //   child: SvgPicture.asset(
+                                //     'assets/images/minus-icon.svg',
+                                //   ),
+                                // ),
+                                // SizedBox(width: size.width * 0.02),
+                                // GestureDetector(
+                                //   onTap: () {
+                                //     addPage();
+                                //     setState(() {});
+                                //   },
+                                //   child: SvgPicture.asset(
+                                //     'assets/images/add-icon.svg',
+                                //   ),
+                                // ),
+                                SizedBox(width: size.width * 0.03),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isSelectedAddress = true;
+                                    });
+                                  },
+                                  child: isSelectedAddress == true
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isSelectedAddress = false;
+                                            });
+                                          },
+                                          child: SvgPicture.asset(
+                                            'assets/images/checkmark-icon.svg',
+                                          ),
+                                        )
+                                      : SvgPicture.asset(
+                                          'assets/images/uncheckmark-icon.svg',
+                                        ),
+                                ),
+                                SizedBox(width: size.width * 0.01),
+                                Text(
+                                  "Saved Addresses",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: drawerTextColor,
+                                    fontSize: 12,
+                                    fontFamily: 'Syne-Bold',
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.005),
+                    Theme(
+                      data: ThemeData(
+                        unselectedWidgetColor: orangeColor,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Radio(
+                                value: 1,
+                                groupValue: selectedRadio,
+                                activeColor: orangeColor,
+                                visualDensity: VisualDensity.compact,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedRadio = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                "Single Delivery",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: drawerTextColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Syne-Bold',
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Radio(
+                                value: 2,
+                                groupValue: selectedRadio,
+                                activeColor: orangeColor,
+                                visualDensity: VisualDensity.compact,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedRadio = value!;
+                                  });
+                                },
+                              ),
+                              Text(
+                                "Multiple Delivery",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: drawerTextColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Syne-Bold',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.015),
+                    if (selectedRadio == 1) singleTextField(),
+                    if (selectedRadio == 2) multiPageView(),
+                    SizedBox(height: size.height * 0.012),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/info-icon.svg",
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Expanded(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButtonFormField(
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(top: 3),
+                                    child: SvgPicture.asset(
+                                      'assets/images/dropdown-icon.svg',
+                                      width: 5,
+                                      height: 5,
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: filledColor,
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide(
+                                        color: redColor,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    hintText: 'Select Vehicle',
+                                    hintStyle: TextStyle(
+                                      color: hintColor,
+                                      fontSize: 12,
+                                      fontFamily: 'Inter-Light',
+                                    ),
+                                    errorStyle: TextStyle(
+                                      color: redColor,
+                                      fontSize: 10,
+                                      fontFamily: 'Inter-Bold',
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.only(right: 5),
+                                  borderRadius: BorderRadius.circular(10),
+                                  items: vehiclesType
+                                      .map(
+                                        (item) => DropdownMenuItem<String>(
+                                          value: item,
+                                          child: Text(
+                                            item,
+                                            style: TextStyle(
+                                              color: blackColor,
+                                              fontSize: 14,
+                                              fontFamily: 'Inter-Regular',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                  value: selectedVehicle,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedVehicle = value;
+                                      debugPrint("selectedVehicle: $value");
+                                      if (getVehiclesByServiceTypeModel.data !=
+                                          null) {
+                                        for (int i = 0;
+                                            i <
+                                                getVehiclesByServiceTypeModel
+                                                    .data!.length;
+                                            i++) {
+                                          if (getVehiclesByServiceTypeModel
+                                                  .data?[i].name ==
+                                              value) {
+                                            vehicleId =
+                                                getVehiclesByServiceTypeModel
+                                                    .data?[i].vehiclesId
+                                                    .toString();
+                                            debugPrint(
+                                                'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
+                                          }
+                                        }
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.015),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/info-icon.svg",
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Expanded(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButtonFormField(
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(top: 3),
+                                    child: SvgPicture.asset(
+                                      'assets/images/dropdown-icon.svg',
+                                      width: 5,
+                                      height: 5,
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: filledColor,
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                      borderSide: BorderSide(
+                                        color: redColor,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    hintText: 'Select Booking Type',
+                                    hintStyle: TextStyle(
+                                      color: hintColor,
+                                      fontSize: 12,
+                                      fontFamily: 'Inter-Light',
+                                    ),
+                                    errorStyle: TextStyle(
+                                      color: redColor,
+                                      fontSize: 10,
+                                      fontFamily: 'Inter-Bold',
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.only(right: 5),
+                                  borderRadius: BorderRadius.circular(10),
+                                  items: bookingType
+                                      .map(
+                                        (item) => DropdownMenuItem<String>(
+                                          value: item,
+                                          child: Text(
+                                            item,
+                                            style: TextStyle(
+                                              color: blackColor,
+                                              fontSize: 14,
+                                              fontFamily: 'Inter-Regular',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                  value: selectedBookingType,
+                                  onChanged: (value) async {
+                                    selectedBookingType = value;
+                                    debugPrint("selectedBookingType: $value");
+                                    if (getBookingsTypeModel.data != null) {
+                                      for (int i = 0;
+                                          i < getBookingsTypeModel.data!.length;
+                                          i++) {
+                                        if ("${getBookingsTypeModel.data?[i].name}" ==
+                                            value) {
+                                          bookingsTypeId = getBookingsTypeModel
+                                              .data?[i].bookingsTypesId
+                                              .toString();
+                                          debugPrint(
+                                              'bookingsTypeId: $bookingsTypeId');
+                                        }
+                                      }
+                                    }
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (selectedRadio == 2)
+                      Column(
+                        children: [
+                          SizedBox(height: size.height * 0.025),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        removePage();
+                                        setState(() {});
+                                      },
+                                      child: Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/images/minus-icon.svg',
+                                          ),
+                                          SizedBox(width: size.width * 0.01),
+                                          const Text('Del Pickups'),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  if (pageController.page!.toInt() > 0) {
+                                    pageController.previousPage(
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
+                                      curve: Curves.easeInOut,
+                                    );
+                                  }
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/images/orange-left-arrow-icon.svg',
+                                ),
+                              ),
+                              SizedBox(width: size.width * 0.02),
+                              DotsIndicator(
+                                dotsCount: pages.length,
+                                position: currentIndex,
+                                decorator: DotsDecorator(
+                                  color: dotsColor, // Inactive color
+                                  activeColor: orangeColor,
+                                  spacing:
+                                      const EdgeInsets.symmetric(horizontal: 3),
+                                ),
+                                onTap: (index) {
+                                  pageController.animateToPage(
+                                    currentIndex = index,
+                                    duration: const Duration(
+                                      milliseconds: 500,
+                                    ),
+                                    curve: Curves.linear,
+                                  );
+                                },
+                              ),
+                              SizedBox(width: size.width * 0.02),
+                              GestureDetector(
+                                onTap: () {
+                                  if (pageController.page!.toInt() <
+                                      pages.length - 1) {
+                                    pageController.nextPage(
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
+                                      curve: Curves.easeInOut,
+                                    );
+                                  }
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/images/orange-right-arrow-icon.svg',
+                                ),
+                              ),
+                              SizedBox(width: size.width * 0.02),
+                              GestureDetector(
+                                onTap: () {
+                                  addPage();
+                                  setState(() {});
+                                },
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/images/add-icon.svg',
+                                    ),
+                                    SizedBox(width: size.width * 0.01),
+                                    const Text('Add Pickups'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: size.height * 0.025),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              if (selectedRadio == 1) {
+                                if (pickupController.text.isEmpty ||
+                                    destinationController.text.isEmpty ||
+                                    receiversNameController.text.isEmpty ||
+                                    receiversNumberController.text.isEmpty ||
+                                    selectedVehicle == null ||
+                                    selectedBookingType == null) {
+                                  if (pickupController.text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill pickup address!",
+                                    );
+                                  } else if (destinationController
+                                      .text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message:
+                                          "Please fill destination address!",
+                                    );
+                                  } else if (receiversNameController
+                                      .text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill receiver's name!",
+                                    );
+                                  } else if (receiversNumberController
+                                      .text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill receiver's number!",
+                                    );
+                                  } else if (selectedVehicle == null) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please select a vehicle!",
+                                    );
+                                  } else if (selectedBookingType == null) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please select booking type!",
+                                    );
+                                  }
+                                } else {
+                                  setState(() {
+                                    isLoading2 = true;
+                                  });
+                                  await calculateDistanceTimeSingle();
+                                  if (double.parse(distance!.split(" ")[0]) <=
+                                      1.0) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message:
+                                          "Distance should be greater than 1.0 Km!",
+                                    );
+                                    setState(() {
+                                      isLoading2 = false;
+                                    });
+                                  } else {
+                                    await getChargesSingle(bookingsTypeId);
+                                    if (bookingsTypeId == "1") {
+                                      debugPrint("fromKm: $fromKm");
+                                      debugPrint("toKm: $toKm");
+                                      debugPrint("perKmAmount: $perKmAmount");
+                                      debugPrint("totalDistance: $distance");
+                                      calculateStandardAmount(
+                                          double.parse(fromKm!),
+                                          toKm != "null"
+                                              ? double.parse(toKm!)
+                                              : 0.0,
+                                          double.parse(perKmAmount!),
+                                          double.parse(
+                                              distance!.split(" ")[0]));
+                                    }
+                                    addSingleData = {
+                                      "type": "schedule",
+                                      "vehicles_id": vehicleId,
+                                      "bookings_types_id": bookingsTypeId,
+                                      "delivery_type": selectedRadio == 1
+                                          ? "Single"
+                                          : "Multiple",
+                                      "pickup_address": pickupController.text,
+                                      "pickup_latitude":
+                                          pickupLat ?? currentLat ?? addressLat,
+                                      "pickup_longitude":
+                                          pickupLng ?? currentLng ?? addressLng,
+                                      "destin_address":
+                                          destinationController.text,
+                                      "destin_latitude": destinationLat,
+                                      "destin_longitude": destinationLng,
+                                      "destin_distance":
+                                          distance!.split(" ")[0],
+                                      "destin_time": duration,
+                                      "destin_delivery_charges": "0.00",
+                                      "destin_vat_charges": "0.00",
+                                      "destin_total_charges":
+                                          roundedTotalAmount ?? "0.00",
+                                      "destin_discount": "0.00",
+                                      "destin_discounted_charges": "0.00",
+                                      "receiver_name":
+                                          receiversNameController.text,
+                                      "receiver_phone":
+                                          receiversNumberController.text,
+                                    };
+                                    setState(() {
+                                      isLoading2 = false;
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ScheduleRideScreen(
+                                          selectedRadio: selectedRadio,
+                                          scheduledSingleData: addSingleData,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+                              if (selectedRadio == 2) {
+                                showDialog(
+                                  context: context,
+                                  // barrierDismissible:
+                                  //     false, // Prevents dialog from closing when tapping outside
+                                  builder: (context) {
+                                    return Dialog(
+                                      backgroundColor: Colors
+                                          .transparent, // Make dialog transparent
+                                      elevation: 0, // Remove shadow
+                                      child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: orangeColor,
+                                              strokeWidth: 2,
+                                            ), // Your progress indicator
+                                            const SizedBox(height: 20),
+                                            const Text(
+                                              'Loading Data...',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                                fontFamily: 'Inter-Bold',
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            const Text(
+                                              'Please wait while data is being loaded.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                                await getDistanceAddress();
+                                // Add a delay to ensure data is populated in allDataForIndexes1
+                                Future.delayed(const Duration(seconds: 2),
+                                    () async {
+                                  // Close the loading dialog
+
+                                  if (filteredData.isNotEmpty) {
+                                    if (distance0 != null &&
+                                            double.parse(
+                                                    distance0!.split(" ")[0]) <=
+                                                1.0 ||
+                                        distance1 != null &&
+                                            double.parse(
+                                                    distance1!.split(" ")[0]) <=
+                                                1.0 ||
+                                        distance2 != null &&
+                                            double.parse(
+                                                    distance2!.split(" ")[0]) <=
+                                                1.0 ||
+                                        distance3 != null &&
+                                            double.parse(
+                                                    distance3!.split(" ")[0]) <=
+                                                1.0 ||
+                                        distance4 != null &&
+                                            double.parse(
+                                                    distance4!.split(" ")[0]) <=
+                                                1.0) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message:
+                                            "Distance should be greater than 1.0 Km!",
+                                      );
+                                    } else {
+                                      await getChargesMultiple(bookingsTypeId);
+                                      if (bookingsTypeId == "1") {
+                                        debugPrint("fromKm0: $fromKm0");
+                                        debugPrint("toKm0: $toKm0");
+                                        debugPrint(
+                                            "perKmAmount0: $perKmAmount0");
+                                        debugPrint(
+                                            "totalDistance0: $distance0");
+                                        calculateStandardAmount0(
+                                            double.parse(fromKm0!),
+                                            toKm0 != "null"
+                                                ? double.parse(toKm0!)
+                                                : 0.0,
+                                            double.parse(perKmAmount0!),
+                                            double.parse(
+                                                distance0!.split(" ")[0]));
+                                        debugPrint("fromKm1: $fromKm1");
+                                        debugPrint("toKm1: $toKm1");
+                                        debugPrint(
+                                            "perKmAmount1: $perKmAmount1");
+                                        debugPrint(
+                                            "totalDistance1: $distance1");
+                                        calculateStandardAmount1(
+                                            double.parse(fromKm1!),
+                                            toKm1 != "null"
+                                                ? double.parse(toKm1!)
+                                                : 0.0,
+                                            double.parse(perKmAmount1!),
+                                            double.parse(
+                                                distance1!.split(" ")[0]));
+                                        if (distance2 != null) {
+                                          debugPrint("fromKm2: $fromKm2");
+                                          debugPrint("toKm2: $toKm2");
+                                          debugPrint(
+                                              "perKmAmount2: $perKmAmount2");
+                                          debugPrint(
+                                              "totalDistance2: $distance2");
+                                          calculateStandardAmount2(
+                                              double.parse(fromKm2!),
+                                              toKm2 != "null"
+                                                  ? double.parse(toKm2!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount2!),
+                                              double.parse(
+                                                  distance2!.split(" ")[0]));
+                                        }
+                                        if (distance3 != null) {
+                                          debugPrint("fromKm3: $fromKm3");
+                                          debugPrint("toKm3: $toKm3");
+                                          debugPrint(
+                                              "perKmAmount3: $perKmAmount3");
+                                          debugPrint(
+                                              "totalDistance3: $distance3");
+                                          calculateStandardAmount3(
+                                              double.parse(fromKm3!),
+                                              toKm3 != "null"
+                                                  ? double.parse(toKm3!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount3!),
+                                              double.parse(
+                                                  distance3!.split(" ")[0]));
+                                        }
+                                        if (distance4 != null) {
+                                          debugPrint("fromKm4: $fromKm4");
+                                          debugPrint("toKm4: $toKm4");
+                                          debugPrint(
+                                              "perKmAmount4: $perKmAmount4");
+                                          debugPrint(
+                                              "totalDistance4: $distance4");
+                                          calculateStandardAmount4(
+                                              double.parse(fromKm4!),
+                                              toKm3 != "null"
+                                                  ? double.parse(toKm4!)
+                                                  : 0.0,
+                                              double.parse(perKmAmount4!),
+                                              double.parse(
+                                                  distance4!.split(" ")[0]));
+                                        }
+                                      }
+                                      addMultipleData = {
+                                        "type": "schedule",
+                                        "vehicles_id": vehicleId,
+                                        "bookings_types_id": bookingsTypeId,
+                                        "delivery_type": selectedRadio == 1
+                                            ? "Single"
+                                            : "Multiple",
+                                        "pickup_latitude0":
+                                            "$pickupLat0" != 'null'
+                                                ? "$pickupLat0"
+                                                : "0",
+                                        "pickup_longitude0":
+                                            "$pickupLng0" != 'null'
+                                                ? "$pickupLng0"
+                                                : "0",
+                                        "destin_latitude0":
+                                            "$destinLat0" != 'null'
+                                                ? "$destinLat0"
+                                                : "0",
+                                        "destin_longitude0":
+                                            "$destinLng0" != 'null'
+                                                ? "$destinLng0"
+                                                : "0",
+                                        "pickup_latitude1":
+                                            "$pickupLat1" != 'null'
+                                                ? "$pickupLat1"
+                                                : "0",
+                                        "pickup_longitude1":
+                                            "$pickupLng1" != 'null'
+                                                ? "$pickupLng1"
+                                                : "0",
+                                        "destin_latitude1":
+                                            "$destinLat1" != 'null'
+                                                ? "$destinLat1"
+                                                : "0",
+                                        "destin_longitude1":
+                                            "$destinLng1" != 'null'
+                                                ? "$destinLng1"
+                                                : "0",
+                                        "pickup_latitude2":
+                                            "$pickupLat2" != 'null'
+                                                ? "$pickupLat2"
+                                                : "0",
+                                        "pickup_longitude2":
+                                            "$pickupLat2" != 'null'
+                                                ? "$pickupLat2"
+                                                : "0",
+                                        "destin_latitude2":
+                                            "$destinLat2" != 'null'
+                                                ? "$destinLat2"
+                                                : "0",
+                                        "destin_longitude2":
+                                            "$destinLng2" != 'null'
+                                                ? "$destinLng2"
+                                                : "0",
+                                        "pickup_latitude3":
+                                            "$pickupLat3" != 'null'
+                                                ? "$pickupLat3"
+                                                : "0",
+                                        "pickup_longitude3":
+                                            "$pickupLng3" != 'null'
+                                                ? "$pickupLng3"
+                                                : "0",
+                                        "destin_latitude3":
+                                            "$destinLat3" != 'null'
+                                                ? "$destinLat3"
+                                                : "0",
+                                        "destin_longitude3":
+                                            "$destinLng3" != 'null'
+                                                ? "$destinLng3"
+                                                : "0",
+                                        "pickup_latitude4":
+                                            "$pickupLng4" != 'null'
+                                                ? "$pickupLng4"
+                                                : "0",
+                                        "pickup_longitude4":
+                                            "$pickupLng4" != 'null'
+                                                ? "$pickupLng4"
+                                                : "0",
+                                        "destin_latitude4":
+                                            "$destinLat4" != 'null'
+                                                ? "$destinLat4"
+                                                : "0",
+                                        "destin_longitude4":
+                                            "$destinLng4" != 'null'
+                                                ? "$destinLng4"
+                                                : "0",
+                                        "destin_distance0":
+                                            distance0!.split(" ")[0],
+                                        "destin_time0": duration0,
+                                        "destin_delivery_charges0":
+                                            roundedTotalAmount0 ?? "0.00",
+                                        "destin_vat_charges0": "0.00",
+                                        "destin_total_charges0": "0.00",
+                                        "destin_discount0": "0.00",
+                                        "destin_discounted_charges0": "0.00",
+                                        "destin_distance1":
+                                            distance1!.split(" ")[0],
+                                        "destin_time1": duration1,
+                                        "destin_delivery_charges1":
+                                            roundedTotalAmount1 ?? "0.00",
+                                        "destin_vat_charges1": "0.00",
+                                        "destin_total_charges1": "0.00",
+                                        "destin_discount1": "0.00",
+                                        "destin_discounted_charges1": "0.00",
+                                        "destin_distance2": distance2 != null
+                                            ? distance2!.split(" ")[0]
+                                            : "0.00",
+                                        "destin_time2": duration2,
+                                        "destin_delivery_charges2":
+                                            roundedTotalAmount2 ?? "0.00",
+                                        "destin_vat_charges2": "0.00",
+                                        "destin_total_charges2": "0.00",
+                                        "destin_discount2": "0.00",
+                                        "destin_discounted_charges2": "0.00",
+                                        "destin_distance3": distance3 != null
+                                            ? distance3!.split(" ")[0]
+                                            : "0.00",
+                                        "destin_time3": duration3,
+                                        "destin_delivery_charges3":
+                                            roundedTotalAmount3 ?? "0.00",
+                                        "destin_vat_charges3": "0.00",
+                                        "destin_total_charges3": "0.00",
+                                        "destin_discount3": "0.00",
+                                        "destin_discounted_charges3": "0.00",
+                                        "destin_distance4": distance4 != null
+                                            ? distance4!.split(" ")[0]
+                                            : "0.00",
+                                        "destin_time4": duration4,
+                                        "destin_delivery_charges4":
+                                            roundedTotalAmount4 ?? "0.00",
+                                        "destin_vat_charges4": "0.00",
+                                        "destin_total_charges4": "0.00",
+                                        "destin_discount4": "0.00",
+                                        "destin_discounted_charges4": "0.00",
+                                      };
+
+                                      List<Map<int, dynamic>> indexData =
+                                          List.filled(5, {});
+
+                                      for (var i = 0;
+                                          i < filteredData.length;
+                                          i++) {
+                                        final dataForIndex = filteredData[i];
+                                        final dataIndexString = dataForIndex
+                                            .keys
+                                            .first; // Get the index as a String
+                                        final dataIndex =
+                                            int.tryParse(dataIndexString);
+
+                                        if (dataIndex != null &&
+                                            dataIndex >= 0 &&
+                                            dataIndex <= 4) {
+                                          indexData[dataIndex] = dataForIndex
+                                              .map((key, value) => MapEntry(
+                                                  int.parse(key), value));
+                                        } else {
+                                          debugPrint(
+                                              "Invalid or out of bounds index: $dataIndexString");
+                                        }
+                                      }
+
+                                      // Separate the data into different lists based on their indices
+                                      Map<int, dynamic> indexData0 =
+                                          indexData[0];
+                                      Map<int, dynamic> indexData1 =
+                                          indexData[1];
+                                      Map<int, dynamic> indexData2 =
+                                          indexData[2];
+                                      Map<int, dynamic> indexData3 =
+                                          indexData[3];
+                                      Map<int, dynamic> indexData4 =
+                                          indexData[4];
+
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ScheduleRideScreen(
+                                            indexData0: indexData0,
+                                            indexData1: indexData1,
+                                            indexData2: indexData2,
+                                            indexData3: indexData3,
+                                            indexData4: indexData4,
+                                            selectedRadio: selectedRadio,
+                                            scheduledMultipleData:
+                                                addMultipleData,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                          ),
+                                          insetPadding: const EdgeInsets.only(
+                                              left: 20, right: 20),
+                                          child: SizedBox(
+                                            width: size.width,
+                                            height: size.height * 0.25,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10),
+                                                  child: Column(
+                                                    children: [
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.02),
+                                                      Align(
+                                                        alignment:
+                                                            Alignment.topLeft,
+                                                        child: Text(
+                                                          "Just a moment...",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: orangeColor,
+                                                            fontSize: 20,
+                                                            fontFamily:
+                                                                'Inter-Bold',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.03),
+                                                      Text(
+                                                        'Please make sure data is available before proceeding.',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Regular',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.02),
+                                                    ],
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 140),
+                                                    child:
+                                                        dialogButtonGradientSmall(
+                                                            "OK", context),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                });
+                              }
+                            },
+                            child: isLoading2
+                                ? buttonTransparentGradientSmallWithLoader(
+                                    "Please Wait...", context)
+                                : buttonTransparentGradientSmall(
+                                    "SCHEDULE RIDE",
+                                    context,
+                                  ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              if (selectedRadio == 1) {
+                                if (pickupController.text.isEmpty ||
+                                    destinationController.text.isEmpty ||
+                                    receiversNameController.text.isEmpty ||
+                                    receiversNumberController.text.isEmpty ||
+                                    selectedVehicle == null ||
+                                    selectedBookingType == null) {
+                                  if (pickupController.text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill pickup address!",
+                                    );
+                                  } else if (destinationController
+                                      .text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message:
+                                          "Please fill destination address!",
+                                    );
+                                  } else if (receiversNameController
+                                      .text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill receiver's name!",
+                                    );
+                                  } else if (receiversNumberController
+                                      .text.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill receiver's number!",
+                                    );
+                                  } else if (selectedVehicle == null) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please select a vehicle!",
+                                    );
+                                  } else if (selectedBookingType == null) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please select booking type!",
+                                    );
+                                  }
+                                } else {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  await calculateDistanceTimeSingle();
+                                  if (double.parse(distance!.split(" ")[0]) <=
+                                      1.0) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message:
+                                          "Distance should be greater than 1.0 Km!",
+                                    );
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  } else {
+                                    await getChargesSingle(bookingsTypeId);
+                                    if (bookingsTypeId == "1") {
+                                      debugPrint("fromKm: $fromKm");
+                                      debugPrint("toKm: $toKm");
+                                      debugPrint("perKmAmount: $perKmAmount");
+                                      debugPrint("totalDistance: $distance");
+                                      calculateStandardAmount(
+                                          double.parse(fromKm!),
+                                          toKm != "null"
+                                              ? double.parse(toKm!)
+                                              : 0.0,
+                                          double.parse(perKmAmount!),
+                                          double.parse(
+                                              distance!.split(" ")[0]));
+                                    }
+                                    addSingleData = {
+                                      "type": "booking",
+                                      "vehicles_id": vehicleId,
+                                      "bookings_types_id": bookingsTypeId,
+                                      "delivery_type": selectedRadio == 1
+                                          ? "Single"
+                                          : "Multiple",
+                                      "pickup_address": pickupController.text,
+                                      "pickup_latitude":
+                                          pickupLat ?? currentLat ?? addressLat,
+                                      "pickup_longitude":
+                                          pickupLng ?? currentLng ?? addressLng,
+                                      "destin_address":
+                                          destinationController.text,
+                                      "destin_latitude": destinationLat,
+                                      "destin_longitude": destinationLng,
+                                      "destin_distance":
+                                          distance!.split(" ")[0],
+                                      "destin_time": duration,
+                                      "destin_delivery_charges": "0.00",
+                                      "destin_vat_charges": "0.00",
+                                      "destin_total_charges":
+                                          roundedTotalAmount ?? "0.00",
+                                      "destin_discount": "0.00",
+                                      "destin_discounted_charges": "0.00",
+                                      "receiver_name":
+                                          receiversNameController.text,
+                                      "receiver_phone":
+                                          receiversNumberController.text,
+                                    };
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ConfirmSingleDetailsScreen(
+                                          singleData: addSingleData,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+                              if (selectedRadio == 2) {
+                                showDialog(
+                                  context: context,
+                                  // barrierDismissible:
+                                  //     false, // Prevents dialog from closing when tapping outside
+                                  builder: (context) {
+                                    return Dialog(
+                                      backgroundColor: Colors
+                                          .transparent, // Make dialog transparent
+                                      elevation: 0, // Remove shadow
+                                      child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: orangeColor,
+                                              strokeWidth: 2,
+                                            ), // Your progress indicator
+                                            const SizedBox(height: 20),
+                                            const Text(
+                                              'Loading Data...',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                                fontFamily: 'Inter-Bold',
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            const Text(
+                                              'Please wait while data is being loaded.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+
+                                await getDistanceAddress();
+                                // Add a delay to ensure data is populated in allDataForIndexes1
+                                Future.delayed(const Duration(seconds: 2),
+                                    () async {
+                                  // Close the loading dialog
+                                  // Navigator.of(context).pop();
+
+                                  if (filteredData.isNotEmpty) {
+                                    await getChargesMultiple(bookingsTypeId);
+                                    if (bookingsTypeId == "1") {
+                                      debugPrint("fromKm0: $fromKm0");
+                                      debugPrint("toKm0: $toKm0");
+                                      debugPrint("perKmAmount0: $perKmAmount0");
+                                      debugPrint("totalDistance0: $distance0");
+                                      calculateStandardAmount0(
+                                          double.parse(fromKm0!),
+                                          toKm0 != "null"
+                                              ? double.parse(toKm0!)
+                                              : 0.0,
+                                          double.parse(perKmAmount0!),
+                                          double.parse(
+                                              distance0!.split(" ")[0]));
+                                      debugPrint("fromKm1: $fromKm1");
+                                      debugPrint("toKm1: $toKm1");
+                                      debugPrint("perKmAmount1: $perKmAmount1");
+                                      debugPrint("totalDistance1: $distance1");
+                                      calculateStandardAmount1(
+                                          double.parse(fromKm1!),
+                                          toKm1 != "null"
+                                              ? double.parse(toKm1!)
+                                              : 0.0,
+                                          double.parse(perKmAmount1!),
+                                          double.parse(
+                                              distance1!.split(" ")[0]));
+                                      if (distance2 != null) {
+                                        debugPrint("fromKm2: $fromKm2");
+                                        debugPrint("toKm2: $toKm2");
+                                        debugPrint(
+                                            "perKmAmount2: $perKmAmount2");
+                                        debugPrint(
+                                            "totalDistance2: $distance2");
+                                        calculateStandardAmount2(
+                                            double.parse(fromKm2!),
+                                            toKm2 != "null"
+                                                ? double.parse(toKm2!)
+                                                : 0.0,
+                                            double.parse(perKmAmount2!),
+                                            double.parse(
+                                                distance2!.split(" ")[0]));
+                                      }
+                                      if (distance3 != null) {
+                                        debugPrint("fromKm3: $fromKm3");
+                                        debugPrint("toKm3: $toKm3");
+                                        debugPrint(
+                                            "perKmAmount3: $perKmAmount3");
+                                        debugPrint(
+                                            "totalDistance3: $distance3");
+                                        calculateStandardAmount3(
+                                            double.parse(fromKm3!),
+                                            toKm3 != "null"
+                                                ? double.parse(toKm3!)
+                                                : 0.0,
+                                            double.parse(perKmAmount3!),
+                                            double.parse(
+                                                distance3!.split(" ")[0]));
+                                      }
+                                      if (distance4 != null) {
+                                        debugPrint("fromKm4: $fromKm4");
+                                        debugPrint("toKm4: $toKm4");
+                                        debugPrint(
+                                            "perKmAmount4: $perKmAmount4");
+                                        debugPrint(
+                                            "totalDistance4: $distance4");
+                                        calculateStandardAmount4(
+                                            double.parse(fromKm4!),
+                                            toKm3 != "null"
+                                                ? double.parse(toKm4!)
+                                                : 0.0,
+                                            double.parse(perKmAmount4!),
+                                            double.parse(
+                                                distance4!.split(" ")[0]));
+                                      }
+                                    }
+                                    addMultipleData = {
+                                      "type": "booking",
+                                      "vehicles_id": vehicleId,
+                                      "pickup_address":
+                                          "${filteredData[0]["0"]["pickupController"]}",
+                                      "bookings_types_id": bookingsTypeId,
+                                      "delivery_type": selectedRadio == 1
+                                          ? "Single"
+                                          : "Multiple",
+                                      "pickup_latitude0":
+                                          "$pickupLat0" != 'null'
+                                              ? "$pickupLat0"
+                                              : "0",
+                                      "pickup_longitude0":
+                                          "$pickupLng0" != 'null'
+                                              ? "$pickupLng0"
+                                              : "0",
+                                      "destin_latitude0":
+                                          "$destinLat0" != 'null'
+                                              ? "$destinLat0"
+                                              : "0",
+                                      "destin_longitude0":
+                                          "$destinLng0" != 'null'
+                                              ? "$destinLng0"
+                                              : "0",
+                                      "pickup_latitude1":
+                                          "$pickupLat1" != 'null'
+                                              ? "$pickupLat1"
+                                              : "0",
+                                      "pickup_longitude1":
+                                          "$pickupLng1" != 'null'
+                                              ? "$pickupLng1"
+                                              : "0",
+                                      "destin_latitude1":
+                                          "$destinLat1" != 'null'
+                                              ? "$destinLat1"
+                                              : "0",
+                                      "destin_longitude1":
+                                          "$destinLng1" != 'null'
+                                              ? "$destinLng1"
+                                              : "0",
+                                      "pickup_latitude2":
+                                          "$pickupLat2" != 'null'
+                                              ? "$pickupLat2"
+                                              : "0",
+                                      "pickup_longitude2":
+                                          "$pickupLat2" != 'null'
+                                              ? "$pickupLat2"
+                                              : "0",
+                                      "destin_latitude2":
+                                          "$destinLat2" != 'null'
+                                              ? "$destinLat2"
+                                              : "0",
+                                      "destin_longitude2":
+                                          "$destinLng2" != 'null'
+                                              ? "$destinLng2"
+                                              : "0",
+                                      "pickup_latitude3":
+                                          "$pickupLat3" != 'null'
+                                              ? "$pickupLat3"
+                                              : "0",
+                                      "pickup_longitude3":
+                                          "$pickupLng3" != 'null'
+                                              ? "$pickupLng3"
+                                              : "0",
+                                      "destin_latitude3":
+                                          "$destinLat3" != 'null'
+                                              ? "$destinLat3"
+                                              : "0",
+                                      "destin_longitude3":
+                                          "$destinLng3" != 'null'
+                                              ? "$destinLng3"
+                                              : "0",
+                                      "pickup_latitude4":
+                                          "$pickupLng4" != 'null'
+                                              ? "$pickupLng4"
+                                              : "0",
+                                      "pickup_longitude4":
+                                          "$pickupLng4" != 'null'
+                                              ? "$pickupLng4"
+                                              : "0",
+                                      "destin_latitude4":
+                                          "$destinLat4" != 'null'
+                                              ? "$destinLat4"
+                                              : "0",
+                                      "destin_longitude4":
+                                          "$destinLng4" != 'null'
+                                              ? "$destinLng4"
+                                              : "0",
+                                      "destin_distance0":
+                                          distance0!.split(" ")[0],
+                                      "destin_time0": duration0,
+                                      "destin_delivery_charges0":
+                                          roundedTotalAmount0 ?? "0.00",
+                                      "destin_vat_charges0": "0.00",
+                                      "destin_total_charges0": "0.00",
+                                      "destin_discount0": "0.00",
+                                      "destin_discounted_charges0": "0.00",
+                                      "destin_distance1":
+                                          distance1!.split(" ")[0],
+                                      "destin_time1": duration1,
+                                      "destin_delivery_charges1":
+                                          roundedTotalAmount1 ?? "0.00",
+                                      "destin_vat_charges1": "0.00",
+                                      "destin_total_charges1": "0.00",
+                                      "destin_discount1": "0.00",
+                                      "destin_discounted_charges1": "0.00",
+                                      "destin_distance2": distance2 != null
+                                          ? distance2!.split(" ")[0]
+                                          : "0.00",
+                                      "destin_time2": duration2,
+                                      "destin_delivery_charges2":
+                                          roundedTotalAmount2 ?? "0.00",
+                                      "destin_vat_charges2": "0.00",
+                                      "destin_total_charges2": "0.00",
+                                      "destin_discount2": "0.00",
+                                      "destin_discounted_charges2": "0.00",
+                                      "destin_distance3": distance3 != null
+                                          ? distance3!.split(" ")[0]
+                                          : "0.00",
+                                      "destin_time3": duration3,
+                                      "destin_delivery_charges3":
+                                          roundedTotalAmount3 ?? "0.00",
+                                      "destin_vat_charges3": "0.00",
+                                      "destin_total_charges3": "0.00",
+                                      "destin_discount3": "0.00",
+                                      "destin_discounted_charges3": "0.00",
+                                      "destin_distance4": distance4 != null
+                                          ? distance4!.split(" ")[0]
+                                          : "0.00",
+                                      "destin_time4": duration4,
+                                      "destin_delivery_charges4":
+                                          roundedTotalAmount4 ?? "0.00",
+                                      "destin_vat_charges4": "0.00",
+                                      "destin_total_charges4": "0.00",
+                                      "destin_discount4": "0.00",
+                                      "destin_discounted_charges4": "0.00",
+                                    };
+
+                                    debugPrint("filteredData: $filteredData");
+
+                                    List<Map<int, dynamic>> indexData =
+                                        List.filled(5, {});
+
+                                    for (var i = 0;
+                                        i < filteredData.length;
+                                        i++) {
+                                      final dataForIndex = filteredData[i];
+                                      final dataIndexString = dataForIndex.keys
+                                          .first; // Get the index as a String
+                                      final dataIndex =
+                                          int.tryParse(dataIndexString);
+
+                                      if (dataIndex != null &&
+                                          dataIndex >= 0 &&
+                                          dataIndex <= 4) {
+                                        indexData[dataIndex] = dataForIndex.map(
+                                            (key, value) => MapEntry(
+                                                int.parse(key), value));
+                                      } else {
+                                        debugPrint(
+                                            "Invalid or out of bounds index: $dataIndexString");
+                                      }
+                                    }
+
+                                    // Separate the data into different lists based on their indices
+                                    Map<int, dynamic> indexData0 = indexData[0];
+                                    Map<int, dynamic> indexData1 = indexData[1];
+                                    Map<int, dynamic> indexData2 = indexData[2];
+                                    Map<int, dynamic> indexData3 = indexData[3];
+                                    Map<int, dynamic> indexData4 = indexData[4];
+
+                                    debugPrint("indexData0: $indexData0");
+                                    debugPrint("indexData1: $indexData1");
+                                    debugPrint("indexData2: $indexData2");
+                                    debugPrint("indexData3: $indexData3");
+                                    debugPrint("indexData4: $indexData4");
+                                    print("addMultipleData: $addMultipleData");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ConfirmMultipleDetailsScreen(
+                                          indexData0: indexData0,
+                                          indexData1: indexData1,
+                                          indexData2: indexData2,
+                                          indexData3: indexData3,
+                                          indexData4: indexData4,
+                                          multipleData: addMultipleData,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return Dialog(
+                                          backgroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                          ),
+                                          insetPadding: const EdgeInsets.only(
+                                              left: 20, right: 20),
+                                          child: SizedBox(
+                                            width: size.width,
+                                            height: size.height * 0.25,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10),
+                                                  child: Column(
+                                                    children: [
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.02),
+                                                      Align(
+                                                        alignment:
+                                                            Alignment.topLeft,
+                                                        child: Text(
+                                                          "Just a moment...",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: orangeColor,
+                                                            fontSize: 20,
+                                                            fontFamily:
+                                                                'Inter-Bold',
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.03),
+                                                      Text(
+                                                        'Please wait while we are collecting the delivery information before proceeding.',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Regular',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.02),
+                                                    ],
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 140),
+                                                    child:
+                                                        dialogButtonGradientSmall(
+                                                            "OK", context),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                });
+                              }
+                            },
+                            child: isLoading
+                                ? buttonGradientSmallWithLoader(
+                                    "Please Wait...",
+                                    context,
+                                  )
+                                : buttonGradientSmall(
+                                    "FIND RIDER",
+                                    context,
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/info-icon.svg",
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Text(
+                            'Note: Distance must be grater than 1KM',
+                            style: TextStyle(
+                              color: blackColor,
+                              fontSize: 10,
+                              fontFamily: 'Inter-Bold',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/info-icon.svg",
+                          ),
+                          SizedBox(width: size.width * 0.02),
+                          Text(
+                            'Note: Please drag down to see your location on the map.',
+                            style: TextStyle(
+                              color: blackColor,
+                              fontSize: 10,
+                              fontFamily: 'Inter-Bold',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.12),
                   ],
                 ),
-              )
-            : Center(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: transparentColor,
-                  child: lottie.Lottie.asset(
-                    'assets/images/loading-icon.json',
-                    fit: BoxFit.cover,
-                  ),
+              ],
+            )
+          : Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                color: transparentColor,
+                child: lottie.Lottie.asset(
+                  'assets/images/loading-icon.json',
+                  fit: BoxFit.cover,
                 ),
               ),
-      ),
+            ),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   var size = MediaQuery.of(context).size;
+  //   return GestureDetector(
+  //     onTap: () {
+  //       FocusManager.instance.primaryFocus?.unfocus();
+  //     },
+  //     child: Scaffold(
+  //       backgroundColor: bgColor,
+  //       body: doubleSystemLat != null
+  //           ? Container(
+  //               color: transparentColor,
+  //               width: size.width,
+  //               height: size.height,
+  //               child: Stack(
+  //                 children: [
+  //                   Container(
+  //                     color: transparentColor,
+  //                     width: size.width,
+  //                     height: size.height * 0.631,
+  //                     child: GoogleMap(
+  //                       onMapCreated: (controller) {
+  //                         mapController = controller;
+  //                       },
+  //                       mapType: MapType.normal,
+  //                       myLocationEnabled: true,
+  //                       zoomControlsEnabled: false,
+  //                       padding: const EdgeInsets.only(top: 410, right: 10),
+  //                       initialCameraPosition: CameraPosition(
+  //                         target: LatLng(
+  //                           doubleSystemLat != null ? doubleSystemLat! : 0.0,
+  //                           doubleSystemLng != null ? doubleSystemLng! : 0.0,
+  //                         ),
+  //                         zoom: 6,
+  //                       ),
+  //                       markers: {
+  //                         if (currentLocation != null)
+  //                           Marker(
+  //                             markerId: const MarkerId('currentLocation'),
+  //                             position: currentLocation!,
+  //                             icon: customMarkerIcon ??
+  //                                 BitmapDescriptor.defaultMarker,
+  //                           ),
+  //                         if (selectedLocation != null)
+  //                           Marker(
+  //                             markerId: const MarkerId('selectedLocation'),
+  //                             position: selectedLocation!,
+  //                             icon: customMarkerIcon ??
+  //                                 BitmapDescriptor.defaultMarker,
+  //                           ),
+  //                         if (selectedAddressLocation != null)
+  //                           Marker(
+  //                             markerId:
+  //                                 const MarkerId('selectedAddressLocation'),
+  //                             position: selectedAddressLocation!,
+  //                             icon: customMarkerIcon ??
+  //                                 BitmapDescriptor.defaultMarker,
+  //                           ),
+  //                       },
+  //                     ),
+  //                   ),
+  //                   Align(
+  //                     alignment: Alignment.topCenter,
+  //                     child: bottomDetailsSheet(
+  //                       context,
+  //                     ), // Add the bottom sheet here
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           : Center(
+  //               child: Container(
+  //                 width: 100,
+  //                 height: 100,
+  //                 color: transparentColor,
+  //                 child: lottie.Lottie.asset(
+  //                   'assets/images/loading-icon.json',
+  //                   fit: BoxFit.cover,
+  //                 ),
+  //               ),
+  //             ),
+  //     ),
+  //   );
+  // }
 
   List<TextEditingController> pickupControllers =
       List.generate(5, (_) => TextEditingController());
@@ -1182,6 +3094,8 @@ class _NewScreenState extends State<NewScreen> {
   Widget singleTextField() {
     var size = MediaQuery.of(context).size;
     Text('API Hits in Single: $apiHitCount');
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Container(
       color: transparentColor,
       width: size.width,
@@ -1664,7 +3578,17 @@ class _NewScreenState extends State<NewScreen> {
                   child: TextFormField(
                     controller: receiversNumberController,
                     cursorColor: orangeColor,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Contact Number is required!';
+                      }
+                      return null;
+                    },
                     style: TextStyle(
                       color: blackColor,
                       fontSize: 14,
@@ -1711,17 +3635,138 @@ class _NewScreenState extends State<NewScreen> {
                           width: 1,
                         ),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      hintText: "Receiver's Phone Number",
+                      // contentPadding: EdgeInsets.symmetric(
+                      //   horizontal: screenWidth * 0.04,
+                      //   vertical: screenHeight * 0.02,
+                      // ),
+                      hintText: "Contact Number",
                       hintStyle: TextStyle(
                         color: hintColor,
                         fontSize: 12,
                         fontFamily: 'Inter-Light',
                       ),
+                      prefixIcon: GestureDetector(
+                        onTap: () async {
+                          final code =
+                              await countryPicker.showPicker(context: context);
+                          setState(() {
+                            countryCode = code;
+                          });
+                          debugPrint('countryName: ${countryCode!.name}');
+                          debugPrint('countryCode: ${countryCode!.code}');
+                          debugPrint(
+                              'countryDialCode: ${countryCode!.dialCode}');
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Container(
+                                child: countryCode != null
+                                    ? Image.asset(
+                                        countryCode!.flagUri,
+                                        package: countryCode!.flagImagePackage,
+                                        width: 25,
+                                        height: 20,
+                                      )
+                                    : SvgPicture.asset(
+                                        'assets/images/flag-icon.svg',
+                                      ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                countryCode?.dialCode ?? "+234",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: hintColor,
+                                  fontSize: 12,
+                                  fontFamily: 'Inter-Light',
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                            Text(
+                              '|',
+                              style: TextStyle(
+                                color: hintColor,
+                                fontSize: 12,
+                                fontFamily: 'Inter-SemiBold',
+                              ),
+                            ),
+                            SizedBox(width: size.width * 0.02),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
+                // Container(
+                //   color: transparentColor,
+                //   width: size.width * 0.85,
+                //   child: TextFormField(
+                //     controller: receiversNumberController,
+                //     cursorColor: orangeColor,
+                //     keyboardType: TextInputType.phone,
+                //     style: TextStyle(
+                //       color: blackColor,
+                //       fontSize: 14,
+                //       fontFamily: 'Inter-Regular',
+                //     ),
+                //     decoration: InputDecoration(
+                //       filled: true,
+                //       fillColor: filledColor,
+                //       errorStyle: TextStyle(
+                //         color: redColor,
+                //         fontSize: 10,
+                //         fontFamily: 'Inter-Bold',
+                //       ),
+                //       border: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       enabledBorder: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       focusedBorder: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       focusedErrorBorder: const OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide.none,
+                //       ),
+                //       errorBorder: OutlineInputBorder(
+                //         borderRadius: const BorderRadius.all(
+                //           Radius.circular(10),
+                //         ),
+                //         borderSide: BorderSide(
+                //           color: redColor,
+                //           width: 1,
+                //         ),
+                //       ),
+                //       contentPadding: const EdgeInsets.symmetric(
+                //           horizontal: 20, vertical: 10),
+                //       hintText: "Receiver's Phone Number",
+                //       hintStyle: TextStyle(
+                //         color: hintColor,
+                //         fontSize: 12,
+                //         fontFamily: 'Inter-Light',
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -1933,10 +3978,10 @@ class _NewScreenState extends State<NewScreen> {
       // Oldest Code
       //   if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
       //     print("receiversNumberController ${receiversNumberController.text}");
-      //     CustomToast.showToast(
-      //       fontSize: 12,
-      //       message: "Distance of delivery first should be greater than 1.0 Km!",
-      //     );
+      // CustomToast.showToast(
+      //   fontSize: 12,
+      //   message: "Distance of delivery first should be greater than 1.0 Km!",
+      // );
       //     receiversNumberController.clear();
 
       //     fetchingData = false;
@@ -2315,26 +4360,26 @@ class _NewScreenState extends State<NewScreen> {
                             if (selectedRadio == 2)
                               Row(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      removePage();
-                                      setState(() {});
-                                    },
-                                    child: SvgPicture.asset(
-                                      'assets/images/minus-icon.svg',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  GestureDetector(
-                                    onTap: () {
-                                      addPage();
-                                      setState(() {});
-                                    },
-                                    child: SvgPicture.asset(
-                                      'assets/images/add-icon.svg',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.03),
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     removePage();
+                                  //     setState(() {});
+                                  //   },
+                                  //   child: SvgPicture.asset(
+                                  //     'assets/images/minus-icon.svg',
+                                  //   ),
+                                  // ),
+                                  // SizedBox(width: size.width * 0.02),
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     addPage();
+                                  //     setState(() {});
+                                  //   },
+                                  //   child: SvgPicture.asset(
+                                  //     'assets/images/add-icon.svg',
+                                  //   ),
+                                  // ),
+                                  // SizedBox(width: size.width * 0.03),
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
@@ -3881,7 +5926,7 @@ class _NewScreenState extends State<NewScreen> {
                             ),
                             SizedBox(width: size.width * 0.02),
                             Text(
-                              'Note: Distance must me grater than 1KM',
+                              'Note: Distance must be grater than 1KM',
                               style: TextStyle(
                                 color: blackColor,
                                 fontSize: 10,

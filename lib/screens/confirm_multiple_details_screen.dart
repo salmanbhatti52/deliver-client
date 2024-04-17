@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
 
+import 'package:deliver_client/utils/buttondown.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -173,6 +175,9 @@ class _ConfirmMultipleDetailsScreenState
     debugPrint("Data for Index 4: $dataForIndex4");
   }
 
+  bool opened = false;
+  bool closed = false;
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -181,10 +186,27 @@ class _ConfirmMultipleDetailsScreenState
       body: getAllSystemDataModel.data != null
           ? Stack(
               children: [
-                Image.asset(
-                  'assets/images/home-location-background.png',
-                  fit: BoxFit.cover,
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        double.parse(widget.multipleData!["destin_latitude0"]
+                            .toString()),
+                        double.parse(widget.multipleData!["destin_longitude0"]
+                            .toString()),
+                      ),
+                      zoom: 13.4746,
+                    ),
+                  ),
                 ),
+                // Image.asset(
+                //   'assets/images/home-location-background.png',
+                //   fit: BoxFit.cover,
+                // ),
                 Positioned(
                   top: 40,
                   left: 20,
@@ -198,20 +220,21 @@ class _ConfirmMultipleDetailsScreenState
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 240,
-                  right: 120,
-                  child: Image.asset(
-                    'assets/images/bike-icon.png',
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-                Positioned(
-                  top: 101,
-                  right: 4,
-                  child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
-                ),
+                // Positioned(
+                //   top: 240,
+                //   right: 120,
+                //   child: Image.asset(
+                //     'assets/images/bike-icon.png',
+                //     width: 100,
+                //     height: 100,
+                //   ),
+                // ),
+                // Positioned(
+                //   top: 101,
+                //   right: 4,
+                //   child: SvgPicture.asset('assets/images/bike-path-icon.svg'),
+                // ),
+
                 // Positioned(
                 //   top: 225,
                 //   right: 135,
@@ -237,246 +260,193 @@ class _ConfirmMultipleDetailsScreenState
                 //     ),
                 //   ),
                 // ),
-                Positioned(
-                  left: 20,
-                  right: 20,
-                  bottom: 85,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: size.width * 0.6,
-                      height: size.height * 0.45,
-                      color: whiteColor,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              SizedBox(height: size.height * 0.02),
-                              Container(
-                                color: transparentColor,
-                                width: size.width,
-                                height: size.height * 0.09,
-                                child: Row(
-                                  children: [
-                                    SizedBox(width: size.width * 0.02),
-                                    Text(
-                                      "Fare",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: orangeColor,
-                                        fontSize: 32,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Text(
-                                      "$currencyUnit",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: orangeColor,
-                                        fontSize: 38,
-                                        fontFamily: 'Syne-Bold',
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(width: size.width * 0.02),
-                                    Tooltip(
-                                      message: roundedTotalPrice.toString(),
-                                      child: Container(
-                                        color: transparentColor,
-                                        width: size.width * 0.359,
-                                        child: AutoSizeText(
-                                          roundedTotalPrice.toString(),
+                Stack(
+                  children: [
+                    Positioned(
+                      left: 20,
+                      right: 20,
+                      bottom: 85,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          width: double.infinity,
+                          height: opened ? 463 : 160,
+                          color: whiteColor,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: size.height * 0.02),
+                                  Container(
+                                    color: transparentColor,
+                                    width: size.width,
+                                    height: size.height * 0.09,
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: size.width * 0.02),
+                                        Text(
+                                          "Fare",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
-                                            color: blackColor,
+                                            color: orangeColor,
                                             fontSize: 32,
-                                            fontFamily: 'Inter-Bold',
+                                            fontFamily: 'Syne-Bold',
+                                          ),
+                                        ),
+                                        SizedBox(width: size.width * 0.02),
+                                        Text(
+                                          "$currencyUnit",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 38,
+                                            fontFamily: 'Syne-Bold',
                                           ),
                                           maxLines: 1,
-                                          maxFontSize: 32,
-                                          minFontSize: 24,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(width: size.width * 0.05),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Discount: ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '$currencyUnit ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  Text(
-                                    discountCharges.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.05),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.005),
-                              Row(
-                                children: [
-                                  Text(
-                                    'VAT Fee (${doubleVatCharges.toString()}%): ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '$currencyUnit ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  Text(
-                                    roundedTotalVatAmount.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.05),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.005),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Total Price: ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '$currencyUnit ',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: orangeColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  Text(
-                                    totalPrice.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Medium',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.05),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.03),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/orange-location-big-icon.svg',
-                                  ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Pickup 1',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            '${dataForIndex0[0]["pickupController"]}',
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            '${dataForIndex0[0]["pickupController"]}',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
+                                        SizedBox(width: size.width * 0.02),
+                                        Tooltip(
+                                          message: roundedTotalPrice.toString(),
+                                          child: Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.359,
+                                            child: AutoSizeText(
+                                              roundedTotalPrice.toString(),
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: blackColor,
+                                                fontSize: 32,
+                                                fontFamily: 'Inter-Bold',
+                                              ),
+                                              maxLines: 1,
+                                              maxFontSize: 32,
+                                              minFontSize: 24,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
+                                        SizedBox(width: size.width * 0.05),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Discount: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
                                       ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        discountCharges.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
                                     ],
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/send-small-icon.svg',
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'VAT Fee (${doubleVatCharges.toString()}%): ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        roundedTotalVatAmount.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
                                   ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Total Price: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        totalPrice.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.03),
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
+                                      SvgPicture.asset(
+                                        'assets/images/orange-location-big-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Dropoff 1',
+                                            'Pickup 1',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -484,32 +454,23 @@ class _ConfirmMultipleDetailsScreenState
                                               fontFamily: 'Syne-Regular',
                                             ),
                                           ),
-                                          SizedBox(width: size.width * 0.3),
-                                          Text(
-                                            '$currencyUnit ',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                          ),
+                                          SizedBox(height: size.height * 0.01),
                                           Tooltip(
                                             message:
-                                                "${widget.multipleData!["destin_delivery_charges0"]}",
+                                                '${dataForIndex0[0]["pickupController"]}',
                                             child: Container(
                                               color: transparentColor,
-                                              width: size.width * 0.16,
+                                              width: size.width * 0.62,
                                               child: AutoSizeText(
-                                                "${widget.multipleData!["destin_delivery_charges0"]}",
+                                                '${dataForIndex0[0]["pickupController"]}',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: blackColor,
                                                   fontSize: 14,
                                                   fontFamily: 'Inter-Medium',
                                                 ),
+                                                minFontSize: 14,
                                                 maxFontSize: 14,
-                                                minFontSize: 12,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -517,108 +478,122 @@ class _ConfirmMultipleDetailsScreenState
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            '${dataForIndex0[0]['destinationController']}',
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            '${dataForIndex0[0]['destinationController']}',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/orange-location-big-icon.svg',
+                                  SizedBox(height: size.height * 0.01),
+                                  Divider(
+                                    thickness: 1,
+                                    color: dividerColor,
+                                    indent: 30,
+                                    endIndent: 30,
                                   ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
+                                  SizedBox(height: size.height * 0.01),
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Pickup 2',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
+                                      SvgPicture.asset(
+                                        'assets/images/send-small-icon.svg',
                                       ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            '${dataForIndex1[1]["pickupController"]}',
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            '${dataForIndex1[1]["pickupController"]}',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Dropoff 1',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: textHaveAccountColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Syne-Regular',
+                                                ),
+                                              ),
+                                              SizedBox(width: size.width * 0.3),
+                                              Text(
+                                                '$currencyUnit ',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: orangeColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                              ),
+                                              Tooltip(
+                                                message:
+                                                    "${widget.multipleData!["destin_delivery_charges0"]}",
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.16,
+                                                  child: AutoSizeText(
+                                                    "${widget.multipleData!["destin_delivery_charges0"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                    maxFontSize: 14,
+                                                    minFontSize: 12,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                '${dataForIndex0[0]['destinationController']}',
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.62,
+                                              child: AutoSizeText(
+                                                '${dataForIndex0[0]['destinationController']}',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                                minFontSize: 14,
+                                                maxFontSize: 14,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/images/send-small-icon.svg'),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
+                                  SizedBox(height: size.height * 0.01),
+                                  Divider(
+                                    thickness: 1,
+                                    color: dividerColor,
+                                    indent: 30,
+                                    endIndent: 30,
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
+                                      SvgPicture.asset(
+                                        'assets/images/orange-location-big-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Dropoff 2',
+                                            'Pickup 2',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
@@ -626,32 +601,23 @@ class _ConfirmMultipleDetailsScreenState
                                               fontFamily: 'Syne-Regular',
                                             ),
                                           ),
-                                          SizedBox(width: size.width * 0.3),
-                                          Text(
-                                            '$currencyUnit ',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                          ),
+                                          SizedBox(height: size.height * 0.01),
                                           Tooltip(
                                             message:
-                                                "${widget.multipleData!["destin_delivery_charges1"]}",
+                                                '${dataForIndex1[1]["pickupController"]}',
                                             child: Container(
                                               color: transparentColor,
-                                              width: size.width * 0.16,
+                                              width: size.width * 0.62,
                                               child: AutoSizeText(
-                                                "${widget.multipleData!["destin_delivery_charges1"]}",
+                                                '${dataForIndex1[1]["pickupController"]}',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: blackColor,
                                                   fontSize: 14,
                                                   fontFamily: 'Inter-Medium',
                                                 ),
+                                                minFontSize: 14,
                                                 maxFontSize: 14,
-                                                minFontSize: 12,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -659,541 +625,675 @@ class _ConfirmMultipleDetailsScreenState
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            '${dataForIndex1[1]['destinationController']}',
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.62,
-                                          child: AutoSizeText(
-                                            '${dataForIndex1[1]['destinationController']}',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  Divider(
+                                    thickness: 1,
+                                    color: dividerColor,
+                                    indent: 30,
+                                    endIndent: 30,
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/images/send-small-icon.svg'),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'Dropoff 2',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: textHaveAccountColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Syne-Regular',
+                                                ),
+                                              ),
+                                              SizedBox(width: size.width * 0.3),
+                                              Text(
+                                                '$currencyUnit ',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: orangeColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                              ),
+                                              Tooltip(
+                                                message:
+                                                    "${widget.multipleData!["destin_delivery_charges1"]}",
+                                                child: Container(
+                                                  color: transparentColor,
+                                                  width: size.width * 0.16,
+                                                  child: AutoSizeText(
+                                                    "${widget.multipleData!["destin_delivery_charges1"]}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                    maxFontSize: 14,
+                                                    minFontSize: 12,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                '${dataForIndex1[1]['destinationController']}',
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.62,
+                                              child: AutoSizeText(
+                                                '${dataForIndex1[1]['destinationController']}',
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                                minFontSize: 14,
+                                                maxFontSize: 14,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
+                                  SizedBox(height: size.height * 0.01),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? Divider(
+                                          thickness: 1,
+                                          color: dividerColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/images/orange-location-big-icon.svg',
+                                            ),
+                                            SizedBox(width: size.width * 0.04),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Pickup 3',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Tooltip(
+                                                  message:
+                                                      '${dataForIndex2[2]["pickupController"]}',
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.62,
+                                                    child: AutoSizeText(
+                                                      '${dataForIndex2[2]["pickupController"]}',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      minFontSize: 14,
+                                                      maxFontSize: 14,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? Divider(
+                                          thickness: 1,
+                                          color: dividerColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/images/send-small-icon.svg'),
+                                            SizedBox(width: size.width * 0.04),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Dropoff 3',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color:
+                                                            textHaveAccountColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Syne-Regular',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            size.width * 0.3),
+                                                    Text(
+                                                      '$currencyUnit ',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: orangeColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                    ),
+                                                    Tooltip(
+                                                      message:
+                                                          "${widget.multipleData!["destin_delivery_charges2"]}",
+                                                      child: Container(
+                                                        color: transparentColor,
+                                                        width:
+                                                            size.width * 0.16,
+                                                        child: AutoSizeText(
+                                                          "${widget.multipleData!["destin_delivery_charges2"]}",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                          maxFontSize: 14,
+                                                          minFontSize: 12,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Tooltip(
+                                                  message:
+                                                      '${dataForIndex2[2]['destinationController']}',
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.62,
+                                                    child: AutoSizeText(
+                                                      '${dataForIndex2[2]['destinationController']}',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      minFontSize: 14,
+                                                      maxFontSize: 14,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance2'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? Divider(
+                                          thickness: 1,
+                                          color: dividerColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/images/orange-location-big-icon.svg',
+                                            ),
+                                            SizedBox(width: size.width * 0.04),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Pickup 4',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Tooltip(
+                                                  message:
+                                                      '${dataForIndex3[3]["pickupController"]}',
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.62,
+                                                    child: AutoSizeText(
+                                                      '${dataForIndex3[3]["pickupController"]}',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      minFontSize: 14,
+                                                      maxFontSize: 14,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? Divider(
+                                          thickness: 1,
+                                          color: dividerColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/images/send-small-icon.svg'),
+                                            SizedBox(width: size.width * 0.04),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Dropoff 4',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color:
+                                                            textHaveAccountColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Syne-Regular',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            size.width * 0.3),
+                                                    Text(
+                                                      '$currencyUnit ',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: orangeColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                    ),
+                                                    Tooltip(
+                                                      message:
+                                                          "${widget.multipleData!["destin_delivery_charges3"]}",
+                                                      child: Container(
+                                                        color: transparentColor,
+                                                        width:
+                                                            size.width * 0.16,
+                                                        child: AutoSizeText(
+                                                          "${widget.multipleData!["destin_delivery_charges3"]}",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                          maxFontSize: 14,
+                                                          minFontSize: 12,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Tooltip(
+                                                  message:
+                                                      '${dataForIndex3[3]['destinationController']}',
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.62,
+                                                    child: AutoSizeText(
+                                                      '${dataForIndex3[3]['destinationController']}',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      minFontSize: 14,
+                                                      maxFontSize: 14,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance3'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? Divider(
+                                          thickness: 1,
+                                          color: dividerColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/images/orange-location-big-icon.svg',
+                                            ),
+                                            SizedBox(width: size.width * 0.04),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Pickup 5',
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: textHaveAccountColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Syne-Regular',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Tooltip(
+                                                  message:
+                                                      '${dataForIndex4[4]["pickupController"]}',
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.62,
+                                                    child: AutoSizeText(
+                                                      '${dataForIndex4[4]["pickupController"]}',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      minFontSize: 14,
+                                                      maxFontSize: 14,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? Divider(
+                                          thickness: 1,
+                                          color: dividerColor,
+                                          indent: 30,
+                                          endIndent: 30,
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          '0.00'
+                                      ? Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                                'assets/images/send-small-icon.svg'),
+                                            SizedBox(width: size.width * 0.04),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Dropoff 5',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color:
+                                                            textHaveAccountColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Syne-Regular',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                        width:
+                                                            size.width * 0.3),
+                                                    Text(
+                                                      '$currencyUnit ',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: orangeColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                    ),
+                                                    Tooltip(
+                                                      message:
+                                                          "${widget.multipleData!["destin_delivery_charges4"]}",
+                                                      child: Container(
+                                                        color: transparentColor,
+                                                        width:
+                                                            size.width * 0.16,
+                                                        child: AutoSizeText(
+                                                          "${widget.multipleData!["destin_delivery_charges4"]}",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color: blackColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Medium',
+                                                          ),
+                                                          maxFontSize: 14,
+                                                          minFontSize: 12,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.01),
+                                                Tooltip(
+                                                  message:
+                                                      '${dataForIndex4[4]['destinationController']}',
+                                                  child: Container(
+                                                    color: transparentColor,
+                                                    width: size.width * 0.62,
+                                                    child: AutoSizeText(
+                                                      '${dataForIndex4[4]['destinationController']}',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        color: blackColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Medium',
+                                                      ),
+                                                      minFontSize: 14,
+                                                      maxFontSize: 14,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox(),
+                                  widget.multipleData!['destin_distance4'] !=
+                                          ' '
+                                      ? SizedBox(height: size.height * 0.01)
+                                      : const SizedBox(),
+                                  SizedBox(height: size.height * 0.02),
                                 ],
                               ),
-                              SizedBox(height: size.height * 0.01),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? Divider(
-                                      thickness: 1,
-                                      color: dividerColor,
-                                      indent: 30,
-                                      endIndent: 30,
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/orange-location-big-icon.svg',
-                                        ),
-                                        SizedBox(width: size.width * 0.04),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Pickup 3',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: textHaveAccountColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Syne-Regular',
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                            Tooltip(
-                                              message:
-                                                  '${dataForIndex2[2]["pickupController"]}',
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width * 0.62,
-                                                child: AutoSizeText(
-                                                  '${dataForIndex2[2]["pickupController"]}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                  minFontSize: 14,
-                                                  maxFontSize: 14,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? Divider(
-                                      thickness: 1,
-                                      color: dividerColor,
-                                      indent: 30,
-                                      endIndent: 30,
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/send-small-icon.svg'),
-                                        SizedBox(width: size.width * 0.04),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Dropoff 3',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: textHaveAccountColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Syne-Regular',
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.3),
-                                                Text(
-                                                  '$currencyUnit ',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: orangeColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                ),
-                                                Tooltip(
-                                                  message:
-                                                      "${widget.multipleData!["destin_delivery_charges2"]}",
-                                                  child: Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.16,
-                                                    child: AutoSizeText(
-                                                      "${widget.multipleData!["destin_delivery_charges2"]}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                      maxFontSize: 14,
-                                                      minFontSize: 12,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                            Tooltip(
-                                              message:
-                                                  '${dataForIndex2[2]['destinationController']}',
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width * 0.62,
-                                                child: AutoSizeText(
-                                                  '${dataForIndex2[2]['destinationController']}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                  minFontSize: 14,
-                                                  maxFontSize: 14,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance2'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? Divider(
-                                      thickness: 1,
-                                      color: dividerColor,
-                                      indent: 30,
-                                      endIndent: 30,
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/orange-location-big-icon.svg',
-                                        ),
-                                        SizedBox(width: size.width * 0.04),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Pickup 4',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: textHaveAccountColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Syne-Regular',
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                            Tooltip(
-                                              message:
-                                                  '${dataForIndex3[3]["pickupController"]}',
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width * 0.62,
-                                                child: AutoSizeText(
-                                                  '${dataForIndex3[3]["pickupController"]}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                  minFontSize: 14,
-                                                  maxFontSize: 14,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? Divider(
-                                      thickness: 1,
-                                      color: dividerColor,
-                                      indent: 30,
-                                      endIndent: 30,
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/send-small-icon.svg'),
-                                        SizedBox(width: size.width * 0.04),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Dropoff 4',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: textHaveAccountColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Syne-Regular',
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.3),
-                                                Text(
-                                                  '$currencyUnit ',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: orangeColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                ),
-                                                Tooltip(
-                                                  message:
-                                                      "${widget.multipleData!["destin_delivery_charges3"]}",
-                                                  child: Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.16,
-                                                    child: AutoSizeText(
-                                                      "${widget.multipleData!["destin_delivery_charges3"]}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                      maxFontSize: 14,
-                                                      minFontSize: 12,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                            Tooltip(
-                                              message:
-                                                  '${dataForIndex3[3]['destinationController']}',
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width * 0.62,
-                                                child: AutoSizeText(
-                                                  '${dataForIndex3[3]['destinationController']}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                  minFontSize: 14,
-                                                  maxFontSize: 14,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance3'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? Divider(
-                                      thickness: 1,
-                                      color: dividerColor,
-                                      indent: 30,
-                                      endIndent: 30,
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                          'assets/images/orange-location-big-icon.svg',
-                                        ),
-                                        SizedBox(width: size.width * 0.04),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Pickup 5',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: textHaveAccountColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Syne-Regular',
-                                              ),
-                                            ),
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                            Tooltip(
-                                              message:
-                                                  '${dataForIndex4[4]["pickupController"]}',
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width * 0.62,
-                                                child: AutoSizeText(
-                                                  '${dataForIndex4[4]["pickupController"]}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                  minFontSize: 14,
-                                                  maxFontSize: 14,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? Divider(
-                                      thickness: 1,
-                                      color: dividerColor,
-                                      indent: 30,
-                                      endIndent: 30,
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != '0.00'
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/send-small-icon.svg'),
-                                        SizedBox(width: size.width * 0.04),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Dropoff 5',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: textHaveAccountColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Syne-Regular',
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.3),
-                                                Text(
-                                                  '$currencyUnit ',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: orangeColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                ),
-                                                Tooltip(
-                                                  message:
-                                                      "${widget.multipleData!["destin_delivery_charges4"]}",
-                                                  child: Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.16,
-                                                    child: AutoSizeText(
-                                                      "${widget.multipleData!["destin_delivery_charges4"]}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                      maxFontSize: 14,
-                                                      minFontSize: 12,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                            Tooltip(
-                                              message:
-                                                  '${dataForIndex4[4]['destinationController']}',
-                                              child: Container(
-                                                color: transparentColor,
-                                                width: size.width * 0.62,
-                                                child: AutoSizeText(
-                                                  '${dataForIndex4[4]['destinationController']}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: blackColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                  minFontSize: 14,
-                                                  maxFontSize: 14,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                              widget.multipleData!['destin_distance4'] != ' '
-                                  ? SizedBox(height: size.height * 0.01)
-                                  : const SizedBox(),
-                              SizedBox(height: size.height * 0.02),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
+                    Positioned(
+                      top: 680,
+                      left: 165,
+                      child: Align(
+                        alignment: const Alignment(0.5, 0.5),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              opened = !opened;
+                            });
+                          },
+                          child: opened
+                              ? detailsButtonUp(context)
+                              : detailsButtonDown(context),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Positioned(
                   bottom: 15,

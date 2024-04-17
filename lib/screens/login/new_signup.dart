@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:deliver_client/models/check_number_model.dart';
-import 'package:deliver_client/screens/login/new_signup.dart';
+import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,14 +21,14 @@ import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/widgets/custom_snackbar_with_btn.dart';
 import 'package:deliver_client/screens/signup/verify_phone_signup_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class NewSignUp extends StatefulWidget {
+  const NewSignUp({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<NewSignUp> createState() => _NewSignUpState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _NewSignUpState extends State<NewSignUp> {
   TextEditingController contactNumberController = TextEditingController();
   final GlobalKey<FormState> logInFormKey = GlobalKey<FormState>();
   final countryPicker = const FlCountryCodePicker();
@@ -56,7 +56,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? baseUrl = dotenv.env['BASE_URL'];
   String? tremiiUrl = dotenv.env['TERMII_URL'];
-
   CheckNumberModel checkNumberModel = CheckNumberModel();
 
   Future<void> checkNumber() async {
@@ -292,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: size.height * 0.04),
                 Text(
-                  "Login".toUpperCase(),
+                  "SignUp".toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: orangeColor,
@@ -301,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Text(
-                  "Welcome, how can we help you?",
+                  "Welcome, Let's sign you up",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: blackColor,
@@ -451,10 +450,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                       await getCurrentLocation();
                       await checkNumber();
-                      if (checkNumberModel.status == "error") {
+                      if (checkNumberModel.status == "success") {
                         CustomToast.showToast(
                           fontSize: 12,
-                          message: "You Don't have an account! \nPlease SignUp",
+                          message:
+                              "You already have an account! \nPlease Login",
                         );
                       } else {
                         if (contactNumberController.text == "3001234567") {
@@ -496,7 +496,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: isLoading
                       ? buttonGradientWithLoader("Please Wait...", context)
-                      : buttonGradient("LOGIN", context),
+                      : buttonGradient("NEXT", context),
                 ),
                 SizedBox(height: size.height * 0.02),
                 SizedBox(height: size.height * 0.02),
@@ -508,18 +508,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     children: [
                       const TextSpan(
-                        text: "Don't have an account yet? ",
+                        text: "Already have an account! ",
                         style: TextStyle(color: Colors.black),
                       ),
                       TextSpan(
-                        text: 'Sign up now!',
+                        text: ' Login now!',
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             // Handle sign up action
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const NewSignUp()),
+                                  builder: (context) => const LoginScreen()),
                             );
                             print('Sign up now tapped!');
                           },
