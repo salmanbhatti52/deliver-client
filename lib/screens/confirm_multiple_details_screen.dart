@@ -1277,10 +1277,12 @@ class _ConfirmMultipleDetailsScreenState
                       ),
                     ),
                     Positioned(
-                      top: 680,
-                      left: 165,
+                      top: MediaQuery.of(context).size.height *
+                          0.875, // Adjust this value based on screen size
+                      left: MediaQuery.of(context).size.width *
+                          0.44, // Adjust this value based on screen size
                       child: Align(
-                        alignment: const Alignment(0.5, 0.5),
+                        alignment: Alignment.center,
                         child: GestureDetector(
                           onTap: () {
                             setState(() {

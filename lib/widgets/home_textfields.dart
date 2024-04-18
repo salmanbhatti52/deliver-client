@@ -85,25 +85,25 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   LatLng? selectedLocation;
   LatLng? selectedAddressLocation;
   BitmapDescriptor? customMarkerIcon;
-  Future<void> googleAnalytics(String input) async {
-    var headersList = {'Accept': '*/*', 'Content-Type': 'application/json'};
-    var url = Uri.parse('https://deliver.eigix.net/api/add_google_api_hit');
+  // Future<void> googleAnalytics(String input) async {
+  //   var headersList = {'Accept': '*/*', 'Content-Type': 'application/json'};
+  //   var url = Uri.parse('https://deliver.eigix.net/api/add_google_api_hit');
 
-    var body = {"url": input};
+  //   var body = {"url": input};
 
-    var req = http.Request('POST', url);
-    req.headers.addAll(headersList);
-    req.body = json.encode(body);
+  //   var req = http.Request('POST', url);
+  //   req.headers.addAll(headersList);
+  //   req.body = json.encode(body);
 
-    var res = await req.send();
-    final resBody = await res.stream.bytesToString();
+  //   var res = await req.send();
+  //   final resBody = await res.stream.bytesToString();
 
-    if (res.statusCode == 200) {
-      print(resBody);
-    } else {
-      print(res.reasonPhrase);
-    }
-  }
+  //   if (res.statusCode == 200) {
+  //     print(resBody);
+  //   } else {
+  //     print(res.reasonPhrase);
+  //   }
+  // }
 
   Timer? _debounceTimer;
   Future<void> searchPickUpPlaces(String input) async {
@@ -119,7 +119,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         apiHitCount++; // Increment API hit count
 
         // Track analytics event
-        await googleAnalytics(input);
+        // await googleAnalytics(input);
 
         if (response.isOkay) {
           setState(() {
@@ -143,7 +143,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
         apiHitCount++; // Increment API hit count
 
         // Track analytics event
-        await googleAnalytics(input);
+        // await googleAnalytics(input);
 
         if (response.isOkay) {
           setState(() {
@@ -699,6 +699,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                   color: transparentColor,
                   width: size.width * 0.8,
                   child: TextFormField(
+
                     controller: widget.receiversNameController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.text,
@@ -765,6 +766,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                   color: transparentColor,
                   width: size.width * 0.80,
                   child: TextFormField(
+                     textInputAction: TextInputAction.done,
                     controller: widget.receiversNumberController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.number,

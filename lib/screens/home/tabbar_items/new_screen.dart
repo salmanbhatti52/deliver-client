@@ -1743,8 +1743,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                           SvgPicture.asset(
                                             'assets/images/minus-icon.svg',
                                           ),
-                                          SizedBox(width: size.width * 0.01),
-                                          const Text('Del Pickups'),
+                                          SizedBox(width: size.width * 0.02),
+                                          const Text('Pickups'),
                                         ],
                                       ),
                                     ),
@@ -1814,8 +1814,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     SvgPicture.asset(
                                       'assets/images/add-icon.svg',
                                     ),
-                                    SizedBox(width: size.width * 0.01),
-                                    const Text('Add Pickups'),
+                                    SizedBox(width: size.width * 0.02),
+                                    const Text('Pickups'),
                                   ],
                                 ),
                               ),
@@ -3576,6 +3576,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                   color: transparentColor,
                   width: size.width * 0.85,
                   child: TextFormField(
+                    textInputAction: TextInputAction.done,
                     controller: receiversNumberController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.number,
