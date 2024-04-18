@@ -58,6 +58,17 @@
 		<string>sms</string>
 		<string>tel</string>
 	</array>
+	  <key>NSPrivacyAccessedUsageDescription</key>
+    <dict>
+        <key>NSUserDefaults</key>
+        <string>The app uses NSUserDefaults to store user preferences and settings related to parcel delivery notifications, such as preferred delivery times and notification preferences.</string>
+        <key>FileTimestamp</key>
+        <string>FileTimestamp is utilized by the app to manage and track the timestamps of parcel delivery-related files, ensuring accurate logging and timestamping of delivery updates and confirmations.</string>
+        <key>DiskSpace</key>
+        <string>The app requires access to DiskSpace to efficiently manage local storage space for storing essential parcel delivery data, including delivery schedules, recipient information, and parcel tracking details.</string>
+        <key>SystemBootTime</key>
+        <string>SystemBootTime is accessed by the app to optimize delivery route planning and scheduling based on device startup times, ensuring efficient allocation of delivery resources and timely parcel dispatch.</string>
+    </dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
