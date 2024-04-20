@@ -77,7 +77,7 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                 children: [
                   SizedBox(height: size.height * 0.06),
                   Text(
-                    'Who will Pay?',
+                    'Make Payment',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: blackColor,
@@ -159,75 +159,75 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                         ),
                       ),
                       SizedBox(width: size.width * 0.03),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSelectedPayNow = false;
-                            isSelectedPayLater = true;
-                          });
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              color: transparentColor,
-                              width: MediaQuery.of(context).size.width * 0.42,
-                              height: MediaQuery.of(context).size.height * 0.15,
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.42,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.12,
-                                decoration: BoxDecoration(
-                                  color: isSelectedPayLater == true
-                                      ? orangeColor
-                                      : const Color(0xFFEBEBEB),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 35,
-                              left: 0,
-                              right: 0,
-                              child: Text(
-                                payLater,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: isSelectedPayLater == true
-                                      ? whiteColor
-                                      : drawerTextColor,
-                                  fontSize: 16,
-                                  fontFamily: 'Syne-Bold',
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 15,
-                              left: 0,
-                              right: 0,
-                              child: Text(
-                                receiver,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: isSelectedPayLater == true
-                                      ? whiteColor
-                                      : supportTextColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Syne-Regular',
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              child: SvgPicture.asset(imagepayLater),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     setState(() {
+                      //       isSelectedPayNow = false;
+                      //       isSelectedPayLater = true;
+                      //     });
+                      //   },
+                      //   child: Stack(
+                      //     children: [
+                      //       Container(
+                      //         color: transparentColor,
+                      //         width: MediaQuery.of(context).size.width * 0.42,
+                      //         height: MediaQuery.of(context).size.height * 0.15,
+                      //       ),
+                      //       Positioned(
+                      //         bottom: 0,
+                      //         child: Container(
+                      //           width: MediaQuery.of(context).size.width * 0.42,
+                      //           height:
+                      //               MediaQuery.of(context).size.height * 0.12,
+                      //           decoration: BoxDecoration(
+                      //             color: isSelectedPayLater == true
+                      //                 ? orangeColor
+                      //                 : const Color(0xFFEBEBEB),
+                      //             borderRadius: BorderRadius.circular(15),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         bottom: 35,
+                      //         left: 0,
+                      //         right: 0,
+                      //         child: Text(
+                      //           payLater,
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //             color: isSelectedPayLater == true
+                      //                 ? whiteColor
+                      //                 : drawerTextColor,
+                      //             fontSize: 16,
+                      //             fontFamily: 'Syne-Bold',
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         bottom: 15,
+                      //         left: 0,
+                      //         right: 0,
+                      //         child: Text(
+                      //           receiver,
+                      //           textAlign: TextAlign.center,
+                      //           style: TextStyle(
+                      //             color: isSelectedPayLater == true
+                      //                 ? whiteColor
+                      //                 : supportTextColor,
+                      //             fontSize: 14,
+                      //             fontFamily: 'Syne-Regular',
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       Positioned(
+                      //         top: 0,
+                      //         left: 0,
+                      //         right: 0,
+                      //         child: SvgPicture.asset(imagepayLater),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(height: size.height * 0.04),
@@ -236,8 +236,9 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                       if (isSelectedPayNow == true) {
                         Map? updatedData = Map.from(widget.singleData!);
                         Map? updatedData2 = Map.from(widget.multipleData!);
-                        if(widget.multipleData!["delivery_type"] == "Multiple") {
-                          if(updatedData2.isNotEmpty) {
+                        if (widget.multipleData!["delivery_type"] ==
+                            "Multiple") {
+                          if (updatedData2.isNotEmpty) {
                             updatedData2.addAll({
                               "payment_by": "Sender",
                             });
@@ -245,7 +246,7 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                             updatedData2 = {};
                           }
                         } else {
-                          if(updatedData.isNotEmpty) {
+                          if (updatedData.isNotEmpty) {
                             updatedData.addAll({
                               "payment_by": "Sender",
                             });
@@ -284,8 +285,9 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                         // );
                         Map? updatedData = Map.from(widget.singleData!);
                         Map? updatedData2 = Map.from(widget.multipleData!);
-                        if(widget.multipleData!["delivery_type"] == "Multiple") {
-                          if(updatedData2.isNotEmpty) {
+                        if (widget.multipleData!["delivery_type"] ==
+                            "Multiple") {
+                          if (updatedData2.isNotEmpty) {
                             updatedData2.addAll({
                               "payment_by": "Receiver",
                             });
@@ -293,7 +295,7 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                             updatedData2 = {};
                           }
                         } else {
-                          if(updatedData.isNotEmpty) {
+                          if (updatedData.isNotEmpty) {
                             updatedData.addAll({
                               "payment_by": "Receiver",
                             });

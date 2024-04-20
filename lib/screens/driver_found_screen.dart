@@ -273,7 +273,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                               Navigator.pop(context);
                             },
                             child: dialogButtonTransparentGradientSmall(
-                              "Cancel",
+                              "Continue",
                               context,
                             ),
                           ),

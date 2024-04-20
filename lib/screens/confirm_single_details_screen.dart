@@ -214,7 +214,7 @@ class _ConfirmSingleDetailsScreenState
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
                           width: double.infinity,
-                          height: opened ? 325 : 150,
+                          height: opened ? 325 : 220,
                           color: whiteColor,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -239,10 +239,10 @@ class _ConfirmSingleDetailsScreenState
                                             fontFamily: 'Syne-Bold',
                                           ),
                                         ),
-                                        SizedBox(width: size.width * 0.02),
+                                        SizedBox(width: size.width * 0.13),
                                         Text(
                                           "$currencyUnit",
-                                          textAlign: TextAlign.left,
+                                          textAlign: TextAlign.right,
                                           style: TextStyle(
                                             color: orangeColor,
                                             fontSize: 38,
@@ -251,7 +251,6 @@ class _ConfirmSingleDetailsScreenState
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                        SizedBox(width: size.width * 0.02),
                                         Tooltip(
                                           message: roundedTotalPrice.toString(),
                                           child: Container(
@@ -274,108 +273,6 @@ class _ConfirmSingleDetailsScreenState
                                       ],
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Discount: ',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        '$currencyUnit ',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: orangeColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      Text(
-                                        "${widget.singleData?["destin_discount"]}",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.05),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.005),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'VAT Fee ($doubleVatCharges%): ',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        '$currencyUnit ',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: orangeColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      Text(
-                                        "$roundedTotalVatAmount",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.05),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.005),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'Total Price: ',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        '$currencyUnit ',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: orangeColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      Text(
-                                        '$totalPrice',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.05),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.03),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -516,6 +413,108 @@ class _ConfirmSingleDetailsScreenState
                                       ),
                                     ],
                                   ),
+                                  SizedBox(height: size.height * 0.03),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Discount: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.singleData?["destin_discount"]}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'VAT Fee ($doubleVatCharges%): ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "$roundedTotalVatAmount",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Total Price: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        '$totalPrice',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -537,8 +536,8 @@ class _ConfirmSingleDetailsScreenState
                             });
                           },
                           child: opened
-                              ? detailsButtonUp(context)
-                              : detailsButtonDown(context),
+                              ? detailsButtonDown(context)
+                              : detailsButtonUp(context),
                         ),
                       ),
                     ),

@@ -699,7 +699,6 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                   color: transparentColor,
                   width: size.width * 0.8,
                   child: TextFormField(
-
                     controller: widget.receiversNameController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.text,
@@ -766,7 +765,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                   color: transparentColor,
                   width: size.width * 0.80,
                   child: TextFormField(
-                     textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.done,
                     controller: widget.receiversNumberController,
                     cursorColor: orangeColor,
                     keyboardType: TextInputType.number,
