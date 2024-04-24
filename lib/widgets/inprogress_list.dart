@@ -302,7 +302,10 @@ class _InProgressListState extends State<InProgressList> {
                                             multipleData: widget.multipleData,
                                             riderData: widget.riderData,
                                             currentBookingId:
-                                                widget.currentBookingId,
+                                                inProgressRideModel
+                                                    .data![reverseIndex]
+                                                    .bookingsId
+                                                    .toString(),
                                             bookingDestinationId:
                                                 widget.bookingDestinationId,
                                           ),

@@ -559,6 +559,9 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
               continue;
             }
 
+    // Convert to double only if distance and duration are not null
+    final double? distanceDouble = double.tryParse(distance);
+    final double? durationDouble = double.tryParse(duration);
             print('Distance $i: $distance');
             print('Duration $i: $duration');
             print('Pickup Latitude $i: $pickupLatt');
@@ -567,7 +570,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
             print('Destination Longitude $i: $destinLong');
             switch (i) {
               case 0:
-                distance0 = distance;
+                distance0 = distance.toString();
                 duration0 = duration;
                 pickupLat0 = pickupLatt;
                 pickupLng0 = pickupLong;

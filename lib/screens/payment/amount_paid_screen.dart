@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'dart:typed_data';
+import 'package:deliver_client/screens/payment/receiptScreenMultiple.dart';
+import 'package:deliver_client/screens/payment/receiptScreenSingle.dart';
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
@@ -269,17 +271,62 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RateDriverScreen(
-                                    riderData: widget.riderData!,
-                                    currentBookingId: widget.currentBookingId,
-                                    bookingDestinationId:
-                                        widget.bookingDestinationId,
+                              if (widget.multipleData == null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReceiptScreenSingle(
+                                      singleData: widget.singleData,
+                                      riderData: widget.riderData!,
+                                      currentBookingId: widget.currentBookingId,
+                                      bookingDestinationId:
+                                          widget.bookingDestinationId,
+                                      date: widget.riderData!.dateModified,
+                                      paymentType: widget.multipleData![
+                                                  "payment_gateways_id"] ==
+                                              '1'
+                                          ? "Cash"
+                                          : "Card",
+                                      ridername:
+                                          "${widget.riderData!.firstName} "
+                                          " ${widget.riderData!.lastName}",
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else if (widget.multipleData != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReceiptScreenMultiple(
+                                      multipleData: widget.multipleData,
+                                      riderData: widget.riderData!,
+                                      currentBookingId: widget.currentBookingId,
+                                      bookingDestinationId:
+                                          widget.bookingDestinationId,
+                                      date: widget.riderData!.dateModified,
+                                      paymentType: widget.multipleData![
+                                                  "payment_gateways_id"] ==
+                                              '1'
+                                          ? "Cash"
+                                          : "Card",
+                                      ridername:
+                                          "${widget.riderData!.firstName} "
+                                          " ${widget.riderData!.lastName}",
+                                    ),
+                                  ),
+                                );
+                              }
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => RateDriverScreen(
+                              //       riderData: widget.riderData!,
+                              //       currentBookingId: widget.currentBookingId,
+                              //       bookingDestinationId:
+                              //           widget.bookingDestinationId,
+                              //     ),
+                              //   ),
+                              // );
                             },
                             child: buttonGradient("NEXT", context),
                           ),

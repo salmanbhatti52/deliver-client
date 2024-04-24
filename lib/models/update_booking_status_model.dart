@@ -227,6 +227,7 @@ class BookingsDestinations {
   String? receiverPhone;
   int? bookingsDestinationsStatusId;
   BookingsDestinationsStatus? bookingsDestinationsStatus;
+  String? passCode;
 
   BookingsDestinations({
     this.bookingsDestinationsId,
@@ -245,6 +246,7 @@ class BookingsDestinations {
     this.receiverPhone,
     this.bookingsDestinationsStatusId,
     this.bookingsDestinationsStatus,
+    this.passCode,
   });
 
   factory BookingsDestinations.fromJson(Map<String, dynamic> json) =>
@@ -266,6 +268,7 @@ class BookingsDestinations {
         bookingsDestinationsStatusId: json["bookings_destinations_status_id"],
         bookingsDestinationsStatus: BookingsDestinationsStatus.fromJson(
             json["bookings_destinations_status"]),
+        passCode: json["passcode_verified"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -285,6 +288,7 @@ class BookingsDestinations {
         "receiver_phone": receiverPhone,
         "bookings_destinations_status_id": bookingsDestinationsStatusId,
         "bookings_destinations_status": bookingsDestinationsStatus?.toJson(),
+        "passcode_verified": passCode,
       };
 }
 

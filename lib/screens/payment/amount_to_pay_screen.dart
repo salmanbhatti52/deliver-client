@@ -18,6 +18,8 @@ import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
 
+import '../../models/update_booking_status_model.dart';
+
 String? firstName;
 String? lastName;
 String? userEmail;
@@ -157,6 +159,53 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
     }
   }
 
+  var passcodeVerified;
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
+
+  updateBookingStatus() async {
+    try {
+      String apiUrl = "$baseUrl/get_updated_status_booking";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("currentBookingId: ${widget.currentBookingId}");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.currentBookingId,
+        },
+      );
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        updateBookingStatusModel =
+            updateBookingStatusModelFromJson(responseString);
+
+        // Initialize a list to store passcode_verified statuses
+        List<String> passcodeVerifiedList = [];
+
+        // Iterate over each booking in the bookingsFleet list
+        for (var booking in updateBookingStatusModel.data!.bookingsFleet!) {
+          // Extract passcode_verified status for the current booking
+          passcodeVerified = booking.bookingsDestinations!.passCode;
+
+          // Add the passcode_verified status to the list
+          passcodeVerifiedList.add(passcodeVerified!);
+        }
+
+        // Now you have a list of passcode_verified statuses for each booking
+        // You can use passcodeVerifiedList as needed
+        setState(() {});
+      }
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
   getAllSystemData() async {
@@ -229,6 +278,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
   @override
   void initState() {
     super.initState();
+    updateBookingStatus();
     sharedPref();
     if (widget.singleData!.isNotEmpty) {
       getLocationSingle();
@@ -316,7 +366,7 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                 ),
                 child: Container(
                   width: size.width,
-                  height: size.height * 0.36,
+                  height: size.height * 0.44,
                   decoration: BoxDecoration(
                     color: whiteColor,
                   ),
@@ -369,6 +419,58 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "PassCode Status",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 18,
+                                          fontFamily: 'Syne-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.12),
+                                      passcodeVerified == "Yes"
+                                          ? Text(
+                                              "Verified",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: pendingColor,
+                                                fontSize: 18,
+                                                fontFamily: 'Syne-Medium',
+                                              ),
+                                            )
+                                          : const SizedBox()
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.02),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Parcel Delivery Status",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 18,
+                                          fontFamily: 'Syne-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.12),
+                                      passcodeVerified != null
+                                          ? Text(
+                                              "Delivered",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: pendingColor,
+                                                fontSize: 18,
+                                                fontFamily: 'Syne-Medium',
+                                              ),
+                                            )
+                                          : const SizedBox(),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.02),
                                   Row(
                                     children: [
                                       Text(

@@ -229,7 +229,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       route();
     });
   }

@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:convert';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -9,7 +11,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show Clipboard, ClipboardData, rootBundle;
 import 'package:deliver_client/screens/report_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
@@ -97,6 +100,11 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     }
   }
 
+  String? passcode0;
+  String? passcode1;
+  String? passcode2;
+  String? passcode3;
+  String? passcode4;
   UpdateBookingStatusModel updateBookingStatusModel =
       UpdateBookingStatusModel();
 
@@ -123,6 +131,36 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
             updateBookingStatusModelFromJson(responseString);
         debugPrint(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+        // Access the passcode
+
+        passcode0 = jsonResponse['data']['bookings_fleet'][0]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode0: $passcode0");
+        passcode1 = jsonResponse['data']['bookings_fleet'][1]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode1: $passcode1");
+        if (jsonResponse['data']['bookings_fleet'].length > 2) {
+          passcode2 = jsonResponse['data']['bookings_fleet'][2]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          print("Passcode2: $passcode2");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 3) {
+          passcode3 = jsonResponse['data']['bookings_fleet'][3]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          print("Passcode3: $passcode3");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 4) {
+          passcode4 = jsonResponse['data']['bookings_fleet'][4]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          print("Passcode4: $passcode4");
+        }
         if (updateBookingStatusModel.data?.status == "Completed") {
           timer?.cancel();
           Navigator.push(
@@ -258,6 +296,9 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
+    updateBookingStatus();
+    print("Single Data: ${widget.singleData}");
+    print("Multiple Data: ${widget.multipleData}");
     if (widget.singleData?.isNotEmpty ?? false) {
       // getPolyPoints();
       getLocationSingle();
@@ -378,31 +419,156 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                         'assets/images/small-black-send-icon.svg',
                                       ),
                                       SizedBox(width: size.width * 0.03),
-                                      widget.singleData!.isNotEmpty
-                                          ? Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Destination Address",
+                                      // widget.singleData!.isNotEmpty
+                                      if (widget.singleData != null &&
+                                          widget.singleData!.isNotEmpty)
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Destination Address",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: textHaveAccountColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.005),
+                                            Tooltip(
+                                              message:
+                                                  "${widget.singleData!['destin_address']}",
+                                              child: Container(
+                                                color: transparentColor,
+                                                width: size.width * 0.79,
+                                                child: Text(
+                                                  "${widget.singleData!['destin_address']}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: textHaveAccountColor,
+                                                    color: blackColor,
                                                     fontSize: 14,
-                                                    fontFamily: 'Inter-Regular',
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      else if (widget.multipleData != null &&
+                                          widget.multipleData!.isNotEmpty)
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Destination Addresses",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: textHaveAccountColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "1.",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
                                                   ),
                                                 ),
                                                 SizedBox(
-                                                    height:
-                                                        size.height * 0.005),
+                                                    width: size.width * 0.02),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 2.5),
+                                                  child: Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address0']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.75,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address0']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text: "$passcode0"));
+                                                CustomToast.showToast(
+                                                  fontSize: 12,
+                                                  message:
+                                                      "$passcode0 copied to clipboard",
+                                                );
+                                              },
+                                              child: Tooltip(
+                                                message: "$passcode0",
+                                                child: Text(
+                                                  "1.   Passcode ${passcode0 ?? '--'}",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "2.",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: blackColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    width: size.width * 0.02),
                                                 Tooltip(
                                                   message:
-                                                      "${widget.singleData!['destin_address']}",
+                                                      "${widget.multipleData!['destin_address1']}",
                                                   child: Container(
                                                     color: transparentColor,
-                                                    width: size.width * 0.79,
+                                                    width: size.width * 0.75,
                                                     child: Text(
-                                                      "${widget.singleData!['destin_address']}",
+                                                      "${widget.multipleData!['destin_address1']}",
                                                       textAlign: TextAlign.left,
                                                       style: TextStyle(
                                                         color: blackColor,
@@ -417,293 +583,313 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                   ),
                                                 ),
                                               ],
-                                            )
-                                          : Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Destination Addresses",
+                                            ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text: "$passcode1"));
+                                                CustomToast.showToast(
+                                                  fontSize: 12,
+                                                  message:
+                                                      "$passcode1 copied to clipboard",
+                                                );
+                                              },
+                                              child: Tooltip(
+                                                message: "$passcode1",
+                                                child: Text(
+                                                  "2.   Passcode ${passcode1 ?? '--'}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: textHaveAccountColor,
+                                                    color: blackColor,
                                                     fontSize: 14,
-                                                    fontFamily: 'Inter-Regular',
+                                                    fontFamily: 'Inter-Medium',
                                                   ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "1.",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        width:
-                                                            size.width * 0.02),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 2.5),
-                                                      child: Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['destin_address0']}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.75,
-                                                          child: Text(
-                                                            "${widget.multipleData!['destin_address0']}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                    height: size.height * 0.01),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "2.",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        width:
-                                                            size.width * 0.02),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.multipleData!['destin_address1']}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.75,
-                                                        child: Text(
-                                                          "${widget.multipleData!['destin_address1']}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                if (widget.multipleData![
-                                                            "destin_address2"] !=
-                                                        null &&
-                                                    widget
-                                                        .multipleData![
-                                                            "destin_address2"]
-                                                        .isNotEmpty)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (widget.multipleData![
-                                                            "destin_address2"] !=
-                                                        null &&
-                                                    widget
-                                                        .multipleData![
-                                                            "destin_address2"]
-                                                        .isNotEmpty)
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "3.",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          width: size.width *
-                                                              0.02),
-                                                      Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['destin_address2']}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.75,
-                                                          child: Text(
-                                                            "${widget.multipleData!['destin_address2']}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                if (widget.multipleData![
-                                                            "destin_address3"] !=
-                                                        null &&
-                                                    widget
-                                                        .multipleData![
-                                                            "destin_address3"]
-                                                        .isNotEmpty)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (widget.multipleData![
-                                                            "destin_address3"] !=
-                                                        null &&
-                                                    widget
-                                                        .multipleData![
-                                                            "destin_address3"]
-                                                        .isNotEmpty)
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "4.",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          width: size.width *
-                                                              0.02),
-                                                      Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['destin_address3']}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.75,
-                                                          child: Text(
-                                                            "${widget.multipleData!['destin_address3']}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                if (widget.multipleData![
-                                                            "destin_address4"] !=
-                                                        null &&
-                                                    widget
-                                                        .multipleData![
-                                                            "destin_address4"]
-                                                        .isNotEmpty)
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                if (widget.multipleData![
-                                                            "destin_address4"] !=
-                                                        null &&
-                                                    widget
-                                                        .multipleData![
-                                                            "destin_address4"]
-                                                        .isNotEmpty)
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        "5.",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          width: size.width *
-                                                              0.02),
-                                                      Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['destin_address4']}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.75,
-                                                          child: Text(
-                                                            "${widget.multipleData!['destin_address4']}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                              ],
+                                              ),
                                             ),
+
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "3.",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address2']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.75,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address2']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address2"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address2"]
+                                                    .isNotEmpty)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: "$passcode2"));
+                                                  CustomToast.showToast(
+                                                    fontSize: 12,
+                                                    message:
+                                                        "$passcode2 copied to clipboard",
+                                                  );
+                                                },
+                                                child: Tooltip(
+                                                  message: "$passcode2",
+                                                  child: Text(
+                                                    "3.   Passcode ${passcode2 ?? '--'}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            // SizedBox(
+                                            //     height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "4.",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address3']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.75,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address3']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address3"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address3"]
+                                                    .isNotEmpty)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: "$passcode3"));
+                                                  CustomToast.showToast(
+                                                    fontSize: 12,
+                                                    message:
+                                                        "$passcode3 copied to clipboard",
+                                                  );
+                                                },
+                                                child: Tooltip(
+                                                  message: "$passcode3",
+                                                  child: Text(
+                                                    "4.   Passcode ${passcode3 ?? '--'}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              SizedBox(
+                                                  height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "5.",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  Tooltip(
+                                                    message:
+                                                        "${widget.multipleData!['destin_address4']}",
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: size.width * 0.75,
+                                                      child: Text(
+                                                        "${widget.multipleData!['destin_address4']}",
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          color: blackColor,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'Inter-Medium',
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            SizedBox(
+                                                height: size.height * 0.01),
+                                            if (widget.multipleData![
+                                                        "destin_address4"] !=
+                                                    null &&
+                                                widget
+                                                    .multipleData![
+                                                        "destin_address4"]
+                                                    .isNotEmpty)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: "$passcode4"));
+                                                  CustomToast.showToast(
+                                                    fontSize: 12,
+                                                    message:
+                                                        "$passcode4 copied to clipboard",
+                                                  );
+                                                },
+                                                child: Tooltip(
+                                                  message: "$passcode4",
+                                                  child: Text(
+                                                    "5.   Passcode ${passcode4 ?? '--'}",
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      color: blackColor,
+                                                      fontSize: 14,
+                                                      fontFamily:
+                                                          'Inter-Medium',
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.01),

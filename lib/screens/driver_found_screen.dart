@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -12,7 +13,8 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show Clipboard, ClipboardData, rootBundle;
 import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +25,7 @@ import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/screens/booking_accepted_screen.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 String? userId;
 
@@ -150,10 +153,18 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
     }
   }
 
+  String? passcode0;
+  String? passcode1;
+  String? passcode2;
+  String? passcode3;
+  String? passcode4;
+
   UpdateBookingStatusModel updateBookingStatusModel =
       UpdateBookingStatusModel();
-
+  String? responseString1;
   updateBookingStatus() async {
+    // print(
+    // " Passssssssssss ${updateBookingStatusModel.data!.bookingsFleet![0].bookingsDestinations!.passCode}");
     try {
       String apiUrl = "$baseUrl/get_updated_status_booking";
       debugPrint("apiUrl: $apiUrl");
@@ -167,12 +178,56 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
           "bookings_id": widget.currentBookingId,
         },
       );
-      final responseString = response.body;
-      debugPrint("response: $responseString");
+      responseString1 = response.body;
+
+      debugPrint("response zain: $responseString1");
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         updateBookingStatusModel =
-            updateBookingStatusModelFromJson(responseString);
+            updateBookingStatusModelFromJson(responseString1!);
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+        // Access the passcode
+
+        passcode0 = jsonResponse['data']['bookings_fleet'][0]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode0: $passcode0");
+        passcode1 = jsonResponse['data']['bookings_fleet'][1]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode1: $passcode1");
+        if (jsonResponse['data']['bookings_fleet'].length > 2) {
+          passcode2 = jsonResponse['data']['bookings_fleet'][2]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          print("Passcode2: $passcode2");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 3) {
+          passcode3 = jsonResponse['data']['bookings_fleet'][3]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          print("Passcode3: $passcode3");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 4) {
+          passcode4 = jsonResponse['data']['bookings_fleet'][4]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          print("Passcode4: $passcode4");
+        }
+        // passcode2 = jsonResponse['data']['bookings_fleet'][2]
+        //         ['bookings_destinations']['passcode'] ??
+        //     "";
+        // print("Passcode2: $passcode2");
+        // passcode3 = jsonResponse['data']['bookings_fleet'][3]
+        //         ['bookings_destinations']['passcode'] ??
+        //     "";
+        // print("Passcode3: $passcode3");
+        // passcode4 = jsonResponse['data']['bookings_fleet'][4]
+        //         ['bookings_destinations']['passcode'] ??
+        //     "";
+        // print("Passcode4: $passcode4");
+
         debugPrint(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         if (updateBookingStatusModel.data?.status == "Accepted" ||
@@ -319,9 +374,10 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   void initState() {
     super.initState();
     debugPrint("passCode: ${widget.passCode}");
-    Future.delayed(Duration.zero, () {
-      showPasscodeDialog();
-    });
+
+    // Future.delayed(Duration.zero, () {
+    //   showPasscodeDialog();
+    // });
     getAllSystemData();
     loadCustomMarker();
     lat = "${widget.riderData!.latitude}";
@@ -841,6 +897,38 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text:
+                                                                      "$passcode0"));
+                                                            CustomToast.showToast(
+                                                            fontSize: 12,
+                                                            message:
+                                                                "$passcode0 copied to clipboard",
+                                                          );
+                                                        },
+                                                        child: Tooltip(
+                                                          message: "$passcode0",
+                                                          child: Text(
+                                                            "Passcode ${passcode0 ?? '--'}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  orangeColor,
+                                                              fontSize: 16,
+                                                              fontFamily:
+                                                                  'Syne-Bold',
+                                                            ),
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
                                                       Tooltip(
                                                         message:
                                                             "${widget.multipleData?["destin_address0"]}",
@@ -1023,6 +1111,48 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Clipboard.setData(
+                                                              ClipboardData(
+                                                                  text:
+                                                                      "$passcode1"));
+                                                          Fluttertoast.showToast(
+                                                              msg:
+                                                                  "$passcode1 copied to clipboard",
+                                                              toastLength: Toast
+                                                                  .LENGTH_SHORT,
+                                                              gravity:
+                                                                  ToastGravity
+                                                                      .BOTTOM,
+                                                              timeInSecForIosWeb:
+                                                                  1,
+                                                              backgroundColor:
+                                                                  Colors.grey,
+                                                              textColor:
+                                                                  Colors.white,
+                                                              fontSize: 16.0);
+                                                        },
+                                                        child: Tooltip(
+                                                          message: "$passcode1",
+                                                          child: Text(
+                                                            "Passcode ${passcode1 ?? "--"}",
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  orangeColor,
+                                                              fontSize: 16,
+                                                              fontFamily:
+                                                                  'Syne-Bold',
+                                                            ),
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
                                                       Tooltip(
                                                         message:
                                                             "${widget.multipleData?["destin_address1"]}",
@@ -1212,6 +1342,51 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Clipboard.setData(
+                                                                ClipboardData(
+                                                                    text:
+                                                                        "$passcode2"));
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "$passcode2 copied to clipboard",
+                                                                toastLength: Toast
+                                                                    .LENGTH_SHORT,
+                                                                gravity:
+                                                                    ToastGravity
+                                                                        .BOTTOM,
+                                                                timeInSecForIosWeb:
+                                                                    1,
+                                                                backgroundColor:
+                                                                    Colors.grey,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                fontSize: 16.0);
+                                                          },
+                                                          child: Tooltip(
+                                                            message:
+                                                                "$passcode2",
+                                                            child: Text(
+                                                              "Passcode ${passcode2 ?? "--"}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    orangeColor,
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'Syne-Bold',
+                                                              ),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Tooltip(
                                                           message:
                                                               "${widget.multipleData?["destin_address2"]}",
@@ -1409,6 +1584,51 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Clipboard.setData(
+                                                                ClipboardData(
+                                                                    text:
+                                                                        "$passcode3"));
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "$passcode3 copied to clipboard",
+                                                                toastLength: Toast
+                                                                    .LENGTH_SHORT,
+                                                                gravity:
+                                                                    ToastGravity
+                                                                        .BOTTOM,
+                                                                timeInSecForIosWeb:
+                                                                    1,
+                                                                backgroundColor:
+                                                                    Colors.grey,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                fontSize: 16.0);
+                                                          },
+                                                          child: Tooltip(
+                                                            message:
+                                                                "$passcode3",
+                                                            child: Text(
+                                                              "Passcode ${passcode3 ?? "--"}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    orangeColor,
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'Syne-Bold',
+                                                              ),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Tooltip(
                                                           message:
                                                               "${widget.multipleData?["destin_address3"]}",
@@ -1606,6 +1826,51 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Clipboard.setData(
+                                                                ClipboardData(
+                                                                    text:
+                                                                        "$passcode4"));
+                                                            Fluttertoast.showToast(
+                                                                msg:
+                                                                    "$passcode4 copied to clipboard",
+                                                                toastLength: Toast
+                                                                    .LENGTH_SHORT,
+                                                                gravity:
+                                                                    ToastGravity
+                                                                        .BOTTOM,
+                                                                timeInSecForIosWeb:
+                                                                    1,
+                                                                backgroundColor:
+                                                                    Colors.grey,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                fontSize: 16.0);
+                                                          },
+                                                          child: Tooltip(
+                                                            message:
+                                                                "$passcode4",
+                                                            child: Text(
+                                                              "Passcode ${passcode4 ?? "--"}",
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    orangeColor,
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'Syne-Bold',
+                                                              ),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Tooltip(
                                                           message:
                                                               "${widget.multipleData?["destin_address4"]}",
