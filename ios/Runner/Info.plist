@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -58,17 +58,6 @@
 		<string>sms</string>
 		<string>tel</string>
 	</array>
-	  <key>NSPrivacyAccessedUsageDescription</key>
-    <dict>
-        <key>NSUserDefaults</key>
-        <string>The app uses NSUserDefaults to store user preferences and settings related to parcel delivery notifications, such as preferred delivery times and notification preferences.</string>
-        <key>FileTimestamp</key>
-        <string>FileTimestamp is utilized by the app to manage and track the timestamps of parcel delivery-related files, ensuring accurate logging and timestamping of delivery updates and confirmations.</string>
-        <key>DiskSpace</key>
-        <string>The app requires access to DiskSpace to efficiently manage local storage space for storing essential parcel delivery data, including delivery schedules, recipient information, and parcel tracking details.</string>
-        <key>SystemBootTime</key>
-        <string>SystemBootTime is accessed by the app to optimize delivery route planning and scheduling based on device startup times, ensuring efficient allocation of delivery resources and timely parcel dispatch.</string>
-    </dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
@@ -85,6 +74,17 @@
 	<string>Needs camera access to capture photo to update in your profile and gallery.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Needs access to photo library to manage your profile image</string>
+	<key>NSPrivacyAccessedUsageDescription</key>
+	<dict>
+		<key>DiskSpace</key>
+		<string>The app requires access to DiskSpace to efficiently manage local storage space for storing essential parcel delivery data, including delivery schedules, recipient information, and parcel tracking details.</string>
+		<key>FileTimestamp</key>
+		<string>FileTimestamp is utilized by the app to manage and track the timestamps of parcel delivery-related files, ensuring accurate logging and timestamping of delivery updates and confirmations.</string>
+		<key>NSUserDefaults</key>
+		<string>The app uses NSUserDefaults to store user preferences and settings related to parcel delivery notifications, such as preferred delivery times and notification preferences.</string>
+		<key>SystemBootTime</key>
+		<string>SystemBootTime is accessed by the app to optimize delivery route planning and scheduling based on device startup times, ensuring efficient allocation of delivery resources and timely parcel dispatch.</string>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
