@@ -559,9 +559,9 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
               continue;
             }
 
-    // Convert to double only if distance and duration are not null
-    final double? distanceDouble = double.tryParse(distance);
-    final double? durationDouble = double.tryParse(duration);
+            // Convert to double only if distance and duration are not null
+            final double? distanceDouble = double.tryParse(distance);
+            final double? durationDouble = double.tryParse(duration);
             print('Distance $i: $distance');
             print('Duration $i: $duration');
             print('Pickup Latitude $i: $pickupLatt');

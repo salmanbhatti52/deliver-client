@@ -297,16 +297,8 @@ class _ConfirmMultipleDetailsScreenState
                                         SizedBox(width: size.width * 0.02),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
-                                          child: Text(
-                                            "$currencyUnit",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 38,
-                                              fontFamily: 'Syne-Bold',
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                          child: SvgPicture.asset(
+                                            'assets/images/naira-icon.svg',
                                           ),
                                         ),
                                         SizedBox(width: size.width * 0.02),

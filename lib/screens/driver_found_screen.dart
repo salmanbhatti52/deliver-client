@@ -165,95 +165,98 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   updateBookingStatus() async {
     // print(
     // " Passssssssssss ${updateBookingStatusModel.data!.bookingsFleet![0].bookingsDestinations!.passCode}");
-    try {
-      String apiUrl = "$baseUrl/get_updated_status_booking";
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint("currentBookingId: ${widget.currentBookingId}");
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: {
-          "bookings_id": widget.currentBookingId,
-        },
-      );
-      responseString1 = response.body;
+    // try {
+    String apiUrl = "$baseUrl/get_updated_status_booking";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "bookings_id": widget.currentBookingId,
+      },
+    );
+    responseString1 = response.body;
 
-      debugPrint("response zain: $responseString1");
-      debugPrint("statusCode: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        updateBookingStatusModel =
-            updateBookingStatusModelFromJson(responseString1!);
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+    debugPrint("response zain: $responseString1");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      updateBookingStatusModel =
+          updateBookingStatusModelFromJson(responseString1!);
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-        // Access the passcode
+      // Access the passcode
 
-        passcode0 = jsonResponse['data']['bookings_fleet'][0]
+      passcode0 = jsonResponse['data']['bookings_fleet'][0]
+              ['bookings_destinations']['passcode'] ??
+          "";
+      print("Passcode0: $passcode0");
+      if (jsonResponse['data']['bookings_fleet'].length > 1) {
+        passcode2 = jsonResponse['data']['bookings_fleet'][1]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode0: $passcode0");
-        passcode1 = jsonResponse['data']['bookings_fleet'][1]
-                ['bookings_destinations']['passcode'] ??
-            "";
-        print("Passcode1: $passcode1");
-        if (jsonResponse['data']['bookings_fleet'].length > 2) {
-          passcode2 = jsonResponse['data']['bookings_fleet'][2]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          print("Passcode2: $passcode2");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 3) {
-          passcode3 = jsonResponse['data']['bookings_fleet'][3]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          print("Passcode3: $passcode3");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 4) {
-          passcode4 = jsonResponse['data']['bookings_fleet'][4]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          print("Passcode4: $passcode4");
-        }
-        // passcode2 = jsonResponse['data']['bookings_fleet'][2]
-        //         ['bookings_destinations']['passcode'] ??
-        //     "";
-        // print("Passcode2: $passcode2");
-        // passcode3 = jsonResponse['data']['bookings_fleet'][3]
-        //         ['bookings_destinations']['passcode'] ??
-        //     "";
-        // print("Passcode3: $passcode3");
-        // passcode4 = jsonResponse['data']['bookings_fleet'][4]
-        //         ['bookings_destinations']['passcode'] ??
-        //     "";
-        // print("Passcode4: $passcode4");
-
-        debugPrint(
-            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-        if (updateBookingStatusModel.data?.status == "Accepted" ||
-            updateBookingStatusModel.data?.status == "Ongoing") {
-          timer?.cancel();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BookingAcceptedScreen(
-                distance: widget.distance,
-                singleData: widget.singleData,
-                multipleData: widget.multipleData,
-                passCode: widget.passCode,
-                riderData: widget.riderData!,
-                currentBookingId: widget.currentBookingId,
-                bookingDestinationId: widget.bookingDestinationId,
-              ),
-            ),
-          );
-        }
-        setState(() {});
+        print("Passcode2: $passcode1");
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
+      if (jsonResponse['data']['bookings_fleet'].length > 2) {
+        passcode2 = jsonResponse['data']['bookings_fleet'][2]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode2: $passcode2");
+      }
+      if (jsonResponse['data']['bookings_fleet'].length > 3) {
+        passcode3 = jsonResponse['data']['bookings_fleet'][3]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode3: $passcode3");
+      }
+      if (jsonResponse['data']['bookings_fleet'].length > 4) {
+        passcode4 = jsonResponse['data']['bookings_fleet'][4]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode4: $passcode4");
+      }
+      // passcode2 = jsonResponse['data']['bookings_fleet'][2]
+      //         ['bookings_destinations']['passcode'] ??
+      //     "";
+      // print("Passcode2: $passcode2");
+      // passcode3 = jsonResponse['data']['bookings_fleet'][3]
+      //         ['bookings_destinations']['passcode'] ??
+      //     "";
+      // print("Passcode3: $passcode3");
+      // passcode4 = jsonResponse['data']['bookings_fleet'][4]
+      //         ['bookings_destinations']['passcode'] ??
+      //     "";
+      // print("Passcode4: $passcode4");
+
+      debugPrint(
+          'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+      if (updateBookingStatusModel.data?.status == "Accepted" ||
+          updateBookingStatusModel.data?.status == "Ongoing") {
+        timer?.cancel();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookingAcceptedScreen(
+              distance: widget.distance,
+              singleData: widget.singleData,
+              multipleData: widget.multipleData,
+              passCode: widget.passCode,
+              riderData: widget.riderData!,
+              currentBookingId: widget.currentBookingId,
+              bookingDestinationId: widget.bookingDestinationId,
+            ),
+          ),
+        );
+      }
+      setState(() {});
     }
+    // }
+    //  catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
   Future<void> loadCustomMarker() async {
@@ -743,12 +746,38 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: size.height * 0.03),
+                                  SizedBox(height: size.height * 0.01),
                                   widget.singleData!.isNotEmpty
                                       ? Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text: "$passcode0"));
+                                                CustomToast.showToast(
+                                                  fontSize: 12,
+                                                  message:
+                                                      "$passcode0 copied to clipboard",
+                                                );
+                                              },
+                                              child: Tooltip(
+                                                message: "$passcode0",
+                                                child: Text(
+                                                  "Passcode ${passcode0 ?? '--'}",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: orangeColor,
+                                                    fontSize: 16,
+                                                    fontFamily: 'Syne-Bold',
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
                                             Tooltip(
                                               message:
                                                   "${widget.singleData?["destin_address"]}",
@@ -903,7 +932,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                                               ClipboardData(
                                                                   text:
                                                                       "$passcode0"));
-                                                            CustomToast.showToast(
+                                                          CustomToast.showToast(
                                                             fontSize: 12,
                                                             message:
                                                                 "$passcode0 copied to clipboard",

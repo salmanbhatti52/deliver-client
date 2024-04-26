@@ -127,97 +127,99 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
       UpdateBookingStatusModel();
 
   updateBookingStatus() async {
-    try {
-      String apiUrl = "$baseUrl/get_updated_status_booking";
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint("currentBookingId: ${widget.currentBookingId}");
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: {
-          "bookings_id": widget.currentBookingId,
-        },
-      );
-      final responseString = response.body;
-      debugPrint("response: $responseString");
-      debugPrint("statusCode: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        updateBookingStatusModel =
-            updateBookingStatusModelFromJson(responseString);
-        debugPrint(
-            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+    // try {
+    String apiUrl = "$baseUrl/get_updated_status_booking";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "bookings_id": widget.currentBookingId,
+      },
+    );
+    final responseString = response.body;
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      updateBookingStatusModel =
+          updateBookingStatusModelFromJson(responseString);
+      debugPrint(
+          'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-        // Access the passcode
+      // Access the passcode
 
-        passcode0 = jsonResponse['data']['bookings_fleet'][0]
+      passcode0 = jsonResponse['data']['bookings_fleet'][0]
+              ['bookings_destinations']['passcode'] ??
+          "";
+      print("Passcode0: $passcode0");
+      if (jsonResponse['data']['bookings_fleet'].length > 1) {
+        passcode2 = jsonResponse['data']['bookings_fleet'][1]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode0: $passcode0");
-        passcode1 = jsonResponse['data']['bookings_fleet'][1]
-                ['bookings_destinations']['passcode'] ??
-            "";
-        print("Passcode1: $passcode1");
-        if (jsonResponse['data']['bookings_fleet'].length > 2) {
-          passcode2 = jsonResponse['data']['bookings_fleet'][2]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          print("Passcode2: $passcode2");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 3) {
-          passcode3 = jsonResponse['data']['bookings_fleet'][3]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          print("Passcode3: $passcode3");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 4) {
-          passcode4 = jsonResponse['data']['bookings_fleet'][4]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          print("Passcode4: $passcode4");
-        }
-        if (updateBookingStatusModel.data?.bookingsFleet?[0]
-                .bookingsDestinations?.bookingsDestinationsStatus?.name ==
-            "Start Ride") {
-          timer?.cancel();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePageScreen(
-                index: 1,
-                singleData: widget.singleData,
-                multipleData: widget.multipleData,
-                passCode: widget.passCode,
-                currentBookingId: widget.currentBookingId,
-                riderData: widget.riderData!,
-                bookingDestinationId: widget.bookingDestinationId,
-              ),
-            ),
-          );
-        } else {
-          // timer?.cancel();
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => ArrivingScreen(
-          //       distance: widget.distance,
-          //       passCode: widget.passCode,
-          //       singleData: widget.singleData,
-          //       riderData: widget.riderData!,
-          //       currentBookingId: widget.currentBookingId,
-          //       bookingDestinationId: widget.bookingDestinationId,
-          //     ),
-          //   ),
-          // );
-        }
-        setState(() {});
+        print("Passcode2: $passcode1");
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
+      if (jsonResponse['data']['bookings_fleet'].length > 2) {
+        passcode2 = jsonResponse['data']['bookings_fleet'][2]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode2: $passcode2");
+      }
+      if (jsonResponse['data']['bookings_fleet'].length > 3) {
+        passcode3 = jsonResponse['data']['bookings_fleet'][3]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode3: $passcode3");
+      }
+      if (jsonResponse['data']['bookings_fleet'].length > 4) {
+        passcode4 = jsonResponse['data']['bookings_fleet'][4]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        print("Passcode4: $passcode4");
+      }
+      if (updateBookingStatusModel.data?.bookingsFleet?[0].bookingsDestinations
+              ?.bookingsDestinationsStatus?.name ==
+          "Start Ride") {
+        timer?.cancel();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePageScreen(
+              index: 1,
+              singleData: widget.singleData,
+              multipleData: widget.multipleData,
+              passCode: widget.passCode,
+              currentBookingId: widget.currentBookingId,
+              riderData: widget.riderData!,
+              bookingDestinationId: widget.bookingDestinationId,
+            ),
+          ),
+        );
+      } else {
+        // timer?.cancel();
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => ArrivingScreen(
+        //       distance: widget.distance,
+        //       passCode: widget.passCode,
+        //       singleData: widget.singleData,
+        //       riderData: widget.riderData!,
+        //       currentBookingId: widget.currentBookingId,
+        //       bookingDestinationId: widget.bookingDestinationId,
+        //     ),
+        //   ),
+        // );
+      }
+      setState(() {});
     }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
   getLocationSingle() {

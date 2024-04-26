@@ -239,17 +239,9 @@ class _ConfirmSingleDetailsScreenState
                                             fontFamily: 'Syne-Bold',
                                           ),
                                         ),
-                                        SizedBox(width: size.width * 0.13),
-                                        Text(
-                                          "$currencyUnit",
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            color: orangeColor,
-                                            fontSize: 38,
-                                            fontFamily: 'Syne-Bold',
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                        SizedBox(width: size.width * 0.05),
+                                        SvgPicture.asset(
+                                          'assets/images/naira-icon.svg',
                                         ),
                                         Tooltip(
                                           message: roundedTotalPrice.toString(),
@@ -352,38 +344,6 @@ class _ConfirmSingleDetailsScreenState
                                                 ),
                                               ),
                                               SizedBox(width: size.width * 0.3),
-                                              Text(
-                                                '$currencyUnit ',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: orangeColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
-                                                ),
-                                              ),
-                                              Tooltip(
-                                                message:
-                                                    "${widget.singleData?["destin_total_charges"]}",
-                                                child: Container(
-                                                  color: transparentColor,
-                                                  width: size.width * 0.18,
-                                                  child: AutoSizeText(
-                                                    "${widget.singleData?["destin_total_charges"]}",
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color: blackColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Inter-Medium',
-                                                    ),
-                                                    maxFontSize: 14,
-                                                    minFontSize: 12,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.01),

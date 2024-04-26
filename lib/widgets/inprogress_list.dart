@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:deliver_client/widgets/inProgress_Detailed_list.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -112,6 +113,7 @@ class _InProgressListState extends State<InProgressList> {
   void initState() {
     super.initState();
     inProgressRides();
+    print("riderData: ${widget.riderData}");
   }
 
   @override
@@ -292,11 +294,11 @@ class _InProgressListState extends State<InProgressList> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.pushReplacement(
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => HomePageScreen(
-                                            index: 1,
+                                          builder: (context) =>
+                                              InProgressDetailedScreen(
                                             passCode: widget.passCode,
                                             singleData: widget.singleData,
                                             multipleData: widget.multipleData,
