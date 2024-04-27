@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=E:\android studio\flutter"
-export "FLUTTER_APPLICATION_PATH=E:\flutter-Project\Office\deliver-client"
+export "FLUTTER_ROOT=/Users/salmanahmad/flutter"
+export "FLUTTER_APPLICATION_PATH=/Users/salmanahmad/Desktop/deliver-client"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.2.6"
