@@ -157,10 +157,10 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
           "";
       print("Passcode0: $passcode0");
       if (jsonResponse['data']['bookings_fleet'].length > 1) {
-        passcode2 = jsonResponse['data']['bookings_fleet'][1]
+        passcode1 = jsonResponse['data']['bookings_fleet'][1]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode2: $passcode1");
+        print("Passcode1: $passcode1");
       }
       if (jsonResponse['data']['bookings_fleet'].length > 2) {
         passcode2 = jsonResponse['data']['bookings_fleet'][2]

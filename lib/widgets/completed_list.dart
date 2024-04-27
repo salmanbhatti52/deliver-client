@@ -26,9 +26,14 @@ class _CompletedListState extends State<CompletedList> {
   bool isLoading = false;
   String? baseUrl = dotenv.env['BASE_URL'];
   String? imageUrl = dotenv.env['IMAGE_URL'];
-
   CompletedRideModel completedRideModel = CompletedRideModel();
 
+  /// Fetches completed rides for a specific user.
+  /// Makes an HTTP POST request to the server to retrieve completed ride data.
+  /// Updates the [completedRideModel] with the response data.
+  /// Sets the [isLoading] flag to true while the request is being made.
+  /// Sets the [isLoading] flag to false once the request is completed.
+  /// If an error occurs, sets the [isLoading] flag to false and returns null.
   completedRide() async {
     try {
       setState(() {
@@ -60,9 +65,11 @@ class _CompletedListState extends State<CompletedList> {
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       return null;
     }
   }

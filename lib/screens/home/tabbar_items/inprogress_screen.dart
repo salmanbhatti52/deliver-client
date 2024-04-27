@@ -533,10 +533,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               child: Tooltip(
                                                 message: "$passcode0",
                                                 child: Text(
-                                                  "1.   Passcode ${passcode0 ?? '--'}",
+                                                  "                                               Passcode ${passcode0 ?? '--'}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: blackColor,
+                                                    color: orangeColor,
                                                     fontSize: 14,
                                                     fontFamily: 'Inter-Medium',
                                                   ),
@@ -599,10 +599,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               child: Tooltip(
                                                 message: "$passcode1",
                                                 child: Text(
-                                                  "2.   Passcode ${passcode1 ?? '--'}",
+                                                  "                                               Passcode ${passcode1 ?? '--'}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: blackColor,
+                                                    color: orangeColor,
                                                     fontSize: 14,
                                                     fontFamily: 'Inter-Medium',
                                                   ),
@@ -690,10 +690,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 child: Tooltip(
                                                   message: "$passcode2",
                                                   child: Text(
-                                                    "3.   Passcode ${passcode2 ?? '--'}",
+                                                    "                                               Passcode ${passcode2 ?? '--'}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
-                                                      color: blackColor,
+                                                      color: orangeColor,
                                                       fontSize: 14,
                                                       fontFamily:
                                                           'Inter-Medium',
@@ -783,10 +783,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 child: Tooltip(
                                                   message: "$passcode3",
                                                   child: Text(
-                                                    "4.   Passcode ${passcode3 ?? '--'}",
+                                                    "                                               Passcode ${passcode3 ?? '--'}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
-                                                      color: blackColor,
+                                                      color: orangeColor,
                                                       fontSize: 14,
                                                       fontFamily:
                                                           'Inter-Medium',
@@ -874,10 +874,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 child: Tooltip(
                                                   message: "$passcode4",
                                                   child: Text(
-                                                    "5.   Passcode ${passcode4 ?? '--'}",
+                                                    "                                               Passcode ${passcode4 ?? '--'}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
-                                                      color: blackColor,
+                                                      color: orangeColor,
                                                       fontSize: 14,
                                                       fontFamily:
                                                           'Inter-Medium',
