@@ -45,6 +45,9 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
 
   rateRider() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
       String apiUrl = "$baseUrl/rate_booking";
@@ -76,9 +79,15 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
       if (response.statusCode == 200) {
         rateRiderModel = rateRiderModelFromJson(responseString);
         debugPrint('rateRiderModel status: ${rateRiderModel.status}');
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
+      setState(() {
+        isLoading = false;
+      });
       return null;
     }
   }

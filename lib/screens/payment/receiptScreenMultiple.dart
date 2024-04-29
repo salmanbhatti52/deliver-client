@@ -104,21 +104,36 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
   }
 
   allCharges() {
-    deliveryCharges =
-        double.parse(widget.multipleData!["destin_delivery_charges0"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges1"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges2"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges3"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges4"]);
+    deliveryCharges = (double.tryParse(
+                widget.multipleData?["destin_delivery_charges0"] ?? '0') ??
+            0) +
+        (double.tryParse(
+                widget.multipleData?["destin_delivery_charges1"] ?? '0') ??
+            0) +
+        (double.tryParse(
+                widget.multipleData?["destin_delivery_charges2"] ?? '0') ??
+            0) +
+        (double.tryParse(
+                widget.multipleData?["destin_delivery_charges3"] ?? '0') ??
+            0) +
+        (double.tryParse(
+                widget.multipleData?["destin_delivery_charges4"] ?? '0') ??
+            0);
     debugPrint("deliveryCharges: $deliveryCharges");
   }
 
   allDiscountCharges() {
-    discountCharges = double.parse(widget.multipleData!["destin_discount0"]) +
-        double.parse(widget.multipleData!["destin_discount1"]) +
-        double.parse(widget.multipleData!["destin_discount2"]) +
-        double.parse(widget.multipleData!["destin_discount3"]) +
-        double.parse(widget.multipleData!["destin_discount4"]);
+    discountCharges =
+        (double.tryParse(widget.multipleData?["destin_discount0"] ?? '0') ??
+                0) +
+            (double.tryParse(widget.multipleData?["destin_discount1"] ?? '0') ??
+                0) +
+            (double.tryParse(widget.multipleData?["destin_discount2"] ?? '0') ??
+                0) +
+            (double.tryParse(widget.multipleData?["destin_discount3"] ?? '0') ??
+                0) +
+            (double.tryParse(widget.multipleData?["destin_discount4"] ?? '0') ??
+                0);
     debugPrint("discountCharges: $discountCharges");
   }
 

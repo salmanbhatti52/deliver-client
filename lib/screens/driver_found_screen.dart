@@ -98,6 +98,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+        await updateBookingStatus();
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";

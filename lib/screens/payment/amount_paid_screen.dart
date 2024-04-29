@@ -271,7 +271,7 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () {
-                              if (widget.multipleData == null) {
+                              if (widget.multipleData!.isEmpty) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

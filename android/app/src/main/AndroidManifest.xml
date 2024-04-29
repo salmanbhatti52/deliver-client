@@ -20,7 +20,7 @@
         </intent>
     </queries>
     <application
-        android:label="Deliver Client"
+        android:label="Deliver By GFL"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

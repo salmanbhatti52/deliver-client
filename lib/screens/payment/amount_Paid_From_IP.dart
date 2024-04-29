@@ -275,6 +275,10 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () {
+                              print("MultipleData: ${widget.multipleData}");
+                              print("SingleData: ${widget.singleData}");
+                              print(
+                                  "widget.multipleData!['delivery_type']: ${widget.multipleData!['delivery_type']}");
                               if (widget.multipleData!['delivery_type'] ==
                                   "Single") {
                                 Navigator.push(

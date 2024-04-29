@@ -2,7 +2,9 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:deliver_client/models/send_otp_model.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
+import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -98,6 +100,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
+
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
           if (getAllSystemDataModel.data?[i].type == "system_currency") {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
@@ -111,6 +114,40 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
             });
           }
         }
+        for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
+          if (getAllSystemDataModel.data?[i].type == "termii_api_key") {
+            termiiApiKey = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "message_type") {
+            pinMessageType = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "from") {
+            pinFrom = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "channel") {
+            pinChannel = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "pin_attempts") {
+            pinAttempts = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "pin_time_to_live") {
+            pinExpiryTime = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "pin_length") {
+            pinLength = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "pin_placeholder") {
+            pinPlaceholder = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "message_text") {
+            pinMessageText = "${getAllSystemDataModel.data?[i].description}";
+          }
+          if (getAllSystemDataModel.data?[i].type == "pin_type") {
+            pinType = "${getAllSystemDataModel.data?[i].description}";
+          }
+        }
+        await updateBookingStatus();
+        await sendMessage();
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
@@ -123,6 +160,22 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
   String? passcode2;
   String? passcode3;
   String? passcode4;
+  String? phoneNumber0;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  String? charges0;
+  String? charges1;
+  String? charges2;
+  String? charges3;
+  String? charges4;
+  String? riderName0;
+  String? riderName1;
+  String? riderName2;
+  String? riderName3;
+  String? riderName4;
+  Map<String, dynamic>? jsonResponse;
   UpdateBookingStatusModel updateBookingStatusModel =
       UpdateBookingStatusModel();
 
@@ -148,42 +201,106 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
           updateBookingStatusModelFromJson(responseString);
       debugPrint(
           'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      jsonResponse = jsonDecode(response.body);
 
       // Access the passcode
 
-      passcode0 = jsonResponse['data']['bookings_fleet'][0]
+      passcode0 = jsonResponse!['data']['bookings_fleet'][0]
               ['bookings_destinations']['passcode'] ??
           "";
-      print("Passcode0: $passcode0");
-      if (jsonResponse['data']['bookings_fleet'].length > 1) {
-        passcode1 = jsonResponse['data']['bookings_fleet'][1]
+      debugPrint("Passcode0: $passcode0");
+      phoneNumber0 = jsonResponse!['data']['bookings_fleet'][0]
+              ['bookings_destinations']['receiver_phone'] ??
+          "";
+      debugPrint("phoneNumber0: $phoneNumber0");
+      charges0 = jsonResponse!['data']['bookings_fleet'][0]
+              ['bookings_destinations']['destin_total_charges'] ??
+            jsonResponse!['data']['bookings_fleet'][0]['bookings_destinations']
+                ['destin_delivery_charges'];
+      debugPrint("charges0: $charges0");
+      riderName0 = jsonResponse!['data']['bookings_fleet'][0]['users_fleet']
+              ['first_name'] ??
+          "";
+      debugPrint("riderName0: $riderName0");
+
+      if (jsonResponse!['data']['bookings_fleet'].length > 1) {
+        passcode1 = jsonResponse!['data']['bookings_fleet'][1]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode1: $passcode1");
+        debugPrint("Passcode1: $passcode1");
+        phoneNumber1 = jsonResponse!['data']['bookings_fleet'][1]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber1: $phoneNumber1");
+        charges1 = jsonResponse!['data']['bookings_fleet'][1]
+                ['bookings_destinations']['destin_delivery_charges'] ??
+            "";
+        debugPrint("charges1: $charges1");
+        riderName1 = jsonResponse!['data']['bookings_fleet'][1]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName1: $riderName1");
       }
-      if (jsonResponse['data']['bookings_fleet'].length > 2) {
-        passcode2 = jsonResponse['data']['bookings_fleet'][2]
+      if (jsonResponse!['data']['bookings_fleet'].length > 2) {
+        passcode2 = jsonResponse!['data']['bookings_fleet'][2]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode2: $passcode2");
+        debugPrint("Passcode2: $passcode2");
+        phoneNumber2 = jsonResponse!['data']['bookings_fleet'][2]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber2: $phoneNumber2");
+        charges2 = jsonResponse!['data']['bookings_fleet'][2]
+                ['bookings_destinations']['destin_delivery_charges'] ??
+            "";
+        debugPrint("charges2: $charges2");
+        riderName2 = jsonResponse!['data']['bookings_fleet'][2]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName2: $riderName2");
       }
-      if (jsonResponse['data']['bookings_fleet'].length > 3) {
-        passcode3 = jsonResponse['data']['bookings_fleet'][3]
+      if (jsonResponse!['data']['bookings_fleet'].length > 3) {
+        passcode3 = jsonResponse!['data']['bookings_fleet'][3]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode3: $passcode3");
+        debugPrint("Passcode3: $passcode3");
+        phoneNumber3 = jsonResponse!['data']['bookings_fleet'][3]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber3: $phoneNumber3");
+        charges3 = jsonResponse!['data']['bookings_fleet'][3]
+                ['bookings_destinations']['destin_delivery_charges'] ??
+            "";
+        debugPrint("charges3: $charges3");
+        riderName3 = jsonResponse!['data']['bookings_fleet'][3]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName3: $riderName3");
       }
-      if (jsonResponse['data']['bookings_fleet'].length > 4) {
-        passcode4 = jsonResponse['data']['bookings_fleet'][4]
+      if (jsonResponse!['data']['bookings_fleet'].length > 4) {
+        passcode4 = jsonResponse!['data']['bookings_fleet'][4]
                 ['bookings_destinations']['passcode'] ??
             "";
-        print("Passcode4: $passcode4");
+        debugPrint("Passcode4: $passcode4");
+        phoneNumber4 = jsonResponse!['data']['bookings_fleet'][4]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber4: $phoneNumber4");
+        charges4 = jsonResponse!['data']['bookings_fleet'][4]
+                ['bookings_destinations']['destin_delivery_charges'] ??
+            "";
+        debugPrint("charges4: $charges4");
+        riderName4 = jsonResponse!['data']['bookings_fleet'][4]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName4: $riderName4");
       }
+
       if (updateBookingStatusModel.data?.bookingsFleet?[0].bookingsDestinations
               ?.bookingsDestinationsStatus?.name ==
           "Start Ride") {
         timer?.cancel();
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -220,6 +337,130 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
     //   debugPrint('Something went wrong = ${e.toString()}');
     //   return null;
     // }
+  }
+
+  String? pinID;
+  String? termiiApiKey;
+  String? pinMessageType;
+  String? pinTo;
+  String? pinFrom;
+  String? pinChannel;
+  String? pinAttempts;
+  String? pinExpiryTime;
+  String? pinLength;
+  String? pinPlaceholder;
+  String? pinMessageText;
+  String? pinType;
+  String? tremiiUrl = dotenv.env['TERMII_URL'];
+  SendOtpModel sendOtpModel = SendOtpModel();
+  final countryPicker = const FlCountryCodePicker();
+  CountryCode? countryCode =
+      const CountryCode(name: 'Nigeria', code: 'NG', dialCode: '+234');
+
+  sendMessage() async {
+    try {
+      String apiUrl = "$tremiiUrl/send";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("apiKey: $termiiApiKey");
+      debugPrint("messageType: $pinMessageType");
+      debugPrint("to: ${countryCode!.dialCode + phoneNumber0.toString()}");
+      debugPrint("from: $pinFrom");
+      debugPrint("channel: $pinChannel");
+      debugPrint("attempts: $pinAttempts");
+      debugPrint("expiryTime: $pinExpiryTime");
+      debugPrint("length: $pinLength");
+      debugPrint("placeholder: $pinPlaceholder");
+      debugPrint("messageText: $pinMessageText");
+      debugPrint("pinType: $pinType");
+      int bookingsLength = jsonResponse!['data']['bookings_fleet'].length;
+
+// Iterate over the bookings_fleet array
+      for (int i = 0; i < bookingsLength; i++) {
+        // Get the passcode, phone number, charges, and rider name for the current booking
+        String passcode = jsonResponse!['data']['bookings_fleet'][i]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        String phoneNumber = jsonResponse!['data']['bookings_fleet'][i]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        String charges = jsonResponse!['data']['bookings_fleet'][i]
+                ['bookings_destinations']['destin_delivery_charges'] ??
+            jsonResponse!['data']['bookings_fleet'][i]['bookings_destinations']
+                ['destin_total_charges'];
+        String riderName = jsonResponse!['data']['bookings_fleet'][i]
+                ['users_fleet']['first_name'] ??
+            "";
+
+        debugPrint("Passcode$i: $passcode");
+        debugPrint("phoneNumber$i: $phoneNumber");
+        debugPrint("charges$i: $charges");
+        debugPrint("riderName$i: $riderName");
+        var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        var body = {
+          "api_key": termiiApiKey,
+          "to": countryCode!.dialCode + phoneNumber,
+          "from": "N-Alert",
+          "sms":
+              "Hello, your passcode is $passcode. Your rider is $riderName and the delivery charges are $charges.",
+          "type": "plain",
+          "channel": "dnd"
+        };
+
+        var response = await http.post(
+          Uri.parse('https://api.ng.termii.com/api/sms/send'),
+          headers: headers,
+          body: body,
+        );
+        print(body);
+        print("Send Message Response ${response.request}");
+        print("Response Body: ${response.body}");
+        final responseString = response.body;
+        // Send a message to the current phone number
+        // var response = await http.post(
+        //   Uri.parse('https://termii.com/api/sms/send'),
+        //   // body: {
+        //   //   "api_key": termiiApiKey,
+        //   //   "message_type": pinMessageType,
+        //   //   "to": countryCode!.dialCode + phoneNumber,
+        //   //   "from": pinFrom,
+        //   //   "channel": pinChannel,
+        //   //   "pin_attempts": pinAttempts,
+        //   //   "pin_time_to_live": pinExpiryTime,
+        //   //   "pin_length": pinLength,
+        //   //   "pin_placeholder": passcode, // Use the passcode instead of the OTP
+        //   //   "message_text":
+        //   //       "Hello, your passcode is $passcode. Your rider is $riderName and the delivery charges are $charges.",
+        //   //   "pin_type": pinType,
+        //   // },
+        //   body: {
+        //     "api_key": termiiApiKey,
+        //     "to": "2348039749289",
+        //     "from": "N-Alert",
+        //     "sms":
+        //         "Hello, your passcode is $passcode. Your rider is $riderName and the delivery charges are $charges.",
+        //     "type": "plain",
+        //     "channel": "dnd"
+        //   },
+        // );
+
+        print("Send Message Response ${response.request}");
+        print("Response Body: ${response.body}");
+
+        debugPrint("sendOtpModel status: response: $responseString");
+        debugPrint("statusCode: ${response.statusCode}");
+        if (response.statusCode == 200) {
+          sendOtpModel = sendOtpModelFromJson(responseString);
+          pinID = sendOtpModel.pinId;
+
+          debugPrint("pinID: $pinID");
+          setState(() {});
+          debugPrint('sendOtpModel status: ${sendOtpModel.status}');
+        }
+      }
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
+    }
   }
 
   getLocationSingle() {
