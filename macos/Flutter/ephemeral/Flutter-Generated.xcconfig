@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=E:\android studio\flutter
-FLUTTER_APPLICATION_PATH=E:\flutter-Project\Office\deliver-client
+FLUTTER_ROOT=/Users/salmanahmad/flutter
+FLUTTER_APPLICATION_PATH=/Users/salmanahmad/Desktop/deliver-client
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.2.6
