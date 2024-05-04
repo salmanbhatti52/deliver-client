@@ -2275,9 +2275,9 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
           ),
           insetPadding: const EdgeInsets.only(left: 20, right: 20),
           child: SizedBox(
-            height: size.height * 0.5,
+            height: size.height * 0.7,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: FutureBuilder<List<RideCancellationReason>>(
                 future: fetchCancellationReasons(),
                 builder: (context, snapshot) {
@@ -2296,19 +2296,19 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: SvgPicture.asset(
-                                  "assets/images/close-icon.svg"),
-                            ),
-                          ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     Navigator.pop(context);
+                        //   },
+                        //   child: Align(
+                        //     alignment: Alignment.centerRight,
+                        //     child: Padding(
+                        //       padding: const EdgeInsets.only(top: 5),
+                        //       child: SvgPicture.asset(
+                        //           "assets/images/close-icon.svg"),
+                        //     ),
+                        //   ),
+                        // ),
 
                         Text(
                           'Cancel Ride',
@@ -2328,36 +2328,31 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                             fontFamily: 'Syne-Regular',
                           ),
                         ),
-                        SizedBox(height: size.height * 0.01),
                         // Display cancellation reasons as radio buttons
                         Column(
                           children: cancellationReasons.map((reason) {
-                            return RadioListTile<String>(
-                              title: Text(
-                                reason.reason,
-                                style: TextStyle(color: blackColor),
+                            return Transform.scale(
+                              scale: 0.9,
+                              child: RadioListTile<String>(
+                                title: Text(
+                                  reason.reason,
+                                  style: TextStyle(color: blackColor),
+                                ),
+                                value: reason.id,
+                                groupValue: selectedReason,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectedReason = value!;
+                                  });
+                                },
+                                activeColor: orangeColor,
                               ),
-                              value: reason.id,
-                              groupValue: selectedReason,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  selectedReason = value!;
-                                });
-                              },
-                              activeColor: orangeColor,
                             );
                           }).toList(),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: dialogButtonTransparentGradientSmall(
-                                  "No", context),
-                            ),
                             GestureDetector(
                               onTap: () async {
                                 if (selectedReason != null) {
@@ -2397,11 +2392,39 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                               child: isLoading
                                   ? dialogButtonGradientSmallWithLoader(
                                       "Please wait...", context)
-                                  : dialogButtonGradientSmall("Yes", context),
+                                  : Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.06,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.45,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.centerRight,
+                                          end: Alignment.centerLeft,
+                                          stops: const [0.1, 1.5],
+                                          colors: [
+                                            orangeColor,
+                                            yellowColor,
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Yes, Cancel Ride",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: whiteColor,
+                                            fontSize: 16,
+                                            fontFamily: 'Syne-Medium',
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                             ),
                           ],
                         ),
-                        SizedBox(height: size.height * 0.01),
                       ],
                     );
                   }
