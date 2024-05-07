@@ -1,12 +1,19 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:math';
+import 'package:deliver_client/models/update_booking_status_model.dart';
+import 'package:deliver_client/models/update_booking_transaction_model.dart';
+import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -58,7 +65,157 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
   BitmapDescriptor? customMarkerIcon;
   String? baseUrl = dotenv.env['BASE_URL'];
   String? imageUrl = dotenv.env['IMAGE_URL'];
+  String? publicKey = dotenv.env['PAYSTACK_PUBLIC_KEY'];
   ScrollController scrollController = ScrollController();
+
+  final int amount = 100000;
+  int? totalAmount;
+  final payStackClient = PaystackPlugin();
+  final String reference =
+      "unique_transaction_ref_${Random().nextInt(1000000)}";
+  UpdateBookingTransactionModel updateBookingTransactionModel =
+      UpdateBookingTransactionModel();
+  String? firstName;
+  String? lastName;
+  String? userEmail;
+  sharedPref() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    userEmail = sharedPref.getString('email');
+    firstName = sharedPref.getString('firstName');
+    lastName = sharedPref.getString('lastName');
+  }
+
+  updateBookingTransaction() async {
+    try {
+      String apiUrl = "$baseUrl/maintain_booking_transaction";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("bookings_id: ${widget.currentBookingId}");
+      debugPrint("payer_name: $firstName $lastName");
+      debugPrint("payer_email: $userEmail");
+      debugPrint(
+          "total_amount: ${widget.singleData!.isNotEmpty ? widget.singleData!['total_charges'] : widget.multipleData!['total_charges']}");
+      debugPrint("payment_status: Paid");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.currentBookingId,
+          "payer_name": "$firstName $lastName",
+          "payer_email": userEmail,
+          "total_amount": widget.singleData!.isNotEmpty
+              ? widget.singleData!['total_charges']
+              : widget.multipleData!['total_charges'],
+          "payment_status": "Paid"
+        },
+      );
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        updateBookingTransactionModel =
+            updateBookingTransactionModelFromJson(responseString);
+        debugPrint(
+            'updateBookingTransactionModel status: ${updateBookingTransactionModel.status}');
+      }
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  void startPayStack() {
+    payStackClient.initialize(publicKey: publicKey!);
+  }
+
+  void makePayment() async {
+    final Charge charge = Charge()
+      ..amount = totalAmount! * 100
+      ..currency = 'NGN'
+      ..email = userEmail
+      ..reference = reference;
+
+    final CheckoutResponse response = await payStackClient.checkout(
+      context,
+      charge: charge,
+      method: CheckoutMethod.card,
+      logo: SvgPicture.asset(
+        'assets/images/logo-paystack-icon.svg',
+      ),
+    );
+
+    if (response.status && response.reference == reference) {
+      debugPrint("response: $response");
+      CustomToast.showToast(
+        fontSize: 12,
+        message: "Transaction Successful!",
+      );
+      await updateBookingTransaction();
+      await getAllSystemData();
+    } else {
+      CustomToast.showToast(
+        fontSize: 12,
+        message: "Transaction Failed!",
+      );
+    }
+  }
+
+  var passcodeVerified;
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
+
+  updateBookingStatus() async {
+    // try {
+    String apiUrl = "$baseUrl/get_updated_status_booking";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "bookings_id": widget.currentBookingId,
+      },
+    );
+    final responseString = response.body;
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      updateBookingStatusModel =
+          updateBookingStatusModelFromJson(responseString);
+      print(
+          "updateBookingStatusModel.data?.status: ${updateBookingStatusModel.data?.status}");
+
+      // Initialize a list to store passcode_verified statuses
+
+      if (updateBookingStatusModel.data?.status == "Ongoing") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArrivingScreen(
+              distance: widget.distance,
+              singleData: widget.singleData,
+              multipleData: widget.multipleData,
+              passCode: widget.passCode,
+              riderData: widget.riderData!,
+              currentBookingId: widget.currentBookingId,
+              bookingDestinationId: widget.bookingDestinationId,
+            ),
+          ),
+        );
+      }
+
+      // Now you have a list of passcode_verified statuses for each booking
+      // You can use passcodeVerifiedList as needed
+      setState(() {});
+    }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
+  }
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
 
@@ -80,7 +237,9 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
-        debugPrint('getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        debugPrint(
+            'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
+        await updateBookingStatus();
         debugPrint(
             'getAllSystemDataModel length: ${getAllSystemDataModel.data!.length}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -210,27 +369,27 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     await launchUrl(launchUri);
   }
 
-  route() {
-    timer?.cancel();
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArrivingScreen(
-          distance: widget.distance,
-          singleData: widget.singleData,
-          multipleData: widget.multipleData,
-          passCode: widget.passCode,
-          riderData: widget.riderData!,
-          currentBookingId: widget.currentBookingId,
-          bookingDestinationId: widget.bookingDestinationId,
-        ),
-      ),
-    );
-  }
+  // route() {
+  //   timer?.cancel();
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context) => ArrivingScreen(
+  //       distance: widget.distance,
+  //       singleData: widget.singleData,
+  //       multipleData: widget.multipleData,
+  //       passCode: widget.passCode,
+  //       riderData: widget.riderData!,
+  //       currentBookingId: widget.currentBookingId,
+  //       bookingDestinationId: widget.bookingDestinationId,
+  //     ),
+  //   ),
+  // );
+  // }
 
   startTimer() {
     timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      route();
+      // route();
     });
   }
 
@@ -239,6 +398,9 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     super.initState();
     getAllSystemData();
     loadCustomMarker();
+    sharedPref();
+    startPayStack();
+    updateBookingStatus();
     lat = "${widget.riderData!.latitude}";
     lng = "${widget.riderData!.longitude}";
     riderLat = double.parse(lat!);
@@ -246,6 +408,15 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     debugPrint("riderLat: $riderLat");
     debugPrint("riderLng: $riderLng");
     startTimer();
+    if (widget.singleData!.isNotEmpty) {
+      double parsedValue = double.parse(widget.singleData!['total_charges']);
+      totalAmount = (parsedValue + 0.5).floor();
+      debugPrint("Rounded Integer: $totalAmount");
+    } else {
+      double parsedValue = double.parse(widget.multipleData!['total_charges']);
+      totalAmount = (parsedValue + 0.5).floor();
+      debugPrint("Rounded Integer: $totalAmount");
+    }
     scrollController.addListener(() {
       setState(() {
         // Update the current index based on the scroll position
@@ -1693,10 +1864,34 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                       ],
                                     ),
                                   SizedBox(height: size.height * 0.02),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: buttonTransparent("CANCEL", context),
-                                  ),
+                                  updateBookingStatusModel
+                                              .data!.paymentStatus ==
+                                          "Unpaid"
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            if (widget.singleData!.isNotEmpty) {
+                                              double parsedValue = double.parse(
+                                                  widget.singleData![
+                                                      'total_charges']);
+                                              totalAmount =
+                                                  (parsedValue + 0.5).floor();
+                                              debugPrint(
+                                                  "Rounded Integer: $totalAmount");
+                                            } else {
+                                              double parsedValue = double.parse(
+                                                  widget.multipleData![
+                                                      'total_charges']);
+                                              totalAmount =
+                                                  (parsedValue + 0.5).floor();
+                                              debugPrint(
+                                                  "Rounded Integer: $totalAmount");
+                                            }
+                                            makePayment();
+                                          },
+                                          child: buttonGradient(
+                                              "Make Payment", context),
+                                        )
+                                      : buttonGradient("Paid", context),
                                 ],
                               ),
                             ),
@@ -1704,15 +1899,16 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                         ),
                       ),
                       Positioned(
-                        top: 40,
+                        top: 45,
                         right: 20,
                         child: GestureDetector(
-                          onTap: () {
-                            showPasscodeDialog();
+                          onTap: () async {
+                            await getAllSystemData();
                           },
-                          child: SvgPicture.asset(
-                            'assets/images/share-icon.svg',
-                            fit: BoxFit.scaleDown,
+                          child: const Icon(
+                            Icons.refresh,
+                            color: Colors.black,
+                            size: 24.0,
                           ),
                         ),
                       ),

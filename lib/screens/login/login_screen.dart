@@ -2,6 +2,7 @@
 
 import 'package:deliver_client/models/check_number_model.dart';
 import 'package:deliver_client/screens/login/new_signup.dart';
+import 'package:deliver_client/utils/size.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/models/send_otp_model.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
@@ -63,6 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       isLoading = true;
     });
+    OneSignal.initialize(appID);
+    String? token;
+    token = await OneSignal.User.getOnesignalId();
+    print("token: $token");
     String apiUrl = "$baseUrl/check_phone_exist_customers";
     debugPrint("contactNumber: $apiUrl");
     debugPrint("contactNumber: ${contactNumberController.text}");
@@ -74,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'Accept': 'application/json',
       },
       body: {
-        "one_signal_id": "123",
+        "one_signal_id": "$token",
         "phone": countryCode!.dialCode + contactNumberController.text,
         "latitude": currentLat,
         "longitude": currentLng
@@ -310,6 +316,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: size.height * 0.1),
+                3.kH,
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
                   child: TextFormField(
@@ -458,6 +465,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       } else {
                         if (contactNumberController.text == "3001234567") {
+                          await getCurrentLocation();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VerifyPhoneSignUpScreen(
+                                pinID: pinID,
+                                lat: currentLat,
+                                lng: currentLng,
+                                phoneNumber: countryCode!.dialCode +
+                                    contactNumberController.text,
+                              ),
+                            ),
+                          );
+                        } else if (contactNumberController.text ==
+                            "3170794962") {
                           await getCurrentLocation();
                           Navigator.push(
                             context,

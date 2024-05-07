@@ -535,6 +535,32 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 ),
                                               ),
                                             ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text: "$passcode0"));
+                                                CustomToast.showToast(
+                                                  fontSize: 12,
+                                                  message:
+                                                      "$passcode0 copied to clipboard",
+                                                );
+                                              },
+                                              child: Tooltip(
+                                                message: "$passcode0",
+                                                child: Text(
+                                                  "                                               Passcode ${passcode0 ?? '--'}",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: orangeColor,
+                                                    fontSize: 14,
+                                                    fontFamily: 'Inter-Medium',
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
                                           ],
                                         )
                                       else if (widget.multipleData != null &&
@@ -1569,48 +1595,48 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                         ],
                                       ),
                                       SizedBox(width: size.width * 0.08),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/images/passcode-icon.svg',
-                                          ),
-                                          SizedBox(width: size.width * 0.02),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 2),
-                                                child: Text(
-                                                  "Passcode",
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: textHaveAccountColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Regular',
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: size.height * 0.005),
-                                              Text(
-                                                "${widget.passCode}",
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: blackColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                      // Row(
+                                      //   mainAxisAlignment:
+                                      //       MainAxisAlignment.start,
+                                      //   crossAxisAlignment:
+                                      //       CrossAxisAlignment.start,
+                                      //   children: [
+                                      //     SvgPicture.asset(
+                                      //       'assets/images/passcode-icon.svg',
+                                      //     ),
+                                      //     SizedBox(width: size.width * 0.02),
+                                      //     Column(
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.center,
+                                      //       children: [
+                                      //         Padding(
+                                      //           padding: const EdgeInsets.only(
+                                      //               top: 2),
+                                      //           child: Text(
+                                      //             "Passcode",
+                                      //             textAlign: TextAlign.left,
+                                      //             style: TextStyle(
+                                      //               color: textHaveAccountColor,
+                                      //               fontSize: 14,
+                                      //               fontFamily: 'Inter-Regular',
+                                      //             ),
+                                      //           ),
+                                      //         ),
+                                      //         SizedBox(
+                                      //             height: size.height * 0.005),
+                                      //         Text(
+                                      //           "${widget.passCode}",
+                                      //           textAlign: TextAlign.left,
+                                      //           style: TextStyle(
+                                      //             color: blackColor,
+                                      //             fontSize: 14,
+                                      //             fontFamily: 'Inter-Medium',
+                                      //           ),
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ],
+                                      // ),
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.02),

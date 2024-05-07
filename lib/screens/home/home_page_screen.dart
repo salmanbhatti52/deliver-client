@@ -6,6 +6,7 @@ import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/tabbar_items/new_screen.dart';
 import 'package:deliver_client/screens/home/tabbar_items/inprogress_screen.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class HomePageScreen extends StatefulWidget {
   final int? index;
@@ -35,6 +36,18 @@ class _HomePageScreenState extends State<HomePageScreen>
     with SingleTickerProviderStateMixin {
   TabController? tabController;
   DateTime? currentBackPressTime;
+  one() async {
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
+    OneSignal.initialize(appID);
+
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    OneSignal.Notifications.requestPermission(true);
+    String? token;
+    token = await OneSignal.User.getOnesignalId();
+    print('token Response: $token');
+    setState(() {});
+  }
 
   Future<bool> onExitApp() {
     DateTime now = DateTime.now();
@@ -54,6 +67,7 @@ class _HomePageScreenState extends State<HomePageScreen>
   void initState() {
     tabController = TabController(length: 2, vsync: this);
     super.initState();
+    one();
   }
 
   @override

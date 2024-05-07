@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math' as math;
 import 'dart:convert';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -54,9 +55,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           "pickup_address": widget.singleData!.isNotEmpty
               ? widget.singleData!["pickup_address"]
               : widget.multipleData!["pickup_address"].toString(),
-          // "pickup_longitude": widget.singleData!.isNotEmpty
-          //     ? widget.singleData!["pickup_longitude"]
-          //     : widget.multipleData!["pickup_longitude0"].toString(),
         },
       );
       final responseString = response.body;
@@ -67,8 +65,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
         if (response.statusCode == 200) {
           searchRiderModel = searchRiderModelFromJson(responseString);
           debugPrint('searchRiderModel status: ${searchRiderModel.status}');
+          await radiusFider();
           debugPrint(
               'searchRiderModel length: ${searchRiderModel.data!.length}');
+
           setState(() {
             isLoading = false;
           });
@@ -81,6 +81,69 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
       return null;
+    }
+  }
+
+  List<SearchRiderData>? filteredRiders;
+  radiusFider() {
+    // Assuming you have parsed the JSON response into a list of rider objects
+    // Assuming you have parsed the JSON response into a SearchRiderModel object
+    // Given location coordinates and radius
+    double? givenLatitude; // Latitude of the given location
+    double? givenLongitude; // Longitude of the given location
+    double radiusThreshold =
+        double.parse(userRadius ?? '0'); // Radius in kilometers
+    double degreesToRadians(double degrees) {
+      return degrees * (math.pi / 180);
+    }
+
+    double calculateDistanceInKm(
+        double lat1, double lon1, double lat2, double lon2) {
+      const int earthRadius = 6371; // Radius of the Earth in kilometers
+
+      double dLat = degreesToRadians(lat2 - lat1);
+      double dLon = degreesToRadians(lon2 - lon1);
+
+      double a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+          math.cos(degreesToRadians(lat1)) *
+              math.cos(degreesToRadians(lat2)) *
+              math.sin(dLon / 2) *
+              math.sin(dLon / 2);
+      double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+      double distance = earthRadius * c;
+
+      return distance;
+    }
+
+// Extract latitude and longitude from pickup_longitude and pickup_latitude
+    if (widget.singleData!.isNotEmpty) {
+      givenLatitude = double.parse(widget.singleData!["pickup_latitude"]);
+      givenLongitude = double.parse(widget.singleData!["pickup_longitude"]);
+    } else if (widget.multipleData!.isNotEmpty) {
+      givenLatitude = double.parse(widget.multipleData!["pickup_latitude"]);
+      givenLongitude = double.parse(widget.multipleData!["pickup_longitude0"]);
+    }
+
+// Filter riders within the specified radius
+    filteredRiders = searchRiderModel.data!.where((rider) {
+      double riderLatitude = double.parse(rider.latitude!);
+      double riderLongitude = double.parse(rider.longitude!);
+      double distance = double.parse(rider.distance!);
+
+      // Calculate distance between given location and rider's location
+      double distanceInKm = calculateDistanceInKm(
+          givenLatitude!, givenLongitude!, riderLatitude, riderLongitude);
+
+      // Check if the rider is within the radius
+      return distanceInKm <= radiusThreshold;
+    }).toList();
+    debugPrint('filteredRiders length: $filteredRiders');
+    for (var rider in filteredRiders!) {
+      print('users_fleet_id: ${rider.usersFleetId}');
+      print('name: ${rider.firstName}');
+      print('one_signal_id: ${rider.oneSignalId}');
+      print('user_type: ${rider.userType}');
+      // Print other attributes as needed
     }
   }
 
@@ -246,12 +309,12 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                           physics:
                                               const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
-                                          itemCount:
-                                              searchRiderModel.data?.length,
+                                          itemCount: filteredRiders!
+                                              .length, // Use filteredRiders length
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             debugPrint(
-                                                "length: ${searchRiderModel.data?.length}");
+                                                "length: ${filteredRiders!.length}");
                                             return RidersList(
                                               singleData:
                                                   widget.singleData!.isNotEmpty
@@ -261,8 +324,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                                       .multipleData!.isNotEmpty
                                                   ? widget.multipleData
                                                   : const {},
-                                              searchRider:
-                                                  searchRiderModel.data?[index],
+                                              searchRider: filteredRiders![
+                                                  index], // Use filteredRiders
                                             );
                                           },
                                         ),

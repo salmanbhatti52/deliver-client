@@ -14,6 +14,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:deliver_client/models/send_otp_model.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
@@ -62,6 +63,10 @@ class _NewSignUpState extends State<NewSignUp> {
     setState(() {
       isLoading = true;
     });
+         OneSignal.initialize(appID);
+      String? token;
+      token = await OneSignal.User.getOnesignalId();
+      print("token: $token");
     String apiUrl = "$baseUrl/check_phone_exist_customers";
     debugPrint("contactNumber: $apiUrl");
     debugPrint("contactNumber: ${contactNumberController.text}");
@@ -73,7 +78,7 @@ class _NewSignUpState extends State<NewSignUp> {
         'Accept': 'application/json',
       },
       body: {
-        "one_signal_id": "123",
+        "one_signal_id": "$token",
         "phone": countryCode!.dialCode + contactNumberController.text,
         "latitude": currentLat,
         "longitude": currentLng

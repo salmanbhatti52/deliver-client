@@ -242,8 +242,7 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
 
   Future<void> captureAndSaveImage() async {
     // Request permission to write to external storage
-    PermissionStatus status = await Permission.storage.request();
-
+    PermissionStatus status = await Permission.manageExternalStorage.request();
     if (!status.isGranted) {
       if (status.isPermanentlyDenied) {
         // The user denied the permission and checked "Don't ask again". Open the app settings page.
@@ -253,20 +252,17 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
         return;
       }
     }
-
     // Capture image
     RenderRepaintBoundary boundary =
         globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     ui.Image image = await boundary.toImage();
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytes = byteData!.buffer.asUint8List();
-
     // Get external storage directory
-    final directory = (await getExternalStorageDirectory())!.path;
+    final directory = (await getTemporaryDirectory()).path;
     String formattedDate = DateFormat('yyyyMMdd').format(DateTime.now());
     String fileName = '${widget.ridername}_$formattedDate.png';
     File imgFile = File('$directory/$fileName');
-
     // Write image to file
     imgFile.writeAsBytesSync(pngBytes);
     print('File written: ${imgFile.existsSync()}');
@@ -314,6 +310,7 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                     child: const Icon(
                       Icons.download,
                       size: 24.0,
+                      color: Colors.black,
                     ),
                   ),
                 ),

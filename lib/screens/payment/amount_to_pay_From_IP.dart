@@ -381,7 +381,7 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
                         children: [
                           SizedBox(height: size.height * 0.04),
                           Text(
-                            "Amount to Pay",
+                            "Delivery Status",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: blackColor,
@@ -488,7 +488,7 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
                                       ),
                                       SizedBox(width: size.width * 0.12),
                                       Text(
-                                        "Pending",
+                                        "Paid",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: pendingColor,
@@ -560,9 +560,20 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
                             onTap: () async {
-                              if (widget.multipleData != null) {
-                                makePayment();
-                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AmountPaidFromInProgress(
+                                    riderData: widget.riderData,
+                                    singleData: widget.singleData,
+                                    multipleData: widget.multipleData,
+                                    currentBookingId: widget.currentBookingId,
+                                    bookingDestinationId:
+                                        widget.bookingDestinationId,
+                                  ),
+                                ),
+                              );
                               //   if (widget
                               //           .multipleData!["payment_gateways_id"] ==
                               //       '1') {
@@ -610,7 +621,7 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
                               //   }
                               // }
                             },
-                            child: buttonGradient("PAY", context),
+                            child: buttonGradient("Next", context),
                           ),
                         ],
                       ),

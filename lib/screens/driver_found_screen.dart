@@ -232,8 +232,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
 
       debugPrint(
           'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-      if (updateBookingStatusModel.data?.status == "Accepted" ||
-          updateBookingStatusModel.data?.status == "Ongoing") {
+      if (updateBookingStatusModel.data?.status == "Accepted") {
         timer?.cancel();
         Navigator.push(
           context,
@@ -370,7 +369,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       updateBookingStatus();
     });
   }
@@ -2211,15 +2210,16 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                       //   ),
                       // ),
                       Positioned(
-                        top: 40,
+                        top: 45,
                         right: 20,
                         child: GestureDetector(
-                          onTap: () {
-                            showPasscodeDialog();
+                          onTap: () async {
+                            await getAllSystemData();
                           },
-                          child: SvgPicture.asset(
-                            'assets/images/share-icon.svg',
-                            fit: BoxFit.scaleDown,
+                          child: const Icon(
+                            Icons.refresh,
+                            color: Colors.black,
+                            size: 24.0,
                           ),
                         ),
                       ),
@@ -2233,7 +2233,7 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
   Future<List<RideCancellationReason>> fetchCancellationReasons() async {
     final response = await http.post(
       Uri.parse(
-          'https://deliver.eigix.net/api/get_bookings_cancellations_reasons'),
+          'https://cs.deliverbygfl.com/api/get_bookings_cancellations_reasons'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

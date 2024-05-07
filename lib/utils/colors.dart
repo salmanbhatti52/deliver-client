@@ -24,3 +24,5 @@ Color transparentColor = Colors.transparent;
 
 List<Map<String, dynamic>>? dataForIndex = [];
 List<List<Map<String, dynamic>>> allDataForIndexes = [];
+
+String appID = "00d28278-85c3-440a-8f4b-ed69c78f72bf";

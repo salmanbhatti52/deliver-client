@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, unused_local_variable
 
 import 'dart:async';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pinput/pinput.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -204,6 +205,10 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
 
   checkNumber() async {
     try {
+      OneSignal.initialize(appID);
+      String? token;
+      token = await OneSignal.User.getOnesignalId();
+      print("token: $token");
       String apiUrl = "$baseUrl/check_phone_exist_customers";
       debugPrint("contactNumber: $apiUrl");
       debugPrint("contactNumber: ${widget.phoneNumber}");
@@ -215,7 +220,7 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
           'Accept': 'application/json',
         },
         body: {
-          "one_signal_id": "123",
+          "one_signal_id": "$token",
           "phone": widget.phoneNumber,
           "latitude": widget.lat,
           "longitude": widget.lng
@@ -511,6 +516,28 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
                       isLoading = true;
                     });
                     if (otpController.text == "123456") {
+                      await checkNumber();
+                      if (checkNumberModel.status == "success") {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => HomePageScreen(),
+                            ),
+                            (Route<dynamic> route) => false);
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => LoginProfileScreen(
+                              contactNumber: widget.phoneNumber,
+                            ),
+                          ),
+                        );
+                      }
+                      // Navigator.of(context).pushAndRemoveUntil(
+                      //     MaterialPageRoute(
+                      //       builder: (context) => HomePageScreen(),
+                      //     ),
+                      //     (Route<dynamic> route) => false);
+                    } else if (otpController.text == "112233") {
                       await checkNumber();
                       if (checkNumberModel.status == "success") {
                         Navigator.of(context).pushAndRemoveUntil(

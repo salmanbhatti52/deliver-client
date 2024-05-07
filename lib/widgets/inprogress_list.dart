@@ -185,7 +185,16 @@ class _InProgressListState extends State<InProgressList> {
                                           "assets/images/user-profile.png",
                                         ),
                                         image: NetworkImage(
-                                          '$imageUrl${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
+                                          inProgressRideModel
+                                                          .data![reverseIndex]
+                                                          .bookingsFleet !=
+                                                      null &&
+                                                  inProgressRideModel
+                                                      .data![reverseIndex]
+                                                      .bookingsFleet!
+                                                      .isNotEmpty
+                                              ? '$imageUrl${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}'
+                                              : 'default_image_url_here', // replace with your default image URL
                                         ),
                                         fit: BoxFit.cover,
                                       ),

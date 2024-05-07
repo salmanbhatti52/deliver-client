@@ -630,109 +630,136 @@ class _RideHistoryCompletedDetailsScreenState
                 )
               : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      SizedBox(height: size.height * 0.02),
-                      Container(
-                        color: transparentColor,
-                        height: size.height * 0.78,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: Text(
-                                formatTimeDifference(timeAdded!),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: sheetBarrierColor,
-                                  fontSize: 14,
-                                  fontFamily: 'Inter-Medium',
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: size.height * 0.02),
+                        Container(
+                          color: transparentColor,
+                          // height: size.height * 0.98,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: Text(
+                                  formatTimeDifference(timeAdded!),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: sheetBarrierColor,
+                                    fontSize: 14,
+                                    fontFamily: 'Inter-Medium',
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: size.height * 0.02),
-                            Card(
-                              color: whiteColor,
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                child: Stack(
-                                  children: [
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(height: size.height * 0.02),
-                                          Row(
+                              SizedBox(height: size.height * 0.02),
+                              Card(
+                                color: whiteColor,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  child: Stack(
+                                    children: [
+                                      SingleChildScrollView(
+                                        child: SizedBox(
+                                          height: size.height * 0.8,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: Container(
-                                                  color: transparentColor,
-                                                  width: 60,
-                                                  height: 65,
-                                                  child: FadeInImage(
-                                                    placeholder:
-                                                        const AssetImage(
-                                                      "assets/images/user-profile.png",
-                                                    ),
-                                                    image: NetworkImage(
-                                                      '$imageUrl${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.profilePic}',
-                                                    ),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
                                               SizedBox(
-                                                  width: size.width * 0.02),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                  height: size.height * 0.02),
+                                              Row(
                                                 children: [
-                                                  Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.45,
-                                                    child: AutoSizeText(
-                                                      "${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.firstName} ${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.lastName}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: drawerTextColor,
-                                                        fontSize: 16,
-                                                        fontFamily: 'Syne-Bold',
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Container(
+                                                      color: transparentColor,
+                                                      width: 60,
+                                                      height: 65,
+                                                      child: FadeInImage(
+                                                        placeholder:
+                                                            const AssetImage(
+                                                          "assets/images/user-profile.png",
+                                                        ),
+                                                        image: NetworkImage(
+                                                          '$imageUrl${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.profilePic}',
+                                                        ),
+                                                        fit: BoxFit.cover,
                                                       ),
-                                                      minFontSize: 16,
-                                                      maxFontSize: 16,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                   SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Row(
+                                                      width: size.width * 0.02),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      Text(
-                                                        '${widget.completedRideModel?.bookingsFleet?[0].usersFleetVehicles?.color} ',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color:
-                                                              textHaveAccountColor,
-                                                          fontSize: 12,
-                                                          fontFamily:
-                                                              'Inter-Regular',
+                                                      Container(
+                                                        color: transparentColor,
+                                                        width:
+                                                            size.width * 0.45,
+                                                        child: AutoSizeText(
+                                                          "${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.firstName} ${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.lastName}",
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            color:
+                                                                drawerTextColor,
+                                                            fontSize: 16,
+                                                            fontFamily:
+                                                                'Syne-Bold',
+                                                          ),
+                                                          minFontSize: 16,
+                                                          maxFontSize: 16,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         ),
                                                       ),
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            '${widget.completedRideModel?.bookingsFleet?[0].usersFleetVehicles?.color} ',
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  textHaveAccountColor,
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'Inter-Regular',
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            '${widget.completedRideModel?.bookingsFleet?[0].usersFleetVehicles?.model}',
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  textHaveAccountColor,
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'Inter-Regular',
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.005),
                                                       Text(
-                                                        '${widget.completedRideModel?.bookingsFleet?[0].usersFleetVehicles?.model}',
+                                                        '${widget.completedRideModel?.bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
@@ -745,965 +772,1212 @@ class _RideHistoryCompletedDetailsScreenState
                                                       ),
                                                     ],
                                                   ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.005),
-                                                  Text(
-                                                    '${widget.completedRideModel?.bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo}',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color:
-                                                          textHaveAccountColor,
-                                                      fontSize: 12,
-                                                      fontFamily:
-                                                          'Inter-Regular',
-                                                    ),
-                                                  ),
                                                 ],
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: size.height * 0.03),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                'assets/images/orange-location-big-icon.svg',
                                               ),
                                               SizedBox(
-                                                  width: size.width * 0.02),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Pickup',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color:
-                                                          textHaveAccountColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Syne-Regular',
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.65,
-                                                      child: AutoSizeText(
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                        minFontSize: 14,
-                                                        maxFontSize: 14,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Divider(
-                                            thickness: 1,
-                                            color: dividerColor,
-                                            indent: 30,
-                                            endIndent: 30,
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                'assets/images/send-small-icon.svg',
-                                              ),
+                                                  height: size.height * 0.03),
                                               SizedBox(
-                                                  width: size.width * 0.02),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Dropoff',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color:
-                                                          textHaveAccountColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Syne-Regular',
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.65,
-                                                      child: AutoSizeText(
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
+                                                height: size.height * 0.45,
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/orange-location-big-icon.svg',
                                                         ),
-                                                        minFontSize: 14,
-                                                        maxFontSize: 14,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Pickup',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    textHaveAccountColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Syne-Regular',
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.65,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.pickupAddress}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Medium',
+                                                                  ),
+                                                                  minFontSize:
+                                                                      14,
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Divider(
+                                                      thickness: 1,
+                                                      color: dividerColor,
+                                                      indent: 30,
+                                                      endIndent: 30,
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/send-small-icon.svg',
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Dropoff',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    textHaveAccountColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Syne-Regular',
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.65,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinAddress}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Medium',
+                                                                  ),
+                                                                  minFontSize:
+                                                                      14,
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Divider(
+                                                      thickness: 1,
+                                                      color: dividerColor,
+                                                      indent: 30,
+                                                      endIndent: 30,
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/orange-location-big-icon.svg',
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Pickup',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    textHaveAccountColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Syne-Regular',
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.pickupAddress}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.65,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.pickupAddress}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Medium',
+                                                                  ),
+                                                                  minFontSize:
+                                                                      14,
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Divider(
+                                                      thickness: 1,
+                                                      color: dividerColor,
+                                                      indent: 30,
+                                                      endIndent: 30,
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/send-small-icon.svg',
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Dropoff',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    textHaveAccountColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Syne-Regular',
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.destinAddress}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.65,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.destinAddress}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Medium',
+                                                                  ),
+                                                                  minFontSize:
+                                                                      14,
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            2 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][2]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    Divider(
+                                                      thickness: 1,
+                                                      color: dividerColor,
+                                                      indent: 30,
+                                                      endIndent: 30,
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            2 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][2]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      // pickup index 2
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            'assets/images/orange-location-big-icon.svg',
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Pickup',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      textHaveAccountColor,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Syne-Regular',
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.01),
+                                                              Tooltip(
+                                                                message:
+                                                                    "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.pickupAddress}",
+                                                                child:
+                                                                    Container(
+                                                                  color:
+                                                                      transparentColor,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.65,
+                                                                  child:
+                                                                      AutoSizeText(
+                                                                    "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.pickupAddress}",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontFamily:
+                                                                          'Inter-Medium',
+                                                                    ),
+                                                                    minFontSize:
+                                                                        14,
+                                                                    maxFontSize:
+                                                                        14,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    // SizedBox(
+                                                    //     height:
+                                                    //         size.height * 0.01),
+                                                    // if (jsonResponse!['data'][
+                                                    //                 'bookings_fleet']
+                                                    //             .length >
+                                                    //         2 &&
+                                                    //     jsonResponse!['data'][
+                                                    //                     'bookings_fleet'][2]
+                                                    //                 [
+                                                    //                 'bookings_destinations']
+                                                    //             [
+                                                    //             'destin_address'] !=
+                                                    //         null)
+                                                    Divider(
+                                                      thickness: 1,
+                                                      color: dividerColor,
+                                                      indent: 30,
+                                                      endIndent: 30,
+                                                    ),
+                                                    // SizedBox(
+                                                    //     height:
+                                                    //         size.height * 0.01),
+                                                    // if (jsonResponse!['data'][
+                                                    //                 'bookings_fleet']
+                                                    //             .length >
+                                                    //         2 &&
+                                                    //     jsonResponse!['data'][
+                                                    //                     'bookings_fleet'][2]
+                                                    //                 [
+                                                    //                 'bookings_destinations']
+                                                    //             [
+                                                    //             'destin_address'] !=
+                                                    //         null)
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/images/send-small-icon.svg',
+                                                        ),
+                                                        SizedBox(
+                                                            width: size.width *
+                                                                0.02),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              'Dropoff',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                color:
+                                                                    textHaveAccountColor,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    'Syne-Regular',
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.destinAddress}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.65,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.destinAddress}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        blackColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Medium',
+                                                                  ),
+                                                                  minFontSize:
+                                                                      14,
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            3 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][3]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            3 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][3]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            'assets/images/orange-location-big-icon.svg',
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Pickup',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      textHaveAccountColor,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Syne-Regular',
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.01),
+                                                              Tooltip(
+                                                                message:
+                                                                    "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.pickupAddress}",
+                                                                child:
+                                                                    Container(
+                                                                  color:
+                                                                      transparentColor,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.65,
+                                                                  child:
+                                                                      AutoSizeText(
+                                                                    "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.pickupAddress}",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontFamily:
+                                                                          'Inter-Medium',
+                                                                    ),
+                                                                    minFontSize:
+                                                                        14,
+                                                                    maxFontSize:
+                                                                        14,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            3 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][3]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      Divider(
+                                                        thickness: 1,
+                                                        color: dividerColor,
+                                                        indent: 30,
+                                                        endIndent: 30,
+                                                      ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            3 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][3]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            'assets/images/send-small-icon.svg',
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Dropoff',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      textHaveAccountColor,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Syne-Regular',
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.01),
+                                                              Tooltip(
+                                                                message:
+                                                                    "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.destinAddress}",
+                                                                child:
+                                                                    Container(
+                                                                  color:
+                                                                      transparentColor,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.65,
+                                                                  child:
+                                                                      AutoSizeText(
+                                                                    "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.destinAddress}",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontFamily:
+                                                                          'Inter-Medium',
+                                                                    ),
+                                                                    minFontSize:
+                                                                        14,
+                                                                    maxFontSize:
+                                                                        14,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            4 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][4]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      SizedBox(
+                                                          height: size.height *
+                                                              0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            4 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][4]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            'assets/images/orange-location-big-icon.svg',
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Pickup',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      textHaveAccountColor,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Syne-Regular',
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.01),
+                                                              Tooltip(
+                                                                message:
+                                                                    "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.pickupAddress}",
+                                                                child:
+                                                                    Container(
+                                                                  color:
+                                                                      transparentColor,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.65,
+                                                                  child:
+                                                                      AutoSizeText(
+                                                                    "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.pickupAddress}",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontFamily:
+                                                                          'Inter-Medium',
+                                                                    ),
+                                                                    minFontSize:
+                                                                        14,
+                                                                    maxFontSize:
+                                                                        14,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            4 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][4]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      Divider(
+                                                        thickness: 1,
+                                                        color: dividerColor,
+                                                        indent: 30,
+                                                        endIndent: 30,
+                                                      ),
+                                                    SizedBox(
+                                                        height:
+                                                            size.height * 0.01),
+                                                    if (jsonResponse!['data'][
+                                                                    'bookings_fleet']
+                                                                .length >
+                                                            4 &&
+                                                        jsonResponse!['data'][
+                                                                        'bookings_fleet'][4]
+                                                                    [
+                                                                    'bookings_destinations']
+                                                                [
+                                                                'destin_address'] !=
+                                                            null)
+                                                      Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            'assets/images/send-small-icon.svg',
+                                                          ),
+                                                          SizedBox(
+                                                              width:
+                                                                  size.width *
+                                                                      0.02),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Dropoff',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      textHaveAccountColor,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Syne-Regular',
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height:
+                                                                      size.height *
+                                                                          0.01),
+                                                              Tooltip(
+                                                                message:
+                                                                    "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.destinAddress}",
+                                                                child:
+                                                                    Container(
+                                                                  color:
+                                                                      transparentColor,
+                                                                  width:
+                                                                      size.width *
+                                                                          0.65,
+                                                                  child:
+                                                                      AutoSizeText(
+                                                                    "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.destinAddress}",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color:
+                                                                          blackColor,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontFamily:
+                                                                          'Inter-Medium',
+                                                                    ),
+                                                                    minFontSize:
+                                                                        14,
+                                                                    maxFontSize:
+                                                                        14,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              'assets/images/grey-location-icon.svg',
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinDistance} $distanceUnit",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.18,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinDistance} $distanceUnit",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        textHaveAccountColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Regular',
+                                                                  ),
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  minFontSize:
+                                                                      12,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Column(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              'assets/images/grey-clock-icon.svg',
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinTime}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.38,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinTime}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        textHaveAccountColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Regular',
+                                                                  ),
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  minFontSize:
+                                                                      12,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Column(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              'assets/images/grey-dollar-icon.svg',
+                                                              colorFilter: ColorFilter.mode(
+                                                                  const Color(
+                                                                          0xFF292D32)
+                                                                      .withOpacity(
+                                                                          0.4),
+                                                                  BlendMode
+                                                                      .srcIn),
+                                                            ),
+                                                            SizedBox(
+                                                                height:
+                                                                    size.height *
+                                                                        0.01),
+                                                            Tooltip(
+                                                              message:
+                                                                  "$currencyUnit${widget.completedRideModel?.totalCharges}",
+                                                              child: Container(
+                                                                color:
+                                                                    transparentColor,
+                                                                width:
+                                                                    size.width *
+                                                                        0.2,
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  "$currencyUnit${widget.completedRideModel?.totalCharges}",
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        textHaveAccountColor,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Inter-Regular',
+                                                                  ),
+                                                                  maxFontSize:
+                                                                      14,
+                                                                  minFontSize:
+                                                                      12,
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
+                                              // SizedBox(
+                                              //     height: size.height * 0.3),
+
+                                              // SizedBox(height: size.height * 0.03),
+                                              // GestureDetector(
+                                              //   onTap: () {
+                                              //     showDialog(
+                                              //       context: context,
+                                              //       barrierDismissible: false,
+                                              //       // barrierColor: sheetBarrierColor,
+                                              //       builder: (context) =>
+                                              //           rebookRide(context),
+                                              //     );
+                                              //   },
+                                              //   child: buttonGradient("REBOOK", context),
+                                              // ),
+                                              // SizedBox(
+                                              //     height: size.height * 0.02),
                                             ],
                                           ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Divider(
-                                            thickness: 1,
-                                            color: dividerColor,
-                                            indent: 30,
-                                            endIndent: 30,
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                'assets/images/orange-location-big-icon.svg',
-                                              ),
-                                              SizedBox(
-                                                  width: size.width * 0.02),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Pickup',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color:
-                                                          textHaveAccountColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Syne-Regular',
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.pickupAddress}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.65,
-                                                      child: AutoSizeText(
-                                                        "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.pickupAddress}",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                        minFontSize: 14,
-                                                        maxFontSize: 14,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Divider(
-                                            thickness: 1,
-                                            color: dividerColor,
-                                            indent: 30,
-                                            endIndent: 30,
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                'assets/images/send-small-icon.svg',
-                                              ),
-                                              SizedBox(
-                                                  width: size.width * 0.02),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Dropoff',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color:
-                                                          textHaveAccountColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Syne-Regular',
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.destinAddress}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.65,
-                                                      child: AutoSizeText(
-                                                        "${widget.completedRideModel?.bookingsFleet?[1].bookingsDestinations?.destinAddress}",
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                        minFontSize: 14,
-                                                        maxFontSize: 14,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  2 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][2]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                          Divider(
-                                            thickness: 1,
-                                            color: dividerColor,
-                                            indent: 30,
-                                            endIndent: 30,
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  2 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][2]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/orange-location-big-icon.svg',
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.02),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Pickup',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color:
-                                                            textHaveAccountColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Syne-Regular',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.01),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.pickupAddress}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: AutoSizeText(
-                                                          "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.pickupAddress}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          minFontSize: 14,
-                                                          maxFontSize: 14,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  2 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][2]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Divider(
-                                              thickness: 1,
-                                              color: dividerColor,
-                                              indent: 30,
-                                              endIndent: 30,
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  2 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][2]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/send-small-icon.svg',
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.02),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Dropoff',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color:
-                                                            textHaveAccountColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Syne-Regular',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.01),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.destinAddress}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: AutoSizeText(
-                                                          "${widget.completedRideModel?.bookingsFleet?[2].bookingsDestinations?.destinAddress}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          minFontSize: 14,
-                                                          maxFontSize: 14,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  3 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][3]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  3 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][3]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/orange-location-big-icon.svg',
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.02),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Pickup',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color:
-                                                            textHaveAccountColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Syne-Regular',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.01),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.pickupAddress}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: AutoSizeText(
-                                                          "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.pickupAddress}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          minFontSize: 14,
-                                                          maxFontSize: 14,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  3 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][3]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Divider(
-                                              thickness: 1,
-                                              color: dividerColor,
-                                              indent: 30,
-                                              endIndent: 30,
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  3 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][3]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/send-small-icon.svg',
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.02),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Dropoff',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color:
-                                                            textHaveAccountColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Syne-Regular',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.01),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.destinAddress}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: AutoSizeText(
-                                                          "${widget.completedRideModel?.bookingsFleet?[3].bookingsDestinations?.destinAddress}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          minFontSize: 14,
-                                                          maxFontSize: 14,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  4 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][4]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            SizedBox(
-                                                height: size.height * 0.01),
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  4 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][4]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/orange-location-big-icon.svg',
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.02),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Pickup',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color:
-                                                            textHaveAccountColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Syne-Regular',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.01),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.pickupAddress}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: AutoSizeText(
-                                                          "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.pickupAddress}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          minFontSize: 14,
-                                                          maxFontSize: 14,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  4 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][4]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Divider(
-                                              thickness: 1,
-                                              color: dividerColor,
-                                              indent: 30,
-                                              endIndent: 30,
-                                            ),
-                                          SizedBox(height: size.height * 0.01),
-                                          if (jsonResponse!['data'][
-                                                          'bookings_fleet']
-                                                      .length >
-                                                  4 &&
-                                              jsonResponse!['data'][
-                                                              'bookings_fleet'][4]
-                                                          [
-                                                          'bookings_destinations']
-                                                      ['destin_address'] !=
-                                                  null)
-                                            Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/send-small-icon.svg',
-                                                ),
-                                                SizedBox(
-                                                    width: size.width * 0.02),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Dropoff',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color:
-                                                            textHaveAccountColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Syne-Regular',
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.01),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.destinAddress}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.65,
-                                                        child: AutoSizeText(
-                                                          "${widget.completedRideModel?.bookingsFleet?[4].bookingsDestinations?.destinAddress}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          minFontSize: 14,
-                                                          maxFontSize: 14,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          SizedBox(height: size.height * 0.03),
-
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    'assets/images/grey-location-icon.svg',
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinDistance} $distanceUnit",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.18,
-                                                      child: AutoSizeText(
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinDistance} $distanceUnit",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color:
-                                                              textHaveAccountColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Regular',
-                                                        ),
-                                                        maxFontSize: 14,
-                                                        minFontSize: 12,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    'assets/images/grey-clock-icon.svg',
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinTime}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.38,
-                                                      child: AutoSizeText(
-                                                        "${widget.completedRideModel?.bookingsFleet?[0].bookingsDestinations?.destinTime}",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color:
-                                                              textHaveAccountColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Regular',
-                                                        ),
-                                                        maxFontSize: 14,
-                                                        minFontSize: 12,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    'assets/images/grey-dollar-icon.svg',
-                                                    colorFilter:
-                                                        ColorFilter.mode(
-                                                            const Color(
-                                                                    0xFF292D32)
-                                                                .withOpacity(
-                                                                    0.4),
-                                                            BlendMode.srcIn),
-                                                  ),
-                                                  SizedBox(
-                                                      height:
-                                                          size.height * 0.01),
-                                                  Tooltip(
-                                                    message:
-                                                        "$currencyUnit${widget.completedRideModel?.totalCharges}",
-                                                    child: Container(
-                                                      color: transparentColor,
-                                                      width: size.width * 0.2,
-                                                      child: AutoSizeText(
-                                                        "$currencyUnit${widget.completedRideModel?.totalCharges}",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color:
-                                                              textHaveAccountColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Regular',
-                                                        ),
-                                                        maxFontSize: 14,
-                                                        minFontSize: 12,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          // SizedBox(height: size.height * 0.03),
-                                          // GestureDetector(
-                                          //   onTap: () {
-                                          //     showDialog(
-                                          //       context: context,
-                                          //       barrierDismissible: false,
-                                          //       // barrierColor: sheetBarrierColor,
-                                          //       builder: (context) =>
-                                          //           rebookRide(context),
-                                          //     );
-                                          //   },
-                                          //   child: buttonGradient("REBOOK", context),
-                                          // ),
-                                          SizedBox(height: size.height * 0.02),
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      right: 0,
-                                      child: SvgPicture.asset(
-                                        'assets/images/star-with-container-icon.svg',
-                                        width: 45,
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 11.5,
-                                      right: 7,
-                                      child: Text(
-                                        '${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.bookingsRatings}',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 12,
-                                          fontFamily: 'Inter-Regular',
                                         ),
                                       ),
-                                    ),
-                                    Positioned(
-                                      top: 31,
-                                      right: 0,
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            width: 36,
-                                            height: 36,
-                                            child: SvgPicture.asset(
-                                              'assets/images/dt.svg',
-                                              fit: BoxFit.scaleDown,
-                                              color: orangeColor,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            widget.completedRideModel!
-                                                .deliveryType!,
-                                            style: GoogleFonts.syne(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              color: grey,
-                                            ),
-                                          )
-                                        ],
+                                      Positioned(
+                                        top: 10,
+                                        right: 0,
+                                        child: SvgPicture.asset(
+                                          'assets/images/star-with-container-icon.svg',
+                                          width: 45,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Positioned(
+                                        top: 11.5,
+                                        right: 7,
+                                        child: Text(
+                                          '${widget.completedRideModel?.bookingsFleet?[0].usersFleet?.bookingsRatings}',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 12,
+                                            fontFamily: 'Inter-Regular',
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 31,
+                                        right: 0,
+                                        child: Column(
+                                          children: [
+                                            SizedBox(
+                                              width: 36,
+                                              height: 36,
+                                              child: SvgPicture.asset(
+                                                'assets/images/dt.svg',
+                                                fit: BoxFit.scaleDown,
+                                                color: orangeColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              widget.completedRideModel!
+                                                  .deliveryType!,
+                                              style: GoogleFonts.syne(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                color: grey,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: size.height * 0.02),
-                          ],
+                              SizedBox(height: size.height * 0.02),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
     );

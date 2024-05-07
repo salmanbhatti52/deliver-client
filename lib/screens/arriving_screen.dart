@@ -215,8 +215,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
       debugPrint("phoneNumber0: $phoneNumber0");
       charges0 = jsonResponse!['data']['bookings_fleet'][0]
               ['bookings_destinations']['destin_total_charges'] ??
-            jsonResponse!['data']['bookings_fleet'][0]['bookings_destinations']
-                ['destin_delivery_charges'];
+          jsonResponse!['data']['bookings_fleet'][0]['bookings_destinations']
+              ['destin_delivery_charges'];
       debugPrint("charges0: $charges0");
       riderName0 = jsonResponse!['data']['bookings_fleet'][0]['users_fleet']
               ['first_name'] ??
@@ -2302,7 +2302,30 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                       ],
                                     ),
                                   SizedBox(height: size.height * 0.02),
-                                  buttonTransparent("CANCEL", context),
+                                  GestureDetector(
+                                      onTap: () {
+                                        timer?.cancel();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                              callbackFunction: startTimer,
+                                              riderId: widget
+                                                  .riderData!.usersFleetId
+                                                  .toString(),
+                                              name:
+                                                  "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                              address:
+                                                  widget.riderData!.address,
+                                              phone: widget.riderData!.phone,
+                                              image:
+                                                  widget.riderData!.profilePic,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: buttonGradient(
+                                          "Talk to Admin", context)),
                                 ],
                               ),
                             ),
