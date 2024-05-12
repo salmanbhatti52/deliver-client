@@ -181,7 +181,11 @@ class _InProgressDetailedScreenState extends State<InProgressDetailedScreen> {
             "";
         print("Passcode4: $passcode4");
       }
-      setState(() {});
+      CustomToast.showToast(
+          message: "${updateBookingStatusModel.data?.status}");
+      if (mounted) {
+        setState(() {});
+      }
       if (updateBookingStatusModel.data?.status == "Completed") {
         timer?.cancel();
         Navigator.push(

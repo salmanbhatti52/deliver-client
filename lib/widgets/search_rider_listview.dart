@@ -22,12 +22,13 @@ class RidersList extends StatefulWidget {
   final Map? singleData;
   final Map? multipleData;
   final SearchRiderData? searchRider;
-
+  final double? distances;
   const RidersList({
     super.key,
     this.singleData,
     this.multipleData,
     this.searchRider,
+    this.distances,
   });
 
   @override
@@ -42,8 +43,6 @@ class _RidersListState extends State<RidersList> {
   String? distanceFormatted;
   String? baseUrl = dotenv.env['BASE_URL'];
   String? imageUrl = dotenv.env['IMAGE_URL'];
-
-  
 
   CreateBookingModel createBookingModel = CreateBookingModel();
 
@@ -853,25 +852,28 @@ class _RidersListState extends State<RidersList> {
     }
   }
 
-  calculateDistance() {
-    distanceKm = widget.searchRider?.distance != null
-        ? double.parse("${widget.searchRider?.distance}")
-        : 0.0;
-    debugPrint('distanceKm: $distanceKm');
+  String formattedDistance = '';
+  String calculateDistance(double? distanceKm) {
+    if (distanceKm != null) {
+      if (distanceKm > 10.00) {
+        formattedDistance =
+            'Distance too large'; // Add a sentinel value or message
+      } else {
+        double distanceMeters = distanceKm * 1000;
+        String distanceFormatted = distanceMeters.toStringAsFixed(0);
+        debugPrint('distanceFormatted: $distanceFormatted');
 
-    if (distanceKm! > 10.00) {
-      distanceKm = null; // Set distanceKm to null or another sentinel value
-    } else {
-      distanceMeters = distanceKm! * 1000;
-      distanceFormatted = distanceMeters!.toStringAsFixed(0);
-      debugPrint('distanceFormatted: $distanceFormatted');
+        formattedDistance = distanceFormatted;
+      }
     }
+
+    return formattedDistance;
   }
 
   @override
   initState() {
     super.initState();
-    calculateDistance();
+    calculateDistance(widget.distances);
     debugPrint('singleData: ${widget.singleData}');
     debugPrint('multipleData: ${widget.multipleData}');
   }
@@ -938,7 +940,7 @@ class _RidersListState extends State<RidersList> {
                             ),
                           ),
                           Text(
-                            "Drive  $distanceFormatted m",
+                            "Drive  $formattedDistance m",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: textHaveAccountColor,
@@ -956,7 +958,7 @@ class _RidersListState extends State<RidersList> {
                       if (widget.singleData?["type"] == "booking" ||
                           widget.multipleData?["type"] == "booking") {
                         debugPrint("booking");
-                        calculateDistance();
+                        calculateDistance(widget.distances);
                         await createBooking();
                         if (createBookingModel.data != null) {
                           if (createBookingModel.status == 'success') {
@@ -998,7 +1000,7 @@ class _RidersListState extends State<RidersList> {
                         }
                       } else {
                         debugPrint("schedule");
-                        calculateDistance();
+                        calculateDistance(widget.distances);
                         await scheduleBooking();
                         if (scheduleBookingModel.status == 'success') {
                           Navigator.pushReplacement(

@@ -161,8 +161,16 @@ class _ScheduledListState extends State<ScheduledList> {
                 itemBuilder: (BuildContext context, int index) {
                   int reverseIndex =
                       getScheduledBookingModel.data!.length - 1 - index;
-                  timeAdded = DateTime.parse(
-                      "${getScheduledBookingModel.data![reverseIndex].dateModified}");
+                  if (getScheduledBookingModel
+                          .data![reverseIndex].dateModified !=
+                      null) {
+                    timeAdded = DateTime.parse(
+                        "${getScheduledBookingModel.data![reverseIndex].dateModified}");
+                  } else {
+                    // Handle the situation when dateModified is null
+                    // For example, you can use the current date and time as a default value
+                    timeAdded = DateTime.now();
+                  }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -463,7 +471,8 @@ class _ScheduledListState extends State<ScheduledList> {
                           } else {
                             CustomToast.showToast(
                               fontSize: 12,
-                              message: "You have already cancelled this booking.",
+                              message:
+                                  "You have already cancelled this booking.",
                             );
                             setState(() {
                               isLoading = false;

@@ -2,6 +2,7 @@
 
 import 'dart:math' as math;
 import 'dart:convert';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -30,62 +31,65 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
 
   SearchRiderModel searchRiderModel = SearchRiderModel();
 
-  searchRider() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      String apiUrl = "$baseUrl/get_riders_reachable";
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint(
-          "vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
-      debugPrint(
-          "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_address"]}");
-      debugPrint(
-          "pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: {
-          "vehicles_id": widget.singleData!.isNotEmpty
-              ? widget.singleData!["vehicles_id"]
-              : widget.multipleData!["vehicles_id"].toString(),
-          "pickup_address": widget.singleData!.isNotEmpty
-              ? widget.singleData!["pickup_address"]
-              : widget.multipleData!["pickup_address"].toString(),
-        },
-      );
-      final responseString = response.body;
-      var data = jsonDecode(responseString);
-      debugPrint("response: $responseString");
-      debugPrint("statusCode: ${response.statusCode}");
-      if (data["status"] == "success") {
-        if (response.statusCode == 200) {
-          searchRiderModel = searchRiderModelFromJson(responseString);
-          debugPrint('searchRiderModel status: ${searchRiderModel.status}');
-          await radiusFider();
-          debugPrint(
-              'searchRiderModel length: ${searchRiderModel.data!.length}');
+  Future<void> searchRider() async {
+    // try {
+    setState(() {
+      isLoading = true;
+    });
+    String apiUrl = "$baseUrl/get_riders_reachable";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint(
+        "vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
+    debugPrint(
+        "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_address0"]}");
+    debugPrint(
+        "pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "vehicles_id": widget.singleData!.isNotEmpty
+            ? widget.singleData!["vehicles_id"]
+            : widget.multipleData!["vehicles_id"].toString(),
+        "pickup_address": widget.singleData!.isNotEmpty
+            ? widget.singleData!["pickup_address"]
+            : widget.multipleData!["pickup_address"].toString(),
+      },
+    );
+    final responseString = response.body;
+    var data = jsonDecode(responseString);
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (data["status"] == "success") {
+      if (response.statusCode == 200) {
+        searchRiderModel = searchRiderModelFromJson(responseString);
+        debugPrint('searchRiderModel status: ${searchRiderModel.status}');
+        await radiusFinder();
+        debugPrint('searchRiderModel length: ${searchRiderModel.data!.length}');
 
-          setState(() {
-            isLoading = false;
-          });
-        }
-      } else {
         setState(() {
           isLoading = false;
         });
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
+    } else {
+      searchRiderModel = searchRiderModelFromJson(responseString);
+      CustomToast.showToast(message: "Something went Wrong");
+      setState(() {
+        isLoading = false;
+      });
     }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
+  List<double> distanceRider = [];
+  double? distanceInKm;
   List<SearchRiderData>? filteredRiders;
-  radiusFider() {
+  radiusFinder() {
     // Assuming you have parsed the JSON response into a list of rider objects
     // Assuming you have parsed the JSON response into a SearchRiderModel object
     // Given location coordinates and radius
@@ -120,7 +124,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       givenLatitude = double.parse(widget.singleData!["pickup_latitude"]);
       givenLongitude = double.parse(widget.singleData!["pickup_longitude"]);
     } else if (widget.multipleData!.isNotEmpty) {
-      givenLatitude = double.parse(widget.multipleData!["pickup_latitude"]);
+      givenLatitude = double.parse(widget.multipleData!["pickup_latitude0"]);
       givenLongitude = double.parse(widget.multipleData!["pickup_longitude0"]);
     }
 
@@ -128,16 +132,24 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     filteredRiders = searchRiderModel.data!.where((rider) {
       double riderLatitude = double.parse(rider.latitude!);
       double riderLongitude = double.parse(rider.longitude!);
-      double distance = double.parse(rider.distance!);
+      debugPrint(
+          'Given Latitude: $givenLatitude, Given Longitude: $givenLongitude');
+      debugPrint(
+          'Rider Latitude: $riderLatitude, Rider Longitude: $riderLongitude');
+      // double distance = double.parse(rider.distance!);
 
       // Calculate distance between given location and rider's location
-      double distanceInKm = calculateDistanceInKm(
+      distanceInKm = calculateDistanceInKm(
           givenLatitude!, givenLongitude!, riderLatitude, riderLongitude);
-
+      debugPrint('Calculated distance: $distanceInKm');
+      debugPrint('Radius Threshold: $radiusThreshold');
+      distanceRider.add(distanceInKm!);
+      print("distanceRider: $distanceRider");
       // Check if the rider is within the radius
-      return distanceInKm <= radiusThreshold;
+      return distanceInKm! <= radiusThreshold;
     }).toList();
     debugPrint('filteredRiders length: $filteredRiders');
+
     for (var rider in filteredRiders!) {
       print('users_fleet_id: ${rider.usersFleetId}');
       print('name: ${rider.firstName}');
@@ -166,7 +178,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       debugPrint("response: $responseString");
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
-        await searchRider();
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
         debugPrint(
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
@@ -178,6 +189,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             debugPrint("userRadius: $userRadius");
           }
         }
+        await searchRider();
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
@@ -314,7 +326,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             debugPrint(
-                                                "length: ${filteredRiders!.length}");
+                                                "Distanceeeeeeee: $distanceInKm");
+
+                                            debugPrint(
+                                                "${searchRiderModel.data![0].distance}");
                                             return RidersList(
                                               singleData:
                                                   widget.singleData!.isNotEmpty
@@ -324,8 +339,9 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                                       .multipleData!.isNotEmpty
                                                   ? widget.multipleData
                                                   : const {},
-                                              searchRider: filteredRiders![
-                                                  index], // Use filteredRiders
+                                              searchRider:
+                                                  searchRiderModel.data![index],
+                                                 distances: distanceRider[index],
                                             );
                                           },
                                         ),

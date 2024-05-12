@@ -38,6 +38,7 @@ class ConfirmMultipleDetailsScreen extends StatefulWidget {
 
 class _ConfirmMultipleDetailsScreenState
     extends State<ConfirmMultipleDetailsScreen> {
+  bool _renderGoogleMap = false;
   var dataForIndex0;
   var dataForIndex1;
   var dataForIndex2;
@@ -139,6 +140,11 @@ class _ConfirmMultipleDetailsScreenState
   @override
   initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _renderGoogleMap = true;
+      });
+    });
     allCharges();
     getAllSystemData();
     allDiscountCharges();
@@ -191,17 +197,21 @@ class _ConfirmMultipleDetailsScreenState
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  child: GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        double.parse(widget.multipleData!["destin_latitude0"]
-                            .toString()),
-                        double.parse(widget.multipleData!["destin_longitude0"]
-                            .toString()),
-                      ),
-                      zoom: 13.4746,
-                    ),
-                  ),
+                  child: _renderGoogleMap
+                      ? GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              double.parse(widget
+                                  .multipleData!["destin_latitude0"]
+                                  .toString()),
+                              double.parse(widget
+                                  .multipleData!["destin_longitude0"]
+                                  .toString()),
+                            ),
+                            zoom: 13.4746,
+                          ),
+                        )
+                      : Container(),
                 ),
                 // Image.asset(
                 //   'assets/images/home-location-background.png',
