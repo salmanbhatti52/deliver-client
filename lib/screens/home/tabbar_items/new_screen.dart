@@ -2951,7 +2951,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                           ),
                           SizedBox(width: size.width * 0.02),
                           Text(
-                            'Note: Distance must be grater than 1KM',
+                            'Note: Distance must be greater than 1KM',
                             style: TextStyle(
                               color: blackColor,
                               fontSize: 10,
