@@ -1,6 +1,10 @@
 // ignore_for_file: avoid_print
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 import 'dart:typed_data';
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/screens/payment/receiptScreenMultiple.dart';
 import 'package:deliver_client/screens/payment/receiptScreenMultipleIP.dart';
 import 'package:deliver_client/screens/payment/receiptScreenSingle.dart';
@@ -9,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/rate_driver_screen.dart';
@@ -70,6 +75,49 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
     }
   }
 
+  String? baseUrl = dotenv.env['BASE_URL'];
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
+  String? responseString1;
+  updateBookingStatus() async {
+    // print(
+    // " Passssssssssss ${updateBookingStatusModel.data!.bookingsFleet![0].bookingsDestinations!.passCode}");
+    // try {
+    String apiUrl = "$baseUrl/get_updated_status_booking";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "bookings_id": widget.currentBookingId,
+      },
+    );
+    responseString1 = response.body;
+
+    debugPrint("response zain: $responseString1");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      updateBookingStatusModel =
+          updateBookingStatusModelFromJson(responseString1!);
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      debugPrint(
+          'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+
+      if (mounted) {
+        setState(() {});
+      }
+    }
+    // }
+    //  catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
+  }
+
   Future<void> loadCustomMarker() async {
     final ByteData bytes = await rootBundle.load(
       'assets/images/custom-dest-icon.png',
@@ -82,6 +130,7 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
   @override
   void initState() {
     super.initState();
+    updateBookingStatus();
     print("multipleData Map: ${widget.multipleData}");
     if (widget.singleData!.isNotEmpty) {
       getLocationSingle();
@@ -290,12 +339,10 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
                                       currentBookingId: widget.currentBookingId,
                                       bookingDestinationId:
                                           widget.bookingDestinationId,
-                                      date: widget.riderData!['date_modified'],
-                                      paymentType: widget.multipleData![
-                                                  "payment_gateways_id"] ==
-                                              '1'
-                                          ? "Cash"
-                                          : "Card",
+                                      date: updateBookingStatusModel
+                                          .data!.dateModified,
+                                      paymentType: updateBookingStatusModel
+                                          .data!.paymentGateways!.name,
                                       ridername:
                                           "${widget.riderData!['first_name']} "
                                           " ${widget.riderData!['last_name']}",
@@ -313,12 +360,10 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
                                       currentBookingId: widget.currentBookingId,
                                       bookingDestinationId:
                                           widget.bookingDestinationId,
-                                      date: widget.riderData!['date_modified'],
-                                      paymentType: widget.multipleData![
-                                                  "payment_gateways_id"] ==
-                                              '1'
-                                          ? "Cash"
-                                          : "Card",
+                                      date: updateBookingStatusModel
+                                          .data!.dateModified,
+                                      paymentType: updateBookingStatusModel
+                                          .data!.paymentGateways!.name,
                                       ridername:
                                           "${widget.riderData!['first_name']} "
                                           " ${widget.riderData!['last_name']}",

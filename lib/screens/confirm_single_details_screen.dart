@@ -68,8 +68,6 @@ class _ConfirmSingleDetailsScreenState
             doubleVatCharges = double.parse(vatCharges!);
             debugPrint("doubleVatCharges: $doubleVatCharges");
             setState(() {});
-            calculateVATCharges(doubleVatCharges!,
-                double.parse(widget.singleData!["destin_total_charges"]));
           }
         }
       }
@@ -77,25 +75,6 @@ class _ConfirmSingleDetailsScreenState
       debugPrint('Something went wrong = ${e.toString()}');
       return null;
     }
-  }
-
-  calculateVATCharges(double vat, double deliveryCharges) {
-    debugPrint("deliveryCharges: $deliveryCharges");
-    double vatPercentage = vat / 100.0;
-    totalVatCharges = deliveryCharges - (deliveryCharges * vatPercentage);
-    debugPrint("totalVatCharges: $totalVatCharges");
-    totalVatAmount = deliveryCharges - totalVatCharges!;
-    debugPrint("totalVatAmount: $totalVatAmount");
-    roundedTotalVatAmount = double.parse(totalVatAmount!.toStringAsFixed(2));
-    debugPrint("roundedTotalVatAmount: $roundedTotalVatAmount");
-    calculateTotalPrice(deliveryCharges, roundedTotalVatAmount!);
-  }
-
-  calculateTotalPrice(double deliveryCharges, double roundedTotalVatAmount) {
-    totalPrice = deliveryCharges + roundedTotalVatAmount;
-    debugPrint("totalPrice: $totalPrice");
-    roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
-    debugPrint("roundedTotalAmount: $roundedTotalPrice");
   }
 
   Future<String> getEncodedPolyline() async {
@@ -244,11 +223,12 @@ class _ConfirmSingleDetailsScreenState
                                           'assets/images/naira-icon.svg',
                                         ),
                                         Tooltip(
-                                          message: roundedTotalPrice.toString(),
+                                          message:
+                                              "${widget.singleData!["destin_total_charges"]}",
                                           child: Container(
                                             color: transparentColor,
                                             child: AutoSizeText(
-                                              roundedTotalPrice.toString(),
+                                              "${widget.singleData!["destin_total_charges"]}",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: blackColor,
@@ -430,7 +410,7 @@ class _ConfirmSingleDetailsScreenState
                                         ),
                                       ),
                                       Text(
-                                        "$roundedTotalVatAmount",
+                                        "${widget.singleData!["destin_vat_charges"]}",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,
@@ -464,7 +444,7 @@ class _ConfirmSingleDetailsScreenState
                                         ),
                                       ),
                                       Text(
-                                        '$totalPrice',
+                                        "${widget.singleData!["destin_total_charges"]}",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,
@@ -512,8 +492,11 @@ class _ConfirmSingleDetailsScreenState
                     onTap: () {
                       Map? updatedData = Map.from(widget.singleData!);
                       updatedData.addAll({
-                        "total_vat_charges": roundedTotalVatAmount.toString(),
-                        "total_charges": totalPrice.toString(),
+                        "total_vat_charges":
+                            widget.singleData!["destin_vat_charges"].toString(),
+                        "total_charges": widget
+                            .singleData!["destin_total_charges"]
+                            .toString(),
                         "total_discount": "0.00",
                         "total_discounted_charges": "0.00",
                       });

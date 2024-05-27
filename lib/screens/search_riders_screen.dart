@@ -2,6 +2,7 @@
 
 import 'dart:math' as math;
 import 'dart:convert';
+import 'package:deliver_client/screens/home/tabbar_items/new_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     debugPrint(
         "vehiclesId: ${widget.singleData!.isNotEmpty ? widget.singleData!["vehicles_id"] : widget.multipleData!["vehicles_id"]}");
     debugPrint(
-        "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_address0"]}");
+        "pickup_address11111: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_address"] : widget.multipleData!["pickup_address"]}");
     debugPrint(
         "pickupLongitude: ${widget.singleData!.isNotEmpty ? widget.singleData!["pickup_longitude"] : widget.multipleData!["pickup_longitude0"]}");
+        
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
@@ -86,15 +88,12 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     // }
   }
 
+  double? givenLatitude; // Latitude of the given location
+  double? givenLongitude;
   List<double> distanceRider = [];
   double? distanceInKm;
   List<SearchRiderData>? filteredRiders;
   radiusFinder() {
-    // Assuming you have parsed the JSON response into a list of rider objects
-    // Assuming you have parsed the JSON response into a SearchRiderModel object
-    // Given location coordinates and radius
-    double? givenLatitude; // Latitude of the given location
-    double? givenLongitude; // Longitude of the given location
     double radiusThreshold =
         double.parse(userRadius ?? '0'); // Radius in kilometers
     double degreesToRadians(double degrees) {
@@ -126,6 +125,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     } else if (widget.multipleData!.isNotEmpty) {
       givenLatitude = double.parse(widget.multipleData!["pickup_latitude0"]);
       givenLongitude = double.parse(widget.multipleData!["pickup_longitude0"]);
+      print(
+          'Given Latitude of Multiple: $givenLatitude, Given Longitude of Multiple: $givenLongitude');
     }
 
 // Filter riders within the specified radius
@@ -190,6 +191,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           }
         }
         await searchRider();
+        print("latLongData $latLongData");
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
@@ -341,7 +343,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                                                   : const {},
                                               searchRider:
                                                   searchRiderModel.data![index],
-                                                 distances: distanceRider[index],
+                                              distances: distanceRider[index],
                                             );
                                           },
                                         ),

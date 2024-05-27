@@ -820,7 +820,9 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
                   ),
                 ),
                 SizedBox(height: size.height * 0.09),
-                updateBookingStatusModel.data!.paymentStatus == "Unpaid"
+                (updateBookingStatusModel.data!.paymentBy == "Sender" &&
+                        updateBookingStatusModel.data!.paymentStatus ==
+                            "Unpaid")
                     ? GestureDetector(
                         onTap: () {
                           if (updateBookingStatusModel.data!.totalCharges !=
@@ -840,7 +842,7 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
                         },
                         child: buttonGradient("Make Payment", context),
                       )
-                    : buttonGradient("Paid", context),
+                    : buttonGradient("In Progress", context),
                 SizedBox(height: size.height * 0.02),
                 GestureDetector(
                   onTap: () {

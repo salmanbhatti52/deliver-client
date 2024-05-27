@@ -533,12 +533,12 @@ class _AppDrawerState extends State<AppDrawer> {
       //   );
       //   break;
       case 6:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoyaltyPointScreen(),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const LoyaltyPointScreen(),
+        //   ),
+        // );
         break;
       case 7:
         Navigator.push(

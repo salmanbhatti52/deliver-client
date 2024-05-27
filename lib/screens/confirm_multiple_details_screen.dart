@@ -89,7 +89,7 @@ class _ConfirmMultipleDetailsScreenState
             doubleVatCharges = double.parse(vatCharges!);
             debugPrint("doubleVatCharges: $doubleVatCharges");
             setState(() {});
-            calculateVATCharges(doubleVatCharges!);
+            // calculateVATCharges(doubleVatCharges!);
           }
         }
       }
@@ -99,15 +99,15 @@ class _ConfirmMultipleDetailsScreenState
     }
   }
 
-  allCharges() {
-    deliveryCharges =
-        double.parse(widget.multipleData!["destin_delivery_charges0"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges1"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges2"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges3"]) +
-            double.parse(widget.multipleData!["destin_delivery_charges4"]);
-    debugPrint("deliveryCharges: $deliveryCharges");
-  }
+  // allCharges() {
+  //   deliveryCharges =
+  //       double.parse(widget.multipleData!["destin_delivery_charges0"]) +
+  //           double.parse(widget.multipleData!["destin_delivery_charges1"]) +
+  //           double.parse(widget.multipleData!["destin_delivery_charges2"]) +
+  //           double.parse(widget.multipleData!["destin_delivery_charges3"]) +
+  //           double.parse(widget.multipleData!["destin_delivery_charges4"]);
+  //   debugPrint("deliveryCharges: $deliveryCharges");
+  // }
 
   allDiscountCharges() {
     discountCharges = double.parse(widget.multipleData!["destin_discount0"]) +
@@ -118,24 +118,24 @@ class _ConfirmMultipleDetailsScreenState
     debugPrint("discountCharges: $discountCharges");
   }
 
-  calculateVATCharges(double vat) {
-    debugPrint("deliveryCharges: $deliveryCharges");
-    double vatPercentage = vat / 100.0;
-    totalVatCharges = deliveryCharges! - (deliveryCharges! * vatPercentage);
-    debugPrint("totalVatCharges: $totalVatCharges");
-    totalVatAmount = deliveryCharges! - totalVatCharges!;
-    debugPrint("totalVatAmount: $totalVatAmount");
-    roundedTotalVatAmount = double.parse(totalVatAmount!.toStringAsFixed(2));
-    debugPrint("roundedTotalVatAmount: $roundedTotalVatAmount");
-    calculateTotalPrice(roundedTotalVatAmount!);
-  }
+  // calculateVATCharges(double vat) {
+  //   debugPrint("deliveryCharges: $deliveryCharges");
+  //   double vatPercentage = vat / 100.0;
+  //   totalVatCharges = deliveryCharges! - (deliveryCharges! * vatPercentage);
+  //   debugPrint("totalVatCharges: $totalVatCharges");
+  //   totalVatAmount = deliveryCharges! - totalVatCharges!;
+  //   debugPrint("totalVatAmount: $totalVatAmount");
+  //   roundedTotalVatAmount = double.parse(totalVatAmount!.toStringAsFixed(2));
+  //   debugPrint("roundedTotalVatAmount: $roundedTotalVatAmount");
+  //   calculateTotalPrice(roundedTotalVatAmount!);
+  // }
 
-  calculateTotalPrice(double roundedTotalVatAmount) {
-    totalPrice = deliveryCharges! + roundedTotalVatAmount;
-    debugPrint("totalPrice: $totalPrice");
-    roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
-    debugPrint("roundedTotalAmount: $roundedTotalPrice");
-  }
+  // calculateTotalPrice(double roundedTotalVatAmount) {
+  //   totalPrice = deliveryCharges! + roundedTotalVatAmount;
+  //   debugPrint("totalPrice: $totalPrice");
+  //   roundedTotalPrice = double.parse(totalPrice!.toStringAsFixed(2));
+  //   debugPrint("roundedTotalAmount: $roundedTotalPrice");
+  // }
 
   @override
   initState() {
@@ -145,7 +145,7 @@ class _ConfirmMultipleDetailsScreenState
         _renderGoogleMap = true;
       });
     });
-    allCharges();
+    // allCharges();
     getAllSystemData();
     allDiscountCharges();
     debugPrint("multipleData:  ${widget.multipleData}");
@@ -211,7 +211,7 @@ class _ConfirmMultipleDetailsScreenState
                             zoom: 13.4746,
                           ),
                         )
-                      : Container(),
+                      : const Text("No Map Data"),
                 ),
                 // Image.asset(
                 //   'assets/images/home-location-background.png',
@@ -313,12 +313,14 @@ class _ConfirmMultipleDetailsScreenState
                                         ),
                                         SizedBox(width: size.width * 0.02),
                                         Tooltip(
-                                          message: roundedTotalPrice.toString(),
+                                          message:
+                                              "${widget.multipleData!["totalChargesM"]}",
                                           child: Container(
                                             color: transparentColor,
                                             width: size.width * 0.359,
                                             child: AutoSizeText(
-                                              roundedTotalPrice.toString(),
+                                              widget.multipleData![
+                                                  'totalChargesM'],
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: blackColor,
@@ -1229,7 +1231,7 @@ class _ConfirmMultipleDetailsScreenState
                                         ),
                                       ),
                                       Text(
-                                        roundedTotalVatAmount.toString(),
+                                        widget.multipleData!['totalVatM'],
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,
@@ -1263,7 +1265,7 @@ class _ConfirmMultipleDetailsScreenState
                                         ),
                                       ),
                                       Text(
-                                        totalPrice.toString(),
+                                        widget.multipleData!['totalChargesM'],
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,
@@ -1404,9 +1406,10 @@ class _ConfirmMultipleDetailsScreenState
                             dataForIndex4[4]["receiversNameController"] ?? "",
                         "receiver_phone4":
                             dataForIndex4[4]["receiversNumberController"] ?? "",
-                        "destin_total_charges": roundedTotalPrice.toString(),
-                        "total_vat_charges": roundedTotalVatAmount.toString(),
-                        "total_charges": totalPrice.toString(),
+                        "destin_total_charges":
+                            widget.multipleData!['totalChargesM'],
+                        "total_vat_charges": widget.multipleData!['totalVatM'],
+                        "total_charges": widget.multipleData!['totalChargesM'],
                         "total_discount": "0.00",
                         "total_discounted_charges": "0.00",
                       });

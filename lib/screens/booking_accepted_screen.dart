@@ -191,6 +191,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
       // Initialize a list to store passcode_verified statuses
 
       if (updateBookingStatusModel.data?.status == "Ongoing") {
+        timer?.cancel();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -388,8 +389,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
   // }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      // route();
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      updateBookingStatus();
     });
   }
 
@@ -1864,9 +1865,11 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                       ],
                                     ),
                                   SizedBox(height: size.height * 0.02),
-                                  updateBookingStatusModel
-                                              .data!.paymentStatus ==
-                                          "Unpaid"
+                                  (updateBookingStatusModel.data!.paymentBy ==
+                                              "Sender" &&
+                                          updateBookingStatusModel
+                                                  .data!.paymentStatus ==
+                                              "Unpaid")
                                       ? GestureDetector(
                                           onTap: () {
                                             if (widget.singleData!.isNotEmpty) {
@@ -1891,7 +1894,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           child: buttonGradient(
                                               "Make Payment", context),
                                         )
-                                      : buttonGradient("Paid", context),
+                                      : buttonGradient("Accepted", context),
                                 ],
                               ),
                             ),

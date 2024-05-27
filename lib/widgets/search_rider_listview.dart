@@ -913,7 +913,7 @@ class _RidersListState extends State<RidersList> {
                               "assets/images/user-profile.png",
                             ),
                             image: NetworkImage(
-                              '$imageUrl${widget.searchRider?.profilePic}',
+                              '$imageUrl${widget.searchRider?.usersFleetVehicles!.image}',
                             ),
                             fit: BoxFit.cover,
                           ),
@@ -1044,7 +1044,7 @@ class _RidersListState extends State<RidersList> {
                     "assets/images/user-profile.png",
                   ),
                   image: NetworkImage(
-                    '$imageUrl${widget.searchRider?.profilePic}',
+                    '$imageUrl${widget.searchRider?.usersFleetVehicles!.image}',
                   ),
                   fit: BoxFit.cover,
                 ),

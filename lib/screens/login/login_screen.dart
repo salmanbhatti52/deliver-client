@@ -58,16 +58,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? baseUrl = dotenv.env['BASE_URL'];
   String? tremiiUrl = dotenv.env['TERMII_URL'];
-
+  String? token;
   CheckNumberModel checkNumberModel = CheckNumberModel();
+  one() async {
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+
+    OneSignal.initialize(appID);
+
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    OneSignal.Notifications.requestPermission(true);
+
+    token = OneSignal.User.pushSubscription.id ?? "123";
+    print('token Response: $token');
+    setState(() {});
+  }
 
   Future<void> checkNumber() async {
     setState(() {
       isLoading = true;
     });
-    OneSignal.initialize(appID);
-    String? token;
-    token = await OneSignal.User.getOnesignalId();
+    await one();
     print("token: $token");
     String apiUrl = "$baseUrl/check_phone_exist_customers";
     debugPrint("contactNumber: $apiUrl");
@@ -86,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
         "longitude": currentLng
       },
     );
+
     final responseString = response.body;
     debugPrint("response: $responseString");
     debugPrint("statusCode: ${response.statusCode}");
@@ -458,6 +469,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                       await getCurrentLocation();
                       await checkNumber();
+
                       if (checkNumberModel.status == "error") {
                         CustomToast.showToast(
                           fontSize: 12,

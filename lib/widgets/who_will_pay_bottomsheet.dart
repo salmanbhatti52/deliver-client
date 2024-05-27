@@ -159,75 +159,75 @@ class _WhoWillPaySheetState extends State<WhoWillPaySheet> {
                         ),
                       ),
                       SizedBox(width: size.width * 0.03),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     setState(() {
-                      //       isSelectedPayNow = false;
-                      //       isSelectedPayLater = true;
-                      //     });
-                      //   },
-                      //   child: Stack(
-                      //     children: [
-                      //       Container(
-                      //         color: transparentColor,
-                      //         width: MediaQuery.of(context).size.width * 0.42,
-                      //         height: MediaQuery.of(context).size.height * 0.15,
-                      //       ),
-                      //       Positioned(
-                      //         bottom: 0,
-                      //         child: Container(
-                      //           width: MediaQuery.of(context).size.width * 0.42,
-                      //           height:
-                      //               MediaQuery.of(context).size.height * 0.12,
-                      //           decoration: BoxDecoration(
-                      //             color: isSelectedPayLater == true
-                      //                 ? orangeColor
-                      //                 : const Color(0xFFEBEBEB),
-                      //             borderRadius: BorderRadius.circular(15),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       Positioned(
-                      //         bottom: 35,
-                      //         left: 0,
-                      //         right: 0,
-                      //         child: Text(
-                      //           payLater,
-                      //           textAlign: TextAlign.center,
-                      //           style: TextStyle(
-                      //             color: isSelectedPayLater == true
-                      //                 ? whiteColor
-                      //                 : drawerTextColor,
-                      //             fontSize: 16,
-                      //             fontFamily: 'Syne-Bold',
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       Positioned(
-                      //         bottom: 15,
-                      //         left: 0,
-                      //         right: 0,
-                      //         child: Text(
-                      //           receiver,
-                      //           textAlign: TextAlign.center,
-                      //           style: TextStyle(
-                      //             color: isSelectedPayLater == true
-                      //                 ? whiteColor
-                      //                 : supportTextColor,
-                      //             fontSize: 14,
-                      //             fontFamily: 'Syne-Regular',
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       Positioned(
-                      //         top: 0,
-                      //         left: 0,
-                      //         right: 0,
-                      //         child: SvgPicture.asset(imagepayLater),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSelectedPayNow = false;
+                            isSelectedPayLater = true;
+                          });
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              color: transparentColor,
+                              width: MediaQuery.of(context).size.width * 0.42,
+                              height: MediaQuery.of(context).size.height * 0.15,
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.42,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.12,
+                                decoration: BoxDecoration(
+                                  color: isSelectedPayLater == true
+                                      ? orangeColor
+                                      : const Color(0xFFEBEBEB),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 35,
+                              left: 0,
+                              right: 0,
+                              child: Text(
+                                payLater,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isSelectedPayLater == true
+                                      ? whiteColor
+                                      : drawerTextColor,
+                                  fontSize: 16,
+                                  fontFamily: 'Syne-Bold',
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 15,
+                              left: 0,
+                              right: 0,
+                              child: Text(
+                                receiver,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isSelectedPayLater == true
+                                      ? whiteColor
+                                      : supportTextColor,
+                                  fontSize: 14,
+                                  fontFamily: 'Syne-Regular',
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: SvgPicture.asset(imagepayLater),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: size.height * 0.04),

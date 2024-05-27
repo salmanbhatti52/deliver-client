@@ -4,71 +4,107 @@
 
 import 'dart:convert';
 
-GetDistanceAddressesModel getDistanceAddressesModelFromJson(String str) =>
-    GetDistanceAddressesModel.fromJson(json.decode(str));
+GetDistanceAddressesModel getDistanceAddressesModelFromJson(String str) => GetDistanceAddressesModel.fromJson(json.decode(str));
 
-String getDistanceAddressesModelToJson(GetDistanceAddressesModel data) =>
-    json.encode(data.toJson());
+String getDistanceAddressesModelToJson(GetDistanceAddressesModel data) => json.encode(data.toJson());
 
 class GetDistanceAddressesModel {
-  String? status;
-  String? message;
-  List<Datum>? data;
+    String? status;
+    String? message;
+    Data? data;
 
-  GetDistanceAddressesModel({
-    this.status,
-    this.message,
-    this.data,
-  });
+    GetDistanceAddressesModel({
+        this.status,
+        this.message,
+        this.data,
+    });
 
-  factory GetDistanceAddressesModel.fromJson(Map<String, dynamic> json) =>
-      GetDistanceAddressesModel(
+    factory GetDistanceAddressesModel.fromJson(Map<String, dynamic> json) => GetDistanceAddressesModel(
         status: json["status"],
         message: json["message"],
-        data: json["data"] != null
-            ? List<Datum>.from(json["data"].map((x) => Datum.fromJson(x)))
-            : null,
-      );
+        
+        data: Data.fromJson(json["data"]),
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-      };
+        "data": data!.toJson(),
+    };
 }
 
-class Datum {
-  double? pickupLat;
-  double? pickupLong;
-  double? destinLat;
-  double? destinLong;
-  String? distance;
-  String? duration;
+class Data {
+    String? totalDeliveryCharges;
+    String? totalVatCharges;
+    String? totalCharges;
+    List<BookingsDestination>? bookingsDestinations;
 
-  Datum({
-    this.pickupLat,
-    this.pickupLong,
-    this.destinLat,
-    this.destinLong,
-    this.distance,
-    this.duration,
-  });
+    Data({
+        this.totalDeliveryCharges,
+        this.totalVatCharges,
+        this.totalCharges,
+        this.bookingsDestinations,
+    });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        pickupLat: json["pickup_lat"].toDouble(),
-        pickupLong: json["pickup_long"].toDouble(),
-        destinLat: json["destin_lat"].toDouble(),
-        destinLong: json["destin_long"].toDouble(),
-        distance: json["distance"],
-        duration: json["duration"],
-      );
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
+        totalDeliveryCharges: json["total_delivery_charges"],
+        totalVatCharges: json["total_vat_charges"],
+        totalCharges: json["total_charges"],
+        bookingsDestinations: List<BookingsDestination>.from(json["bookings_destinations"].map((x) => BookingsDestination.fromJson(x))),
+    );
 
-  Map<String, dynamic> toJson() => {
-        "pickup_lat": pickupLat,
-        "pickup_long": pickupLong,
-        "destin_lat": destinLat,
-        "destin_long": destinLong,
-        "distance": distance,
-        "duration": duration,
-      };
+    Map<String, dynamic> toJson() => {
+        "total_delivery_charges": totalDeliveryCharges,
+        "total_vat_charges": totalVatCharges,
+        "total_charges": totalCharges,
+        "bookings_destinations": List<dynamic>.from(bookingsDestinations!.map((x) => x.toJson())),
+    };
+}
+
+class BookingsDestination {
+    double? pickupLatitude;
+    double? pickupLongitude;
+    double? destinLatitude;
+    double? destinLongitude;
+    String? destinDistance;
+    String? destinTime;
+    String? destinDeliveryCharges;
+    String? destinVatCharges;
+    String? destinTotalCharges;
+
+    BookingsDestination({
+        this.pickupLatitude,
+        this.pickupLongitude,
+        this.destinLatitude,
+        this.destinLongitude,
+        this.destinDistance,
+        this.destinTime,
+        this.destinDeliveryCharges,
+        this.destinVatCharges,
+        this.destinTotalCharges,
+    });
+
+    factory BookingsDestination.fromJson(Map<String, dynamic> json) => BookingsDestination(
+        pickupLatitude: json["pickup_latitude"].toDouble(),
+        pickupLongitude: json["pickup_longitude"].toDouble(),
+        destinLatitude: json["destin_latitude"].toDouble(),
+        destinLongitude: json["destin_longitude"].toDouble(),
+        destinDistance: json["destin_distance"],
+        destinTime: json["destin_time"],
+        destinDeliveryCharges: json["destin_delivery_charges"],
+        destinVatCharges: json["destin_vat_charges"],
+        destinTotalCharges: json["destin_total_charges"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "pickup_latitude": pickupLatitude,
+        "pickup_longitude": pickupLongitude,
+        "destin_latitude": destinLatitude,
+        "destin_longitude": destinLongitude,
+        "destin_distance": destinDistance,
+        "destin_time": destinTime,
+        "destin_delivery_charges": destinDeliveryCharges,
+        "destin_vat_charges": destinVatCharges,
+        "destin_total_charges": destinTotalCharges,
+    };
 }

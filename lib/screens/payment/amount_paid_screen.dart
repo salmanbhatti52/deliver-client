@@ -1,12 +1,17 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
 import 'dart:typed_data';
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/screens/payment/receiptScreenMultiple.dart';
 import 'package:deliver_client/screens/payment/receiptScreenSingle.dart';
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/rate_driver_screen.dart';
@@ -54,6 +59,49 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
     }
   }
 
+  String? baseUrl = dotenv.env['BASE_URL'];
+  UpdateBookingStatusModel updateBookingStatusModel =
+      UpdateBookingStatusModel();
+  String? responseString1;
+  updateBookingStatus() async {
+    // print(
+    // " Passssssssssss ${updateBookingStatusModel.data!.bookingsFleet![0].bookingsDestinations!.passCode}");
+    // try {
+    String apiUrl = "$baseUrl/get_updated_status_booking";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "bookings_id": widget.currentBookingId,
+      },
+    );
+    responseString1 = response.body;
+
+    debugPrint("response zain: $responseString1");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      updateBookingStatusModel =
+          updateBookingStatusModelFromJson(responseString1!);
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      debugPrint(
+          'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+
+      if (mounted) {
+        setState(() {});
+      }
+    }
+    // }
+    //  catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
+  }
+
   getLocationMultiple() {
     if (widget.multipleData!.isNotEmpty) {
       latDest = "${widget.multipleData!['destin_latitude0']}";
@@ -79,6 +127,7 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
   @override
   void initState() {
     super.initState();
+    updateBookingStatus();
     if (widget.singleData!.isNotEmpty) {
       getLocationSingle();
     } else {
@@ -281,12 +330,10 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                                       currentBookingId: widget.currentBookingId,
                                       bookingDestinationId:
                                           widget.bookingDestinationId,
-                                      date: widget.riderData!.dateModified,
-                                      paymentType: widget.multipleData![
-                                                  "payment_gateways_id"] ==
-                                              '1'
-                                          ? "Cash"
-                                          : "Card",
+                                      date: updateBookingStatusModel
+                                          .data!.dateModified,
+                                      paymentType: updateBookingStatusModel
+                                          .data!.paymentGateways!.name,
                                       ridername:
                                           "${widget.riderData!.firstName} "
                                           " ${widget.riderData!.lastName}",
@@ -303,12 +350,10 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                                       currentBookingId: widget.currentBookingId,
                                       bookingDestinationId:
                                           widget.bookingDestinationId,
-                                      date: widget.riderData!.dateModified,
-                                      paymentType: widget.multipleData![
-                                                  "payment_gateways_id"] ==
-                                              '1'
-                                          ? "Cash"
-                                          : "Card",
+                                      date: updateBookingStatusModel
+                                          .data!.dateModified,
+                                      paymentType: updateBookingStatusModel
+                                          .data!.paymentGateways!.name,
                                       ridername:
                                           "${widget.riderData!.firstName} "
                                           " ${widget.riderData!.lastName}",
