@@ -5294,7 +5294,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                   }
                                 }
                                 if (selectedRadio == 2) {
-                                  print("Zainnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+                                  print("Zainnnnnnnnnn");
                                   if (pickupControllers[0].text.isEmpty &&
                                       destinationControllers[0].text.isEmpty &&
                                       receiversNameControllers[0]
