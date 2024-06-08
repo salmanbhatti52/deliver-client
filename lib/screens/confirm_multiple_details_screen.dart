@@ -199,19 +199,17 @@ class _ConfirmMultipleDetailsScreenState
                   right: 0,
                   bottom: 0,
                   child: _renderGoogleMap
-                      ? Expanded(
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                double.parse(widget
-                                    .multipleData!["destin_latitude0"]
-                                    .toString()),
-                                double.parse(widget
-                                    .multipleData!["destin_longitude0"]
-                                    .toString()),
-                              ),
-                              zoom: 13.4746,
+                      ? GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              double.parse(widget
+                                  .multipleData!["destin_latitude0"]
+                                  .toString()),
+                              double.parse(widget
+                                  .multipleData!["destin_longitude0"]
+                                  .toString()),
                             ),
+                            zoom: 13.4746,
                           ),
                         )
                       : const Text("No Map Data"),
