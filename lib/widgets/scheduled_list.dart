@@ -66,9 +66,11 @@ class _ScheduledListState extends State<ScheduledList> {
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
-      setState(() {
+     if(mounted){
+       setState(() {
         isLoading = false;
       });
+     }
       return null;
     }
   }
@@ -196,173 +198,195 @@ class _ScheduledListState extends State<ScheduledList> {
                             right: 10,
                             bottom: 15,
                           ),
-                          child: Stack(
+                          child: Column(
+                            // crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              // Row(
+                              //   children: [
+                              //     ClipRRect(
+                              //       borderRadius: BorderRadius.circular(10),
+                              //       child: Container(
+                              //         color: transparentColor,
+                              //         width: 60,
+                              //         height: 65,
+                              //         child: FadeInImage(
+                              //           placeholder: const AssetImage(
+                              //             "assets/images/user-profile.png",
+                              //           ),
+                              //           image: NetworkImage(
+                              //             '$imageUrl${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
+                              //           ),
+                              //           fit: BoxFit.cover,
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     SizedBox(width: size.width * 0.02),
+                              //     Column(
+                              //       crossAxisAlignment:
+                              //           CrossAxisAlignment.start,
+                              //       children: [
+                              //         Container(
+                              //           color: transparentColor,
+                              //           width: size.width * 0.44,
+                              //           child: AutoSizeText(
+                              //             '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.firstName} ${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.lastName}',
+                              //             textAlign: TextAlign.left,
+                              //             style: TextStyle(
+                              //               color: drawerTextColor,
+                              //               fontSize: 16,
+                              //               fontFamily: 'Syne-Bold',
+                              //             ),
+                              //             minFontSize: 16,
+                              //             maxFontSize: 16,
+                              //             maxLines: 1,
+                              //             overflow: TextOverflow.ellipsis,
+                              //           ),
+                              //         ),
+                              //         SizedBox(height: size.height * 0.01),
+                              //         Row(
+                              //           children: [
+                              //             Text(
+                              //               '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.color} ',
+                              //               textAlign: TextAlign.left,
+                              //               style: TextStyle(
+                              //                 color: textHaveAccountColor,
+                              //                 fontSize: 12,
+                              //                 fontFamily: 'Inter-Regular',
+                              //               ),
+                              //             ),
+                              //             Text(
+                              //               '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.model}',
+                              //               textAlign: TextAlign.left,
+                              //               style: TextStyle(
+                              //                 color: textHaveAccountColor,
+                              //                 fontSize: 12,
+                              //                 fontFamily: 'Inter-Regular',
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //         SizedBox(height: size.height * 0.005),
+                              //         Text(
+                              //           '(${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo})',
+                              //           textAlign: TextAlign.left,
+                              //           style: TextStyle(
+                              //             color: textHaveAccountColor,
+                              //             fontSize: 12,
+                              //             fontFamily: 'Inter-Regular',
+                              //           ),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ],
+                              // ),
+
+                              SizedBox(height: size.height * 0.02),
+                              Center(
+                                child: Container(
+                                  color: transparentColor,
+                                  width: size.width * 0.80,
+                                  child: AutoSizeText(
+                                    'You booked a scheduled ride, ${formatTimeDifference(timeAdded!)} see Details to check either Accepted or not',
+                                    // 'You Completed a ride\n${completedRideModel.data![reverseIndex].rideCompleted} with this captain',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: textHaveAccountColor,
+                                      fontSize: 13,
+                                      fontFamily: 'Inter-Regular',
+                                    ),
+                                    minFontSize: 13,
+                                    maxFontSize: 13,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: size.height * 0.02),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  SizedBox(height: size.height * 0.02),
-                                  Row(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: 60,
-                                          height: 65,
-                                          child: FadeInImage(
-                                            placeholder: const AssetImage(
-                                              "assets/images/user-profile.png",
-                                            ),
-                                            image: NetworkImage(
-                                              '$imageUrl${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
-                                            ),
-                                            fit: BoxFit.cover,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ScheduledRideDetailScreen(
+                                            getScheduledBookingModel:
+                                                getScheduledBookingModel
+                                                    .data?[reverseIndex],
                                           ),
                                         ),
-                                      ),
-                                      SizedBox(width: size.width * 0.02),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.44,
-                                            child: AutoSizeText(
-                                              '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.firstName} ${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.lastName}',
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: drawerTextColor,
-                                                fontSize: 16,
-                                                fontFamily: 'Syne-Bold',
-                                              ),
-                                              minFontSize: 16,
-                                              maxFontSize: 16,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          SizedBox(height: size.height * 0.01),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.color} ',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: textHaveAccountColor,
-                                                  fontSize: 12,
-                                                  fontFamily: 'Inter-Regular',
-                                                ),
-                                              ),
-                                              Text(
-                                                '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.model}',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: textHaveAccountColor,
-                                                  fontSize: 12,
-                                                  fontFamily: 'Inter-Regular',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: size.height * 0.005),
-                                          Text(
-                                            '(${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleetVehicles?.vehicleRegistrationNo})',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 12,
-                                              fontFamily: 'Inter-Regular',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.02),
-                                  Container(
-                                    color: transparentColor,
-                                    width: size.width * 0.54,
-                                    child: AutoSizeText(
-                                      'You Scheduled a ride\n${formatTimeDifference(timeAdded!)} with this captain',
-                                      // 'You Completed a ride\n${completedRideModel.data![reverseIndex].rideCompleted} with this captain',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: textHaveAccountColor,
-                                        fontSize: 14,
-                                        fontFamily: 'Inter-Regular',
-                                      ),
-                                      minFontSize: 14,
-                                      maxFontSize: 14,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                      );
+                                    },
+                                    child: detailButtonGradientSmall(
+                                      'See detail',
+                                      context,
                                     ),
                                   ),
-                                  SizedBox(height: size.height * 0.02),
-                                ],
-                              ),
-                              Positioned(
-                                top: 18,
-                                right: 0,
-                                child: SvgPicture.asset(
-                                  'assets/images/star-with-container-icon.svg',
-                                  width: 45,
-                                ),
-                              ),
-                              Positioned(
-                                top: 19,
-                                right: 7,
-                                child: Text(
-                                  '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.bookingsRatings}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: blackColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Inter-Regular',
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 52,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (context) => cancelRide(context),
-                                    );
-                                  },
-                                  child: detailButtonTransparentGradientSmall(
-                                      'Cancel', context),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 13,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
+                                  GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
                                         builder: (context) =>
-                                            ScheduledRideDetailScreen(
-                                          getScheduledBookingModel:
-                                              getScheduledBookingModel
-                                                  .data?[reverseIndex],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: detailButtonGradientSmall(
-                                    'See detail',
-                                    context,
+                                            cancelRide(context),
+                                      );
+                                    },
+                                    child: detailButtonTransparentGradientSmall(
+                                        'Cancel', context),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
+                          // Positioned(
+                          //   top: 18,
+                          //   right: 0,
+                          //   child: SvgPicture.asset(
+                          //     'assets/images/star-with-container-icon.svg',
+                          //     width: 45,
+                          //   ),
+                          // ),
+                          // Positioned(
+                          //   top: 19,
+                          //   right: 7,
+                          //   child: Text(
+                          //     '${getScheduledBookingModel.data?[reverseIndex].bookingsFleet?[0].usersFleet?.bookingsRatings}',
+                          //     textAlign: TextAlign.center,
+                          //     style: TextStyle(
+                          //       color: blackColor,
+                          //       fontSize: 12,
+                          //       fontFamily: 'Inter-Regular',
+                          //     ),
+                          //   ),
+                          // ),
+
+                          // Positioned(
+                          //   top: 45,
+                          //   bottom: 0,
+                          //   right: 0,
+                          //   child: GestureDetector(
+                          //     onTap: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) =>
+                          //               ScheduledRideDetailScreen(
+                          //             getScheduledBookingModel:
+                          //                 getScheduledBookingModel
+                          //                     .data?[reverseIndex],
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //     child: detailButtonGradientSmall(
+                          //       'See detail',
+                          //       context,
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                       ),
                       SizedBox(height: size.height * 0.02),

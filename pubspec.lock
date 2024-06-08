@@ -363,6 +363,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      sha256: d2696eed13732831414595b98863260e33e8882fc069ee80ec35d4ac9ddb0472
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.1"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -925,6 +933,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  polyline_do:
+    dependency: "direct main"
+    description:
+      name: polyline_do
+      sha256: "41b7a4c3d3f259816764d577beba843e683f59117958c51e90a5ca975ff3d298"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   provider:
     dependency: transitive
     description:

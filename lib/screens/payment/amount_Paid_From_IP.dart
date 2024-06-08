@@ -1,13 +1,11 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
 import 'dart:typed_data';
 import 'package:deliver_client/models/update_booking_status_model.dart';
-import 'package:deliver_client/screens/payment/receiptScreenMultiple.dart';
 import 'package:deliver_client/screens/payment/receiptScreenMultipleIP.dart';
-import 'package:deliver_client/screens/payment/receiptScreenSingle.dart';
 import 'package:deliver_client/screens/payment/receiptScreenSingleIP.dart';
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
@@ -15,8 +13,6 @@ import 'package:deliver_client/widgets/buttons.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
-import 'package:deliver_client/screens/rate_driver_screen.dart';
 
 String? userEmail;
 
@@ -106,10 +102,9 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
 
       debugPrint(
           'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-
-      if (mounted) {
-        setState(() {});
-      }
+    }
+    if (mounted) {
+      setState(() {});
     }
     // }
     //  catch (e) {
@@ -323,7 +318,8 @@ class _AmountPaidFromInProgressState extends State<AmountPaidFromInProgress> {
                           ),
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async {
+                              await updateBookingStatus();
                               print("MultipleData: ${widget.multipleData}");
                               print("SingleData: ${widget.singleData}");
                               print(

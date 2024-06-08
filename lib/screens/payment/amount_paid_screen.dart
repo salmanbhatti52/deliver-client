@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:typed_data';
@@ -13,8 +13,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
-import 'package:deliver_client/screens/rate_driver_screen.dart';
 
 String? userEmail;
 
@@ -22,7 +20,7 @@ class AmountPaidScreen extends StatefulWidget {
   final Map? singleData;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const AmountPaidScreen({
@@ -319,7 +317,8 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                           ),
                           SizedBox(height: size.height * 0.04),
                           GestureDetector(
-                            onTap: () {
+                            onTap: () async {
+                              await updateBookingStatus();
                               if (widget.multipleData!.isEmpty) {
                                 Navigator.push(
                                   context,
@@ -335,8 +334,8 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                                       paymentType: updateBookingStatusModel
                                           .data!.paymentGateways!.name,
                                       ridername:
-                                          "${widget.riderData!.firstName} "
-                                          " ${widget.riderData!.lastName}",
+                                          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} "
+                                          " ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                     ),
                                   ),
                                 );
@@ -355,8 +354,8 @@ class _AmountPaidScreenState extends State<AmountPaidScreen> {
                                       paymentType: updateBookingStatusModel
                                           .data!.paymentGateways!.name,
                                       ridername:
-                                          "${widget.riderData!.firstName} "
-                                          " ${widget.riderData!.lastName}",
+                                          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} "
+                                          " ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                     ),
                                   ),
                                 );

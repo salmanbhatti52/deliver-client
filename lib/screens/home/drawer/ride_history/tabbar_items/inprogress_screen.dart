@@ -1,7 +1,7 @@
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/inprogress_list.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 
 class InProgressHistoryScreen extends StatefulWidget {
   final int? index;
@@ -9,7 +9,7 @@ class InProgressHistoryScreen extends StatefulWidget {
   final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
   const InProgressHistoryScreen({
     super.key,

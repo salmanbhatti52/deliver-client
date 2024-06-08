@@ -1,9 +1,9 @@
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:deliver_client/widgets/app_drawer.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/tabbar_items/new_screen.dart';
 import 'package:deliver_client/screens/home/tabbar_items/inprogress_screen.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -14,7 +14,7 @@ class HomePageScreen extends StatefulWidget {
   final String? passCode;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const HomePageScreen({

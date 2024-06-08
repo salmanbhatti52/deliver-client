@@ -1,6 +1,6 @@
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/cancelled_screen.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/completed_screen.dart';
 import 'package:deliver_client/screens/home/drawer/ride_history/tabbar_items/inprogress_screen.dart';
@@ -11,7 +11,7 @@ class TabbarRideHistory extends StatefulWidget {
   final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
   const TabbarRideHistory({
     super.key,

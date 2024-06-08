@@ -7,12 +7,7 @@ import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:deliver_client/screens/payment/rateDriverFromIP.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
-import 'package:deliver_client/screens/rate_driver_screen.dart';
-import 'package:deliver_client/utils/buttondown.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +17,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
-import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ReceiptScreenMultipleIP extends StatefulWidget {
@@ -99,15 +93,16 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
             debugPrint("currencyUnit: $currencyUnit");
           }
-          if (getAllSystemDataModel.data?[i].type == "vat_charges") {
+          if (getAllSystemDataModel.data?[i].type == "vat_charges_pct") {
             vatCharges = "${getAllSystemDataModel.data?[i].description}";
             doubleVatCharges = double.parse(vatCharges!);
             debugPrint("doubleVatCharges: $doubleVatCharges");
-            setState(() {});
-            calculateVATCharges(doubleVatCharges!);
+
+            // calculateVATCharges(doubleVatCharges!);
           }
         }
       }
+      setState(() {});
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
       return null;
@@ -1572,6 +1567,40 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                             ],
                                           )
                                         : const SizedBox(),
+                                    SizedBox(height: size.height * 0.005),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Service Charges ',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '$currencyUnit ',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                        ),
+                                        Text(
+                                          "${widget.multipleData!['total_svc_running_charges']}",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                        ),
+                                        SizedBox(width: size.width * 0.05),
+                                      ],
+                                    ),
                                     SizedBox(height: size.height * 0.005),
                                     Row(
                                       children: [

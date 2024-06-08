@@ -1,6 +1,9 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:deliver_client/utils/buttondown.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -63,13 +66,13 @@ class _ConfirmSingleDetailsScreenState
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
             debugPrint("currencyUnit: $currencyUnit");
           }
-          if (getAllSystemDataModel.data?[i].type == "vat_charges") {
+          if (getAllSystemDataModel.data?[i].type == "vat_charges_pct") {
             vatCharges = "${getAllSystemDataModel.data?[i].description}";
             doubleVatCharges = double.parse(vatCharges!);
             debugPrint("doubleVatCharges: $doubleVatCharges");
-            setState(() {});
           }
         }
+        setState(() {});
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
@@ -77,24 +80,88 @@ class _ConfirmSingleDetailsScreenState
     }
   }
 
-  Future<String> getEncodedPolyline() async {
-    var url = Uri.parse(
-      'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.singleData!["pickup_latitude"]},${widget.singleData!["pickup_longitude"]}&destination=${widget.singleData!["destin_latitude"]},${widget.singleData!["destin_longitude"]}&key${dotenv.env['MAPS_KEY']}',
-    );
+  // late Set<Polyline> _polylines;
+  // Future<void> _fetchAndAddPolyline() async {
+  //   String encodedPolyline = await getEncodedPolyline();
+  //   if (encodedPolyline.isNotEmpty) {
+  //     List<PointLatLng> points = decode(encodedPolyline);
+  //     Polyline polyline = Polyline(
+  //       polylineId: const PolylineId('route'),
+  //       visible: true,
+  //       points: points
+  //           .map((point) => LatLng(point.latitude, point.longitude))
+  //           .toList(),
+  //       width: 5,
+  //       color: Colors.blue,
+  //     );
+  //     setState(() {
+  //       _polylines.add(polyline);
+  //     });
+  //   }
+  // }
 
-    var response = await http.get(url);
+  // Future<String> getEncodedPolyline() async {
+  //   print('getEncodedPolyline started');
 
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      var routes = jsonResponse['routes'] as List;
-      var overviewPolyline = routes[0]['overview_polyline'];
-      var points = overviewPolyline['points'];
-      return points;
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-      return '';
-    }
-  }
+  //   var url = Uri.parse(
+  //     'https://maps.googleapis.com/maps/api/directions/json?origin=${widget.singleData!["pickup_latitude"]},${widget.singleData!["pickup_longitude"]}&destination=${widget.singleData!["destin_latitude"]},${widget.singleData!["destin_longitude"]}&key=${dotenv.env['MAPS_KEY']}',
+  //   );
+
+  //   print('URL: $url');
+
+  //   var response = await http.get(url);
+
+  //   print('Response status: ${response.statusCode}');
+
+  //   if (response.statusCode == 200) {
+  //     var jsonResponse = convert.jsonDecode(response.body);
+  //     var routes = jsonResponse['routes'] as List;
+  //     var overviewPolyline = routes[0]['overview_polyline'];
+  //     var points = overviewPolyline['points'];
+
+  //     print('Points: $points');
+
+  //     return points;
+  //   } else {
+  //     print('Request failed with status: ${response.statusCode}.');
+  //     return '';
+  //   }
+  // }
+
+  // List<PointLatLng> decode(String encoded) {
+  //   int index = 0, len = encoded.length;
+  //   List<PointLatLng> path = [];
+  //   double lat = 0.0; // Initialize lat to 0.0
+  //   double lng = 0.0; // Initialize lng to 0.0
+  //   while (index < len) {
+  //     int b = 0, shift = 0, result = 0; // Initialize b to 0
+  //     do {
+  //       if (index < len) {
+  //         b = encoded.codeUnitAt(index++);
+  //         result |= (b & 0x7f) << shift;
+  //         shift += 7;
+  //       }
+  //     } while (b >= 0x80 && index < len);
+
+  //     int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+  //     lat += dlat;
+
+  //     shift = 0;
+  //     result = 0;
+  //     b = 0; // Reset b to 0 before the next loop
+  //     do {
+  //       if (index < len) {
+  //         b = encoded.codeUnitAt(index++);
+  //         result |= (b & 0x7f) << shift;
+  //         shift += 7;
+  //       }
+  //     } while (b >= 0x80 && index < len);
+
+  //     int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+  //     lng += dlng;
+  //   }
+  //   return path;
+  // }
 
   bool opened = false;
   bool closed = false;
@@ -104,6 +171,8 @@ class _ConfirmSingleDetailsScreenState
     getAllSystemData();
     debugPrint("mapData: ${widget.singleData}");
     // getEncodedPolyline();
+    // _polylines = {};
+    // _fetchAndAddPolyline();
   }
 
   @override
@@ -129,6 +198,7 @@ class _ConfirmSingleDetailsScreenState
                       ),
                       zoom: 14.4746,
                     ),
+                    // polylines: _polylines,
                   ),
                 ),
                 Positioned(
@@ -193,7 +263,7 @@ class _ConfirmSingleDetailsScreenState
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
                           width: double.infinity,
-                          height: opened ? 325 : 220,
+                          height: opened ? 340 : 220,
                           color: whiteColor,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -411,6 +481,112 @@ class _ConfirmSingleDetailsScreenState
                                       ),
                                       Text(
                                         "${widget.singleData!["destin_vat_charges"]}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  // widget.singleData![
+                                  //             "total_tollgate_charges"] !=
+                                  //         ""
+                                  //     ? Row(
+                                  //         children: [
+                                  //           Text(
+                                  //             'TollGate Charges:',
+                                  //             textAlign: TextAlign.left,
+                                  //             style: TextStyle(
+                                  //               color: blackColor,
+                                  //               fontSize: 14,
+                                  //               fontFamily: 'Inter-Medium',
+                                  //             ),
+                                  //           ),
+                                  //           const Spacer(),
+                                  //           Text(
+                                  //             '$currencyUnit ',
+                                  //             textAlign: TextAlign.left,
+                                  //             style: TextStyle(
+                                  //               color: orangeColor,
+                                  //               fontSize: 14,
+                                  //               fontFamily: 'Inter-Medium',
+                                  //             ),
+                                  //           ),
+                                  //           Text(
+                                  //             "${widget.singleData!["total_tollgate_charges"]}",
+                                  //             textAlign: TextAlign.left,
+                                  //             style: TextStyle(
+                                  //               color: blackColor,
+                                  //               fontSize: 14,
+                                  //               fontFamily: 'Inter-Medium',
+                                  //             ),
+                                  //           ),
+                                  //           SizedBox(width: size.width * 0.05),
+                                  //         ],
+                                  //       )
+                                  //     : const SizedBox.shrink(),
+                                  // SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Service Charges:',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.singleData!["total_svc_running_charges"]}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Delivery Charges: ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.singleData?["delivery_charges"]}",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,

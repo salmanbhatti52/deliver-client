@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, must_be_immutable
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:intl/intl.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/rate_driver_screen.dart';
-import 'package:deliver_client/utils/buttondown.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +11,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
-import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 
 class ReceiptScreenMultiple extends StatefulWidget {
   Map<int, dynamic>? indexData0;
@@ -23,7 +20,7 @@ class ReceiptScreenMultiple extends StatefulWidget {
   Map<int, dynamic>? indexData4;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
   final String? date;
   final String? paymentType;
@@ -88,12 +85,11 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
             debugPrint("currencyUnit: $currencyUnit");
           }
-          if (getAllSystemDataModel.data?[i].type == "vat_charges") {
+          if (getAllSystemDataModel.data?[i].type == "vat_charges_pct") {
             vatCharges = "${getAllSystemDataModel.data?[i].description}";
             doubleVatCharges = double.parse(vatCharges!);
             debugPrint("doubleVatCharges: $doubleVatCharges");
             setState(() {});
-            calculateVATCharges(doubleVatCharges!);
           }
         }
       }
@@ -396,12 +392,12 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                           SizedBox(height: size.height * 0.01),
                                           Tooltip(
                                             message:
-                                                '${widget.multipleData!["pickup_address"] ?? ""}',
+                                                '${widget.multipleData!["pickup_address0"] ?? ""}',
                                             child: Container(
                                               color: transparentColor,
                                               width: size.width * 0.62,
                                               child: AutoSizeText(
-                                                '${widget.multipleData!["pickup_address"] ?? ""}',
+                                                '${widget.multipleData!["pickup_address0"] ?? ""}',
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                   color: blackColor,
@@ -1248,6 +1244,40 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                   Row(
                                     children: [
                                       Text(
+                                        'Service Charges:',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.multipleData!["total_svc_running_charges"]}",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
                                         'VAT Fee ($doubleVatCharges%): ',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
@@ -1267,7 +1297,7 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                         ),
                                       ),
                                       Text(
-                                        "$roundedTotalVatAmount",
+                                        '${widget.multipleData!['totalVatM']}',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,
@@ -1307,7 +1337,7 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                         ),
                                       ),
                                       Text(
-                                        '$totalPrice',
+                                        '${widget.multipleData!['totalChargesM']}',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,

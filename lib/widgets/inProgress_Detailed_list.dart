@@ -21,18 +21,16 @@ import 'package:flutter/services.dart'
         rootBundle;
 import 'package:deliver_client/screens/report_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
-import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
 
 class InProgressDetailedScreen extends StatefulWidget {
   final Map? singleData;
   final String? passCode;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const InProgressDetailedScreen({
@@ -234,8 +232,10 @@ class _InProgressDetailedScreenState extends State<InProgressDetailedScreen> {
       destLng = double.parse(lngDest!);
       debugPrint("destLat: $destLat");
       debugPrint("destLng: $destLng");
-      latRider = "${widget.riderData!.latitude}";
-      lngRider = "${widget.riderData!.longitude}";
+      latRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+      lngRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
       debugPrint("riderLat: $riderLat");
@@ -253,8 +253,10 @@ class _InProgressDetailedScreenState extends State<InProgressDetailedScreen> {
       destLng = double.parse(lngDest!);
       debugPrint("destLat: $destLat");
       debugPrint("destLng: $destLng");
-      latRider = "${widget.riderData!.latitude}";
-      lngRider = "${widget.riderData!.longitude}";
+      latRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+      lngRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
       debugPrint("riderLat: $riderLat");

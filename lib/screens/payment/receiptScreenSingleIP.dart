@@ -1,10 +1,6 @@
 // ignore_for_file: avoid_print
 import 'package:deliver_client/screens/payment/rateDriverFromIP.dart';
 import 'package:intl/intl.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
-import 'package:deliver_client/screens/rate_driver_screen.dart';
-import 'package:deliver_client/utils/buttondown.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,10 +8,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:speech_balloon/speech_balloon.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
-import 'package:deliver_client/widgets/who_will_pay_bottomsheet.dart';
 import 'dart:convert' as convert;
 
 class ReceiptScreenSingleIP extends StatefulWidget {
@@ -77,18 +71,19 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
           currencyUnit = "${getAllSystemDataModel.data?[i].description}";
           debugPrint("currencyUnit: $currencyUnit");
         }
-        if (getAllSystemDataModel.data?[i].type == "vat_charges") {
+        if (getAllSystemDataModel.data?[i].type == "vat_charges_pct") {
           vatCharges = "${getAllSystemDataModel.data?[i].description}";
           doubleVatCharges = double.parse(vatCharges!);
           debugPrint("doubleVatCharges: $doubleVatCharges");
-          setState(() {});
-          calculateVATCharges(
-              doubleVatCharges!,
-              double.parse(widget.singleData!['bookings_fleet'][0]
-                  ['bookings_destinations']["destin_total_charges"]));
+
+          // calculateVATCharges(
+          //     doubleVatCharges!,
+          //     double.parse(widget.singleData!['bookings_fleet'][0]
+          //         ['bookings_destinations']["destin_total_charges"]));
         }
       }
     }
+    setState(() {});
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
     //   return null;
@@ -387,12 +382,12 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
                                                 ),
                                                 Tooltip(
                                                   message:
-                                                      "${widget.singleData?['bookings_fleet'][0]['bookings_destinations']["destin_total_charges"]}",
+                                                      "${widget.singleData?['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
                                                   child: Container(
                                                     color: transparentColor,
                                                     width: size.width * 0.18,
                                                     child: AutoSizeText(
-                                                      "${widget.singleData?['bookings_fleet'][0]['bookings_destinations']["destin_total_charges"]}",
+                                                      "${widget.singleData?['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
                                                       textAlign: TextAlign.left,
                                                       style: TextStyle(
                                                         color: blackColor,
@@ -481,7 +476,7 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
                                     Row(
                                       children: [
                                         Text(
-                                          'Total Charges: ',
+                                          'Delivery Charges: ',
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: blackColor,
@@ -500,7 +495,7 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
                                           ),
                                         ),
                                         Text(
-                                          "${widget.singleData?['bookings_fleet'][0]['bookings_destinations']["destin_total_charges"]}",
+                                          "${widget.singleData?['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: blackColor,
@@ -534,7 +529,7 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
                                           ),
                                         ),
                                         Text(
-                                          "$roundedTotalVatAmount",
+                                          "${widget.singleData!["total_vat_charges"]}",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: blackColor,
@@ -545,7 +540,41 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
                                         SizedBox(width: size.width * 0.05),
                                       ],
                                     ),
-                                    SizedBox(height: size.height * 0.005),
+                                    SizedBox(height: size.height * 0.020),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Service Charges:',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Text(
+                                          '$currencyUnit ',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                        ),
+                                        Text(
+                                          "${widget.singleData!["total_svc_running_charges"]}",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 14,
+                                            fontFamily: 'Inter-Medium',
+                                          ),
+                                        ),
+                                        SizedBox(width: size.width * 0.05),
+                                      ],
+                                    ),
+                                    SizedBox(height: size.height * 0.020),
                                     Divider(
                                       thickness: 2,
                                       color: dividerColor,
@@ -574,7 +603,7 @@ class _ReceiptScreenSingleIPState extends State<ReceiptScreenSingleIP> {
                                           ),
                                         ),
                                         Text(
-                                          '$totalPrice',
+                                          "${widget.singleData?['total_delivery_charges']}",
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             color: blackColor,

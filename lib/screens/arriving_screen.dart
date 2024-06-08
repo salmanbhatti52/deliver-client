@@ -20,12 +20,10 @@ import 'package:flutter/services.dart'
     show Clipboard, ClipboardData, rootBundle;
 import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class ArrivingScreen extends StatefulWidget {
   final double? distance;
@@ -33,7 +31,7 @@ class ArrivingScreen extends StatefulWidget {
   final String? passCode;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const ArrivingScreen({
@@ -471,8 +469,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
       pickupLng = double.parse(lngPickup!);
       debugPrint("pickupLat: $pickupLat");
       debugPrint("pickupLng: $pickupLng");
-      latRider = "${widget.riderData!.latitude}";
-      lngRider = "${widget.riderData!.longitude}";
+      latRider = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+      lngRider = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
       debugPrint("riderLat: $riderLat");
@@ -490,8 +488,8 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
       pickupLng = double.parse(lngPickup!);
       debugPrint("pickupLat: $pickupLat");
       debugPrint("pickupLng: $pickupLng");
-      latRider = "${widget.riderData!.latitude}";
-      lngRider = "${widget.riderData!.longitude}";
+      latRider = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+      lngRider = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
       debugPrint("riderLat: $riderLat");
@@ -824,7 +822,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                               "assets/images/user-profile.png",
                                             ),
                                             image: NetworkImage(
-                                              '$imageUrl${widget.riderData!.profilePic}',
+                                              '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -839,7 +837,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                             color: transparentColor,
                                             width: size.width * 0.45,
                                             child: AutoSizeText(
-                                              "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                              "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: drawerTextColor,
@@ -862,7 +860,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                                 padding: const EdgeInsets.only(
                                                     top: 1.5, left: 24),
                                                 child: Text(
-                                                  "${widget.riderData!.bookingsRatings}",
+                                                  "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.bookingsRatings}",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -874,23 +872,23 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.003),
-                                          Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.45,
-                                            child: AutoSizeText(
-                                              "${widget.riderData!.usersFleetVehicles!.color} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: textHaveAccountColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Syne-Regular',
-                                              ),
-                                              minFontSize: 14,
-                                              maxFontSize: 14,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
+                                          // Container(
+                                          //   color: transparentColor,
+                                          //   width: size.width * 0.45,
+                                          //   child: AutoSizeText(
+                                          //     "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetVehicles!.color} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetVehicles!.model} (${widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetVehicles!.vehicleRegistrationNo})",
+                                          //     textAlign: TextAlign.center,
+                                          //     style: TextStyle(
+                                          //       color: textHaveAccountColor,
+                                          //       fontSize: 14,
+                                          //       fontFamily: 'Syne-Regular',
+                                          //     ),
+                                          //     minFontSize: 14,
+                                          //     maxFontSize: 14,
+                                          //     maxLines: 1,
+                                          //     overflow: TextOverflow.ellipsis,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       const Spacer(),
@@ -906,17 +904,14 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                                       ChatScreen(
                                                     callbackFunction:
                                                         startTimer,
-                                                    riderId: widget
-                                                        .riderData!.usersFleetId
+                                                    riderId: widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetId
                                                         .toString(),
                                                     name:
-                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
-                                                    address: widget
-                                                        .riderData!.address,
+                                                        "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
+                                                    address:widget.riderData!.data!.bookingsFleet![0].usersFleet!.address,
                                                     phone:
-                                                        widget.riderData!.phone,
-                                                    image: widget
-                                                        .riderData!.profilePic,
+                                                        widget.riderData!.data!.bookingsFleet![0].usersFleet!.phone,
+                                                    image: widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic,
                                                   ),
                                                 ),
                                               );
@@ -929,7 +924,7 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               makePhoneCall(
-                                                  "${widget.riderData!.phone}");
+                                                  "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.phone}");
                                             },
                                             child: SvgPicture.asset(
                                               'assets/images/call-icon.svg',
@@ -2310,16 +2305,15 @@ class _ArrivingScreenState extends State<ArrivingScreen> {
                                           MaterialPageRoute(
                                             builder: (context) => ChatScreen(
                                               callbackFunction: startTimer,
-                                              riderId: widget
-                                                  .riderData!.usersFleetId
+                                              riderId: widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetId
                                                   .toString(),
                                               name:
-                                                  "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                  "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                               address:
-                                                  widget.riderData!.address,
-                                              phone: widget.riderData!.phone,
+                                                  widget.riderData!.data!.bookingsFleet![0].usersFleet!.address,
+                                              phone: widget.riderData!.data!.bookingsFleet![0].usersFleet!.phone,
                                               image:
-                                                  widget.riderData!.profilePic,
+                                                  widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic,
                                             ),
                                           ),
                                         );

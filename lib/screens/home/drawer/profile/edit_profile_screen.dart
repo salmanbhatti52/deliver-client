@@ -10,12 +10,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/widgets/buttons.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/widgets/custom_snackbar.dart';
 import 'package:deliver_client/models/edit_profile_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
-import 'package:deliver_client/widgets/custom_snackbar_with_btn.dart';
 
 String? userId;
 

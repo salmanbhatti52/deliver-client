@@ -15,7 +15,6 @@ import 'package:flutter/services.dart'
     show Clipboard, ClipboardData, rootBundle;
 import 'package:deliver_client/screens/report_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
@@ -26,7 +25,7 @@ class InProgressHomeScreen extends StatefulWidget {
   final String? passCode;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const InProgressHomeScreen({
@@ -124,157 +123,142 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       UpdateBookingStatusModel();
 
   updateBookingStatus() async {
-    try {
-      String apiUrl = "$baseUrl/get_updated_status_booking";
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint("currentBookingId: ${widget.currentBookingId}");
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: {
-          "bookings_id": widget.currentBookingId,
-        },
-      );
-      final responseString = response.body;
-      debugPrint("response: $responseString");
-      debugPrint("statusCode: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        setState(() {});
-        updateBookingStatusModel =
-            updateBookingStatusModelFromJson(responseString);
-        debugPrint(
-            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+    // try {
+    String apiUrl = "$baseUrl/get_updated_status_booking";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("currentBookingId: ${widget.currentBookingId}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "bookings_id": widget.currentBookingId,
+      },
+    );
+    final responseString = response.body;
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      updateBookingStatusModel =
+          updateBookingStatusModelFromJson(responseString);
 
-        // Access the passcode
+      debugPrint(
+          'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-        passcode0 = jsonResponse['data']['bookings_fleet'][0]
+      // Access the passcode
+
+      passcode0 = jsonResponse['data']['bookings_fleet'][0]
+              ['bookings_destinations']['passcode'] ??
+          "";
+      debugPrint("Passcode0: $passcode0");
+      phoneNumber0 = jsonResponse['data']['bookings_fleet'][0]
+              ['bookings_destinations']['receiver_phone'] ??
+          "";
+      debugPrint("phoneNumber0: $phoneNumber0");
+      charges0 = jsonResponse['data']['bookings_fleet'][0]
+              ['bookings_destinations']['destin_total_charges'] ??
+          "";
+      debugPrint("charges0: $charges0");
+      riderName0 = jsonResponse['data']['bookings_fleet'][0]['users_fleet']
+              ['first_name'] ??
+          "";
+      debugPrint("riderName0: $riderName0");
+
+      if (jsonResponse['data']['bookings_fleet'].length > 1) {
+        passcode1 = jsonResponse['data']['bookings_fleet'][1]
                 ['bookings_destinations']['passcode'] ??
             "";
-        debugPrint("Passcode0: $passcode0");
-        phoneNumber0 = jsonResponse['data']['bookings_fleet'][0]
+        debugPrint("Passcode1: $passcode1");
+        phoneNumber1 = jsonResponse['data']['bookings_fleet'][1]
                 ['bookings_destinations']['receiver_phone'] ??
             "";
-        debugPrint("phoneNumber0: $phoneNumber0");
-        charges0 = jsonResponse['data']['bookings_fleet'][0]
+        debugPrint("phoneNumber1: $phoneNumber1");
+        charges1 = jsonResponse['data']['bookings_fleet'][1]
                 ['bookings_destinations']['destin_total_charges'] ??
             "";
-        debugPrint("charges0: $charges0");
-        riderName0 = jsonResponse['data']['bookings_fleet'][0]['users_fleet']
+        debugPrint("charges1: $charges1");
+        riderName1 = jsonResponse['data']['bookings_fleet'][1]['users_fleet']
                 ['first_name'] ??
             "";
-        debugPrint("riderName0: $riderName0");
-
-        if (jsonResponse['data']['bookings_fleet'].length > 1) {
-          passcode1 = jsonResponse['data']['bookings_fleet'][1]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          debugPrint("Passcode1: $passcode1");
-          phoneNumber1 = jsonResponse['data']['bookings_fleet'][1]
-                  ['bookings_destinations']['receiver_phone'] ??
-              "";
-          debugPrint("phoneNumber1: $phoneNumber1");
-          charges1 = jsonResponse['data']['bookings_fleet'][1]
-                  ['bookings_destinations']['destin_total_charges'] ??
-              "";
-          debugPrint("charges1: $charges1");
-          riderName1 = jsonResponse['data']['bookings_fleet'][1]['users_fleet']
-                  ['first_name'] ??
-              "";
-          debugPrint("riderName1: $riderName1");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 2) {
-          passcode2 = jsonResponse['data']['bookings_fleet'][2]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          debugPrint("Passcode2: $passcode2");
-          phoneNumber2 = jsonResponse['data']['bookings_fleet'][2]
-                  ['bookings_destinations']['receiver_phone'] ??
-              "";
-          debugPrint("phoneNumber2: $phoneNumber2");
-          charges2 = jsonResponse['data']['bookings_fleet'][2]
-                  ['bookings_destinations']['destin_total_charges'] ??
-              "";
-          debugPrint("charges2: $charges2");
-          riderName2 = jsonResponse['data']['bookings_fleet'][2]['users_fleet']
-                  ['first_name'] ??
-              "";
-          debugPrint("riderName2: $riderName2");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 3) {
-          passcode3 = jsonResponse['data']['bookings_fleet'][3]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          debugPrint("Passcode3: $passcode3");
-          phoneNumber3 = jsonResponse['data']['bookings_fleet'][3]
-                  ['bookings_destinations']['receiver_phone'] ??
-              "";
-          debugPrint("phoneNumber3: $phoneNumber3");
-          charges3 = jsonResponse['data']['bookings_fleet'][3]
-                  ['bookings_destinations']['destin_total_charges'] ??
-              "";
-          debugPrint("charges3: $charges3");
-          riderName3 = jsonResponse['data']['bookings_fleet'][3]['users_fleet']
-                  ['first_name'] ??
-              "";
-          debugPrint("riderName3: $riderName3");
-        }
-        if (jsonResponse['data']['bookings_fleet'].length > 4) {
-          passcode4 = jsonResponse['data']['bookings_fleet'][4]
-                  ['bookings_destinations']['passcode'] ??
-              "";
-          debugPrint("Passcode4: $passcode4");
-          phoneNumber4 = jsonResponse['data']['bookings_fleet'][4]
-                  ['bookings_destinations']['receiver_phone'] ??
-              "";
-          debugPrint("phoneNumber4: $phoneNumber4");
-          charges4 = jsonResponse['data']['bookings_fleet'][4]
-                  ['bookings_destinations']['destin_total_charges'] ??
-              "";
-          debugPrint("charges4: $charges4");
-          riderName4 = jsonResponse['data']['bookings_fleet'][4]['users_fleet']
-                  ['first_name'] ??
-              "";
-          debugPrint("riderName4: $riderName4");
-        }
-        if (updateBookingStatusModel.data?.status == "Completed") {
-          timer?.cancel();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AmountToPayScreen(
-                riderData: widget.riderData!,
-                singleData: widget.singleData,
-                multipleData: widget.multipleData,
-                currentBookingId: widget.currentBookingId,
-                bookingDestinationId: widget.bookingDestinationId,
-              ),
-            ),
-          );
-        } else {
-          // timer?.cancel();
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => HomePageScreen(
-          //       index: 1,
-          //       passCode: widget.passCode,
-          //       singleData: widget.singleData,
-          //       multipleData: widget.multipleData,
-          //       riderData: widget.riderData!,
-          //       currentBookingId: widget.currentBookingId,
-          //       bookingDestinationId: widget.bookingDestinationId,
-          //     ),
-          //   ),
-          // );
-        }
+        debugPrint("riderName1: $riderName1");
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
+      if (jsonResponse['data']['bookings_fleet'].length > 2) {
+        passcode2 = jsonResponse['data']['bookings_fleet'][2]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        debugPrint("Passcode2: $passcode2");
+        phoneNumber2 = jsonResponse['data']['bookings_fleet'][2]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber2: $phoneNumber2");
+        charges2 = jsonResponse['data']['bookings_fleet'][2]
+                ['bookings_destinations']['destin_total_charges'] ??
+            "";
+        debugPrint("charges2: $charges2");
+        riderName2 = jsonResponse['data']['bookings_fleet'][2]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName2: $riderName2");
+      }
+      if (jsonResponse['data']['bookings_fleet'].length > 3) {
+        passcode3 = jsonResponse['data']['bookings_fleet'][3]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        debugPrint("Passcode3: $passcode3");
+        phoneNumber3 = jsonResponse['data']['bookings_fleet'][3]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber3: $phoneNumber3");
+        charges3 = jsonResponse['data']['bookings_fleet'][3]
+                ['bookings_destinations']['destin_total_charges'] ??
+            "";
+        debugPrint("charges3: $charges3");
+        riderName3 = jsonResponse['data']['bookings_fleet'][3]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName3: $riderName3");
+      }
+      if (jsonResponse['data']['bookings_fleet'].length > 4) {
+        passcode4 = jsonResponse['data']['bookings_fleet'][4]
+                ['bookings_destinations']['passcode'] ??
+            "";
+        debugPrint("Passcode4: $passcode4");
+        phoneNumber4 = jsonResponse['data']['bookings_fleet'][4]
+                ['bookings_destinations']['receiver_phone'] ??
+            "";
+        debugPrint("phoneNumber4: $phoneNumber4");
+        charges4 = jsonResponse['data']['bookings_fleet'][4]
+                ['bookings_destinations']['destin_total_charges'] ??
+            "";
+        debugPrint("charges4: $charges4");
+        riderName4 = jsonResponse['data']['bookings_fleet'][4]['users_fleet']
+                ['first_name'] ??
+            "";
+        debugPrint("riderName4: $riderName4");
+      }
+      if (updateBookingStatusModel.data?.status == "Completed") {
+        timer?.cancel();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AmountToPayScreen(
+              riderData: widget.riderData!,
+              singleData: widget.singleData,
+              multipleData: widget.multipleData,
+              currentBookingId: widget.currentBookingId,
+              bookingDestinationId: widget.bookingDestinationId,
+            ),
+          ),
+        );
+      } 
+      setState(() {});
     }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
   getLocationSingle() {
@@ -285,8 +269,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       destLng = double.parse(lngDest!);
       debugPrint("destLat: $destLat");
       debugPrint("destLng: $destLng");
-      latRider = "${widget.riderData!.latitude}";
-      lngRider = "${widget.riderData!.longitude}";
+      latRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+      lngRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
       debugPrint("riderLat: $riderLat");
@@ -304,8 +290,10 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       destLng = double.parse(lngDest!);
       debugPrint("destLat: $destLat");
       debugPrint("destLng: $destLng");
-      latRider = "${widget.riderData!.latitude}";
-      lngRider = "${widget.riderData!.longitude}";
+      latRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+      lngRider =
+          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
       riderLat = double.parse(latRider!);
       riderLng = double.parse(lngRider!);
       debugPrint("riderLat: $riderLat");
@@ -1664,7 +1652,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 "assets/images/user-profile.png",
                                               ),
                                               image: NetworkImage(
-                                                '$imageUrl${widget.riderData!.profilePic}',
+                                                '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                               ),
                                               fit: BoxFit.cover,
                                             ),
@@ -1682,7 +1670,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 color: transparentColor,
                                                 width: size.width * 0.45,
                                                 child: AutoSizeText(
-                                                  "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                  "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: drawerTextColor,
@@ -1707,7 +1695,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                         const EdgeInsets.only(
                                                             top: 1.5, left: 24),
                                                     child: Text(
-                                                      "${widget.riderData!.bookingsRatings}",
+                                                      "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.bookingsRatings}",
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -1723,23 +1711,23 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.005),
-                                          Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.62,
-                                            child: AutoSizeText(
-                                              "${widget.riderData!.usersFleetVehicles!.color} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: textHaveAccountColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Syne-Regular',
-                                              ),
-                                              maxFontSize: 14,
-                                              minFontSize: 12,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
+                                          // Container(
+                                          //   color: transparentColor,
+                                          //   width: size.width * 0.62,
+                                          //   child: AutoSizeText(
+                                          //     "${widget.riderData!.usersFleetVehicles!.color} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
+                                          //     textAlign: TextAlign.left,
+                                          //     style: TextStyle(
+                                          //       color: textHaveAccountColor,
+                                          //       fontSize: 14,
+                                          //       fontFamily: 'Syne-Regular',
+                                          //     ),
+                                          //     maxFontSize: 14,
+                                          //     minFontSize: 12,
+                                          //     maxLines: 1,
+                                          //     overflow: TextOverflow.ellipsis,
+                                          //   ),
+                                          // ),
                                           SizedBox(height: size.height * 0.002),
                                           Row(
                                             children: [
@@ -1752,7 +1740,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                       width: size.width * 0.01),
                                                   Tooltip(
                                                     message:
-                                                        "${widget.riderData!.address}",
+                                                        "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.address}",
                                                     child: Container(
                                                       color: transparentColor,
                                                       width: widget.singleData!
@@ -1760,7 +1748,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                           ? size.width * 0.3
                                                           : size.width * 0.4,
                                                       child: AutoSizeText(
-                                                        "${widget.riderData!.address}",
+                                                        "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.address}",
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(

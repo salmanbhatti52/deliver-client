@@ -1,7 +1,7 @@
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/widgets/tabbar_ride_history.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
@@ -11,7 +11,7 @@ class RideHistoryScreen extends StatefulWidget {
   final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
   const RideHistoryScreen({
     super.key,

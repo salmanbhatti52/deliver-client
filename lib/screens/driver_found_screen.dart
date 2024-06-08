@@ -22,7 +22,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/cancel_booking_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
-import 'package:deliver_client/screens/booking_accepted_screen.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -234,20 +233,20 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
           'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
       if (updateBookingStatusModel.data?.status == "Accepted") {
         timer?.cancel();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => BookingAcceptedScreen(
-              distance: widget.distance,
-              singleData: widget.singleData,
-              multipleData: widget.multipleData,
-              passCode: widget.passCode,
-              riderData: widget.riderData!,
-              currentBookingId: widget.currentBookingId,
-              bookingDestinationId: widget.bookingDestinationId,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => BookingAcceptedScreen(
+        //       distance: widget.distance,
+        //       singleData: widget.singleData,
+        //       multipleData: widget.multipleData,
+        //       passCode: widget.passCode,
+        //       riderData: widget.riderData!,
+        //       currentBookingId: widget.currentBookingId,
+        //       bookingDestinationId: widget.bookingDestinationId,
+        //     ),
+        //   ),
+        // );
       }
       if (mounted) {
         setState(() {});

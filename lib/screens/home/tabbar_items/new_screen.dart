@@ -27,7 +27,6 @@ import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/widgets/home_textfields.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/get_charges_model.dart';
 import 'package:deliver_client/models/get_vehicles_model.dart';
 import 'package:deliver_client/utils/distance_matrix_api.dart';
 import 'package:deliver_client/models/get_addresses_model.dart';
@@ -449,6 +448,11 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   String? destinLong;
   String? totalDeliveryAmount;
   String? totalVatCharges;
+  String? totalTollGateCharges;
+  String? totalServiceCharges;
+  String? serviceRunning;
+  String? serviceRunningCharges;
+  String? tollGateCharges;
   String? roundedTotalAmount;
   String? totalChargesM;
   String? totalVatM;
@@ -485,6 +489,18 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   String? totalDeliveryAmount3;
   String? totalDeliveryAmount4;
 
+  String? serviceCharges0;
+  String? serviceCharges1;
+  String? serviceCharges2;
+  String? serviceCharges3;
+  String? serviceCharges4;
+
+  String? tollGateCharges0;
+  String? tollGateCharges1;
+  String? tollGateCharges2;
+  String? tollGateCharges3;
+  String? tollGateCharges4;
+
   String? totalVatCharges0;
   String? totalVatCharges1;
   String? totalVatCharges2;
@@ -496,207 +512,253 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   String? roundedTotalAmount2;
   String? roundedTotalAmount3;
   String? roundedTotalAmount4;
+
   GetDistanceAddressesModel getDistanceAddressesModel =
       GetDistanceAddressesModel();
-  Future<void> getDistanceAddress(String? bTypeId) async {
-    print("pickup: ${pickupController.text}");
-    print("Destin: ${destinationController.text}");
+  Future<void> getDistanceAddress(String? bTypeId, String? vehicleId) async {
+    debugPrint("pickup: ${pickupController.text}");
+    debugPrint("Destin: ${destinationController.text}");
     Map<String, dynamic>? requestBody;
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      String apiUrl = "$baseUrl/get_booking_charges";
+    // try {
+    setState(() {
+      isLoading = true;
+    });
+    String apiUrl = "$baseUrl/get_booking_charges";
 
-      List<Map<String, String>> addresses = [];
-      List<Map<String, String>> addresses2 = [];
-      if (filteredData.isNotEmpty) {
-        for (var i = 0; i < filteredData.length; i++) {
-          String? pickupAddress = filteredData[i]["$i"]["pickupController"];
-          String? destinationAddress =
-              filteredData[i]["$i"]["destinationController"];
+    List<Map<String, String>> addresses = [];
+    List<Map<String, String>> addresses2 = [];
+    if (filteredData.isNotEmpty) {
+      for (var i = 0; i < filteredData.length; i++) {
+        String? pickupAddress = filteredData[i]["$i"]["pickupController"];
+        String? destinationAddress =
+            filteredData[i]["$i"]["destinationController"];
 
-          if (pickupAddress != null &&
-              destinationAddress != null &&
-              pickupAddress.isNotEmpty &&
-              destinationAddress.isNotEmpty) {
-            addresses.add({
-              "pickup": pickupAddress,
-              "destin": destinationAddress,
-            });
-          }
-        }
-      } else {
-        if (pickupController.text.isNotEmpty &&
-            destinationController.text.isNotEmpty) {
-          addresses2.add({
-            "pickup": pickupController.text,
-            "destin": destinationController.text,
+        if (pickupAddress != null &&
+            destinationAddress != null &&
+            pickupAddress.isNotEmpty &&
+            destinationAddress.isNotEmpty) {
+          addresses.add({
+            "pickup": pickupAddress,
+            "destin": destinationAddress,
           });
         }
       }
-
-      if (addresses.isNotEmpty) {
-        requestBody = {
-          "bookings_types_id": "$bTypeId",
-          "addresses": addresses,
-        };
-      } else if (addresses.isEmpty) {
-        requestBody = {
-          "bookings_types_id": "$bTypeId",
-          "addresses": addresses2,
-        };
+    } else {
+      if (pickupController.text.isNotEmpty &&
+          destinationController.text.isNotEmpty) {
+        addresses2.add({
+          "pickup": pickupController.text,
+          "destin": destinationController.text,
+        });
       }
+    }
 
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint("requestBody: $requestBody");
+    if (addresses.isNotEmpty) {
+      requestBody = {
+        "bookings_types_id": "$bTypeId",
+        "vehicles_id": vehicleId,
+        "addresses": addresses,
+      };
+    } else if (addresses.isEmpty) {
+      requestBody = {
+        "bookings_types_id": "$bTypeId",
+        "vehicles_id": vehicleId,
+        "addresses": addresses2,
+      };
+    }
 
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBody),
-      );
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("requestBody: $requestBody");
 
-      final responseString = response.body;
-      debugPrint("response: $responseString");
-      debugPrint("statusCode: ${response.statusCode}");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
 
-      if (response.statusCode == 200) {
-        getDistanceAddressesModel =
-            getDistanceAddressesModelFromJson(responseString);
-        totalChargesM = getDistanceAddressesModel.data!.totalCharges;
-        totalVatM = getDistanceAddressesModel.data!.totalVatCharges;
-        if (getDistanceAddressesModel.data != null) {
-          for (int i = 0;
-              i < getDistanceAddressesModel.data!.bookingsDestinations!.length;
-              i++) {
-            final distance = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinDistance;
-            final duration = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinTime;
-            pickupLatt = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].pickupLatitude
-                .toString();
-            pickupLong = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].pickupLongitude
-                .toString();
-            destinLatt = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinLatitude
-                .toString();
-            destinLong = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinLongitude
-                .toString();
-            totalDeliveryAmount = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinDeliveryCharges
-                .toString();
-            totalVatCharges = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinVatCharges
-                .toString();
-            roundedTotalAmount = getDistanceAddressesModel
-                .data!.bookingsDestinations![i].destinTotalCharges
-                .toString();
+    final responseString = response.body;
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
 
-            if (distance == null || duration == null) {
-              Fluttertoast.showToast(
-                msg: "Distance fetching problem",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.TOP,
-                timeInSecForIosWeb: 2,
-                fontSize: 16.0,
-                textColor: Colors.white,
-                backgroundColor: Colors.red,
-              );
-              continue;
-            }
+    if (response.statusCode == 200) {
+      getDistanceAddressesModel =
+          getDistanceAddressesModelFromJson(responseString);
+      totalChargesM = getDistanceAddressesModel.data!.totalCharges;
+      totalVatM = getDistanceAddressesModel.data!.totalVatCharges;
+      if (getDistanceAddressesModel.data != null) {
+        for (int i = 0;
+            i < getDistanceAddressesModel.data!.bookingsDestinations!.length;
+            i++) {
+          final distance = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinDistance
+              .toString();
+          final duration = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinTime;
+          pickupLatt = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].pickupLatitude
+              .toString();
+          pickupLong = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].pickupLongitude
+              .toString();
+          destinLatt = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinLatitude
+              .toString();
+          destinLong = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinLongitude
+              .toString();
+          totalDeliveryAmount = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinDeliveryCharges
+              .toString();
+          totalVatCharges = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinVatCharges
+              .toString();
+          roundedTotalAmount = getDistanceAddressesModel
+              .data!.bookingsDestinations![i].destinTotalCharges
+              .toString();
+          serviceRunning =
+              getDistanceAddressesModel.data?.serviceRunning.toString();
+          totalServiceCharges =
+              getDistanceAddressesModel.data?.totalServiceCharges.toString();
+          totalTollGateCharges =
+              getDistanceAddressesModel.data?.totalTollGateCharges;
+          tollGateCharges = getDistanceAddressesModel
+              .data!.bookingsDestinations?[i].totalTollGateCharges;
+          serviceRunningCharges = getDistanceAddressesModel
+              .data!.bookingsDestinations?[i].totalServiceCharges
+              .toString();
+          if (duration == null) {
+            Fluttertoast.showToast(
+              msg: "Distance fetching problem",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 2,
+              fontSize: 16.0,
+              textColor: Colors.white,
+              backgroundColor: Colors.red,
+            );
+            continue;
+          }
 
-            // Convert to double only if distance and duration are not null
-            final double? distanceDouble = double.tryParse(distance);
-            final double? durationDouble = double.tryParse(duration);
-            print('Distance $i: $distance');
-            print('Duration $i: $duration');
-            print('Pickup Latitude $i: $pickupLatt');
-            print('Pickup Longitude $i: $pickupLong');
-            print('Destination Latitude $i: $destinLatt');
-            print('Destination Longitude $i: $destinLong');
-            switch (i) {
-              case 0:
-                distance0 = distance.toString();
-                duration0 = duration;
-                pickupLat0 = pickupLatt;
-                pickupLng0 = pickupLong;
-                destinLat0 = destinLatt;
-                destinLng0 = destinLong;
-                totalDeliveryAmount0 = totalDeliveryAmount;
-                totalVatCharges0 = totalVatCharges;
-                roundedTotalAmount0 = roundedTotalAmount;
-                break;
-              case 1:
-                distance1 = distance;
-                duration1 = duration;
-                pickupLat1 = pickupLatt;
-                pickupLng1 = pickupLong;
-                destinLat1 = destinLatt;
-                destinLng1 = destinLong;
-                totalDeliveryAmount1 = totalDeliveryAmount;
-                totalVatCharges1 = totalVatCharges;
-                roundedTotalAmount1 = roundedTotalAmount;
-                break;
-              case 2:
-                distance2 = distance;
-                duration2 = duration;
-                pickupLat2 = pickupLatt;
-                pickupLng2 = pickupLong;
-                destinLat2 = destinLatt;
-                destinLng2 = destinLong;
-                totalDeliveryAmount2 = totalDeliveryAmount;
-                totalVatCharges2 = totalVatCharges;
-                roundedTotalAmount2 = roundedTotalAmount;
-                break;
-              case 3:
-                distance3 = distance;
-                duration3 = duration;
-                pickupLat3 = pickupLatt;
-                pickupLng3 = pickupLong;
-                destinLat3 = destinLatt;
-                destinLng3 = destinLong;
-                totalDeliveryAmount3 = totalDeliveryAmount;
-                totalVatCharges3 = totalVatCharges;
-                roundedTotalAmount3 = roundedTotalAmount;
-                break;
-              case 4:
-                distance4 = distance;
-                duration4 = duration;
-                pickupLat4 = pickupLatt;
-                pickupLng4 = pickupLong;
-                destinLat4 = destinLatt;
-                destinLng4 = destinLong;
-                totalDeliveryAmount4 = totalDeliveryAmount;
-                totalVatCharges4 = totalVatCharges;
-                roundedTotalAmount4 = roundedTotalAmount;
-                break;
-              default:
-                // Handle if there are more distances than predefined variables
-                break;
-            }
+          // Convert to double only if distance and duration are not null
+          // final double? distanceDouble = double.tryParse(distance);
+          // final double? durationDouble = double.tryParse(duration);
+          debugPrint('Distance $i: $distance');
+          debugPrint('Duration $i: $duration');
+          debugPrint('Pickup Latitude $i: $pickupLatt');
+          debugPrint('Pickup Longitude $i: $pickupLong');
+          debugPrint('Destination Latitude $i: $destinLatt');
+          debugPrint('Destination Longitude $i: $destinLong');
+          switch (i) {
+            case 0:
+              distance0 = distance;
+              duration0 = duration;
+              pickupLat0 = pickupLatt;
+              pickupLng0 = pickupLong;
+              destinLat0 = destinLatt;
+              destinLng0 = destinLong;
+              totalDeliveryAmount0 = totalDeliveryAmount;
+              totalVatCharges0 = totalVatCharges;
+              roundedTotalAmount0 = roundedTotalAmount;
+              serviceCharges0 = serviceRunningCharges;
+              tollGateCharges0 = tollGateCharges;
+              debugPrint('distance0 = $distance0');
+              debugPrint('duration0 = $duration0');
+              debugPrint('pickupLat0 = $pickupLat0');
+              debugPrint('pickupLng0 = $pickupLng0');
+              debugPrint('destinLat0 = $destinLat0');
+              debugPrint('destinLng0 = $destinLng0');
+              debugPrint('totalDeliveryAmount0 = $totalDeliveryAmount0');
+              debugPrint('totalVatCharges0 = $totalVatCharges0');
+              debugPrint('roundedTotalAmount0 = $roundedTotalAmount0');
+              debugPrint('serviceCharges0 = $serviceCharges0');
+              debugPrint('tollGateCharges0 = $tollGateCharges0');
+              break;
+            case 1:
+              distance1 = distance;
+              duration1 = duration;
+              pickupLat1 = pickupLatt;
+              pickupLng1 = pickupLong;
+              destinLat1 = destinLatt;
+              destinLng1 = destinLong;
+              totalDeliveryAmount1 = totalDeliveryAmount;
+              totalVatCharges1 = totalVatCharges;
+              roundedTotalAmount1 = roundedTotalAmount;
+              serviceCharges1 = serviceRunningCharges;
+              tollGateCharges1 = tollGateCharges;
+              debugPrint('distance1 = $distance1');
+              debugPrint('duration1 = $duration1');
+              debugPrint('pickupLat1 = $pickupLat1');
+              debugPrint('pickupLng1 = $pickupLng1');
+              debugPrint('destinLat1 = $destinLat1');
+              debugPrint('destinLng1 = $destinLng1');
+              debugPrint('totalDeliveryAmount1 = $totalDeliveryAmount1');
+              debugPrint('totalVatCharges1 = $totalVatCharges1');
+              debugPrint('roundedTotalAmount1 = $roundedTotalAmount1');
+              debugPrint('serviceCharges1 = $serviceCharges1');
+              debugPrint('tollGateCharges1 = $tollGateCharges1');
+              break;
+            case 2:
+              distance2 = distance;
+              duration2 = duration;
+              pickupLat2 = pickupLatt;
+              pickupLng2 = pickupLong;
+              destinLat2 = destinLatt;
+              destinLng2 = destinLong;
+              totalDeliveryAmount2 = totalDeliveryAmount;
+              totalVatCharges2 = totalVatCharges;
+              roundedTotalAmount2 = roundedTotalAmount;
+              serviceCharges2 = serviceRunningCharges;
+              tollGateCharges2 = tollGateCharges;
+              break;
+            case 3:
+              distance3 = distance;
+              duration3 = duration;
+              pickupLat3 = pickupLatt;
+              pickupLng3 = pickupLong;
+              destinLat3 = destinLatt;
+              destinLng3 = destinLong;
+              totalDeliveryAmount3 = totalDeliveryAmount;
+              totalVatCharges3 = totalVatCharges;
+              roundedTotalAmount3 = roundedTotalAmount;
+              serviceCharges3 = serviceRunningCharges;
+              tollGateCharges3 = tollGateCharges;
+              break;
+            case 4:
+              distance4 = distance;
+              duration4 = duration;
+              pickupLat4 = pickupLatt;
+              pickupLng4 = pickupLong;
+              destinLat4 = destinLatt;
+              destinLng4 = destinLong;
+              totalDeliveryAmount4 = totalDeliveryAmount;
+              totalVatCharges4 = totalVatCharges;
+              roundedTotalAmount4 = roundedTotalAmount;
+              serviceCharges4 = serviceRunningCharges;
+              tollGateCharges4 = tollGateCharges;
+              break;
+            default:
+              // Handle if there are more distances than predefined variables
+              break;
           }
         }
-        setState(() {
-          isLoading = false;
-        });
-      } else {
-        debugPrint("Non-200 status code received: ${response.statusCode}");
-        // Handle other status codes as needed
-        CustomToast.showToast(
-          fontSize: 12,
-          message: "${getDistanceAddressesModel.message}",
-        );
       }
-    } catch (e, stackTrace) {
-      debugPrint('Something went wrong: $e\n$stackTrace');
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      debugPrint("Non-200 status code received: ${response.statusCode}");
+      // Handle other status codes as needed
+      CustomToast.showToast(
+        fontSize: 12,
+        message: "${getDistanceAddressesModel.message}",
+      );
     }
+    // } catch (e, stackTrace) {
+    //   debugPrint('Something went wrong: $e\n$stackTrace');
+    // }
   }
 
   // getChargesMultiple(String? bTypeId) async {
@@ -850,27 +912,27 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   //   }
   // }
 
-  Future<Map<String, dynamic>> getDistanceAndTime(
-    String origin,
-    String destination,
-  ) async {
-    final apiKey = dotenv.env['MAPS_KEY'];
-    final response = await http.get(
-      Uri.parse(
-        'https://maps.googleapis.com/maps/api/distancematrix/json'
-        '?origins=$origin'
-        '&destinations=$destination'
-        '&key=$apiKey',
-      ),
-    );
+  // Future<Map<String, dynamic>> getDistanceAndTime(
+  //   String origin,
+  //   String destination,
+  // ) async {
+  //   final apiKey = dotenv.env['MAPS_KEY'];
+  //   final response = await http.get(
+  //     Uri.parse(
+  //       'https://maps.googleapis.com/maps/api/distancematrix/json'
+  //       '?origins=$origin'
+  //       '&destinations=$destination'
+  //       '&key=$apiKey',
+  //     ),
+  //   );
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return data;
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     return data;
+  //   } else {
+  //     throw Exception('Failed to load data');
+  //   }
+  // }
 
   // calculateStandardAmount(
   //     double from, double to, double perKm, double distance) {
@@ -1967,7 +2029,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                   setState(() {
                                     isLoading2 = true;
                                   });
-                                  await getDistanceAddress(bookingsTypeId);
+                                  await getDistanceAddress(
+                                      bookingsTypeId, vehicleId);
                                   if (double.parse(distance0!) <= 1.0) {
                                     CustomToast.showToast(
                                       fontSize: 12,
@@ -1982,6 +2045,15 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     addSingleData = {
                                       "type": "schedule",
                                       "vehicles_id": vehicleId,
+                                      "service_running": serviceRunning,
+                                      "delivery_charges": totalDeliveryAmount0,
+                                      "total_svc_running_charges":
+                                          totalServiceCharges,
+                                      "total_tollgate_charges":
+                                          totalTollGateCharges ?? "0",
+                                      "svc_running_charges0": serviceCharges0,
+                                      "tollgate_charges0":
+                                          tollGateCharges0 ?? "0",
                                       "bookings_types_id": bookingsTypeId,
                                       "delivery_type": selectedRadio == 1
                                           ? "Single"
@@ -2072,7 +2144,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     );
                                   },
                                 );
-                                await getDistanceAddress(bookingsTypeId);
+                                await getDistanceAddress(
+                                    bookingsTypeId, vehicleId);
                                 // Add a delay to ensure data is populated in allDataForIndexes1
                                 Future.delayed(const Duration(seconds: 2),
                                     () async {
@@ -2095,12 +2168,33 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                             "Distance should be greater than 1.0 Km!",
                                       );
                                     } else {
-                                      await getDistanceAddress(bookingsTypeId);
+                                      await getDistanceAddress(
+                                          bookingsTypeId, vehicleId);
                                       addMultipleData = {
                                         "type": "schedule",
                                         "vehicles_id": vehicleId,
                                         "totalChargesM": totalChargesM,
                                         "totalVatM": totalVatM,
+                                        "service_running": serviceRunning,
+                                        "total_svc_running_charges":
+                                            totalServiceCharges,
+                                        "total_tollgate_charges":
+                                            totalTollGateCharges ?? "0",
+                                        "svc_running_charges0": serviceCharges0,
+                                        "tollgate_charges0":
+                                            tollGateCharges0 ?? "0",
+                                        "svc_running_charges1": serviceCharges1,
+                                        "tollgate_charges1":
+                                            tollGateCharges1 ?? "0",
+                                        "svc_running_charges2": serviceCharges2,
+                                        "tollgate_charges2":
+                                            tollGateCharges2 ?? "0",
+                                        "svc_running_charges3": serviceCharges3,
+                                        "tollgate_charges3":
+                                            tollGateCharges3 ?? "0",
+                                        "svc_running_charges4": serviceCharges4,
+                                        "tollgate_charges4":
+                                            tollGateCharges4 ?? "0",
                                         "bookings_types_id": bookingsTypeId,
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"
@@ -2428,7 +2522,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     );
                                   }
                                 } else {
-                                  await getDistanceAddress(bookingsTypeId);
+                                  await getDistanceAddress(
+                                      bookingsTypeId, vehicleId);
                                   if (double.parse(distance0!) <= 1.0) {
                                     CustomToast.showToast(
                                       fontSize: 12,
@@ -2439,11 +2534,21 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       isLoading = false;
                                     });
                                   } else {
-                                    await getDistanceAddress(bookingsTypeId);
+                                    await getDistanceAddress(
+                                        bookingsTypeId, vehicleId!);
 
                                     addSingleData = {
                                       "type": "booking",
                                       "vehicles_id": vehicleId,
+                                      "delivery_charges": totalDeliveryAmount0,
+                                      "service_running": serviceRunning,
+                                      "total_svc_running_charges":
+                                          totalServiceCharges,
+                                      "total_tollgate_charges":
+                                          totalTollGateCharges ?? "0",
+                                      "svc_running_charges0": serviceCharges0,
+                                      "tollgate_charges0":
+                                          tollGateCharges0 ?? "0",
                                       "bookings_types_id": bookingsTypeId,
                                       "delivery_type": selectedRadio == 1
                                           ? "Single"
@@ -2534,7 +2639,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                   },
                                 );
 
-                                await getDistanceAddress(bookingsTypeId);
+                                await getDistanceAddress(
+                                    bookingsTypeId, vehicleId);
                                 // Add a delay to ensure data is populated in allDataForIndexes1
                                 Future.delayed(const Duration(seconds: 2),
                                     () async {
@@ -2547,6 +2653,26 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       "totalChargesM": totalChargesM,
                                       "totalVatM": totalVatM,
                                       "vehicles_id": vehicleId,
+                                      "service_running": serviceRunning,
+                                      "total_svc_running_charges":
+                                          totalServiceCharges,
+                                      "total_tollgate_charges":
+                                          totalTollGateCharges ?? "0",
+                                      "svc_running_charges0": serviceCharges0,
+                                      "tollgate_charges0":
+                                          tollGateCharges0 ?? "0",
+                                      "svc_running_charges1": serviceCharges1,
+                                      "tollgate_charges1":
+                                          tollGateCharges1 ?? "0",
+                                      "svc_running_charges2": serviceCharges2,
+                                      "tollgate_charges2":
+                                          tollGateCharges2 ?? "0",
+                                      "svc_running_charges3": serviceCharges3,
+                                      "tollgate_charges3":
+                                          tollGateCharges3 ?? "0",
+                                      "svc_running_charges4": serviceCharges4,
+                                      "tollgate_charges4":
+                                          tollGateCharges4 ?? "0",
                                       "bookings_types_id": bookingsTypeId,
                                       "delivery_type": selectedRadio == 1
                                           ? "Single"
@@ -4746,7 +4872,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     setState(() {
                                       isLoading2 = true;
                                     });
-                                    await getDistanceAddress(bookingsTypeId);
+                                    await getDistanceAddress(
+                                        bookingsTypeId, vehicleId);
                                     if (double.parse(distance0!) <= 1.0) {
                                       CustomToast.showToast(
                                         fontSize: 12,
@@ -4762,6 +4889,16 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       addSingleData = {
                                         "type": "schedule",
                                         "vehicles_id": vehicleId,
+                                        "delivery_charges":
+                                            totalDeliveryAmount0,
+                                        "service_running": serviceRunning,
+                                        "total_svc_running_charges":
+                                            totalServiceCharges,
+                                        "total_tollgate_charges":
+                                            totalTollGateCharges ?? "0",
+                                        "svc_running_charges0": serviceCharges0,
+                                        "tollgate_charges0":
+                                            tollGateCharges0 ?? "0",
                                         "bookings_types_id": bookingsTypeId,
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"
@@ -4858,7 +4995,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       );
                                     },
                                   );
-                                  await getDistanceAddress(bookingsTypeId);
+                                  await getDistanceAddress(
+                                      bookingsTypeId, vehicleId);
                                   // Add a delay to ensure data is populated in allDataForIndexes1
                                   Future.delayed(const Duration(seconds: 1),
                                       () async {
@@ -4888,6 +5026,31 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                           "vehicles_id": vehicleId,
                                           "totalChargesM": totalChargesM,
                                           "totalVatM": totalVatM,
+                                          "service_running": serviceRunning,
+                                          "total_svc_running_charges":
+                                              totalServiceCharges,
+                                          "total_tollgate_charges":
+                                              totalTollGateCharges ?? "0",
+                                          "svc_running_charges0":
+                                              serviceCharges0,
+                                          "tollgate_charges0":
+                                              tollGateCharges0 ?? "0",
+                                          "svc_running_charges1":
+                                              serviceCharges1,
+                                          "tollgate_charges1":
+                                              tollGateCharges1 ?? "0",
+                                          "svc_running_charges2":
+                                              serviceCharges2,
+                                          "tollgate_charges2":
+                                              tollGateCharges2 ?? "0",
+                                          "svc_running_charges3":
+                                              serviceCharges3,
+                                          "tollgate_charges3":
+                                              tollGateCharges3 ?? "0",
+                                          "svc_running_charges4":
+                                              serviceCharges4,
+                                          "tollgate_charges4":
+                                              tollGateCharges4 ?? "0",
                                           "bookings_types_id": bookingsTypeId,
                                           "delivery_type": selectedRadio == 1
                                               ? "Single"
@@ -5238,7 +5401,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     setState(() {
                                       isLoading = true;
                                     });
-                                    await getDistanceAddress(bookingsTypeId);
+                                    await getDistanceAddress(
+                                        bookingsTypeId, vehicleId!);
                                     if (double.parse(distance0!) <= 1.0) {
                                       CustomToast.showToast(
                                         fontSize: 12,
@@ -5253,6 +5417,16 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       addSingleData = {
                                         "type": "booking",
                                         "vehicles_id": vehicleId,
+                                        "delivery_charges":
+                                            totalDeliveryAmount0,
+                                        "service_running": serviceRunning,
+                                        "total_svc_running_charges":
+                                            totalServiceCharges,
+                                        "total_tollgate_charges":
+                                            totalTollGateCharges ?? "0",
+                                        "svc_running_charges0": serviceCharges0,
+                                        "tollgate_charges0":
+                                            tollGateCharges0 ?? "0",
                                         "bookings_types_id": bookingsTypeId,
                                         "delivery_type": selectedRadio == 1
                                             ? "Single"
@@ -5393,7 +5567,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       },
                                     );
 
-                                    await getDistanceAddress(bookingsTypeId);
+                                    await getDistanceAddress(
+                                        bookingsTypeId, vehicleId!);
                                     // Add a delay to ensure data is populated in allDataForIndexes1
                                     Future.delayed(const Duration(seconds: 2),
                                         () async {
@@ -5407,6 +5582,31 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                           "vehicles_id": vehicleId,
                                           "totalChargesM": totalChargesM,
                                           "totalVatM": totalVatM,
+                                          "service_running": serviceRunning,
+                                          "total_svc_running_charges":
+                                              totalServiceCharges,
+                                          "total_tollgate_charges":
+                                              totalTollGateCharges ?? "0",
+                                          "svc_running_charges0":
+                                              serviceCharges0,
+                                          "tollgate_charges0":
+                                              tollGateCharges0 ?? "0",
+                                          "svc_running_charges1":
+                                              serviceCharges1,
+                                          "tollgate_charges1":
+                                              tollGateCharges1 ?? "0",
+                                          "svc_running_charges2":
+                                              serviceCharges2,
+                                          "tollgate_charges2":
+                                              tollGateCharges2 ?? "0",
+                                          "svc_running_charges3":
+                                              serviceCharges3,
+                                          "tollgate_charges3":
+                                              tollGateCharges3 ?? "0",
+                                          "svc_running_charges4":
+                                              serviceCharges4,
+                                          "tollgate_charges4":
+                                              tollGateCharges4 ?? "0",
                                           "bookings_types_id": bookingsTypeId,
                                           "delivery_type": selectedRadio == 1
                                               ? "Single"

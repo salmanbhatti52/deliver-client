@@ -78,12 +78,11 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
       },
       body: {
         "bookings_id": widget.getScheduledBookingModel!.bookingsId.toString(),
-        "payer_name": "$firstName $lastName",
-        "payer_email": userEmail,
         "total_amount": widget.getScheduledBookingModel != null
             ? widget.getScheduledBookingModel!.totalCharges
             : widget.getScheduledBookingModel!.totalDeliveryCharges,
-        "payment_status": "Paid"
+        "payment_status": "Paid",
+        "bookings_destinations_id": ""
       },
     );
     final responseString = response.body;
@@ -163,12 +162,17 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
     debugPrint("response: $responseString");
     debugPrint("statusCode: ${response.statusCode}");
     if (response.statusCode == 200) {
-      setState(() {});
       updateBookingStatusModel =
           updateBookingStatusModelFromJson(responseString);
       debugPrint(
           'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      print("$jsonResponse");
+    }
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
     }
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
@@ -212,14 +216,11 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
           debugPrint("distanceUnit: $distanceUnit");
         }
       }
-
-      await updateBookingStatus();
-      CustomToast.showToast(
-          message: "${updateBookingStatusModel.data!.paymentStatus}");
-      setState(() {
-        isLoading = false;
-      });
     }
+    await updateBookingStatus();
+    CustomToast.showToast(
+        message: "${updateBookingStatusModel.data!.paymentStatus}");
+
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
     //   return null;
@@ -290,6 +291,7 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
     sharedPref();
     startPayStack();
     getAllSystemData();
+    print("${widget.getScheduledBookingModel}");
 
     nextPageScrollController.addListener(() {
       setState(() {
@@ -304,9 +306,7 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    timeAdded = widget.getScheduledBookingModel?.dateModified != null
-        ? DateTime.parse("${widget.getScheduledBookingModel?.dateModified}")
-        : DateTime.now(); // Use current date and time as a default value
+    // Use current date and time as a default value
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
@@ -365,498 +365,525 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
                 ),
               ),
             )
-          : Column(
-              children: [
-                Expanded(
-                  child: PageView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.getScheduledBookingModel!.bookingsFleet!
-                              .length ??
-                          0,
-                      onPageChanged: (index) async {
-                        setState(() {
-                          currentIndex =
-                              index; // Update currentIndex when page changes
-                        });
-                      },
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Column(
-                            children: [
-                              SizedBox(height: size.height * 0.02),
-                              Row(
+          : updateBookingStatusModel.data!.status == "Accepted"
+              ? Column(
+                  children: [
+                    Expanded(
+                      child: PageView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: updateBookingStatusModel
+                                  .data!.bookingsFleet!.length ??
+                              0,
+                          onPageChanged: (index) async {
+                            setState(() {
+                              currentIndex =
+                                  index; // Update currentIndex when page changes
+                            });
+                          },
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Column(
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Container(
-                                      color: transparentColor,
-                                      width: 60,
-                                      height: 65,
-                                      child: FadeInImage(
-                                        placeholder: const AssetImage(
-                                          "assets/images/user-profile.png",
-                                        ),
-                                        image: NetworkImage(
-                                          '$imageUrl${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleet?.profilePic}',
-                                        ),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  SizedBox(height: size.height * 0.02),
+                                  Row(
                                     children: [
-                                      Container(
-                                        color: transparentColor,
-                                        width: size.width * 0.45,
-                                        child: AutoSizeText(
-                                          "${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleet?.firstName} ${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleet?.lastName}",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            color: drawerTextColor,
-                                            fontSize: 16,
-                                            fontFamily: 'Syne-Bold',
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Container(
+                                          color: transparentColor,
+                                          width: 60,
+                                          height: 65,
+                                          child: FadeInImage(
+                                            placeholder: const AssetImage(
+                                              "assets/images/user-profile.png",
+                                            ),
+                                            image: NetworkImage(
+                                              '$imageUrl${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.profilePic}',
+                                            ),
+                                            fit: BoxFit.cover,
                                           ),
-                                          minFontSize: 16,
-                                          maxFontSize: 16,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      Text(
-                                        '${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleet?.bookingsRatings}',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 12,
-                                          fontFamily: 'Inter-Regular',
-                                        ),
-                                      ),
-                                      Row(
+                                      SizedBox(width: size.width * 0.02),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
+                                          Container(
+                                            color: transparentColor,
+                                            width: size.width * 0.45,
+                                            child: AutoSizeText(
+                                              "${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.firstName} ${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.lastName}",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: drawerTextColor,
+                                                fontSize: 16,
+                                                fontFamily: 'Syne-Bold',
+                                              ),
+                                              minFontSize: 16,
+                                              maxFontSize: 16,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
                                           Text(
-                                            '${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleetVehicles?.color} ',
-                                            textAlign: TextAlign.left,
+                                            '${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.bookingsRatings}',
+                                            textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              color: textHaveAccountColor,
+                                              color: blackColor,
                                               fontSize: 12,
                                               fontFamily: 'Inter-Regular',
                                             ),
                                           ),
+                                          // Row(
+                                          //   children: [
+                                          //     Text(
+                                          //       '${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleetVehicles?.color} ',
+                                          //       textAlign: TextAlign.left,
+                                          //       style: TextStyle(
+                                          //         color: textHaveAccountColor,
+                                          //         fontSize: 12,
+                                          //         fontFamily: 'Inter-Regular',
+                                          //       ),
+                                          //     ),
+                                          //     Text(
+                                          //       '${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleetVehicles?.model}',
+                                          //       textAlign: TextAlign.left,
+                                          //       style: TextStyle(
+                                          //         color: textHaveAccountColor,
+                                          //         fontSize: 12,
+                                          //         fontFamily: 'Inter-Regular',
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                          SizedBox(height: size.height * 0.005),
+                                          // Text(
+                                          //   '${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleetVehicles?.vehicleRegistrationNo}',
+                                          //   textAlign: TextAlign.left,
+                                          //   style: TextStyle(
+                                          //     color: textHaveAccountColor,
+                                          //     fontSize: 12,
+                                          //     fontFamily: 'Inter-Regular',
+                                          //   ),
+                                          // ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.03),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/date-picker-icon.svg',
+                                        width: 15,
+                                        height: 15,
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        'Scheduled Date:',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: textHaveAccountColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Syne-Regular',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        '${updateBookingStatusModel.data!.deliveryDate}',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Regular',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.02),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/time-picker-icon.svg',
+                                        width: 15,
+                                        height: 15,
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        'Scheduled Time:',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: textHaveAccountColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Syne-Regular',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Text(
+                                        '${updateBookingStatusModel.data!.deliveryTime}',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Regular',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.03),
+                                  // SizedBox(
+                                  //   width: MediaQuery.of(context).size.width,
+                                  //   child: Expanded(
+                                  //     child: ListView.builder(
+                                  //       itemCount: widget
+                                  //               .getScheduledBookingModel!
+                                  //               .bookingsFleet
+                                  //               ?.length ??
+                                  //           0,
+                                  //       itemBuilder: (context, index) {
+                                  //         return ListTile(
+                                  //           title: Text(
+                                  //             '${widget.getScheduledBookingModel!.bookingsFleet?[index].dateModified}',
+                                  //             textAlign: TextAlign.left,
+                                  //             style: const TextStyle(
+                                  //               color: Colors.black,
+                                  //               fontSize: 14,
+                                  //               fontFamily: 'Inter-Regular',
+                                  //             ),
+                                  //           ),
+                                  //           trailing: GestureDetector(
+                                  //             onTap: () {
+                                  //               showDialog(
+                                  //                 context: context,
+                                  //                 barrierDismissible: false,
+                                  //                 builder: (context) =>
+                                  //                     cancelRide(context),
+                                  //               );
+                                  //             },
+                                  //             child: const Icon(Icons.cancel),
+                                  //           ),
+                                  //         );
+                                  //       },
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/orange-location-big-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
                                           Text(
-                                            '${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleetVehicles?.model}',
+                                            'Pickup',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               color: textHaveAccountColor,
-                                              fontSize: 12,
-                                              fontFamily: 'Inter-Regular',
+                                              fontSize: 14,
+                                              fontFamily: 'Syne-Regular',
+                                            ),
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations!.pickupAddress}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.6,
+                                              child: AutoSizeText(
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.pickupAddress}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                                minFontSize: 14,
+                                                maxFontSize: 14,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: size.height * 0.005),
-                                      Text(
-                                        '${widget.getScheduledBookingModel?.bookingsFleet?[index].usersFleetVehicles?.vehicleRegistrationNo}',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 12,
-                                          fontFamily: 'Inter-Regular',
-                                        ),
-                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.03),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/date-picker-icon.svg',
-                                    width: 15,
-                                    height: 15,
+                                  SizedBox(height: size.height * 0.01),
+                                  Divider(
+                                    thickness: 1,
+                                    color: dividerColor,
+                                    indent: 30,
+                                    endIndent: 30,
                                   ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Text(
-                                    'Scheduled Date:',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: textHaveAccountColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Syne-Regular',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Text(
-                                    '${widget.getScheduledBookingModel?.deliveryDate}',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Regular',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/time-picker-icon.svg',
-                                    width: 15,
-                                    height: 15,
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Text(
-                                    'Scheduled Time:',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: textHaveAccountColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Syne-Regular',
-                                    ),
-                                  ),
-                                  SizedBox(width: size.width * 0.02),
-                                  Text(
-                                    '${widget.getScheduledBookingModel?.deliveryTime}',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: blackColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Inter-Regular',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.03),
-                              // SizedBox(
-                              //   width: MediaQuery.of(context).size.width,
-                              //   child: Expanded(
-                              //     child: ListView.builder(
-                              //       itemCount: widget
-                              //               .getScheduledBookingModel!
-                              //               .bookingsFleet
-                              //               ?.length ??
-                              //           0,
-                              //       itemBuilder: (context, index) {
-                              //         return ListTile(
-                              //           title: Text(
-                              //             '${widget.getScheduledBookingModel!.bookingsFleet?[index].dateModified}',
-                              //             textAlign: TextAlign.left,
-                              //             style: const TextStyle(
-                              //               color: Colors.black,
-                              //               fontSize: 14,
-                              //               fontFamily: 'Inter-Regular',
-                              //             ),
-                              //           ),
-                              //           trailing: GestureDetector(
-                              //             onTap: () {
-                              //               showDialog(
-                              //                 context: context,
-                              //                 barrierDismissible: false,
-                              //                 builder: (context) =>
-                              //                     cancelRide(context),
-                              //               );
-                              //             },
-                              //             child: const Icon(Icons.cancel),
-                              //           ),
-                              //         );
-                              //       },
-                              //     ),
-                              //   ),
-                              // ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/orange-location-big-icon.svg',
-                                  ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
+                                  SizedBox(height: size.height * 0.01),
+                                  Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Pickup',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
+                                      SvgPicture.asset(
+                                        'assets/images/send-small-icon.svg',
                                       ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.pickupAddress}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.6,
-                                          child: AutoSizeText(
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.pickupAddress}",
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Dropoff',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Divider(
-                                thickness: 1,
-                                color: dividerColor,
-                                indent: 30,
-                                endIndent: 30,
-                              ),
-                              SizedBox(height: size.height * 0.01),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/images/send-small-icon.svg',
-                                  ),
-                                  SizedBox(width: size.width * 0.04),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Dropoff',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: textHaveAccountColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Syne-Regular',
-                                        ),
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.destinAddress}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.6,
-                                          child: AutoSizeText(
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.destinAddress}",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Medium',
-                                            ),
-                                            minFontSize: 14,
-                                            maxFontSize: 14,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: size.height * 0.03),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Column(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/grey-location-icon.svg',
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.destinDistance} $distanceUnit",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.18,
-                                          child: AutoSizeText(
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.destinDistance} $distanceUnit",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
                                               color: textHaveAccountColor,
                                               fontSize: 14,
-                                              fontFamily: 'Inter-Regular',
+                                              fontFamily: 'Syne-Regular',
                                             ),
-                                            maxFontSize: 14,
-                                            minFontSize: 12,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                        ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.destinAddress}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.6,
+                                              child: AutoSizeText(
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.destinAddress}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Medium',
+                                                ),
+                                                minFontSize: 14,
+                                                maxFontSize: 14,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  Column(
+                                  SizedBox(height: size.height * 0.03),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/images/grey-clock-icon.svg',
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.destinTime}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.38,
-                                          child: AutoSizeText(
-                                            "${widget.getScheduledBookingModel?.bookingsFleet?[index].bookingsDestinations?.destinTime}",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Regular',
-                                            ),
-                                            maxFontSize: 14,
-                                            minFontSize: 12,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                      Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/images/grey-location-icon.svg',
                                           ),
-                                        ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.destinDistance} $distanceUnit",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.18,
+                                              child: AutoSizeText(
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.destinDistance} $distanceUnit",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: textHaveAccountColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                                maxFontSize: 14,
+                                                minFontSize: 12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/images/grey-clock-icon.svg',
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.destinTime}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.38,
+                                              child: AutoSizeText(
+                                                "${updateBookingStatusModel.data!.bookingsFleet?[index].bookingsDestinations?.destinTime}",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: textHaveAccountColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                                maxFontSize: 14,
+                                                minFontSize: 12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/images/grey-dollar-icon.svg',
+                                            colorFilter: ColorFilter.mode(
+                                                const Color(0xFF292D32)
+                                                    .withOpacity(0.4),
+                                                BlendMode.srcIn),
+                                          ),
+                                          SizedBox(height: size.height * 0.01),
+                                          Tooltip(
+                                            message:
+                                                "$currencyUnit${updateBookingStatusModel.data!.totalCharges}",
+                                            child: Container(
+                                              color: transparentColor,
+                                              width: size.width * 0.2,
+                                              child: AutoSizeText(
+                                                "$currencyUnit${updateBookingStatusModel.data!.totalCharges}",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: textHaveAccountColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                                maxFontSize: 14,
+                                                minFontSize: 12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  Column(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/grey-dollar-icon.svg',
-                                        colorFilter: ColorFilter.mode(
-                                            const Color(0xFF292D32)
-                                                .withOpacity(0.4),
-                                            BlendMode.srcIn),
-                                      ),
-                                      SizedBox(height: size.height * 0.01),
-                                      Tooltip(
-                                        message:
-                                            "$currencyUnit${widget.getScheduledBookingModel?.totalCharges}",
-                                        child: Container(
-                                          color: transparentColor,
-                                          width: size.width * 0.2,
-                                          child: AutoSizeText(
-                                            "$currencyUnit${widget.getScheduledBookingModel?.totalCharges}",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: textHaveAccountColor,
-                                              fontSize: 14,
-                                              fontFamily: 'Inter-Regular',
-                                            ),
-                                            maxFontSize: 14,
-                                            minFontSize: 12,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // SizedBox(height: size.height * 0.03),
+                                  // SizedBox(height: size.height * 0.02),
                                 ],
                               ),
-                              // SizedBox(height: size.height * 0.03),
-                              // SizedBox(height: size.height * 0.02),
-                            ],
-                          ),
-                        );
-                      }),
-                ),
-                Center(
-                  child: Container(
-                    color: Colors.transparent,
-                    height: 12,
-                    width: 100,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 18),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        controller: nextPageScrollController,
-                        itemCount: widget
-                            .getScheduledBookingModel!.bookingsFleet!.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              pageController.animateToPage(index,
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.ease);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(width: 3),
-                                Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: currentIndex == index
-                                        ? Colors.orange
-                                        : grey,
-                                  ),
+                            );
+                          }),
+                    ),
+                    Center(
+                      child: Container(
+                        color: Colors.transparent,
+                        height: 12,
+                        width: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 18),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            controller: nextPageScrollController,
+                            itemCount: updateBookingStatusModel
+                                .data!.bookingsFleet!.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  pageController.animateToPage(index,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.ease);
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(width: 3),
+                                    Container(
+                                      width: 10,
+                                      height: 10,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: currentIndex == index
+                                            ? Colors.orange
+                                            : grey,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 3)
+                                  ],
                                 ),
-                                const SizedBox(width: 3)
-                              ],
-                            ),
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
+                    SizedBox(height: size.height * 0.09),
+                    (updateBookingStatusModel.data!.paymentBy == "Sender" &&
+                            updateBookingStatusModel.data!.paymentStatus ==
+                                "Unpaid")
+                        ? GestureDetector(
+                            onTap: () {
+                              if (updateBookingStatusModel.data!.totalCharges !=
+                                  null) {
+                                double parsedValue = double.parse(
+                                    updateBookingStatusModel
+                                        .data!.totalCharges!);
+                                totalAmount1 = (parsedValue + 0.5).floor();
+                                debugPrint("Rounded Integer: $totalAmount");
+                              } else {
+                                double parsedValue = double.parse(
+                                    updateBookingStatusModel
+                                        .data!.totalDeliveryCharges!);
+                                totalAmount = (parsedValue + 0.5).floor();
+                                debugPrint("Rounded Integer: $totalAmount1");
+                              }
+                              makePayment();
+                            },
+                            child: buttonGradient("Make Payment", context),
+                          )
+                        : buttonGradient("In Progress", context),
+                    SizedBox(height: size.height * 0.02),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => cancelRide(context),
+                        );
+                      },
+                      child: buttonGradient("Cancel", context),
+                    ),
+                    SizedBox(height: size.height * 0.04),
+                  ],
+                )
+              : const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          "Waiting for the ride to be accepted. You will be notified via notification. Make payment in case you selected the card payment.",
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: size.height * 0.09),
-                (updateBookingStatusModel.data!.paymentBy == "Sender" &&
-                        updateBookingStatusModel.data!.paymentStatus ==
-                            "Unpaid")
-                    ? GestureDetector(
-                        onTap: () {
-                          if (updateBookingStatusModel.data!.totalCharges !=
-                              null) {
-                            double parsedValue = double.parse(
-                                updateBookingStatusModel.data!.totalCharges!);
-                            totalAmount1 = (parsedValue + 0.5).floor();
-                            debugPrint("Rounded Integer: $totalAmount");
-                          } else {
-                            double parsedValue = double.parse(
-                                updateBookingStatusModel
-                                    .data!.totalDeliveryCharges!);
-                            totalAmount = (parsedValue + 0.5).floor();
-                            debugPrint("Rounded Integer: $totalAmount1");
-                          }
-                          makePayment();
-                        },
-                        child: buttonGradient("Make Payment", context),
-                      )
-                    : buttonGradient("In Progress", context),
-                SizedBox(height: size.height * 0.02),
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => cancelRide(context),
-                    );
-                  },
-                  child: buttonGradient("Cancel", context),
-                ),
-                SizedBox(height: size.height * 0.04),
-              ],
-            ),
     );
   }
 

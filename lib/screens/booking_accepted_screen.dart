@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
-import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
@@ -23,7 +22,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:deliver_client/screens/arriving_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 
 class BookingAcceptedScreen extends StatefulWidget {
@@ -32,7 +30,7 @@ class BookingAcceptedScreen extends StatefulWidget {
   final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const BookingAcceptedScreen({
@@ -102,12 +100,13 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
         },
         body: {
           "bookings_id": widget.currentBookingId,
-          "payer_name": "$firstName $lastName",
-          "payer_email": userEmail,
+          // "payer_name": "$firstName $lastName",
+          // "payer_email": userEmail,
           "total_amount": widget.singleData!.isNotEmpty
               ? widget.singleData!['total_charges']
               : widget.multipleData!['total_charges'],
-          "payment_status": "Paid"
+          "payment_status": "Paid",
+          "bookings_destinations_id": "" // payment_by = 'Receiver'
         },
       );
       final responseString = response.body;
@@ -170,6 +169,11 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     String apiUrl = "$baseUrl/get_updated_status_booking";
     debugPrint("apiUrl: $apiUrl");
     debugPrint("currentBookingId: ${widget.currentBookingId}");
+    var body = {
+      "bookings_id": widget.currentBookingId,
+      "users_fleet_id": "147" // used in rider-app
+    };
+    print(body);
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
@@ -402,8 +406,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     sharedPref();
     startPayStack();
     updateBookingStatus();
-    lat = "${widget.riderData!.latitude}";
-    lng = "${widget.riderData!.longitude}";
+    lat = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
+    lng = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
     riderLat = double.parse(lat!);
     riderLng = double.parse(lng!);
     debugPrint("riderLat: $riderLat");
@@ -556,7 +560,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                               "assets/images/user-profile.png",
                                             ),
                                             image: NetworkImage(
-                                              '$imageUrl${widget.riderData!.profilePic}',
+                                              '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
                                           ),
@@ -571,7 +575,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                             color: transparentColor,
                                             width: size.width * 0.45,
                                             child: AutoSizeText(
-                                              "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                              "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: drawerTextColor,
@@ -594,7 +598,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                 padding: const EdgeInsets.only(
                                                     top: 1.5, left: 24),
                                                 child: Text(
-                                                  "${widget.riderData!.bookingsRatings}",
+                                                  "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.bookingsRatings}",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: blackColor,
@@ -606,23 +610,23 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.003),
-                                          Container(
-                                            color: transparentColor,
-                                            width: size.width * 0.45,
-                                            child: AutoSizeText(
-                                              "${widget.riderData!.usersFleetVehicles!.color} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: textHaveAccountColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Syne-Regular',
-                                              ),
-                                              minFontSize: 14,
-                                              maxFontSize: 14,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
+                                          // Container(
+                                          //   color: transparentColor,
+                                          //   width: size.width * 0.45,
+                                          //   child: AutoSizeText(
+                                          //     "${widget.riderData!.data!.bookingsFleet![0].vehicles!.} ${widget.riderData!.usersFleetVehicles!.model} (${widget.riderData!.usersFleetVehicles!.vehicleRegistrationNo})",
+                                          //     textAlign: TextAlign.center,
+                                          //     style: TextStyle(
+                                          //       color: textHaveAccountColor,
+                                          //       fontSize: 14,
+                                          //       fontFamily: 'Syne-Regular',
+                                          //     ),
+                                          //     minFontSize: 14,
+                                          //     maxFontSize: 14,
+                                          //     maxLines: 1,
+                                          //     overflow: TextOverflow.ellipsis,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       const Spacer(),
@@ -639,16 +643,32 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                     callbackFunction:
                                                         startTimer,
                                                     riderId: widget
-                                                        .riderData!.usersFleetId
+                                                        .riderData!
+                                                        .data!
+                                                        .bookingsFleet![0]
+                                                        .usersFleet!
+                                                        .usersFleetId
                                                         .toString(),
                                                     name:
-                                                        "${widget.riderData!.firstName} ${widget.riderData!.lastName}",
+                                                        "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
                                                     address: widget
-                                                        .riderData!.address,
-                                                    phone:
-                                                        widget.riderData!.phone,
+                                                        .riderData!
+                                                        .data!
+                                                        .bookingsFleet![0]
+                                                        .usersFleet!
+                                                        .address,
+                                                    phone: widget
+                                                        .riderData!
+                                                        .data!
+                                                        .bookingsFleet![0]
+                                                        .usersFleet!
+                                                        .phone,
                                                     image: widget
-                                                        .riderData!.profilePic,
+                                                        .riderData!
+                                                        .data!
+                                                        .bookingsFleet![0]
+                                                        .usersFleet!
+                                                        .profilePic,
                                                   ),
                                                 ),
                                               );
@@ -661,7 +681,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                           GestureDetector(
                                             onTap: () {
                                               makePhoneCall(
-                                                  "${widget.riderData!.phone}");
+                                                  "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.phone}");
                                             },
                                             child: SvgPicture.asset(
                                               'assets/images/call-icon.svg',
@@ -715,7 +735,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                         width:
                                                             size.width * 0.18,
                                                         child: AutoSizeText(
-                                                          "${widget.distance} $distanceUnit",
+                                                          "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -872,7 +892,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                           0.18,
                                                                   child:
                                                                       AutoSizeText(
-                                                                    "${widget.distance} $distanceUnit",
+                                                                    "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
                                                                     textAlign:
                                                                         TextAlign
                                                                             .center,
@@ -1054,7 +1074,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                           0.18,
                                                                   child:
                                                                       AutoSizeText(
-                                                                    "${widget.distance} $distanceUnit",
+                                                                    "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
                                                                     textAlign:
                                                                         TextAlign
                                                                             .center,
@@ -1246,7 +1266,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                         0.18,
                                                                     child:
                                                                         AutoSizeText(
-                                                                      "${widget.distance} $distanceUnit",
+                                                                      "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,
@@ -1443,7 +1463,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                         0.18,
                                                                     child:
                                                                         AutoSizeText(
-                                                                      "${widget.distance} $distanceUnit",
+                                                                      "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,
@@ -1640,7 +1660,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                         0.18,
                                                                     child:
                                                                         AutoSizeText(
-                                                                      "${widget.distance} $distanceUnit",
+                                                                      "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,

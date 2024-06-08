@@ -11,7 +11,6 @@ import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:deliver_client/models/rate_rider_model.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;

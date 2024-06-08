@@ -13,7 +13,6 @@ import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
@@ -28,7 +27,7 @@ class AmountToPayScreen extends StatefulWidget {
   final Map? singleData;
   final Map? multipleData;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const AmountToPayScreen({
@@ -89,12 +88,11 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
         },
         body: {
           "bookings_id": widget.currentBookingId,
-          "payer_name": "$firstName $lastName",
-          "payer_email": userEmail,
           "total_amount": widget.singleData!.isNotEmpty
               ? widget.singleData!['total_charges']
               : widget.multipleData!['total_charges'],
-          "payment_status": "Paid"
+          "payment_status": "Paid",
+          "bookings_destinations_id": ""
         },
       );
       final responseString = response.body;

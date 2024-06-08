@@ -84,15 +84,16 @@ class _ConfirmMultipleDetailsScreenState
             currencyUnit = "${getAllSystemDataModel.data?[i].description}";
             debugPrint("currencyUnit: $currencyUnit");
           }
-          if (getAllSystemDataModel.data?[i].type == "vat_charges") {
+          if (getAllSystemDataModel.data?[i].type == "vat_charges_pct") {
             vatCharges = "${getAllSystemDataModel.data?[i].description}";
             doubleVatCharges = double.parse(vatCharges!);
             debugPrint("doubleVatCharges: $doubleVatCharges");
-            setState(() {});
+
             // calculateVATCharges(doubleVatCharges!);
           }
         }
       }
+      setState(() {});
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
       return null;
@@ -198,17 +199,19 @@ class _ConfirmMultipleDetailsScreenState
                   right: 0,
                   bottom: 0,
                   child: _renderGoogleMap
-                      ? GoogleMap(
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                              double.parse(widget
-                                  .multipleData!["destin_latitude0"]
-                                  .toString()),
-                              double.parse(widget
-                                  .multipleData!["destin_longitude0"]
-                                  .toString()),
+                      ? Expanded(
+                          child: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                double.parse(widget
+                                    .multipleData!["destin_latitude0"]
+                                    .toString()),
+                                double.parse(widget
+                                    .multipleData!["destin_longitude0"]
+                                    .toString()),
+                              ),
+                              zoom: 13.4746,
                             ),
-                            zoom: 13.4746,
                           ),
                         )
                       : const Text("No Map Data"),
@@ -320,7 +323,8 @@ class _ConfirmMultipleDetailsScreenState
                                             width: size.width * 0.359,
                                             child: AutoSizeText(
                                               widget.multipleData![
-                                                  'totalChargesM'],
+                                                      'totalChargesM'] ??
+                                                  "0.0",
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: blackColor,
@@ -1232,6 +1236,40 @@ class _ConfirmMultipleDetailsScreenState
                                       ),
                                       Text(
                                         widget.multipleData!['totalVatM'],
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      SizedBox(width: size.width * 0.05),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.005),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Service Charges:',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: blackColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        '$currencyUnit ',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: orangeColor,
+                                          fontSize: 14,
+                                          fontFamily: 'Inter-Medium',
+                                        ),
+                                      ),
+                                      Text(
+                                        "${widget.multipleData!["total_svc_running_charges"]}",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,

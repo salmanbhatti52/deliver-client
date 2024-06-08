@@ -46,7 +46,7 @@ class _RidersListState extends State<RidersList> {
 
   CreateBookingModel createBookingModel = CreateBookingModel();
 
-  createBooking() async {
+  Future<void> createBooking() async {
     // try {
     setState(() {
       isLoading = true;
@@ -243,6 +243,10 @@ class _RidersListState extends State<RidersList> {
       "vehicles_id": widget.singleData!.isNotEmpty
           ? widget.singleData!["vehicles_id"]
           : widget.multipleData!["vehicles_id"],
+      "bookings_fleet": [
+        {"users_fleet_id": "147", "vehicles_id": "1"},
+        {"users_fleet_id": "172", "vehicles_id": "1"}
+      ],
       "users_customers_id": userId,
       "bookings_types_id": widget.singleData!.isNotEmpty
           ? widget.singleData!["bookings_types_id"]

@@ -22,7 +22,7 @@ class UpdateBookingStatusModel {
   factory UpdateBookingStatusModel.fromJson(Map<String, dynamic> json) =>
       UpdateBookingStatusModel(
         status: json["status"],
-        data: Data.fromJson(json["data"]),
+        data: json["data"] != null ? Data.fromJson(json["data"]) : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -213,6 +213,9 @@ class BookingsFleet {
 class BookingsDestinations {
   int? bookingsDestinationsId;
   int? bookingsId;
+    String? pickupAddress;
+  String? pickupLatitude;
+  String? pickupLongitude;
   String? destinAddress;
   String? destinLatitude;
   String? destinLongitude;
@@ -232,6 +235,9 @@ class BookingsDestinations {
   BookingsDestinations({
     this.bookingsDestinationsId,
     this.bookingsId,
+         this.pickupAddress,
+     this.pickupLatitude,
+     this.pickupLongitude,
     this.destinAddress,
     this.destinLatitude,
     this.destinLongitude,
@@ -253,6 +259,9 @@ class BookingsDestinations {
       BookingsDestinations(
         bookingsDestinationsId: json["bookings_destinations_id"],
         bookingsId: json["bookings_id"],
+             pickupAddress: json["pickup_address"],
+        pickupLatitude: json["pickup_latitude"],
+        pickupLongitude: json["pickup_longitude"],
         destinAddress: json["destin_address"],
         destinLatitude: json["destin_latitude"],
         destinLongitude: json["destin_longitude"],
@@ -274,6 +283,9 @@ class BookingsDestinations {
   Map<String, dynamic> toJson() => {
         "bookings_destinations_id": bookingsDestinationsId,
         "bookings_id": bookingsId,
+                "pickup_address": pickupAddress,
+        "pickup_latitude": pickupLatitude,
+        "pickup_longitude": pickupLongitude,
         "destin_address": destinAddress,
         "destin_latitude": destinLatitude,
         "destin_longitude": destinLongitude,

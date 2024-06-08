@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:deliver_client/models/update_booking_status_model.dart';
+import 'package:deliver_client/screens/home/drawer/support/newSupport.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,11 +9,9 @@ import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/get_profile_model.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/models/get_support_admin_model.dart';
 import 'package:deliver_client/screens/home/drawer/legal_screen.dart';
-import 'package:deliver_client/screens/home/drawer/loyalty_point_screen.dart';
 import 'package:deliver_client/screens/home/drawer/profile/profile_screen.dart';
 import 'package:deliver_client/screens/home/drawer/support/support_screen.dart';
 import 'package:deliver_client/screens/home/drawer/update_location_screen.dart';
@@ -31,7 +31,7 @@ class AppDrawer extends StatefulWidget {
   final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const AppDrawer({
@@ -127,10 +127,10 @@ class _AppDrawerState extends State<AppDrawer> {
         debugPrint(
             'getSupportAdminModel length: ${getSupportAdminModel.data!.length}');
         for (int i = 0; i < getSupportAdminModel.data!.length; i++) {
-          getAdminId = "${getSupportAdminModel.data![i].usersSystemId}";
-          getAdminName = "${getSupportAdminModel.data![i].name}";
-          getAdminImage = "${getSupportAdminModel.data![i].profilePic}";
-          getAdminAddress = "${getSupportAdminModel.data![i].address}";
+          getAdminId = "${getSupportAdminModel.data![0].usersSystemId}";
+          getAdminName = "${getSupportAdminModel.data![0].name}";
+          getAdminImage = "${getSupportAdminModel.data![0].profilePic}";
+          getAdminAddress = "${getSupportAdminModel.data![0].address}";
         }
         debugPrint('getAdminId: $getAdminId');
         debugPrint('getAdminName: $getAdminName');
@@ -544,7 +544,7 @@ class _AppDrawerState extends State<AppDrawer> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SupportScreen(
+            builder: (context) => NewSupportPage(
               getAdminId: getAdminId,
               getAdminName: getAdminName,
               getAdminImage: getAdminImage,

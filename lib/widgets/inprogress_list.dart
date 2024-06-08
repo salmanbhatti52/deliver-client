@@ -10,9 +10,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:deliver_client/widgets/buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/models/inprogress_ride_model.dart';
-import 'package:deliver_client/screens/home/home_page_screen.dart';
+
+import '../models/update_booking_status_model.dart';
 
 String? userId;
 
@@ -22,7 +22,7 @@ class InProgressList extends StatefulWidget {
   final Map? multipleData;
   final String? passCode;
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const InProgressList({

@@ -16,13 +16,14 @@ import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:deliver_client/models/get_reason_model.dart';
 import 'package:deliver_client/models/report_rider_model.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
+
+import '../models/update_booking_status_model.dart';
 
 String? userId;
 
 class ReportScreen extends StatefulWidget {
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final Function()? callbackFunction;
   final String? bookingDestinationId;
 
@@ -221,7 +222,7 @@ class _ReportScreenState extends State<ReportScreen> {
       String apiUrl = "$baseUrl/report_rider";
       debugPrint("apiUrl: $apiUrl");
       debugPrint("userId: $userId");
-      debugPrint("fleetId: ${widget.riderData!.usersFleetId}");
+      debugPrint("fleetId: ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetId}");
       debugPrint("bookingId: ${widget.currentBookingId}");
       debugPrint("bookingsDestinationsId: ${widget.bookingDestinationId}");
       debugPrint("reportsReasonsId: $selectedReasonId");
@@ -236,7 +237,7 @@ class _ReportScreenState extends State<ReportScreen> {
         },
         body: {
           "users_customers_id": userId,
-          "users_fleet_id": widget.riderData!.usersFleetId.toString(),
+          "users_fleet_id": widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetId.toString(),
           "bookings_id": widget.currentBookingId,
           "bookings_destinations_id": widget.bookingDestinationId,
           "bookings_reports_reasons_id": selectedReasonId,
@@ -336,7 +337,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                     "assets/images/user-profile.png",
                                   ),
                                   image: NetworkImage(
-                                    '$imageUrl${widget.riderData!.profilePic}',
+                                    '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -345,7 +346,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           ),
                           SizedBox(height: size.height * 0.03),
                           Text(
-                            '${widget.riderData!.firstName} ${widget.riderData!.lastName}',
+                            '${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: drawerTextColor,
@@ -360,63 +361,63 @@ class _ReportScreenState extends State<ReportScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
+                            child: const Padding(
+                              padding: EdgeInsets.all(20),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/star-icon.svg',
-                                      ),
-                                      SizedBox(width: size.width * 0.02),
-                                      Text(
-                                        '${widget.riderData!.bookingsRatings}',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: drawerTextColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/car-icon.svg',
-                                      ),
-                                      SizedBox(width: size.width * 0.02),
-                                      Text(
-                                        '${widget.riderData!.trips} Trips',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: drawerTextColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/images/arrival-time-icon.svg',
-                                      ),
-                                      SizedBox(width: size.width * 0.02),
-                                      Text(
-                                        '${widget.riderData!.experience}',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: drawerTextColor,
-                                          fontSize: 14,
-                                          fontFamily: 'Inter-Medium',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     SvgPicture.asset(
+                                  //       'assets/images/star-icon.svg',
+                                  //     ),
+                                  //     SizedBox(width: size.width * 0.02),
+                                  //     Text(
+                                  //       '${widget.riderData!.data!.bookingsFleet![0].usersFleet!.bookingsRatings}',
+                                  //       textAlign: TextAlign.left,
+                                  //       style: TextStyle(
+                                  //         color: drawerTextColor,
+                                  //         fontSize: 14,
+                                  //         fontFamily: 'Inter-Medium',
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  // Row(
+                                  //   children: [
+                                  //     SvgPicture.asset(
+                                  //       'assets/images/car-icon.svg',
+                                  //     ),
+                                  //     SizedBox(width: size.width * 0.02),
+                                  //     Text(
+                                  //       '${widget.riderData!.data!.bookingsFleet![0].usersFleet!.trips} Trips',
+                                  //       textAlign: TextAlign.left,
+                                  //       style: TextStyle(
+                                  //         color: drawerTextColor,
+                                  //         fontSize: 14,
+                                  //         fontFamily: 'Inter-Medium',
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                  // Row(
+                                  //   children: [
+                                  //     SvgPicture.asset(
+                                  //       'assets/images/arrival-time-icon.svg',
+                                  //     ),
+                                  //     SizedBox(width: size.width * 0.02),
+                                  //     Text(
+                                  //       '${widget.riderData!.data!.bookingsFleet![0].usersFleet!.experience}',
+                                  //       textAlign: TextAlign.left,
+                                  //       style: TextStyle(
+                                  //         color: drawerTextColor,
+                                  //         fontSize: 14,
+                                  //         fontFamily: 'Inter-Medium',
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                 ],
                               ),
                             ),

@@ -11,7 +11,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:deliver_client/utils/colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:deliver_client/widgets/buttons.dart';
 import 'package:deliver_client/models/completed_ride_model.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart'
     as system_data;

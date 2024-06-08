@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,14 +12,13 @@ import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:deliver_client/models/rate_rider_model.dart';
-import 'package:deliver_client/models/search_rider_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 
 String? userId;
 
 class RateDriverScreen extends StatefulWidget {
   final String? currentBookingId;
-  final SearchRiderData? riderData;
+  final UpdateBookingStatusModel? riderData;
   final String? bookingDestinationId;
 
   const RateDriverScreen({
@@ -53,7 +53,8 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
       String apiUrl = "$baseUrl/rate_booking";
       debugPrint("apiUrl: $apiUrl");
       debugPrint("userId: $userId");
-      debugPrint("fleetId: ${widget.riderData!.usersFleetId.toString()}");
+      debugPrint(
+          "fleetId: ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetId.toString()}");
       debugPrint("bookingId: ${widget.currentBookingId}");
       debugPrint("bookingDestinationId: ${widget.bookingDestinationId}");
       debugPrint("rating: ${ratingValue.toString()}");
@@ -66,7 +67,9 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
         body: {
           "rated_by": "Customers",
           "users_customers_id": userId,
-          "users_fleet_id": widget.riderData!.usersFleetId.toString(),
+          "users_fleet_id": widget
+              .riderData!.data!.bookingsFleet![0].usersFleet!.usersFleetId
+              .toString(),
           "bookings_id": widget.currentBookingId,
           "bookings_destinations_id": widget.bookingDestinationId,
           "rating": ratingValue.toString(),
@@ -175,7 +178,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                           "assets/images/user-profile.png",
                                         ),
                                         image: NetworkImage(
-                                          '$imageUrl${widget.riderData!.profilePic}',
+                                          '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                         ),
                                         fit: BoxFit.cover,
                                       ),
@@ -188,7 +191,7 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${widget.riderData!.firstName}",
+                                        "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName}",
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
                                           color: blackColor,
