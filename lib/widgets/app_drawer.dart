@@ -2,6 +2,7 @@
 
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/screens/home/drawer/support/newSupport.dart';
+import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -533,6 +534,10 @@ class _AppDrawerState extends State<AppDrawer> {
       //   );
       //   break;
       case 6:
+        CustomToast.showToast(
+          fontSize: 12,
+          message: "Stay Tuned for this",
+        );
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
