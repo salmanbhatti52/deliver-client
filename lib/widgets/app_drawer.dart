@@ -536,7 +536,7 @@ class _AppDrawerState extends State<AppDrawer> {
       case 6:
         CustomToast.showToast(
           fontSize: 12,
-          message: "Stay Tuned for this",
+          message: "This feature is not yet available. Coming soon",
         );
         // Navigator.push(
         //   context,

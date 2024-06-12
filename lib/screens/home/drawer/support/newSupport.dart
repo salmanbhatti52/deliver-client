@@ -157,7 +157,11 @@ class _NewSupportPageState extends State<NewSupportPage> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: ExpansionTile(
-                                  title: Text(snapshot.data![index].question),
+                                  title: Text(
+                                    snapshot.data![index].question,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                   children: <Widget>[
                                     ListTile(
                                       title: Text(snapshot.data![index].answer),

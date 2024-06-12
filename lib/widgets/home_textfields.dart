@@ -889,6 +889,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                           ],
                         ),
                       ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                     ),
                   ),
                 ),

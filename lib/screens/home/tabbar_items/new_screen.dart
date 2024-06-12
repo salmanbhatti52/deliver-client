@@ -519,504 +519,257 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
     debugPrint("pickup: ${pickupController.text}");
     debugPrint("Destin: ${destinationController.text}");
     Map<String, dynamic>? requestBody;
-    // try {
-    setState(() {
-      isLoading = true;
-    });
-    String apiUrl = "$baseUrl/get_booking_charges";
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      String apiUrl = "$baseUrl/get_booking_charges";
 
-    List<Map<String, String>> addresses = [];
-    List<Map<String, String>> addresses2 = [];
-    if (filteredData.isNotEmpty) {
-      for (var i = 0; i < filteredData.length; i++) {
-        String? pickupAddress = filteredData[i]["$i"]["pickupController"];
-        String? destinationAddress =
-            filteredData[i]["$i"]["destinationController"];
+      List<Map<String, String>> addresses = [];
+      List<Map<String, String>> addresses2 = [];
+      if (filteredData.isNotEmpty) {
+        for (var i = 0; i < filteredData.length; i++) {
+          String? pickupAddress = filteredData[i]["$i"]["pickupController"];
+          String? destinationAddress =
+              filteredData[i]["$i"]["destinationController"];
 
-        if (pickupAddress != null &&
-            destinationAddress != null &&
-            pickupAddress.isNotEmpty &&
-            destinationAddress.isNotEmpty) {
-          addresses.add({
-            "pickup": pickupAddress,
-            "destin": destinationAddress,
-          });
+          if (pickupAddress != null &&
+              destinationAddress != null &&
+              pickupAddress.isNotEmpty &&
+              destinationAddress.isNotEmpty) {
+            addresses.add({
+              "pickup": pickupAddress,
+              "destin": destinationAddress,
+            });
+          }
         }
-      }
-    } else {
-      if (pickupController.text.isNotEmpty &&
+      } else if (pickupController.text.isNotEmpty &&
           destinationController.text.isNotEmpty) {
         addresses2.add({
           "pickup": pickupController.text,
           "destin": destinationController.text,
         });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+        CustomToast.showToast(
+          fontSize: 12,
+          message: "${getDistanceAddressesModel.message}",
+        );
       }
-    }
 
-    if (addresses.isNotEmpty) {
-      requestBody = {
-        "bookings_types_id": "$bTypeId",
-        "vehicles_id": vehicleId,
-        "addresses": addresses,
-      };
-    } else if (addresses.isEmpty) {
-      requestBody = {
-        "bookings_types_id": "$bTypeId",
-        "vehicles_id": vehicleId,
-        "addresses": addresses2,
-      };
-    }
+      if (addresses.isNotEmpty) {
+        requestBody = {
+          "bookings_types_id": "$bTypeId",
+          "vehicles_id": vehicleId,
+          "addresses": addresses,
+        };
+      } else if (addresses.isEmpty) {
+        requestBody = {
+          "bookings_types_id": "$bTypeId",
+          "vehicles_id": vehicleId,
+          "addresses": addresses2,
+        };
+      }
 
-    debugPrint("apiUrl: $apiUrl");
-    debugPrint("requestBody: $requestBody");
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("requestBody: $requestBody");
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBody),
-    );
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody),
+      );
 
-    final responseString = response.body;
-    debugPrint("response: $responseString");
-    debugPrint("statusCode: ${response.statusCode}");
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
 
-    if (response.statusCode == 200) {
-      getDistanceAddressesModel =
-          getDistanceAddressesModelFromJson(responseString);
-      totalChargesM = getDistanceAddressesModel.data!.totalCharges;
-      totalVatM = getDistanceAddressesModel.data!.totalVatCharges;
-      if (getDistanceAddressesModel.data != null) {
-        for (int i = 0;
-            i < getDistanceAddressesModel.data!.bookingsDestinations!.length;
-            i++) {
-          final distance = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinDistance
-              .toString();
-          final duration = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinTime;
-          pickupLatt = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].pickupLatitude
-              .toString();
-          pickupLong = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].pickupLongitude
-              .toString();
-          destinLatt = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinLatitude
-              .toString();
-          destinLong = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinLongitude
-              .toString();
-          totalDeliveryAmount = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinDeliveryCharges
-              .toString();
-          totalVatCharges = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinVatCharges
-              .toString();
-          roundedTotalAmount = getDistanceAddressesModel
-              .data!.bookingsDestinations![i].destinTotalCharges
-              .toString();
-          serviceRunning =
-              getDistanceAddressesModel.data?.serviceRunning.toString();
-          totalServiceCharges =
-              getDistanceAddressesModel.data?.totalServiceCharges.toString();
-          totalTollGateCharges =
-              getDistanceAddressesModel.data?.totalTollGateCharges;
-          tollGateCharges = getDistanceAddressesModel
-              .data!.bookingsDestinations?[i].totalTollGateCharges;
-          serviceRunningCharges = getDistanceAddressesModel
-              .data!.bookingsDestinations?[i].totalServiceCharges
-              .toString();
-          if (duration == null) {
-            Fluttertoast.showToast(
-              msg: "Distance fetching problem",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.TOP,
-              timeInSecForIosWeb: 2,
-              fontSize: 16.0,
-              textColor: Colors.white,
-              backgroundColor: Colors.red,
-            );
-            continue;
-          }
+      if (response.statusCode == 200) {
+        getDistanceAddressesModel =
+            getDistanceAddressesModelFromJson(responseString);
+        totalChargesM = getDistanceAddressesModel.data!.totalCharges;
+        totalVatM = getDistanceAddressesModel.data!.totalVatCharges;
+        if (getDistanceAddressesModel.data != null) {
+          for (int i = 0;
+              i < getDistanceAddressesModel.data!.bookingsDestinations!.length;
+              i++) {
+            final distance = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinDistance
+                .toString();
+            final duration = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinTime;
+            pickupLatt = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].pickupLatitude
+                .toString();
+            pickupLong = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].pickupLongitude
+                .toString();
+            destinLatt = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinLatitude
+                .toString();
+            destinLong = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinLongitude
+                .toString();
+            totalDeliveryAmount = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinDeliveryCharges
+                .toString();
+            totalVatCharges = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinVatCharges
+                .toString();
+            roundedTotalAmount = getDistanceAddressesModel
+                .data!.bookingsDestinations![i].destinTotalCharges
+                .toString();
+            serviceRunning =
+                getDistanceAddressesModel.data?.serviceRunning.toString();
+            totalServiceCharges =
+                getDistanceAddressesModel.data?.totalServiceCharges.toString();
+            totalTollGateCharges =
+                getDistanceAddressesModel.data?.totalTollGateCharges;
+            tollGateCharges = getDistanceAddressesModel
+                .data!.bookingsDestinations?[i].totalTollGateCharges;
+            serviceRunningCharges = getDistanceAddressesModel
+                .data!.bookingsDestinations?[i].totalServiceCharges
+                .toString();
+            if (duration == null) {
+              Fluttertoast.showToast(
+                msg: "Distance fetching problem",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.TOP,
+                timeInSecForIosWeb: 2,
+                fontSize: 16.0,
+                textColor: Colors.white,
+                backgroundColor: Colors.red,
+              );
+              continue;
+            }
 
-          // Convert to double only if distance and duration are not null
-          // final double? distanceDouble = double.tryParse(distance);
-          // final double? durationDouble = double.tryParse(duration);
-          debugPrint('Distance $i: $distance');
-          debugPrint('Duration $i: $duration');
-          debugPrint('Pickup Latitude $i: $pickupLatt');
-          debugPrint('Pickup Longitude $i: $pickupLong');
-          debugPrint('Destination Latitude $i: $destinLatt');
-          debugPrint('Destination Longitude $i: $destinLong');
-          switch (i) {
-            case 0:
-              distance0 = distance;
-              duration0 = duration;
-              pickupLat0 = pickupLatt;
-              pickupLng0 = pickupLong;
-              destinLat0 = destinLatt;
-              destinLng0 = destinLong;
-              totalDeliveryAmount0 = totalDeliveryAmount;
-              totalVatCharges0 = totalVatCharges;
-              roundedTotalAmount0 = roundedTotalAmount;
-              serviceCharges0 = serviceRunningCharges;
-              tollGateCharges0 = tollGateCharges;
-              debugPrint('distance0 = $distance0');
-              debugPrint('duration0 = $duration0');
-              debugPrint('pickupLat0 = $pickupLat0');
-              debugPrint('pickupLng0 = $pickupLng0');
-              debugPrint('destinLat0 = $destinLat0');
-              debugPrint('destinLng0 = $destinLng0');
-              debugPrint('totalDeliveryAmount0 = $totalDeliveryAmount0');
-              debugPrint('totalVatCharges0 = $totalVatCharges0');
-              debugPrint('roundedTotalAmount0 = $roundedTotalAmount0');
-              debugPrint('serviceCharges0 = $serviceCharges0');
-              debugPrint('tollGateCharges0 = $tollGateCharges0');
-              break;
-            case 1:
-              distance1 = distance;
-              duration1 = duration;
-              pickupLat1 = pickupLatt;
-              pickupLng1 = pickupLong;
-              destinLat1 = destinLatt;
-              destinLng1 = destinLong;
-              totalDeliveryAmount1 = totalDeliveryAmount;
-              totalVatCharges1 = totalVatCharges;
-              roundedTotalAmount1 = roundedTotalAmount;
-              serviceCharges1 = serviceRunningCharges;
-              tollGateCharges1 = tollGateCharges;
-              debugPrint('distance1 = $distance1');
-              debugPrint('duration1 = $duration1');
-              debugPrint('pickupLat1 = $pickupLat1');
-              debugPrint('pickupLng1 = $pickupLng1');
-              debugPrint('destinLat1 = $destinLat1');
-              debugPrint('destinLng1 = $destinLng1');
-              debugPrint('totalDeliveryAmount1 = $totalDeliveryAmount1');
-              debugPrint('totalVatCharges1 = $totalVatCharges1');
-              debugPrint('roundedTotalAmount1 = $roundedTotalAmount1');
-              debugPrint('serviceCharges1 = $serviceCharges1');
-              debugPrint('tollGateCharges1 = $tollGateCharges1');
-              break;
-            case 2:
-              distance2 = distance;
-              duration2 = duration;
-              pickupLat2 = pickupLatt;
-              pickupLng2 = pickupLong;
-              destinLat2 = destinLatt;
-              destinLng2 = destinLong;
-              totalDeliveryAmount2 = totalDeliveryAmount;
-              totalVatCharges2 = totalVatCharges;
-              roundedTotalAmount2 = roundedTotalAmount;
-              serviceCharges2 = serviceRunningCharges;
-              tollGateCharges2 = tollGateCharges;
-              break;
-            case 3:
-              distance3 = distance;
-              duration3 = duration;
-              pickupLat3 = pickupLatt;
-              pickupLng3 = pickupLong;
-              destinLat3 = destinLatt;
-              destinLng3 = destinLong;
-              totalDeliveryAmount3 = totalDeliveryAmount;
-              totalVatCharges3 = totalVatCharges;
-              roundedTotalAmount3 = roundedTotalAmount;
-              serviceCharges3 = serviceRunningCharges;
-              tollGateCharges3 = tollGateCharges;
-              break;
-            case 4:
-              distance4 = distance;
-              duration4 = duration;
-              pickupLat4 = pickupLatt;
-              pickupLng4 = pickupLong;
-              destinLat4 = destinLatt;
-              destinLng4 = destinLong;
-              totalDeliveryAmount4 = totalDeliveryAmount;
-              totalVatCharges4 = totalVatCharges;
-              roundedTotalAmount4 = roundedTotalAmount;
-              serviceCharges4 = serviceRunningCharges;
-              tollGateCharges4 = tollGateCharges;
-              break;
-            default:
-              // Handle if there are more distances than predefined variables
-              break;
+            // Convert to double only if distance and duration are not null
+            // final double? distanceDouble = double.tryParse(distance);
+            // final double? durationDouble = double.tryParse(duration);
+            debugPrint('Distance $i: $distance');
+            debugPrint('Duration $i: $duration');
+            debugPrint('Pickup Latitude $i: $pickupLatt');
+            debugPrint('Pickup Longitude $i: $pickupLong');
+            debugPrint('Destination Latitude $i: $destinLatt');
+            debugPrint('Destination Longitude $i: $destinLong');
+            switch (i) {
+              case 0:
+                distance0 = distance;
+                duration0 = duration;
+                pickupLat0 = pickupLatt;
+                pickupLng0 = pickupLong;
+                destinLat0 = destinLatt;
+                destinLng0 = destinLong;
+                totalDeliveryAmount0 = totalDeliveryAmount;
+                totalVatCharges0 = totalVatCharges;
+                roundedTotalAmount0 = roundedTotalAmount;
+                serviceCharges0 = serviceRunningCharges;
+                tollGateCharges0 = tollGateCharges;
+                debugPrint('distance0 = $distance0');
+                debugPrint('duration0 = $duration0');
+                debugPrint('pickupLat0 = $pickupLat0');
+                debugPrint('pickupLng0 = $pickupLng0');
+                debugPrint('destinLat0 = $destinLat0');
+                debugPrint('destinLng0 = $destinLng0');
+                debugPrint('totalDeliveryAmount0 = $totalDeliveryAmount0');
+                debugPrint('totalVatCharges0 = $totalVatCharges0');
+                debugPrint('roundedTotalAmount0 = $roundedTotalAmount0');
+                debugPrint('serviceCharges0 = $serviceCharges0');
+                debugPrint('tollGateCharges0 = $tollGateCharges0');
+                break;
+              case 1:
+                distance1 = distance;
+                duration1 = duration;
+                pickupLat1 = pickupLatt;
+                pickupLng1 = pickupLong;
+                destinLat1 = destinLatt;
+                destinLng1 = destinLong;
+                totalDeliveryAmount1 = totalDeliveryAmount;
+                totalVatCharges1 = totalVatCharges;
+                roundedTotalAmount1 = roundedTotalAmount;
+                serviceCharges1 = serviceRunningCharges;
+                tollGateCharges1 = tollGateCharges;
+                debugPrint('distance1 = $distance1');
+                debugPrint('duration1 = $duration1');
+                debugPrint('pickupLat1 = $pickupLat1');
+                debugPrint('pickupLng1 = $pickupLng1');
+                debugPrint('destinLat1 = $destinLat1');
+                debugPrint('destinLng1 = $destinLng1');
+                debugPrint('totalDeliveryAmount1 = $totalDeliveryAmount1');
+                debugPrint('totalVatCharges1 = $totalVatCharges1');
+                debugPrint('roundedTotalAmount1 = $roundedTotalAmount1');
+                debugPrint('serviceCharges1 = $serviceCharges1');
+                debugPrint('tollGateCharges1 = $tollGateCharges1');
+                break;
+              case 2:
+                distance2 = distance;
+                duration2 = duration;
+                pickupLat2 = pickupLatt;
+                pickupLng2 = pickupLong;
+                destinLat2 = destinLatt;
+                destinLng2 = destinLong;
+                totalDeliveryAmount2 = totalDeliveryAmount;
+                totalVatCharges2 = totalVatCharges;
+                roundedTotalAmount2 = roundedTotalAmount;
+                serviceCharges2 = serviceRunningCharges;
+                tollGateCharges2 = tollGateCharges;
+                break;
+              case 3:
+                distance3 = distance;
+                duration3 = duration;
+                pickupLat3 = pickupLatt;
+                pickupLng3 = pickupLong;
+                destinLat3 = destinLatt;
+                destinLng3 = destinLong;
+                totalDeliveryAmount3 = totalDeliveryAmount;
+                totalVatCharges3 = totalVatCharges;
+                roundedTotalAmount3 = roundedTotalAmount;
+                serviceCharges3 = serviceRunningCharges;
+                tollGateCharges3 = tollGateCharges;
+                break;
+              case 4:
+                distance4 = distance;
+                duration4 = duration;
+                pickupLat4 = pickupLatt;
+                pickupLng4 = pickupLong;
+                destinLat4 = destinLatt;
+                destinLng4 = destinLong;
+                totalDeliveryAmount4 = totalDeliveryAmount;
+                totalVatCharges4 = totalVatCharges;
+                roundedTotalAmount4 = roundedTotalAmount;
+                serviceCharges4 = serviceRunningCharges;
+                tollGateCharges4 = tollGateCharges;
+                break;
+              default:
+                // Handle if there are more distances than predefined variables
+                break;
+            }
           }
         }
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        debugPrint("Non-200 status code received: ${response.statusCode}");
+        // Handle other status codes as needed
+        CustomToast.showToast(
+          fontSize: 12,
+          message: "${getDistanceAddressesModel.message}",
+        );
       }
-      setState(() {
-        isLoading = false;
-      });
-    } else {
-      debugPrint("Non-200 status code received: ${response.statusCode}");
-      // Handle other status codes as needed
+    } catch (e, stackTrace) {
+      debugPrint('Something went wrong: $e\n$stackTrace');
       CustomToast.showToast(
         fontSize: 12,
         message: "${getDistanceAddressesModel.message}",
       );
     }
-    // } catch (e, stackTrace) {
-    //   debugPrint('Something went wrong: $e\n$stackTrace');
-    // }
   }
-
-  // getChargesMultiple(String? bTypeId) async {
-  //   // try {
-  //   String apiUrl = "$baseUrl/get_charges_parameters";
-
-  //   // Create distance map with non-null distances
-  //   Map<String, String> distanceMap = {};
-  //   if (distance0 != null) distanceMap["0"] = distance0!.split(" ")[0];
-  //   if (distance1 != null) distanceMap["1"] = distance1!.split(" ")[0];
-  //   if (distance2 != null) distanceMap["2"] = distance2!.split(" ")[0];
-  //   if (distance3 != null) distanceMap["3"] = distance3!.split(" ")[0];
-  //   if (distance4 != null) distanceMap["4"] = distance4!.split(" ")[0];
-
-  //   // Create the request body as a map
-  //   Map<String, dynamic> requestBody = {
-  //     "bookings_types_id": bTypeId,
-  //     "distance": distanceMap,
-  //   };
-
-  //   debugPrint("apiUrl: $apiUrl");
-  //   debugPrint("bookingsTypeId: $bTypeId");
-  //   debugPrint("requestBody: $requestBody");
-
-  //   final response = await http.post(
-  //     Uri.parse(apiUrl),
-  //     headers: {
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //     },
-  //     body: jsonEncode(requestBody),
-  //   );
-
-  //   final responseString = response.body;
-  //   debugPrint("getChargesResponse: $responseString");
-  //   debugPrint("statusCode: ${response.statusCode}");
-
-  //   if (response.statusCode == 200) {
-  //     getChargesModel = getChargesModelFromJson(responseString);
-  //     debugPrint('getChargesModel status: ${getChargesModel.status}');
-  //     debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
-
-  //     // Assign values based on data availability
-  //     if (getChargesModel.data != null) {
-  //       for (int i = 0; i < getChargesModel.data!.length; i++) {
-  //         switch (i) {
-  //           case 0:
-  //             toKm0 = "${getChargesModel.data![i].firstMilesTo}";
-  //             fromKm0 = "${getChargesModel.data![i].firstMilesFrom}";
-  //             perKmAmount0 = "${getChargesModel.data![i].firstMilesAmount}";
-  //             break;
-  //           case 1:
-  //             toKm1 = "${getChargesModel.data![i].firstMilesTo}";
-  //             fromKm1 = "${getChargesModel.data![i].firstMilesFrom}";
-  //             perKmAmount1 = "${getChargesModel.data![i].firstMilesAmount}";
-  //             break;
-  //           case 2:
-  //             toKm2 = "${getChargesModel.data![i].firstMilesTo}";
-  //             fromKm2 = "${getChargesModel.data![i].firstMilesFrom}";
-  //             perKmAmount2 = "${getChargesModel.data![i].firstMilesAmount}";
-  //             break;
-  //           case 3:
-  //             toKm3 = "${getChargesModel.data![i].firstMilesTo}";
-  //             fromKm3 = "${getChargesModel.data![i].firstMilesFrom}";
-  //             perKmAmount3 = "${getChargesModel.data![i].firstMilesAmount}";
-  //             break;
-  //           case 4:
-  //             toKm4 = "${getChargesModel.data![i].firstMilesTo}";
-  //             fromKm4 = "${getChargesModel.data![i].firstMilesFrom}";
-  //             perKmAmount4 = "${getChargesModel.data![i].firstMilesAmount}";
-  //             break;
-  //           default:
-  //             // Handle if there are more charges than predefined variables
-  //             break;
-  //         }
-  //       }
-  //     }
-
-  //     setState(() {});
-  //   }
-  //   // } catch (e) {
-  //   //   debugPrint('Something went wrong in Multiple = ${e.toString()}');
-  //   //   return null;
-  //   // }
-  // }
-
-  // getChargesMultiple(String? bTypeId) async {
-  //   try {
-  //     String apiUrl = "$baseUrl/get_charges_parameters";
-  //     Map<String, String> distanceMap = {
-  //       "0": distance0!.split(" ")[0],
-  //       "1": distance1!.split(" ")[0],
-  //       // "2": distance2!.split(" ")[0],
-  //       // "3": distance3!.split(" ")[0],
-  //       // "4": distance4!.split(" ")[0],
-  //     };
-  //     if (distance2 != null) distanceMap["2"] = distance2!.split(" ")[0];
-  //     if (distance3 != null) distanceMap["3"] = distance3!.split(" ")[0];
-  //     if (distance4 != null) distanceMap["4"] = distance4!.split(" ")[0];
-  //     // Create the request body as a map
-  //     Map<String, dynamic> requestBody = {
-  //       "bookings_types_id": bTypeId,
-  //       "distance": distanceMap,
-  //     };
-  //     debugPrint("apiUrl: $apiUrl");
-  //     debugPrint("bookingsTypeId: $bTypeId");
-  //     debugPrint("requestBody: $requestBody");
-  //     final response = await http.post(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(requestBody),
-  //     );
-  //     final responseString = response.body;
-  //     debugPrint("response: $responseString");
-  //     debugPrint("statusCode: ${response.statusCode}");
-  //     if (response.statusCode == 200) {
-  //       getChargesModel = getChargesModelFromJson(responseString);
-  //       debugPrint('getChargesModel status: ${getChargesModel.status}');
-  //       debugPrint('getChargesModel length: ${getChargesModel.data!.length}');
-  //       // for (int i = 0; i < getChargesModel.data!.length; i++) {
-  //       toKm0 = "${getChargesModel.data![0].firstMilesTo}";
-  //       fromKm0 = "${getChargesModel.data![0].firstMilesFrom}";
-  //       perKmAmount0 = "${getChargesModel.data![0].firstMilesAmount}";
-  //       toKm1 = "${getChargesModel.data![1].firstMilesTo}";
-  //       fromKm1 = "${getChargesModel.data![1].firstMilesFrom}";
-  //       perKmAmount1 = "${getChargesModel.data![1].firstMilesAmount}";
-  //       if (distance2 != null) {
-  //         toKm2 = "${getChargesModel.data![2].firstMilesTo}";
-  //         fromKm2 = "${getChargesModel.data![2].firstMilesFrom}";
-  //         perKmAmount2 = "${getChargesModel.data![2].firstMilesAmount}";
-  //       }
-  //       if (distance3 != null) {
-  //         toKm3 = "${getChargesModel.data![3].firstMilesTo}";
-  //         fromKm3 = "${getChargesModel.data![3].firstMilesFrom}";
-  //         perKmAmount3 = "${getChargesModel.data![3].firstMilesAmount}";
-  //       }
-  //       if (distance4 != null) {
-  //         toKm4 = "${getChargesModel.data![4].firstMilesTo}";
-  //         fromKm4 = "${getChargesModel.data![4].firstMilesFrom}";
-  //         perKmAmount4 = "${getChargesModel.data![4].firstMilesAmount}";
-  //       }
-  //       // }
-  //       setState(() {});
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Something went wrong in Multiple = ${e.toString()}');
-  //     return null;
-  //   }
-  // }
-
-  // Future<Map<String, dynamic>> getDistanceAndTime(
-  //   String origin,
-  //   String destination,
-  // ) async {
-  //   final apiKey = dotenv.env['MAPS_KEY'];
-  //   final response = await http.get(
-  //     Uri.parse(
-  //       'https://maps.googleapis.com/maps/api/distancematrix/json'
-  //       '?origins=$origin'
-  //       '&destinations=$destination'
-  //       '&key=$apiKey',
-  //     ),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-  //     return data;
-  //   } else {
-  //     throw Exception('Failed to load data');
-  //   }
-  // }
-
-  // calculateStandardAmount(
-  //     double from, double to, double perKm, double distance) {
-  //   if (to < 16) {
-  //     totalAmount = distance * perKm;
-  //   } else if (from > 15.99 && to < 31) {
-  //     totalAmount = distance * perKm;
-  //   } else if (from > 30.99) {
-  //     totalAmount = distance * perKm;
-  //   }
-  //   debugPrint("totalAmount: $totalAmount");
-  //   roundedTotalAmount = totalAmount!.toStringAsFixed(2);
-  //   debugPrint("roundedTotalAmount: $roundedTotalAmount");
-  // }
-
-  // calculateStandardAmount0(
-  //     double from0, double to0, double perKm0, double distance0) {
-  //   if (to0 < 16) {
-  //     totalAmount0 = distance0 * perKm0;
-  //   } else if (from0 > 15.99 && to0 < 31) {
-  //     totalAmount0 = distance0 * perKm0;
-  //   } else if (from0 > 30.99) {
-  //     totalAmount0 = distance0 * perKm0;
-  //   }
-  //   debugPrint("totalAmount0: $totalAmount0");
-  //   roundedTotalAmount0 = totalAmount0!.toStringAsFixed(2);
-  //   debugPrint("roundedTotalAmount0: $roundedTotalAmount0");
-  // }
-
-  // calculateStandardAmount1(
-  //     double from1, double to1, double perKm1, double distance1) {
-  //   if (to1 < 16) {
-  //     totalAmount1 = distance1 * perKm1;
-  //   } else if (from1 > 15.99 && to1 < 31) {
-  //     totalAmount1 = distance1 * perKm1;
-  //   } else if (from1 > 30.99) {
-  //     totalAmount1 = distance1 * perKm1;
-  //   }
-  //   debugPrint("totalAmount1: $totalAmount1");
-  //   roundedTotalAmount1 = totalAmount1!.toStringAsFixed(2);
-  //   debugPrint("roundedTotalAmount1: $roundedTotalAmount1");
-  // }
-
-  // calculateStandardAmount2(
-  //     double from2, double to2, double perKm2, double distance2) {
-  //   if (to2 < 16) {
-  //     totalAmount2 = distance2 * perKm2;
-  //   } else if (from2 > 15.99 && to2 < 31) {
-  //     totalAmount2 = distance2 * perKm2;
-  //   } else if (from2 > 30.99) {
-  //     totalAmount2 = distance2 * perKm2;
-  //   }
-  //   debugPrint("totalAmount2: $totalAmount2");
-  //   roundedTotalAmount2 = totalAmount2!.toStringAsFixed(2);
-  //   debugPrint("roundedTotalAmount2: $roundedTotalAmount2");
-  // }
-
-  // calculateStandardAmount3(
-  //     double from3, double to3, double perKm3, double distance3) {
-  //   if (to3 < 16) {
-  //     totalAmount3 = distance3 * perKm3;
-  //   } else if (from3 > 15.99 && to3 < 31) {
-  //     totalAmount3 = distance3 * perKm3;
-  //   } else if (from3 > 30.99) {
-  //     totalAmount3 = distance3 * perKm3;
-  //   }
-  //   debugPrint("totalAmount3: $totalAmount3");
-  //   roundedTotalAmount3 = totalAmount3!.toStringAsFixed(2);
-  //   debugPrint("roundedTotalAmount3: $roundedTotalAmount3");
-  // }
-
-  // calculateStandardAmount4(
-  //     double from4, double to4, double perKm4, double distance4) {
-  //   if (to4 < 16) {
-  //     totalAmount4 = distance4 * perKm4;
-  //   } else if (from4 > 15.99 && to4 < 31) {
-  //     totalAmount4 = distance4 * perKm4;
-  //   } else if (from4 > 30.99) {
-  //     totalAmount4 = distance4 * perKm4;
-  //   }
-  //   debugPrint("totalAmount4: $totalAmount4");
-  //   roundedTotalAmount4 = totalAmount4!.toStringAsFixed(2);
-  //   debugPrint("roundedTotalAmount4: $roundedTotalAmount4");
-  // }
 
   int currentIndex = 0;
   late List<Widget> pages;
@@ -1648,7 +1401,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                     SizedBox(height: size.height * 0.015),
                     if (selectedRadio == 1) singleTextField(),
                     if (selectedRadio == 2) multiPageView(),
-                    SizedBox(height: size.height * 0.012),
+                    SizedBox(height: size.height * 0.015),
                     Padding(
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       child: Row(
@@ -2590,360 +2343,458 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                 }
                               }
                               if (selectedRadio == 2) {
-                                showDialog(
-                                  context: context,
-                                  // barrierDismissible:
-                                  //     false, // Prevents dialog from closing when tapping outside
-                                  builder: (context) {
-                                    return Dialog(
-                                      backgroundColor: Colors
-                                          .transparent, // Make dialog transparent
-                                      elevation: 0, // Remove shadow
-                                      child: Container(
-                                        padding: const EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            CircularProgressIndicator(
-                                              color: orangeColor,
-                                              strokeWidth: 2,
-                                            ), // Your progress indicator
-                                            const SizedBox(height: 20),
-                                            const Text(
-                                              'Loading Data...',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontFamily: 'Inter-Bold',
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                            const Text(
-                                              'Please wait while data is being loaded.',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                if (pickupControllers.isEmpty &&
+                                    destinationControllers.isEmpty &&
+                                    receiversNameControllers.isEmpty &&
+                                    receiversNumberControllers.isEmpty &&
+                                    selectedVehicle == null &&
+                                    selectedBookingType == null &&
+                                    pickupControllers.length < 2 &&
+                                    destinationControllers.length < 2 &&
+                                    receiversNameControllers.length < 2 &&
+                                    receiversNumberControllers.length < 2) {
+                                  if (pickupControllers.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill pickup address!",
                                     );
-                                  },
-                                );
+                                  } else if (destinationControllers.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message:
+                                          "Please fill destination address!",
+                                    );
+                                  } else if (receiversNameControllers.isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill receiver's name!",
+                                    );
+                                  } else if (receiversNumberControllers
+                                      .isEmpty) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please fill receiver's number!",
+                                    );
+                                  } else if (selectedVehicle == null) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please select a vehicle!",
+                                    );
+                                  } else if (selectedBookingType == null) {
+                                    CustomToast.showToast(
+                                      fontSize: 12,
+                                      message: "Please select booking type!",
+                                    );
+                                  }
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                } else {
+                                  if (pickupControllers.isEmpty &&
+                                      destinationControllers.isEmpty &&
+                                      receiversNameControllers.isEmpty &&
+                                      receiversNumberControllers.isEmpty &&
+                                      selectedVehicle == null &&
+                                      selectedBookingType == null &&
+                                      pickupControllers.length < 2 &&
+                                      destinationControllers.length < 2 &&
+                                      receiversNameControllers.length < 2 &&
+                                      receiversNumberControllers.length < 2) {
+                                    if (pickupControllers.isEmpty) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message: "Please fill pickup address!",
+                                      );
+                                    } else if (destinationControllers.isEmpty) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message:
+                                            "Please fill destination address!",
+                                      );
+                                    } else if (receiversNameControllers
+                                        .isEmpty) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message: "Please fill receiver's name!",
+                                      );
+                                    } else if (receiversNumberControllers
+                                        .isEmpty) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message:
+                                            "Please fill receiver's number!",
+                                      );
+                                    } else if (selectedVehicle == null) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message: "Please select a vehicle!",
+                                      );
+                                    } else if (selectedBookingType == null) {
+                                      CustomToast.showToast(
+                                        fontSize: 12,
+                                        message: "Please select booking type!",
+                                      );
+                                    }
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  } else {
+                                    await getDistanceAddress(
+                                        bookingsTypeId, vehicleId);
 
-                                await getDistanceAddress(
-                                    bookingsTypeId, vehicleId);
-                                // Add a delay to ensure data is populated in allDataForIndexes1
-                                Future.delayed(const Duration(seconds: 2),
-                                    () async {
-                                  // Close the loading dialog
-                                  // Navigator.of(context).pop();
-
-                                  if (filteredData.isNotEmpty) {
-                                    addMultipleData = {
-                                      "type": "booking",
-                                      "totalChargesM": totalChargesM,
-                                      "totalVatM": totalVatM,
-                                      "vehicles_id": vehicleId,
-                                      "service_running": serviceRunning,
-                                      "total_svc_running_charges":
-                                          totalServiceCharges,
-                                      "total_tollgate_charges":
-                                          totalTollGateCharges ?? "0",
-                                      "svc_running_charges0": serviceCharges0,
-                                      "tollgate_charges0":
-                                          tollGateCharges0 ?? "0",
-                                      "svc_running_charges1": serviceCharges1,
-                                      "tollgate_charges1":
-                                          tollGateCharges1 ?? "0",
-                                      "svc_running_charges2": serviceCharges2,
-                                      "tollgate_charges2":
-                                          tollGateCharges2 ?? "0",
-                                      "svc_running_charges3": serviceCharges3,
-                                      "tollgate_charges3":
-                                          tollGateCharges3 ?? "0",
-                                      "svc_running_charges4": serviceCharges4,
-                                      "tollgate_charges4":
-                                          tollGateCharges4 ?? "0",
-                                      "bookings_types_id": bookingsTypeId,
-                                      "delivery_type": selectedRadio == 1
-                                          ? "Single"
-                                          : "Multiple",
-                                      "pickup_latitude0":
-                                          "$pickupLat0" != 'null'
-                                              ? "$pickupLat0"
-                                              : "0",
-                                      "pickup_longitude0":
-                                          "$pickupLng0" != 'null'
-                                              ? "$pickupLng0"
-                                              : "0",
-                                      "destin_latitude0":
-                                          "$destinLat0" != 'null'
-                                              ? "$destinLat0"
-                                              : "0",
-                                      "destin_longitude0":
-                                          "$destinLng0" != 'null'
-                                              ? "$destinLng0"
-                                              : "0",
-                                      "pickup_latitude1":
-                                          "$pickupLat1" != 'null'
-                                              ? "$pickupLat1"
-                                              : "0",
-                                      "pickup_longitude1":
-                                          "$pickupLng1" != 'null'
-                                              ? "$pickupLng1"
-                                              : "0",
-                                      "destin_latitude1":
-                                          "$destinLat1" != 'null'
-                                              ? "$destinLat1"
-                                              : "0",
-                                      "destin_longitude1":
-                                          "$destinLng1" != 'null'
-                                              ? "$destinLng1"
-                                              : "0",
-                                      "pickup_latitude2":
-                                          "$pickupLat2" != 'null'
-                                              ? "$pickupLat2"
-                                              : "0",
-                                      "pickup_longitude2":
-                                          "$pickupLat2" != 'null'
-                                              ? "$pickupLat2"
-                                              : "0",
-                                      "destin_latitude2":
-                                          "$destinLat2" != 'null'
-                                              ? "$destinLat2"
-                                              : "0",
-                                      "destin_longitude2":
-                                          "$destinLng2" != 'null'
-                                              ? "$destinLng2"
-                                              : "0",
-                                      "pickup_latitude3":
-                                          "$pickupLat3" != 'null'
-                                              ? "$pickupLat3"
-                                              : "0",
-                                      "pickup_longitude3":
-                                          "$pickupLng3" != 'null'
-                                              ? "$pickupLng3"
-                                              : "0",
-                                      "destin_latitude3":
-                                          "$destinLat3" != 'null'
-                                              ? "$destinLat3"
-                                              : "0",
-                                      "destin_longitude3":
-                                          "$destinLng3" != 'null'
-                                              ? "$destinLng3"
-                                              : "0",
-                                      "pickup_latitude4":
-                                          "$pickupLng4" != 'null'
-                                              ? "$pickupLng4"
-                                              : "0",
-                                      "pickup_longitude4":
-                                          "$pickupLng4" != 'null'
-                                              ? "$pickupLng4"
-                                              : "0",
-                                      "destin_latitude4":
-                                          "$destinLat4" != 'null'
-                                              ? "$destinLat4"
-                                              : "0",
-                                      "destin_longitude4":
-                                          "$destinLng4" != 'null'
-                                              ? "$destinLng4"
-                                              : "0",
-                                      "destin_distance0": distance0,
-                                      "destin_time0": duration0,
-                                      "destin_delivery_charges0":
-                                          totalDeliveryAmount0 ?? "0.00",
-                                      "destin_vat_charges0": totalVatCharges0,
-                                      "destin_total_charges0":
-                                          roundedTotalAmount0,
-                                      "destin_discount0": "0.00",
-                                      "destin_discounted_charges0": "0.00",
-                                      "destin_distance1": distance1,
-                                      "destin_time1": duration1,
-                                      "destin_delivery_charges1":
-                                          totalDeliveryAmount1 ?? "0.00",
-                                      "destin_vat_charges1":
-                                          totalVatCharges1 ?? "0.00",
-                                      "destin_total_charges1":
-                                          roundedTotalAmount1 ?? "0.00",
-                                      "destin_discount1": "0.00",
-                                      "destin_discounted_charges1": "0.00",
-                                      "destin_distance2": distance2 ?? "0.00",
-                                      "destin_time2": duration2,
-                                      "destin_delivery_charges2":
-                                          totalDeliveryAmount2 ?? "0.00",
-                                      "destin_vat_charges2":
-                                          totalVatCharges2 ?? "0.00",
-                                      "destin_total_charges2":
-                                          roundedTotalAmount2 ?? "0.00",
-                                      "destin_discount2": "0.00",
-                                      "destin_discounted_charges2": "0.00",
-                                      "destin_distance3": distance3 ?? "0.00",
-                                      "destin_time3": duration3,
-                                      "destin_delivery_charges3":
-                                          totalDeliveryAmount3 ?? "0.00",
-                                      "destin_vat_charges3":
-                                          totalVatCharges3 ?? "0.00",
-                                      "destin_total_charges3":
-                                          roundedTotalAmount3 ?? "0.00",
-                                      "destin_discount3": "0.00",
-                                      "destin_discounted_charges3": "0.00",
-                                      "destin_distance4": distance4 ?? "0.00",
-                                      "destin_time4": duration4,
-                                      "destin_delivery_charges4":
-                                          totalDeliveryAmount4 ?? "0.00",
-                                      "destin_vat_charges4":
-                                          totalVatCharges4 ?? "0.00",
-                                      "destin_total_charges4":
-                                          roundedTotalAmount4 ?? "0.00",
-                                      "destin_discount4": "0.00",
-                                      "destin_discounted_charges4": "0.00",
-                                    };
-
-                                    debugPrint("filteredData: $filteredData");
-
-                                    List<Map<int, dynamic>> indexData =
-                                        List.filled(5, {});
-
-                                    for (var i = 0;
-                                        i < filteredData.length;
-                                        i++) {
-                                      final dataForIndex = filteredData[i];
-                                      final dataIndexString = dataForIndex.keys
-                                          .first; // Get the index as a String
-                                      final dataIndex =
-                                          int.tryParse(dataIndexString);
-
-                                      if (dataIndex != null &&
-                                          dataIndex >= 0 &&
-                                          dataIndex <= 4) {
-                                        indexData[dataIndex] = dataForIndex.map(
-                                            (key, value) => MapEntry(
-                                                int.parse(key), value));
-                                      } else {
-                                        debugPrint(
-                                            "Invalid or out of bounds index: $dataIndexString");
-                                      }
+                                    if (getDistanceAddressesModel.status ==
+                                        "success") {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return WillPopScope(
+                                            onWillPop: () async =>
+                                                !isLoading, // Prevents dialog from closing when isLoading is true
+                                            child: Dialog(
+                                              backgroundColor: Colors
+                                                  .transparent, // Make dialog transparent
+                                              elevation: 0, // Remove shadow
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    CircularProgressIndicator(
+                                                      color: orangeColor,
+                                                      strokeWidth: 2,
+                                                    ), // Your progress indicator
+                                                    const SizedBox(height: 20),
+                                                    const Text(
+                                                      'Loading Data...',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontFamily:
+                                                            'Inter-Bold',
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    const Text(
+                                                      'Please wait while data is being loaded.',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Regular',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      // Add a delay to ensure data is populated in allDataForIndexes1
                                     }
 
-                                    // Separate the data into different lists based on their indices
-                                    Map<int, dynamic> indexData0 = indexData[0];
-                                    Map<int, dynamic> indexData1 = indexData[1];
-                                    Map<int, dynamic> indexData2 = indexData[2];
-                                    Map<int, dynamic> indexData3 = indexData[3];
-                                    Map<int, dynamic> indexData4 = indexData[4];
+                                    Future.delayed(const Duration(seconds: 2),
+                                        () async {
+                                      // Close the loading dialog
+                                      // Navigator.of(context).pop();
 
-                                    debugPrint("indexData0: $indexData0");
-                                    debugPrint("indexData1: $indexData1");
-                                    debugPrint("indexData2: $indexData2");
-                                    debugPrint("indexData3: $indexData3");
-                                    debugPrint("indexData4: $indexData4");
-                                    print("addMultipleData: $addMultipleData");
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ConfirmMultipleDetailsScreen(
-                                          indexData0: indexData0,
-                                          indexData1: indexData1,
-                                          indexData2: indexData2,
-                                          indexData3: indexData3,
-                                          indexData4: indexData4,
-                                          multipleData: addMultipleData,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return Dialog(
-                                          backgroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(40),
-                                          ),
-                                          insetPadding: const EdgeInsets.only(
-                                              left: 20, right: 20),
-                                          child: SizedBox(
-                                            width: size.width,
-                                            height: size.height * 0.25,
-                                            child: Column(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 10),
-                                                  child: Column(
-                                                    children: [
-                                                      SizedBox(
-                                                          height: size.height *
-                                                              0.02),
-                                                      Align(
-                                                        alignment:
-                                                            Alignment.topLeft,
-                                                        child: Text(
-                                                          "Just a moment...",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: orangeColor,
-                                                            fontSize: 20,
-                                                            fontFamily:
-                                                                'Inter-Bold',
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: size.height *
-                                                              0.03),
-                                                      Text(
-                                                        'Please wait while we are collecting the delivery information before proceeding.',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          color: blackColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Regular',
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                          height: size.height *
-                                                              0.02),
-                                                    ],
-                                                  ),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 140),
-                                                    child:
-                                                        dialogButtonGradientSmall(
-                                                            "OK", context),
-                                                  ),
-                                                ),
-                                              ],
+                                      if (filteredData.isNotEmpty &&
+                                          pickupLat0 != null &&
+                                          pickupLat1 != null) {
+                                        addMultipleData = {
+                                          "type": "booking",
+                                          "totalChargesM": totalChargesM,
+                                          "totalVatM": totalVatM,
+                                          "vehicles_id": vehicleId,
+                                          "service_running": serviceRunning,
+                                          "total_svc_running_charges":
+                                              totalServiceCharges,
+                                          "total_tollgate_charges":
+                                              totalTollGateCharges ?? "0",
+                                          "svc_running_charges0":
+                                              serviceCharges0,
+                                          "tollgate_charges0":
+                                              tollGateCharges0 ?? "0",
+                                          "svc_running_charges1":
+                                              serviceCharges1,
+                                          "tollgate_charges1":
+                                              tollGateCharges1 ?? "0",
+                                          "svc_running_charges2":
+                                              serviceCharges2,
+                                          "tollgate_charges2":
+                                              tollGateCharges2 ?? "0",
+                                          "svc_running_charges3":
+                                              serviceCharges3,
+                                          "tollgate_charges3":
+                                              tollGateCharges3 ?? "0",
+                                          "svc_running_charges4":
+                                              serviceCharges4,
+                                          "tollgate_charges4":
+                                              tollGateCharges4 ?? "0",
+                                          "bookings_types_id": bookingsTypeId,
+                                          "delivery_type": selectedRadio == 1
+                                              ? "Single"
+                                              : "Multiple",
+                                          "pickup_latitude0":
+                                              "$pickupLat0" != 'null'
+                                                  ? "$pickupLat0"
+                                                  : "0",
+                                          "pickup_longitude0":
+                                              "$pickupLng0" != 'null'
+                                                  ? "$pickupLng0"
+                                                  : "0",
+                                          "destin_latitude0":
+                                              "$destinLat0" != 'null'
+                                                  ? "$destinLat0"
+                                                  : "0",
+                                          "destin_longitude0":
+                                              "$destinLng0" != 'null'
+                                                  ? "$destinLng0"
+                                                  : "0",
+                                          "pickup_latitude1":
+                                              "$pickupLat1" != 'null'
+                                                  ? "$pickupLat1"
+                                                  : "0",
+                                          "pickup_longitude1":
+                                              "$pickupLng1" != 'null'
+                                                  ? "$pickupLng1"
+                                                  : "0",
+                                          "destin_latitude1":
+                                              "$destinLat1" != 'null'
+                                                  ? "$destinLat1"
+                                                  : "0",
+                                          "destin_longitude1":
+                                              "$destinLng1" != 'null'
+                                                  ? "$destinLng1"
+                                                  : "0",
+                                          "pickup_latitude2":
+                                              "$pickupLat2" != 'null'
+                                                  ? "$pickupLat2"
+                                                  : "0",
+                                          "pickup_longitude2":
+                                              "$pickupLat2" != 'null'
+                                                  ? "$pickupLat2"
+                                                  : "0",
+                                          "destin_latitude2":
+                                              "$destinLat2" != 'null'
+                                                  ? "$destinLat2"
+                                                  : "0",
+                                          "destin_longitude2":
+                                              "$destinLng2" != 'null'
+                                                  ? "$destinLng2"
+                                                  : "0",
+                                          "pickup_latitude3":
+                                              "$pickupLat3" != 'null'
+                                                  ? "$pickupLat3"
+                                                  : "0",
+                                          "pickup_longitude3":
+                                              "$pickupLng3" != 'null'
+                                                  ? "$pickupLng3"
+                                                  : "0",
+                                          "destin_latitude3":
+                                              "$destinLat3" != 'null'
+                                                  ? "$destinLat3"
+                                                  : "0",
+                                          "destin_longitude3":
+                                              "$destinLng3" != 'null'
+                                                  ? "$destinLng3"
+                                                  : "0",
+                                          "pickup_latitude4":
+                                              "$pickupLng4" != 'null'
+                                                  ? "$pickupLng4"
+                                                  : "0",
+                                          "pickup_longitude4":
+                                              "$pickupLng4" != 'null'
+                                                  ? "$pickupLng4"
+                                                  : "0",
+                                          "destin_latitude4":
+                                              "$destinLat4" != 'null'
+                                                  ? "$destinLat4"
+                                                  : "0",
+                                          "destin_longitude4":
+                                              "$destinLng4" != 'null'
+                                                  ? "$destinLng4"
+                                                  : "0",
+                                          "destin_distance0": distance0,
+                                          "destin_time0": duration0,
+                                          "destin_delivery_charges0":
+                                              totalDeliveryAmount0 ?? "0.00",
+                                          "destin_vat_charges0":
+                                              totalVatCharges0,
+                                          "destin_total_charges0":
+                                              roundedTotalAmount0,
+                                          "destin_discount0": "0.00",
+                                          "destin_discounted_charges0": "0.00",
+                                          "destin_distance1": distance1,
+                                          "destin_time1": duration1,
+                                          "destin_delivery_charges1":
+                                              totalDeliveryAmount1 ?? "0.00",
+                                          "destin_vat_charges1":
+                                              totalVatCharges1 ?? "0.00",
+                                          "destin_total_charges1":
+                                              roundedTotalAmount1 ?? "0.00",
+                                          "destin_discount1": "0.00",
+                                          "destin_discounted_charges1": "0.00",
+                                          "destin_distance2":
+                                              distance2 ?? "0.00",
+                                          "destin_time2": duration2,
+                                          "destin_delivery_charges2":
+                                              totalDeliveryAmount2 ?? "0.00",
+                                          "destin_vat_charges2":
+                                              totalVatCharges2 ?? "0.00",
+                                          "destin_total_charges2":
+                                              roundedTotalAmount2 ?? "0.00",
+                                          "destin_discount2": "0.00",
+                                          "destin_discounted_charges2": "0.00",
+                                          "destin_distance3":
+                                              distance3 ?? "0.00",
+                                          "destin_time3": duration3,
+                                          "destin_delivery_charges3":
+                                              totalDeliveryAmount3 ?? "0.00",
+                                          "destin_vat_charges3":
+                                              totalVatCharges3 ?? "0.00",
+                                          "destin_total_charges3":
+                                              roundedTotalAmount3 ?? "0.00",
+                                          "destin_discount3": "0.00",
+                                          "destin_discounted_charges3": "0.00",
+                                          "destin_distance4":
+                                              distance4 ?? "0.00",
+                                          "destin_time4": duration4,
+                                          "destin_delivery_charges4":
+                                              totalDeliveryAmount4 ?? "0.00",
+                                          "destin_vat_charges4":
+                                              totalVatCharges4 ?? "0.00",
+                                          "destin_total_charges4":
+                                              roundedTotalAmount4 ?? "0.00",
+                                          "destin_discount4": "0.00",
+                                          "destin_discounted_charges4": "0.00",
+                                        };
+
+                                        debugPrint(
+                                            "filteredData: $filteredData");
+
+                                        List<Map<int, dynamic>> indexData =
+                                            List.filled(5, {});
+
+                                        for (var i = 0;
+                                            i < filteredData.length;
+                                            i++) {
+                                          final dataForIndex = filteredData[i];
+                                          final dataIndexString = dataForIndex
+                                              .keys
+                                              .first; // Get the index as a String
+                                          final dataIndex =
+                                              int.tryParse(dataIndexString);
+
+                                          if (dataIndex != null &&
+                                              dataIndex >= 0 &&
+                                              dataIndex <= 4) {
+                                            indexData[dataIndex] = dataForIndex
+                                                .map((key, value) => MapEntry(
+                                                    int.parse(key), value));
+                                          } else {
+                                            debugPrint(
+                                                "Invalid or out of bounds index: $dataIndexString");
+                                          }
+                                        }
+
+                                        // Separate the data into different lists based on their indices
+                                        Map<int, dynamic> indexData0 =
+                                            indexData[0];
+                                        Map<int, dynamic> indexData1 =
+                                            indexData[1];
+                                        Map<int, dynamic> indexData2 =
+                                            indexData[2];
+                                        Map<int, dynamic> indexData3 =
+                                            indexData[3];
+                                        Map<int, dynamic> indexData4 =
+                                            indexData[4];
+
+                                        debugPrint("indexData0: $indexData0");
+                                        debugPrint("indexData1: $indexData1");
+                                        debugPrint("indexData2: $indexData2");
+                                        debugPrint("indexData3: $indexData3");
+                                        debugPrint("indexData4: $indexData4");
+                                        print(
+                                            "addMultipleData: $addMultipleData");
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ConfirmMultipleDetailsScreen(
+                                              indexData0: indexData0,
+                                              indexData1: indexData1,
+                                              indexData2: indexData2,
+                                              indexData3: indexData3,
+                                              indexData4: indexData4,
+                                              multipleData: addMultipleData,
                                             ),
                                           ),
                                         );
-                                      },
-                                    );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          // barrierDismissible:
+                                          //     false, // Prevents dialog from closing when tapping outside
+                                          builder: (context) {
+                                            return Dialog(
+                                              backgroundColor: Colors
+                                                  .transparent, // Make dialog transparent
+                                              elevation: 0, // Remove shadow
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: const Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    // Your progress indicator
+                                                    SizedBox(height: 20),
+                                                    Text(
+                                                      'Error',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontFamily:
+                                                            'Inter-Bold',
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Text(
+                                                      'Please Fill the Both Delivery Fields.',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Regular',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    });
                                   }
-                                });
+                                }
                               }
                             },
                             child: isLoading
@@ -2999,7 +2850,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    SizedBox(height: size.height * 0.12),
+                    SizedBox(height: size.height * 0.22),
                   ],
                 ),
               ],
@@ -3617,6 +3468,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                       fontFamily: 'Inter-Regular',
                     ),
                     decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       filled: true,
                       fillColor: filledColor,
                       errorStyle: TextStyle(
@@ -3970,80 +3823,6 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
           .where((entry) => entry.values.every((value) => value != null))
           .toList();
       debugPrint("filteredData: $filteredData");
-      // if (dataIndex1 == 0) {
-      //   distance0 = distanceDataMap[0]!['distance'];
-      //   duration0 = distanceDataMap[0]!['duration'];
-      //   debugPrint("distance 0: $distance0");
-      //   debugPrint("duration 0: $duration0");
-      // } else if (dataIndex1 == 1) {
-      //   distance1 = distanceDataMap[1]!['distance'];
-      //   duration1 = distanceDataMap[1]!['duration'];
-      //   debugPrint("distance 1: $distance1");
-      //   debugPrint("duration 1: $duration1");
-      // } else if (dataIndex1 == 2) {
-      //   distance2 = distanceDataMap[2]!['distance'];
-      //   duration2 = distanceDataMap[2]!['duration'];
-      //   debugPrint("distance 2: $distance2");
-      //   debugPrint("duration 2: $duration2");
-      // } else if (dataIndex1 == 3) {
-      //   distance3 = distanceDataMap[3]!['distance'];
-      //   duration3 = distanceDataMap[3]!['duration'];
-      //   debugPrint("distance 3: $distance3");
-      //   debugPrint("duration 3: $duration3");
-      // } else if (dataIndex1 == 4) {
-      //   distance4 = distanceDataMap[4]!['distance'];
-      //   duration4 = distanceDataMap[4]!['duration'];
-      //   debugPrint("distance 4: $distance4");
-      //   debugPrint("duration 4: $duration4");
-      // }
-
-      // Oldest Code
-      //   if (double.parse(distance0!.split(" ")[0]) <= 1.0) {
-      //     print("receiversNumberController ${receiversNumberController.text}");
-      // CustomToast.showToast(
-      //   fontSize: 12,
-      //   message: "Distance of delivery first should be greater than 1.0 Km!",
-      // );
-      //     receiversNumberController.clear();
-
-      //     fetchingData = false;
-      //   } else if (distance1 != null &&
-      //       double.parse(distance1!.split(" ")[0]) <= 1.0) {
-      //     receiversNumberController.clear();
-
-      //     CustomToast.showToast(
-      //       fontSize: 12,
-      //       message: "Distance of delivery second should be greater than 1.0 Km!",
-      //     );
-      //     fetchingData = false;
-      //   } else if (distance2 != null &&
-      //       double.parse(distance2!.split(" ")[0]) <= 1.0) {
-      //     receiversNumberController.clear();
-      //     CustomToast.showToast(
-      //       fontSize: 12,
-      //       message: "Distance of delivery third should be greater than 1.0 Km!",
-      //     );
-      //     fetchingData = false;
-      //   } else if (distance3 != null &&
-      //       double.parse(distance3!.split(" ")[0]) <= 1.0) {
-      //     receiversNumberController.clear();
-      //     CustomToast.showToast(
-      //       fontSize: 12,
-      //       message: "Distance of delivery fourth should be greater than 1.0 Km!",
-      //     );
-      //     fetchingData = false;
-      //   } else if (distance4 != null &&
-      //       double.parse(distance4!.split(" ")[0]) <= 1.0) {
-      //     receiversNumberController.clear();
-      // CustomToast.showToast(
-      //   fontSize: 12,
-      //   message: "Distance of delivery fifth should be greater than 1.0 Km!",
-      // );
-      //     fetchingData = false;
-      //   } else {
-      //     debugPrint("All distances are greater than 1.0 Km");
-      //     fetchingData = false;
-      //   }
     }
 
     return Padding(
@@ -4123,1771 +3902,1771 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
 
   //-----------------#################### IN USE FUNCTION TILL HERE ###############--------------------//
 
-  Widget bottomDetailsSheet(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    final double screenHeight = MediaQuery.of(context).size.height;
-    double fontSize = screenHeight * 0.02;
-    return DraggableScrollableSheet(
-      initialChildSize: .38,
-      minChildSize: .38,
-      maxChildSize: 1,
-      controller: dragController,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Container(
-              width: size.width,
-              height: size.height,
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: ListView(
-                controller: scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Container(
-                          width: size.width * 0.3,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: dividerColor,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.03),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text(
-                          "Select service type",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: drawerTextColor,
-                            fontSize: 20,
-                            fontFamily: 'Syne-Bold',
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () async {
-                              vehiclesType.clear();
-                              selectedVehicle = null;
-                              getVehiclesByServiceType(courierId);
-                              setState(() {
-                                isSelectedBus = false;
-                                isSelectedCourier = true;
-                                debugPrint("courierId: $courierId");
-                              });
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  color: transparentColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.14,
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.43,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.1,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.centerRight,
-                                        end: Alignment.centerLeft,
-                                        stops: const [0.1, 1.5],
-                                        colors: [
-                                          isSelectedCourier == true
-                                              ? orangeColor
-                                              : const Color(0xFFEBEBEB),
-                                          isSelectedCourier == true
-                                              ? yellowColor
-                                              : const Color(0xFFEBEBEB),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 20,
-                                  left: 0,
-                                  right: 0,
-                                  child: Text(
-                                    "Deliver a Parcel",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: isSelectedCourier == true
-                                          ? whiteColor
-                                          : drawerTextColor,
-                                      fontSize: fontSize,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 5,
-                                  left: 0,
-                                  right: 0,
-                                  child: SvgPicture.asset(
-                                    "assets/images/login-parcel-icon.svg",
-                                    width: size.width * 0.07,
-                                    height: size.height * 0.07,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: size.width * 0.04),
-                          GestureDetector(
-                            onTap: () async {
-                              vehiclesType.clear();
-                              selectedVehicle = null;
-                              getVehiclesByServiceType(otherId);
-                              setState(() {
-                                isSelectedBus = true;
-                                isSelectedCourier = false;
-                                debugPrint("otherId: $otherId");
-                              });
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  color: transparentColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.14,
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.43,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.1,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.centerRight,
-                                        end: Alignment.centerLeft,
-                                        stops: const [0.1, 1.5],
-                                        colors: [
-                                          isSelectedBus == true
-                                              ? orangeColor
-                                              : const Color(0xFFEBEBEB),
-                                          isSelectedBus == true
-                                              ? yellowColor
-                                              : const Color(0xFFEBEBEB),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  bottom: 20,
-                                  left: 0,
-                                  right: 0,
-                                  child: Text(
-                                    "Book a Van",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: isSelectedBus == true
-                                          ? whiteColor
-                                          : drawerTextColor,
-                                      fontSize: fontSize,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 5,
-                                  left: 0,
-                                  right: 0,
-                                  child: SvgPicture.asset(
-                                    "assets/images/login-truck-icon.svg",
-                                    width: size.width * 0.07,
-                                    height: size.height * 0.07,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: size.height * 0.03),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  for (int i = 0;
-                                      i < 5 && i < distanceDurationList.length;
-                                      i++) {
-                                    final entry = distanceDurationList[i];
-                                    debugPrint(
-                                        "distanceDurationList[$i]: $entry");
-                                  }
-                                });
-                              },
-                              child: Text(
-                                "Find best rider?",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: drawerTextColor,
-                                  fontSize: 20,
-                                  fontFamily: 'Syne-Bold',
-                                ),
-                              ),
-                            ),
-                            if (selectedRadio == 1)
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isSelectedAddress = true;
-                                      });
-                                    },
-                                    child: isSelectedAddress == true
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelectedAddress = false;
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/images/checkmark-icon.svg',
-                                            ),
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/images/uncheckmark-icon.svg',
-                                          ),
-                                  ),
-                                  SizedBox(width: size.width * 0.01),
-                                  Text(
-                                    "Saved Addresses",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: drawerTextColor,
-                                      fontSize: 12,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            if (selectedRadio == 2)
-                              Row(
-                                children: [
-                                  // GestureDetector(
-                                  //   onTap: () {
-                                  //     removePage();
-                                  //     setState(() {});
-                                  //   },
-                                  //   child: SvgPicture.asset(
-                                  //     'assets/images/minus-icon.svg',
-                                  //   ),
-                                  // ),
-                                  // SizedBox(width: size.width * 0.02),
-                                  // GestureDetector(
-                                  //   onTap: () {
-                                  //     addPage();
-                                  //     setState(() {});
-                                  //   },
-                                  //   child: SvgPicture.asset(
-                                  //     'assets/images/add-icon.svg',
-                                  //   ),
-                                  // ),
-                                  // SizedBox(width: size.width * 0.03),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isSelectedAddress = true;
-                                      });
-                                    },
-                                    child: isSelectedAddress == true
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelectedAddress = false;
-                                              });
-                                            },
-                                            child: SvgPicture.asset(
-                                              'assets/images/checkmark-icon.svg',
-                                            ),
-                                          )
-                                        : SvgPicture.asset(
-                                            'assets/images/uncheckmark-icon.svg',
-                                          ),
-                                  ),
-                                  SizedBox(width: size.width * 0.01),
-                                  Text(
-                                    "Saved\nAddresses",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: drawerTextColor,
-                                      fontSize: 10,
-                                      fontFamily: 'Syne-Bold',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.005),
-                      Theme(
-                        data: ThemeData(
-                          unselectedWidgetColor: orangeColor,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Radio(
-                                  value: 1,
-                                  groupValue: selectedRadio,
-                                  activeColor: orangeColor,
-                                  visualDensity: VisualDensity.compact,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedRadio = value!;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  "Single Delivery",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: drawerTextColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio(
-                                  value: 2,
-                                  groupValue: selectedRadio,
-                                  activeColor: orangeColor,
-                                  visualDensity: VisualDensity.compact,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedRadio = value!;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  "Multiple Delivery",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: drawerTextColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.015),
-                      if (selectedRadio == 1) singleTextField(),
-                      if (selectedRadio == 2) multiPageView(),
-                      SizedBox(height: size.height * 0.012),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/info-icon.svg",
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            Expanded(
-                              child: ButtonTheme(
-                                alignedDropdown: true,
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButtonFormField(
-                                    icon: Padding(
-                                      padding: const EdgeInsets.only(top: 3),
-                                      child: SvgPicture.asset(
-                                        'assets/images/dropdown-icon.svg',
-                                        width: 5,
-                                        height: 5,
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    ),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: filledColor,
-                                      border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      enabledBorder: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      focusedBorder: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: redColor,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
-                                      hintText: 'Select Vehicle',
-                                      hintStyle: TextStyle(
-                                        color: hintColor,
-                                        fontSize: 12,
-                                        fontFamily: 'Inter-Light',
-                                      ),
-                                      errorStyle: TextStyle(
-                                        color: redColor,
-                                        fontSize: 10,
-                                        fontFamily: 'Inter-Bold',
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.only(right: 5),
-                                    borderRadius: BorderRadius.circular(10),
-                                    items: vehiclesType
-                                        .map(
-                                          (item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
-                                              style: TextStyle(
-                                                color: blackColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    value: selectedVehicle,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedVehicle = value;
-                                        debugPrint("selectedVehicle: $value");
-                                        if (getVehiclesByServiceTypeModel
-                                                .data !=
-                                            null) {
-                                          for (int i = 0;
-                                              i <
-                                                  getVehiclesByServiceTypeModel
-                                                      .data!.length;
-                                              i++) {
-                                            if (getVehiclesByServiceTypeModel
-                                                    .data?[i].name ==
-                                                value) {
-                                              vehicleId =
-                                                  getVehiclesByServiceTypeModel
-                                                      .data?[i].vehiclesId
-                                                      .toString();
-                                              debugPrint(
-                                                  'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
-                                            }
-                                          }
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.015),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/info-icon.svg",
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            Expanded(
-                              child: ButtonTheme(
-                                alignedDropdown: true,
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButtonFormField(
-                                    icon: Padding(
-                                      padding: const EdgeInsets.only(top: 3),
-                                      child: SvgPicture.asset(
-                                        'assets/images/dropdown-icon.svg',
-                                        width: 5,
-                                        height: 5,
-                                        fit: BoxFit.scaleDown,
-                                      ),
-                                    ),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: filledColor,
-                                      border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      enabledBorder: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      focusedBorder: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        borderSide: BorderSide(
-                                          color: redColor,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
-                                      hintText: 'Select Booking Type',
-                                      hintStyle: TextStyle(
-                                        color: hintColor,
-                                        fontSize: 12,
-                                        fontFamily: 'Inter-Light',
-                                      ),
-                                      errorStyle: TextStyle(
-                                        color: redColor,
-                                        fontSize: 10,
-                                        fontFamily: 'Inter-Bold',
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.only(right: 5),
-                                    borderRadius: BorderRadius.circular(10),
-                                    items: bookingType
-                                        .map(
-                                          (item) => DropdownMenuItem<String>(
-                                            value: item,
-                                            child: Text(
-                                              item,
-                                              style: TextStyle(
-                                                color: blackColor,
-                                                fontSize: 14,
-                                                fontFamily: 'Inter-Regular',
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    value: selectedBookingType,
-                                    onChanged: (value) async {
-                                      selectedBookingType = value;
-                                      debugPrint("selectedBookingType: $value");
-                                      if (getBookingsTypeModel.data != null) {
-                                        for (int i = 0;
-                                            i <
-                                                getBookingsTypeModel
-                                                    .data!.length;
-                                            i++) {
-                                          if ("${getBookingsTypeModel.data?[i].name}" ==
-                                              value) {
-                                            bookingsTypeId =
-                                                getBookingsTypeModel
-                                                    .data?[i].bookingsTypesId
-                                                    .toString();
-                                            debugPrint(
-                                                'bookingsTypeId: $bookingsTypeId');
-                                          }
-                                        }
-                                      }
-                                      setState(() {});
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (selectedRadio == 2)
-                        Column(
-                          children: [
-                            SizedBox(height: size.height * 0.025),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    if (pageController.page!.toInt() > 0) {
-                                      pageController.previousPage(
-                                        duration: const Duration(
-                                          milliseconds: 500,
-                                        ),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    }
-                                  },
-                                  child: SvgPicture.asset(
-                                    'assets/images/orange-left-arrow-icon.svg',
-                                  ),
-                                ),
-                                SizedBox(width: size.width * 0.02),
-                                DotsIndicator(
-                                  dotsCount: pages.length,
-                                  position: currentIndex,
-                                  decorator: DotsDecorator(
-                                    color: dotsColor, // Inactive color
-                                    activeColor: orangeColor,
-                                    spacing: const EdgeInsets.symmetric(
-                                        horizontal: 3),
-                                  ),
-                                  onTap: (index) {
-                                    pageController.animateToPage(
-                                      currentIndex = index,
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                      curve: Curves.linear,
-                                    );
-                                  },
-                                ),
-                                SizedBox(width: size.width * 0.02),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (pageController.page!.toInt() <
-                                        pages.length - 1) {
-                                      pageController.nextPage(
-                                        duration: const Duration(
-                                          milliseconds: 500,
-                                        ),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    }
-                                  },
-                                  child: SvgPicture.asset(
-                                    'assets/images/orange-right-arrow-icon.svg',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      SizedBox(height: size.height * 0.025),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                if (selectedRadio == 1) {
-                                  if (pickupController.text.isEmpty &&
-                                      destinationController.text.isEmpty &&
-                                      receiversNameController.text.isEmpty &&
-                                      receiversNumberController.text.isEmpty &&
-                                      selectedVehicle == null &&
-                                      selectedBookingType == null) {
-                                    if (pickupController.text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please fill pickup address!",
-                                      );
-                                    } else if (destinationController
-                                        .text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Please fill destination address!",
-                                      );
-                                    } else if (receiversNameController
-                                        .text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please fill receiver's name!",
-                                      );
-                                    } else if (receiversNumberController
-                                        .text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Please fill receiver's number!",
-                                      );
-                                    } else if (selectedVehicle == null) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please select a vehicle!",
-                                      );
-                                    } else if (selectedBookingType == null) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please select booking type!",
-                                      );
-                                    }
-                                  } else {
-                                    setState(() {
-                                      isLoading2 = true;
-                                    });
-                                    await getDistanceAddress(
-                                        bookingsTypeId, vehicleId);
-                                    if (double.parse(distance0!) <= 1.0) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Distance should be greater than 1.0 Km!",
-                                      );
-                                      setState(() {
-                                        isLoading2 = false;
-                                      });
-                                    } else {
-                                      // await getDistanceAddress(bookingsTypeId);
+  // Widget bottomDetailsSheet(BuildContext context) {
+  //   var size = MediaQuery.of(context).size;
+  //   final double screenHeight = MediaQuery.of(context).size.height;
+  //   double fontSize = screenHeight * 0.02;
+  //   return DraggableScrollableSheet(
+  //     initialChildSize: .38,
+  //     minChildSize: .38,
+  //     maxChildSize: 1,
+  //     controller: dragController,
+  //     builder: (BuildContext context, ScrollController scrollController) {
+  //       return ClipRRect(
+  //         borderRadius: const BorderRadius.only(
+  //           topLeft: Radius.circular(20),
+  //           topRight: Radius.circular(20),
+  //         ),
+  //         child: SingleChildScrollView(
+  //           controller: scrollController,
+  //           child: Container(
+  //             width: size.width,
+  //             height: size.height,
+  //             decoration: BoxDecoration(
+  //               color: whiteColor,
+  //               borderRadius: const BorderRadius.only(
+  //                 topLeft: Radius.circular(20),
+  //                 topRight: Radius.circular(20),
+  //               ),
+  //             ),
+  //             child: ListView(
+  //               controller: scrollController,
+  //               physics: const AlwaysScrollableScrollPhysics(),
+  //               children: [
+  //                 Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Center(
+  //                       child: Container(
+  //                         width: size.width * 0.3,
+  //                         height: 6,
+  //                         decoration: BoxDecoration(
+  //                           color: dividerColor,
+  //                           borderRadius: BorderRadius.circular(100),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.03),
+  //                     Padding(
+  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                       child: Text(
+  //                         "Select service type",
+  //                         textAlign: TextAlign.left,
+  //                         style: TextStyle(
+  //                           color: drawerTextColor,
+  //                           fontSize: 20,
+  //                           fontFamily: 'Syne-Bold',
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.02),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       children: [
+  //                         GestureDetector(
+  //                           onTap: () async {
+  //                             vehiclesType.clear();
+  //                             selectedVehicle = null;
+  //                             getVehiclesByServiceType(courierId);
+  //                             setState(() {
+  //                               isSelectedBus = false;
+  //                               isSelectedCourier = true;
+  //                               debugPrint("courierId: $courierId");
+  //                             });
+  //                           },
+  //                           child: Stack(
+  //                             children: [
+  //                               Container(
+  //                                 color: transparentColor,
+  //                                 width:
+  //                                     MediaQuery.of(context).size.width * 0.43,
+  //                                 height:
+  //                                     MediaQuery.of(context).size.height * 0.14,
+  //                               ),
+  //                               Positioned(
+  //                                 bottom: 0,
+  //                                 child: Container(
+  //                                   width: MediaQuery.of(context).size.width *
+  //                                       0.43,
+  //                                   height: MediaQuery.of(context).size.height *
+  //                                       0.1,
+  //                                   decoration: BoxDecoration(
+  //                                     gradient: LinearGradient(
+  //                                       begin: Alignment.centerRight,
+  //                                       end: Alignment.centerLeft,
+  //                                       stops: const [0.1, 1.5],
+  //                                       colors: [
+  //                                         isSelectedCourier == true
+  //                                             ? orangeColor
+  //                                             : const Color(0xFFEBEBEB),
+  //                                         isSelectedCourier == true
+  //                                             ? yellowColor
+  //                                             : const Color(0xFFEBEBEB),
+  //                                       ],
+  //                                     ),
+  //                                     borderRadius: BorderRadius.circular(15),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Positioned(
+  //                                 bottom: 20,
+  //                                 left: 0,
+  //                                 right: 0,
+  //                                 child: Text(
+  //                                   "Deliver a Parcel",
+  //                                   textAlign: TextAlign.center,
+  //                                   style: TextStyle(
+  //                                     color: isSelectedCourier == true
+  //                                         ? whiteColor
+  //                                         : drawerTextColor,
+  //                                     fontSize: fontSize,
+  //                                     fontFamily: 'Syne-Bold',
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Positioned(
+  //                                 top: 5,
+  //                                 left: 0,
+  //                                 right: 0,
+  //                                 child: SvgPicture.asset(
+  //                                   "assets/images/login-parcel-icon.svg",
+  //                                   width: size.width * 0.07,
+  //                                   height: size.height * 0.07,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         SizedBox(width: size.width * 0.04),
+  //                         GestureDetector(
+  //                           onTap: () async {
+  //                             vehiclesType.clear();
+  //                             selectedVehicle = null;
+  //                             getVehiclesByServiceType(otherId);
+  //                             setState(() {
+  //                               isSelectedBus = true;
+  //                               isSelectedCourier = false;
+  //                               debugPrint("otherId: $otherId");
+  //                             });
+  //                           },
+  //                           child: Stack(
+  //                             children: [
+  //                               Container(
+  //                                 color: transparentColor,
+  //                                 width:
+  //                                     MediaQuery.of(context).size.width * 0.43,
+  //                                 height:
+  //                                     MediaQuery.of(context).size.height * 0.14,
+  //                               ),
+  //                               Positioned(
+  //                                 bottom: 0,
+  //                                 child: Container(
+  //                                   width: MediaQuery.of(context).size.width *
+  //                                       0.43,
+  //                                   height: MediaQuery.of(context).size.height *
+  //                                       0.1,
+  //                                   decoration: BoxDecoration(
+  //                                     gradient: LinearGradient(
+  //                                       begin: Alignment.centerRight,
+  //                                       end: Alignment.centerLeft,
+  //                                       stops: const [0.1, 1.5],
+  //                                       colors: [
+  //                                         isSelectedBus == true
+  //                                             ? orangeColor
+  //                                             : const Color(0xFFEBEBEB),
+  //                                         isSelectedBus == true
+  //                                             ? yellowColor
+  //                                             : const Color(0xFFEBEBEB),
+  //                                       ],
+  //                                     ),
+  //                                     borderRadius: BorderRadius.circular(15),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Positioned(
+  //                                 bottom: 20,
+  //                                 left: 0,
+  //                                 right: 0,
+  //                                 child: Text(
+  //                                   "Book a Van",
+  //                                   textAlign: TextAlign.center,
+  //                                   style: TextStyle(
+  //                                     color: isSelectedBus == true
+  //                                         ? whiteColor
+  //                                         : drawerTextColor,
+  //                                     fontSize: fontSize,
+  //                                     fontFamily: 'Syne-Bold',
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               Positioned(
+  //                                 top: 5,
+  //                                 left: 0,
+  //                                 right: 0,
+  //                                 child: SvgPicture.asset(
+  //                                   "assets/images/login-truck-icon.svg",
+  //                                   width: size.width * 0.07,
+  //                                   height: size.height * 0.07,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     SizedBox(height: size.height * 0.03),
+  //                     Padding(
+  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           GestureDetector(
+  //                             onTap: () {
+  //                               setState(() {
+  //                                 for (int i = 0;
+  //                                     i < 5 && i < distanceDurationList.length;
+  //                                     i++) {
+  //                                   final entry = distanceDurationList[i];
+  //                                   debugPrint(
+  //                                       "distanceDurationList[$i]: $entry");
+  //                                 }
+  //                               });
+  //                             },
+  //                             child: Text(
+  //                               "Find best rider?",
+  //                               textAlign: TextAlign.left,
+  //                               style: TextStyle(
+  //                                 color: drawerTextColor,
+  //                                 fontSize: 20,
+  //                                 fontFamily: 'Syne-Bold',
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           if (selectedRadio == 1)
+  //                             Row(
+  //                               children: [
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     setState(() {
+  //                                       isSelectedAddress = true;
+  //                                     });
+  //                                   },
+  //                                   child: isSelectedAddress == true
+  //                                       ? GestureDetector(
+  //                                           onTap: () {
+  //                                             setState(() {
+  //                                               isSelectedAddress = false;
+  //                                             });
+  //                                           },
+  //                                           child: SvgPicture.asset(
+  //                                             'assets/images/checkmark-icon.svg',
+  //                                           ),
+  //                                         )
+  //                                       : SvgPicture.asset(
+  //                                           'assets/images/uncheckmark-icon.svg',
+  //                                         ),
+  //                                 ),
+  //                                 SizedBox(width: size.width * 0.01),
+  //                                 Text(
+  //                                   "Saved Addresses",
+  //                                   textAlign: TextAlign.left,
+  //                                   style: TextStyle(
+  //                                     color: drawerTextColor,
+  //                                     fontSize: 12,
+  //                                     fontFamily: 'Syne-Bold',
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           if (selectedRadio == 2)
+  //                             Row(
+  //                               children: [
+  //                                 // GestureDetector(
+  //                                 //   onTap: () {
+  //                                 //     removePage();
+  //                                 //     setState(() {});
+  //                                 //   },
+  //                                 //   child: SvgPicture.asset(
+  //                                 //     'assets/images/minus-icon.svg',
+  //                                 //   ),
+  //                                 // ),
+  //                                 // SizedBox(width: size.width * 0.02),
+  //                                 // GestureDetector(
+  //                                 //   onTap: () {
+  //                                 //     addPage();
+  //                                 //     setState(() {});
+  //                                 //   },
+  //                                 //   child: SvgPicture.asset(
+  //                                 //     'assets/images/add-icon.svg',
+  //                                 //   ),
+  //                                 // ),
+  //                                 // SizedBox(width: size.width * 0.03),
+  //                                 GestureDetector(
+  //                                   onTap: () {
+  //                                     setState(() {
+  //                                       isSelectedAddress = true;
+  //                                     });
+  //                                   },
+  //                                   child: isSelectedAddress == true
+  //                                       ? GestureDetector(
+  //                                           onTap: () {
+  //                                             setState(() {
+  //                                               isSelectedAddress = false;
+  //                                             });
+  //                                           },
+  //                                           child: SvgPicture.asset(
+  //                                             'assets/images/checkmark-icon.svg',
+  //                                           ),
+  //                                         )
+  //                                       : SvgPicture.asset(
+  //                                           'assets/images/uncheckmark-icon.svg',
+  //                                         ),
+  //                                 ),
+  //                                 SizedBox(width: size.width * 0.01),
+  //                                 Text(
+  //                                   "Saved\nAddresses",
+  //                                   textAlign: TextAlign.left,
+  //                                   style: TextStyle(
+  //                                     color: drawerTextColor,
+  //                                     fontSize: 10,
+  //                                     fontFamily: 'Syne-Bold',
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.005),
+  //                     Theme(
+  //                       data: ThemeData(
+  //                         unselectedWidgetColor: orangeColor,
+  //                       ),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           Row(
+  //                             children: [
+  //                               Radio(
+  //                                 value: 1,
+  //                                 groupValue: selectedRadio,
+  //                                 activeColor: orangeColor,
+  //                                 visualDensity: VisualDensity.compact,
+  //                                 onChanged: (value) {
+  //                                   setState(() {
+  //                                     selectedRadio = value!;
+  //                                   });
+  //                                 },
+  //                               ),
+  //                               Text(
+  //                                 "Single Delivery",
+  //                                 textAlign: TextAlign.left,
+  //                                 style: TextStyle(
+  //                                   color: drawerTextColor,
+  //                                   fontSize: 14,
+  //                                   fontFamily: 'Syne-Bold',
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           Row(
+  //                             children: [
+  //                               Radio(
+  //                                 value: 2,
+  //                                 groupValue: selectedRadio,
+  //                                 activeColor: orangeColor,
+  //                                 visualDensity: VisualDensity.compact,
+  //                                 onChanged: (value) {
+  //                                   setState(() {
+  //                                     selectedRadio = value!;
+  //                                   });
+  //                                 },
+  //                               ),
+  //                               Text(
+  //                                 "Multiple Delivery",
+  //                                 textAlign: TextAlign.left,
+  //                                 style: TextStyle(
+  //                                   color: drawerTextColor,
+  //                                   fontSize: 14,
+  //                                   fontFamily: 'Syne-Bold',
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.015),
+  //                     if (selectedRadio == 1) singleTextField(),
+  //                     if (selectedRadio == 2) multiPageView(),
+  //                     SizedBox(height: size.height * 0.012),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(left: 10, right: 10),
+  //                       child: Row(
+  //                         children: [
+  //                           SvgPicture.asset(
+  //                             "assets/images/info-icon.svg",
+  //                           ),
+  //                           SizedBox(width: size.width * 0.02),
+  //                           Expanded(
+  //                             child: ButtonTheme(
+  //                               alignedDropdown: true,
+  //                               child: DropdownButtonHideUnderline(
+  //                                 child: DropdownButtonFormField(
+  //                                   icon: Padding(
+  //                                     padding: const EdgeInsets.only(top: 3),
+  //                                     child: SvgPicture.asset(
+  //                                       'assets/images/dropdown-icon.svg',
+  //                                       width: 5,
+  //                                       height: 5,
+  //                                       fit: BoxFit.scaleDown,
+  //                                     ),
+  //                                   ),
+  //                                   decoration: InputDecoration(
+  //                                     filled: true,
+  //                                     fillColor: filledColor,
+  //                                     border: const OutlineInputBorder(
+  //                                       borderRadius: BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide.none,
+  //                                     ),
+  //                                     enabledBorder: const OutlineInputBorder(
+  //                                       borderRadius: BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide.none,
+  //                                     ),
+  //                                     focusedBorder: const OutlineInputBorder(
+  //                                       borderRadius: BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide.none,
+  //                                     ),
+  //                                     errorBorder: OutlineInputBorder(
+  //                                       borderRadius: const BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide(
+  //                                         color: redColor,
+  //                                         width: 1,
+  //                                       ),
+  //                                     ),
+  //                                     contentPadding:
+  //                                         const EdgeInsets.symmetric(
+  //                                             horizontal: 20, vertical: 10),
+  //                                     hintText: 'Select Vehicle',
+  //                                     hintStyle: TextStyle(
+  //                                       color: hintColor,
+  //                                       fontSize: 12,
+  //                                       fontFamily: 'Inter-Light',
+  //                                     ),
+  //                                     errorStyle: TextStyle(
+  //                                       color: redColor,
+  //                                       fontSize: 10,
+  //                                       fontFamily: 'Inter-Bold',
+  //                                     ),
+  //                                   ),
+  //                                   padding: const EdgeInsets.only(right: 5),
+  //                                   borderRadius: BorderRadius.circular(10),
+  //                                   items: vehiclesType
+  //                                       .map(
+  //                                         (item) => DropdownMenuItem<String>(
+  //                                           value: item,
+  //                                           child: Text(
+  //                                             item,
+  //                                             style: TextStyle(
+  //                                               color: blackColor,
+  //                                               fontSize: 14,
+  //                                               fontFamily: 'Inter-Regular',
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       )
+  //                                       .toList(),
+  //                                   value: selectedVehicle,
+  //                                   onChanged: (value) {
+  //                                     setState(() {
+  //                                       selectedVehicle = value;
+  //                                       debugPrint("selectedVehicle: $value");
+  //                                       if (getVehiclesByServiceTypeModel
+  //                                               .data !=
+  //                                           null) {
+  //                                         for (int i = 0;
+  //                                             i <
+  //                                                 getVehiclesByServiceTypeModel
+  //                                                     .data!.length;
+  //                                             i++) {
+  //                                           if (getVehiclesByServiceTypeModel
+  //                                                   .data?[i].name ==
+  //                                               value) {
+  //                                             vehicleId =
+  //                                                 getVehiclesByServiceTypeModel
+  //                                                     .data?[i].vehiclesId
+  //                                                     .toString();
+  //                                             debugPrint(
+  //                                                 'vehicleId: ${getVehiclesByServiceTypeModel.data?[i].vehiclesId.toString()}');
+  //                                           }
+  //                                         }
+  //                                       }
+  //                                     });
+  //                                   },
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.015),
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(left: 10, right: 10),
+  //                       child: Row(
+  //                         children: [
+  //                           SvgPicture.asset(
+  //                             "assets/images/info-icon.svg",
+  //                           ),
+  //                           SizedBox(width: size.width * 0.02),
+  //                           Expanded(
+  //                             child: ButtonTheme(
+  //                               alignedDropdown: true,
+  //                               child: DropdownButtonHideUnderline(
+  //                                 child: DropdownButtonFormField(
+  //                                   icon: Padding(
+  //                                     padding: const EdgeInsets.only(top: 3),
+  //                                     child: SvgPicture.asset(
+  //                                       'assets/images/dropdown-icon.svg',
+  //                                       width: 5,
+  //                                       height: 5,
+  //                                       fit: BoxFit.scaleDown,
+  //                                     ),
+  //                                   ),
+  //                                   decoration: InputDecoration(
+  //                                     filled: true,
+  //                                     fillColor: filledColor,
+  //                                     border: const OutlineInputBorder(
+  //                                       borderRadius: BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide.none,
+  //                                     ),
+  //                                     enabledBorder: const OutlineInputBorder(
+  //                                       borderRadius: BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide.none,
+  //                                     ),
+  //                                     focusedBorder: const OutlineInputBorder(
+  //                                       borderRadius: BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide.none,
+  //                                     ),
+  //                                     errorBorder: OutlineInputBorder(
+  //                                       borderRadius: const BorderRadius.all(
+  //                                         Radius.circular(10),
+  //                                       ),
+  //                                       borderSide: BorderSide(
+  //                                         color: redColor,
+  //                                         width: 1,
+  //                                       ),
+  //                                     ),
+  //                                     contentPadding:
+  //                                         const EdgeInsets.symmetric(
+  //                                             horizontal: 20, vertical: 10),
+  //                                     hintText: 'Select Booking Type',
+  //                                     hintStyle: TextStyle(
+  //                                       color: hintColor,
+  //                                       fontSize: 12,
+  //                                       fontFamily: 'Inter-Light',
+  //                                     ),
+  //                                     errorStyle: TextStyle(
+  //                                       color: redColor,
+  //                                       fontSize: 10,
+  //                                       fontFamily: 'Inter-Bold',
+  //                                     ),
+  //                                   ),
+  //                                   padding: const EdgeInsets.only(right: 5),
+  //                                   borderRadius: BorderRadius.circular(10),
+  //                                   items: bookingType
+  //                                       .map(
+  //                                         (item) => DropdownMenuItem<String>(
+  //                                           value: item,
+  //                                           child: Text(
+  //                                             item,
+  //                                             style: TextStyle(
+  //                                               color: blackColor,
+  //                                               fontSize: 14,
+  //                                               fontFamily: 'Inter-Regular',
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       )
+  //                                       .toList(),
+  //                                   value: selectedBookingType,
+  //                                   onChanged: (value) async {
+  //                                     selectedBookingType = value;
+  //                                     debugPrint("selectedBookingType: $value");
+  //                                     if (getBookingsTypeModel.data != null) {
+  //                                       for (int i = 0;
+  //                                           i <
+  //                                               getBookingsTypeModel
+  //                                                   .data!.length;
+  //                                           i++) {
+  //                                         if ("${getBookingsTypeModel.data?[i].name}" ==
+  //                                             value) {
+  //                                           bookingsTypeId =
+  //                                               getBookingsTypeModel
+  //                                                   .data?[i].bookingsTypesId
+  //                                                   .toString();
+  //                                           debugPrint(
+  //                                               'bookingsTypeId: $bookingsTypeId');
+  //                                         }
+  //                                       }
+  //                                     }
+  //                                     setState(() {});
+  //                                   },
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     if (selectedRadio == 2)
+  //                       Column(
+  //                         children: [
+  //                           SizedBox(height: size.height * 0.025),
+  //                           Row(
+  //                             mainAxisAlignment: MainAxisAlignment.center,
+  //                             children: [
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   if (pageController.page!.toInt() > 0) {
+  //                                     pageController.previousPage(
+  //                                       duration: const Duration(
+  //                                         milliseconds: 500,
+  //                                       ),
+  //                                       curve: Curves.easeInOut,
+  //                                     );
+  //                                   }
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   'assets/images/orange-left-arrow-icon.svg',
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: size.width * 0.02),
+  //                               DotsIndicator(
+  //                                 dotsCount: pages.length,
+  //                                 position: currentIndex,
+  //                                 decorator: DotsDecorator(
+  //                                   color: dotsColor, // Inactive color
+  //                                   activeColor: orangeColor,
+  //                                   spacing: const EdgeInsets.symmetric(
+  //                                       horizontal: 3),
+  //                                 ),
+  //                                 onTap: (index) {
+  //                                   pageController.animateToPage(
+  //                                     currentIndex = index,
+  //                                     duration: const Duration(
+  //                                       milliseconds: 500,
+  //                                     ),
+  //                                     curve: Curves.linear,
+  //                                   );
+  //                                 },
+  //                               ),
+  //                               SizedBox(width: size.width * 0.02),
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   if (pageController.page!.toInt() <
+  //                                       pages.length - 1) {
+  //                                     pageController.nextPage(
+  //                                       duration: const Duration(
+  //                                         milliseconds: 500,
+  //                                       ),
+  //                                       curve: Curves.easeInOut,
+  //                                     );
+  //                                   }
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   'assets/images/orange-right-arrow-icon.svg',
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     SizedBox(height: size.height * 0.025),
+  //                     Padding(
+  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           GestureDetector(
+  //                             onTap: () async {
+  //                               if (selectedRadio == 1) {
+  //                                 if (pickupController.text.isEmpty &&
+  //                                     destinationController.text.isEmpty &&
+  //                                     receiversNameController.text.isEmpty &&
+  //                                     receiversNumberController.text.isEmpty &&
+  //                                     selectedVehicle == null &&
+  //                                     selectedBookingType == null) {
+  //                                   if (pickupController.text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please fill pickup address!",
+  //                                     );
+  //                                   } else if (destinationController
+  //                                       .text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Please fill destination address!",
+  //                                     );
+  //                                   } else if (receiversNameController
+  //                                       .text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please fill receiver's name!",
+  //                                     );
+  //                                   } else if (receiversNumberController
+  //                                       .text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Please fill receiver's number!",
+  //                                     );
+  //                                   } else if (selectedVehicle == null) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please select a vehicle!",
+  //                                     );
+  //                                   } else if (selectedBookingType == null) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please select booking type!",
+  //                                     );
+  //                                   }
+  //                                 } else {
+  //                                   setState(() {
+  //                                     isLoading2 = true;
+  //                                   });
+  //                                   await getDistanceAddress(
+  //                                       bookingsTypeId, vehicleId);
+  //                                   if (double.parse(distance0!) <= 1.0) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Distance should be greater than 1.0 Km!",
+  //                                     );
+  //                                     setState(() {
+  //                                       isLoading2 = false;
+  //                                     });
+  //                                   } else {
+  //                                     // await getDistanceAddress(bookingsTypeId);
 
-                                      addSingleData = {
-                                        "type": "schedule",
-                                        "vehicles_id": vehicleId,
-                                        "delivery_charges":
-                                            totalDeliveryAmount0,
-                                        "service_running": serviceRunning,
-                                        "total_svc_running_charges":
-                                            totalServiceCharges,
-                                        "total_tollgate_charges":
-                                            totalTollGateCharges ?? "0",
-                                        "svc_running_charges0": serviceCharges0,
-                                        "tollgate_charges0":
-                                            tollGateCharges0 ?? "0",
-                                        "bookings_types_id": bookingsTypeId,
-                                        "delivery_type": selectedRadio == 1
-                                            ? "Single"
-                                            : "Multiple",
-                                        "pickup_address": pickupController.text,
-                                        "pickup_latitude": pickupLat0,
-                                        "pickup_longitude": pickupLng0,
-                                        "destin_address":
-                                            destinationController.text,
-                                        "destin_latitude": destinLat0,
-                                        "destin_longitude": destinLng0,
-                                        "destin_distance": distance0,
-                                        "destin_time": duration0,
-                                        "destin_delivery_charges":
-                                            totalDeliveryAmount0,
-                                        "destin_vat_charges": totalVatCharges0,
-                                        "destin_total_charges":
-                                            roundedTotalAmount0 ?? "0.00",
-                                        "destin_discount": "0.00",
-                                        "destin_discounted_charges": "0.00",
-                                        "receiver_name":
-                                            receiversNameController.text,
-                                        "receiver_phone":
-                                            receiversNumberController.text,
-                                      };
-                                      setState(() {
-                                        isLoading2 = false;
-                                      });
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ScheduleRideScreen(
-                                            selectedRadio: selectedRadio,
-                                            scheduledSingleData: addSingleData,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                }
-                                if (selectedRadio == 2) {
-                                  if (pickupControllers.isEmpty) {
-                                    CustomToast.showToast(
-                                      fontSize: 12,
-                                      message: "Please fill the all fields",
-                                    );
-                                  }
-                                  showDialog(
-                                    context: context,
-                                    // barrierDismissible:
-                                    //     false, // Prevents dialog from closing when tapping outside
-                                    builder: (context) {
-                                      return Dialog(
-                                        backgroundColor: Colors
-                                            .transparent, // Make dialog transparent
-                                        elevation: 0, // Remove shadow
-                                        child: Container(
-                                          padding: const EdgeInsets.all(20),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircularProgressIndicator(
-                                                color: orangeColor,
-                                                strokeWidth: 2,
-                                              ), // Your progress indicator
-                                              const SizedBox(height: 20),
-                                              const Text(
-                                                'Loading Data...',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 20,
-                                                  fontFamily: 'Inter-Bold',
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              const Text(
-                                                'Please wait while data is being loaded.',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Regular',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                  await getDistanceAddress(
-                                      bookingsTypeId, vehicleId);
-                                  // Add a delay to ensure data is populated in allDataForIndexes1
-                                  Future.delayed(const Duration(seconds: 1),
-                                      () async {
-                                    // Close the loading dialog
+  //                                     addSingleData = {
+  //                                       "type": "schedule",
+  //                                       "vehicles_id": vehicleId,
+  //                                       "delivery_charges":
+  //                                           totalDeliveryAmount0,
+  //                                       "service_running": serviceRunning,
+  //                                       "total_svc_running_charges":
+  //                                           totalServiceCharges,
+  //                                       "total_tollgate_charges":
+  //                                           totalTollGateCharges ?? "0",
+  //                                       "svc_running_charges0": serviceCharges0,
+  //                                       "tollgate_charges0":
+  //                                           tollGateCharges0 ?? "0",
+  //                                       "bookings_types_id": bookingsTypeId,
+  //                                       "delivery_type": selectedRadio == 1
+  //                                           ? "Single"
+  //                                           : "Multiple",
+  //                                       "pickup_address": pickupController.text,
+  //                                       "pickup_latitude": pickupLat0,
+  //                                       "pickup_longitude": pickupLng0,
+  //                                       "destin_address":
+  //                                           destinationController.text,
+  //                                       "destin_latitude": destinLat0,
+  //                                       "destin_longitude": destinLng0,
+  //                                       "destin_distance": distance0,
+  //                                       "destin_time": duration0,
+  //                                       "destin_delivery_charges":
+  //                                           totalDeliveryAmount0,
+  //                                       "destin_vat_charges": totalVatCharges0,
+  //                                       "destin_total_charges":
+  //                                           roundedTotalAmount0 ?? "0.00",
+  //                                       "destin_discount": "0.00",
+  //                                       "destin_discounted_charges": "0.00",
+  //                                       "receiver_name":
+  //                                           receiversNameController.text,
+  //                                       "receiver_phone":
+  //                                           receiversNumberController.text,
+  //                                     };
+  //                                     setState(() {
+  //                                       isLoading2 = false;
+  //                                     });
+  //                                     Navigator.push(
+  //                                       context,
+  //                                       MaterialPageRoute(
+  //                                         builder: (context) =>
+  //                                             ScheduleRideScreen(
+  //                                           selectedRadio: selectedRadio,
+  //                                           scheduledSingleData: addSingleData,
+  //                                         ),
+  //                                       ),
+  //                                     );
+  //                                   }
+  //                                 }
+  //                               }
+  //                               if (selectedRadio == 2) {
+  //                                 if (pickupControllers.isEmpty) {
+  //                                   CustomToast.showToast(
+  //                                     fontSize: 12,
+  //                                     message: "Please fill the all fields",
+  //                                   );
+  //                                 }
+  //                                 showDialog(
+  //                                   context: context,
+  //                                   // barrierDismissible:
+  //                                   //     false, // Prevents dialog from closing when tapping outside
+  //                                   builder: (context) {
+  //                                     return Dialog(
+  //                                       backgroundColor: Colors
+  //                                           .transparent, // Make dialog transparent
+  //                                       elevation: 0, // Remove shadow
+  //                                       child: Container(
+  //                                         padding: const EdgeInsets.all(20),
+  //                                         decoration: BoxDecoration(
+  //                                           color: Colors.white,
+  //                                           borderRadius:
+  //                                               BorderRadius.circular(10),
+  //                                         ),
+  //                                         child: Column(
+  //                                           mainAxisSize: MainAxisSize.min,
+  //                                           children: [
+  //                                             CircularProgressIndicator(
+  //                                               color: orangeColor,
+  //                                               strokeWidth: 2,
+  //                                             ), // Your progress indicator
+  //                                             const SizedBox(height: 20),
+  //                                             const Text(
+  //                                               'Loading Data...',
+  //                                               style: TextStyle(
+  //                                                 color: Colors.black,
+  //                                                 fontSize: 20,
+  //                                                 fontFamily: 'Inter-Bold',
+  //                                               ),
+  //                                             ),
+  //                                             const SizedBox(height: 10),
+  //                                             const Text(
+  //                                               'Please wait while data is being loaded.',
+  //                                               textAlign: TextAlign.center,
+  //                                               style: TextStyle(
+  //                                                 color: Colors.black,
+  //                                                 fontSize: 14,
+  //                                                 fontFamily: 'Inter-Regular',
+  //                                               ),
+  //                                             ),
+  //                                           ],
+  //                                         ),
+  //                                       ),
+  //                                     );
+  //                                   },
+  //                                 );
+  //                                 await getDistanceAddress(
+  //                                     bookingsTypeId, vehicleId);
+  //                                 // Add a delay to ensure data is populated in allDataForIndexes1
+  //                                 Future.delayed(const Duration(seconds: 1),
+  //                                     () async {
+  //                                   // Close the loading dialog
 
-                                    if (filteredData.isNotEmpty) {
-                                      if (distance0 != null &&
-                                              double.parse(distance0!) <= 1.0 ||
-                                          distance1 != null &&
-                                              double.parse(distance1!) <= 1.0 ||
-                                          distance2 != null &&
-                                              double.parse(distance2!) <= 1.0 ||
-                                          distance3 != null &&
-                                              double.parse(distance3!) <= 1.0 ||
-                                          distance4 != null &&
-                                              double.parse(distance4!) <= 1.0) {
-                                        CustomToast.showToast(
-                                          fontSize: 12,
-                                          message:
-                                              "Distance should be greater than 1.0 Km!",
-                                        );
-                                      } else {
-                                        // await getDistanceAddress(
-                                        //     bookingsTypeId);
-                                        addMultipleData = {
-                                          "type": "schedule",
-                                          "vehicles_id": vehicleId,
-                                          "totalChargesM": totalChargesM,
-                                          "totalVatM": totalVatM,
-                                          "service_running": serviceRunning,
-                                          "total_svc_running_charges":
-                                              totalServiceCharges,
-                                          "total_tollgate_charges":
-                                              totalTollGateCharges ?? "0",
-                                          "svc_running_charges0":
-                                              serviceCharges0,
-                                          "tollgate_charges0":
-                                              tollGateCharges0 ?? "0",
-                                          "svc_running_charges1":
-                                              serviceCharges1,
-                                          "tollgate_charges1":
-                                              tollGateCharges1 ?? "0",
-                                          "svc_running_charges2":
-                                              serviceCharges2,
-                                          "tollgate_charges2":
-                                              tollGateCharges2 ?? "0",
-                                          "svc_running_charges3":
-                                              serviceCharges3,
-                                          "tollgate_charges3":
-                                              tollGateCharges3 ?? "0",
-                                          "svc_running_charges4":
-                                              serviceCharges4,
-                                          "tollgate_charges4":
-                                              tollGateCharges4 ?? "0",
-                                          "bookings_types_id": bookingsTypeId,
-                                          "delivery_type": selectedRadio == 1
-                                              ? "Single"
-                                              : "Multiple",
-                                          "pickup_latitude0":
-                                              "$pickupLat0" != 'null'
-                                                  ? "$pickupLat0"
-                                                  : "0",
-                                          "pickup_longitude0":
-                                              "$pickupLng0" != 'null'
-                                                  ? "$pickupLng0"
-                                                  : "0",
-                                          "destin_latitude0":
-                                              "$destinLat0" != 'null'
-                                                  ? "$destinLat0"
-                                                  : "0",
-                                          "destin_longitude0":
-                                              "$destinLng0" != 'null'
-                                                  ? "$destinLng0"
-                                                  : "0",
-                                          "pickup_latitude1":
-                                              "$pickupLat1" != 'null'
-                                                  ? "$pickupLat1"
-                                                  : "0",
-                                          "pickup_longitude1":
-                                              "$pickupLng1" != 'null'
-                                                  ? "$pickupLng1"
-                                                  : "0",
-                                          "destin_latitude1":
-                                              "$destinLat1" != 'null'
-                                                  ? "$destinLat1"
-                                                  : "0",
-                                          "destin_longitude1":
-                                              "$destinLng1" != 'null'
-                                                  ? "$destinLng1"
-                                                  : "0",
-                                          "pickup_latitude2":
-                                              "$pickupLat2" != 'null'
-                                                  ? "$pickupLat2"
-                                                  : "0",
-                                          "pickup_longitude2":
-                                              "$pickupLat2" != 'null'
-                                                  ? "$pickupLat2"
-                                                  : "0",
-                                          "destin_latitude2":
-                                              "$destinLat2" != 'null'
-                                                  ? "$destinLat2"
-                                                  : "0",
-                                          "destin_longitude2":
-                                              "$destinLng2" != 'null'
-                                                  ? "$destinLng2"
-                                                  : "0",
-                                          "pickup_latitude3":
-                                              "$pickupLat3" != 'null'
-                                                  ? "$pickupLat3"
-                                                  : "0",
-                                          "pickup_longitude3":
-                                              "$pickupLng3" != 'null'
-                                                  ? "$pickupLng3"
-                                                  : "0",
-                                          "destin_latitude3":
-                                              "$destinLat3" != 'null'
-                                                  ? "$destinLat3"
-                                                  : "0",
-                                          "destin_longitude3":
-                                              "$destinLng3" != 'null'
-                                                  ? "$destinLng3"
-                                                  : "0",
-                                          "pickup_latitude4":
-                                              "$pickupLng4" != 'null'
-                                                  ? "$pickupLng4"
-                                                  : "0",
-                                          "pickup_longitude4":
-                                              "$pickupLng4" != 'null'
-                                                  ? "$pickupLng4"
-                                                  : "0",
-                                          "destin_latitude4":
-                                              "$destinLat4" != 'null'
-                                                  ? "$destinLat4"
-                                                  : "0",
-                                          "destin_longitude4":
-                                              "$destinLng4" != 'null'
-                                                  ? "$destinLng4"
-                                                  : "0",
-                                          "destin_distance0": distance0,
-                                          "destin_time0": duration0,
-                                          "destin_delivery_charges0":
-                                              totalDeliveryAmount0 ?? "0.00",
-                                          "destin_vat_charges0":
-                                              totalVatCharges0,
-                                          "destin_total_charges0":
-                                              roundedTotalAmount0,
-                                          "destin_discount0": "0.00",
-                                          "destin_discounted_charges0": "0.00",
-                                          "destin_distance1": distance1,
-                                          "destin_time1": duration1,
-                                          "destin_delivery_charges1":
-                                              totalDeliveryAmount1 ?? "0.00",
-                                          "destin_vat_charges1":
-                                              totalVatCharges1 ?? "0.00",
-                                          "destin_total_charges1":
-                                              roundedTotalAmount1 ?? "0.00",
-                                          "destin_discount1": "0.00",
-                                          "destin_discounted_charges1": "0.00",
-                                          "destin_distance2":
-                                              distance2 ?? "0.00",
-                                          "destin_time2": duration2,
-                                          "destin_delivery_charges2":
-                                              totalDeliveryAmount2 ?? "0.00",
-                                          "destin_vat_charges2":
-                                              totalVatCharges2 ?? "0.00",
-                                          "destin_total_charges2":
-                                              roundedTotalAmount2 ?? "0.00",
-                                          "destin_discount2": "0.00",
-                                          "destin_discounted_charges2": "0.00",
-                                          "destin_distance3":
-                                              distance3 ?? "0.00",
-                                          "destin_time3": duration3,
-                                          "destin_delivery_charges3":
-                                              totalDeliveryAmount3 ?? "0.00",
-                                          "destin_vat_charges3":
-                                              totalVatCharges3 ?? "0.00",
-                                          "destin_total_charges3":
-                                              roundedTotalAmount3 ?? "0.00",
-                                          "destin_discount3": "0.00",
-                                          "destin_discounted_charges3": "0.00",
-                                          "destin_distance4":
-                                              distance4 ?? "0.00",
-                                          "destin_time4": duration4,
-                                          "destin_delivery_charges4":
-                                              totalDeliveryAmount4 ?? "0.00",
-                                          "destin_vat_charges4":
-                                              totalVatCharges4 ?? "0.00",
-                                          "destin_total_charges4":
-                                              roundedTotalAmount4 ?? "0.00",
-                                          "destin_discount4": "0.00",
-                                          "destin_discounted_charges4": "0.00",
-                                        };
+  //                                   if (filteredData.isNotEmpty) {
+  //                                     if (distance0 != null &&
+  //                                             double.parse(distance0!) <= 1.0 ||
+  //                                         distance1 != null &&
+  //                                             double.parse(distance1!) <= 1.0 ||
+  //                                         distance2 != null &&
+  //                                             double.parse(distance2!) <= 1.0 ||
+  //                                         distance3 != null &&
+  //                                             double.parse(distance3!) <= 1.0 ||
+  //                                         distance4 != null &&
+  //                                             double.parse(distance4!) <= 1.0) {
+  //                                       CustomToast.showToast(
+  //                                         fontSize: 12,
+  //                                         message:
+  //                                             "Distance should be greater than 1.0 Km!",
+  //                                       );
+  //                                     } else {
+  //                                       // await getDistanceAddress(
+  //                                       //     bookingsTypeId);
+  //                                       addMultipleData = {
+  //                                         "type": "schedule",
+  //                                         "vehicles_id": vehicleId,
+  //                                         "totalChargesM": totalChargesM,
+  //                                         "totalVatM": totalVatM,
+  //                                         "service_running": serviceRunning,
+  //                                         "total_svc_running_charges":
+  //                                             totalServiceCharges,
+  //                                         "total_tollgate_charges":
+  //                                             totalTollGateCharges ?? "0",
+  //                                         "svc_running_charges0":
+  //                                             serviceCharges0,
+  //                                         "tollgate_charges0":
+  //                                             tollGateCharges0 ?? "0",
+  //                                         "svc_running_charges1":
+  //                                             serviceCharges1,
+  //                                         "tollgate_charges1":
+  //                                             tollGateCharges1 ?? "0",
+  //                                         "svc_running_charges2":
+  //                                             serviceCharges2,
+  //                                         "tollgate_charges2":
+  //                                             tollGateCharges2 ?? "0",
+  //                                         "svc_running_charges3":
+  //                                             serviceCharges3,
+  //                                         "tollgate_charges3":
+  //                                             tollGateCharges3 ?? "0",
+  //                                         "svc_running_charges4":
+  //                                             serviceCharges4,
+  //                                         "tollgate_charges4":
+  //                                             tollGateCharges4 ?? "0",
+  //                                         "bookings_types_id": bookingsTypeId,
+  //                                         "delivery_type": selectedRadio == 1
+  //                                             ? "Single"
+  //                                             : "Multiple",
+  //                                         "pickup_latitude0":
+  //                                             "$pickupLat0" != 'null'
+  //                                                 ? "$pickupLat0"
+  //                                                 : "0",
+  //                                         "pickup_longitude0":
+  //                                             "$pickupLng0" != 'null'
+  //                                                 ? "$pickupLng0"
+  //                                                 : "0",
+  //                                         "destin_latitude0":
+  //                                             "$destinLat0" != 'null'
+  //                                                 ? "$destinLat0"
+  //                                                 : "0",
+  //                                         "destin_longitude0":
+  //                                             "$destinLng0" != 'null'
+  //                                                 ? "$destinLng0"
+  //                                                 : "0",
+  //                                         "pickup_latitude1":
+  //                                             "$pickupLat1" != 'null'
+  //                                                 ? "$pickupLat1"
+  //                                                 : "0",
+  //                                         "pickup_longitude1":
+  //                                             "$pickupLng1" != 'null'
+  //                                                 ? "$pickupLng1"
+  //                                                 : "0",
+  //                                         "destin_latitude1":
+  //                                             "$destinLat1" != 'null'
+  //                                                 ? "$destinLat1"
+  //                                                 : "0",
+  //                                         "destin_longitude1":
+  //                                             "$destinLng1" != 'null'
+  //                                                 ? "$destinLng1"
+  //                                                 : "0",
+  //                                         "pickup_latitude2":
+  //                                             "$pickupLat2" != 'null'
+  //                                                 ? "$pickupLat2"
+  //                                                 : "0",
+  //                                         "pickup_longitude2":
+  //                                             "$pickupLat2" != 'null'
+  //                                                 ? "$pickupLat2"
+  //                                                 : "0",
+  //                                         "destin_latitude2":
+  //                                             "$destinLat2" != 'null'
+  //                                                 ? "$destinLat2"
+  //                                                 : "0",
+  //                                         "destin_longitude2":
+  //                                             "$destinLng2" != 'null'
+  //                                                 ? "$destinLng2"
+  //                                                 : "0",
+  //                                         "pickup_latitude3":
+  //                                             "$pickupLat3" != 'null'
+  //                                                 ? "$pickupLat3"
+  //                                                 : "0",
+  //                                         "pickup_longitude3":
+  //                                             "$pickupLng3" != 'null'
+  //                                                 ? "$pickupLng3"
+  //                                                 : "0",
+  //                                         "destin_latitude3":
+  //                                             "$destinLat3" != 'null'
+  //                                                 ? "$destinLat3"
+  //                                                 : "0",
+  //                                         "destin_longitude3":
+  //                                             "$destinLng3" != 'null'
+  //                                                 ? "$destinLng3"
+  //                                                 : "0",
+  //                                         "pickup_latitude4":
+  //                                             "$pickupLng4" != 'null'
+  //                                                 ? "$pickupLng4"
+  //                                                 : "0",
+  //                                         "pickup_longitude4":
+  //                                             "$pickupLng4" != 'null'
+  //                                                 ? "$pickupLng4"
+  //                                                 : "0",
+  //                                         "destin_latitude4":
+  //                                             "$destinLat4" != 'null'
+  //                                                 ? "$destinLat4"
+  //                                                 : "0",
+  //                                         "destin_longitude4":
+  //                                             "$destinLng4" != 'null'
+  //                                                 ? "$destinLng4"
+  //                                                 : "0",
+  //                                         "destin_distance0": distance0,
+  //                                         "destin_time0": duration0,
+  //                                         "destin_delivery_charges0":
+  //                                             totalDeliveryAmount0 ?? "0.00",
+  //                                         "destin_vat_charges0":
+  //                                             totalVatCharges0,
+  //                                         "destin_total_charges0":
+  //                                             roundedTotalAmount0,
+  //                                         "destin_discount0": "0.00",
+  //                                         "destin_discounted_charges0": "0.00",
+  //                                         "destin_distance1": distance1,
+  //                                         "destin_time1": duration1,
+  //                                         "destin_delivery_charges1":
+  //                                             totalDeliveryAmount1 ?? "0.00",
+  //                                         "destin_vat_charges1":
+  //                                             totalVatCharges1 ?? "0.00",
+  //                                         "destin_total_charges1":
+  //                                             roundedTotalAmount1 ?? "0.00",
+  //                                         "destin_discount1": "0.00",
+  //                                         "destin_discounted_charges1": "0.00",
+  //                                         "destin_distance2":
+  //                                             distance2 ?? "0.00",
+  //                                         "destin_time2": duration2,
+  //                                         "destin_delivery_charges2":
+  //                                             totalDeliveryAmount2 ?? "0.00",
+  //                                         "destin_vat_charges2":
+  //                                             totalVatCharges2 ?? "0.00",
+  //                                         "destin_total_charges2":
+  //                                             roundedTotalAmount2 ?? "0.00",
+  //                                         "destin_discount2": "0.00",
+  //                                         "destin_discounted_charges2": "0.00",
+  //                                         "destin_distance3":
+  //                                             distance3 ?? "0.00",
+  //                                         "destin_time3": duration3,
+  //                                         "destin_delivery_charges3":
+  //                                             totalDeliveryAmount3 ?? "0.00",
+  //                                         "destin_vat_charges3":
+  //                                             totalVatCharges3 ?? "0.00",
+  //                                         "destin_total_charges3":
+  //                                             roundedTotalAmount3 ?? "0.00",
+  //                                         "destin_discount3": "0.00",
+  //                                         "destin_discounted_charges3": "0.00",
+  //                                         "destin_distance4":
+  //                                             distance4 ?? "0.00",
+  //                                         "destin_time4": duration4,
+  //                                         "destin_delivery_charges4":
+  //                                             totalDeliveryAmount4 ?? "0.00",
+  //                                         "destin_vat_charges4":
+  //                                             totalVatCharges4 ?? "0.00",
+  //                                         "destin_total_charges4":
+  //                                             roundedTotalAmount4 ?? "0.00",
+  //                                         "destin_discount4": "0.00",
+  //                                         "destin_discounted_charges4": "0.00",
+  //                                       };
 
-                                        List<Map<int, dynamic>> indexData =
-                                            List.filled(5, {});
+  //                                       List<Map<int, dynamic>> indexData =
+  //                                           List.filled(5, {});
 
-                                        for (var i = 0;
-                                            i < filteredData.length;
-                                            i++) {
-                                          final dataForIndex = filteredData[i];
-                                          final dataIndexString = dataForIndex
-                                              .keys
-                                              .first; // Get the index as a String
-                                          final dataIndex =
-                                              int.tryParse(dataIndexString);
+  //                                       for (var i = 0;
+  //                                           i < filteredData.length;
+  //                                           i++) {
+  //                                         final dataForIndex = filteredData[i];
+  //                                         final dataIndexString = dataForIndex
+  //                                             .keys
+  //                                             .first; // Get the index as a String
+  //                                         final dataIndex =
+  //                                             int.tryParse(dataIndexString);
 
-                                          if (dataIndex != null &&
-                                              dataIndex >= 0 &&
-                                              dataIndex <= 4) {
-                                            indexData[dataIndex] = dataForIndex
-                                                .map((key, value) => MapEntry(
-                                                    int.parse(key), value));
-                                          } else {
-                                            debugPrint(
-                                                "Invalid or out of bounds index: $dataIndexString");
-                                          }
-                                        }
-                                        latLongData = {
-                                          "pickup_latitude":
-                                              "$pickupLat0" != 'null'
-                                                  ? "$pickupLat0"
-                                                  : "0",
-                                          "pickup_longitude":
-                                              "$pickupLng0" != 'null'
-                                                  ? "$pickupLng0"
-                                                  : "0",
-                                        };
-                                        print(
-                                            "latLongData in Screen: $latLongData");
-                                        // Separate the data into different lists based on their indices
-                                        Map<int, dynamic> indexData0 =
-                                            indexData[0];
-                                        Map<int, dynamic> indexData1 =
-                                            indexData[1];
-                                        Map<int, dynamic> indexData2 =
-                                            indexData[2];
-                                        Map<int, dynamic> indexData3 =
-                                            indexData[3];
-                                        Map<int, dynamic> indexData4 =
-                                            indexData[4];
+  //                                         if (dataIndex != null &&
+  //                                             dataIndex >= 0 &&
+  //                                             dataIndex <= 4) {
+  //                                           indexData[dataIndex] = dataForIndex
+  //                                               .map((key, value) => MapEntry(
+  //                                                   int.parse(key), value));
+  //                                         } else {
+  //                                           debugPrint(
+  //                                               "Invalid or out of bounds index: $dataIndexString");
+  //                                         }
+  //                                       }
+  //                                       latLongData = {
+  //                                         "pickup_latitude":
+  //                                             "$pickupLat0" != 'null'
+  //                                                 ? "$pickupLat0"
+  //                                                 : "0",
+  //                                         "pickup_longitude":
+  //                                             "$pickupLng0" != 'null'
+  //                                                 ? "$pickupLng0"
+  //                                                 : "0",
+  //                                       };
+  //                                       print(
+  //                                           "latLongData in Screen: $latLongData");
+  //                                       // Separate the data into different lists based on their indices
+  //                                       Map<int, dynamic> indexData0 =
+  //                                           indexData[0];
+  //                                       Map<int, dynamic> indexData1 =
+  //                                           indexData[1];
+  //                                       Map<int, dynamic> indexData2 =
+  //                                           indexData[2];
+  //                                       Map<int, dynamic> indexData3 =
+  //                                           indexData[3];
+  //                                       Map<int, dynamic> indexData4 =
+  //                                           indexData[4];
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ScheduleRideScreen(
-                                              indexData0: indexData0,
-                                              indexData1: indexData1,
-                                              indexData2: indexData2,
-                                              indexData3: indexData3,
-                                              indexData4: indexData4,
-                                              selectedRadio: selectedRadio,
-                                              scheduledMultipleData:
-                                                  addMultipleData,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return Dialog(
-                                            backgroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                            ),
-                                            insetPadding: const EdgeInsets.only(
-                                                left: 20, right: 20),
-                                            child: SizedBox(
-                                              width: size.width,
-                                              height: size.height * 0.25,
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 10),
-                                                    child: Column(
-                                                      children: [
-                                                        SizedBox(
-                                                            height:
-                                                                size.height *
-                                                                    0.02),
-                                                        Align(
-                                                          alignment:
-                                                              Alignment.topLeft,
-                                                          child: Text(
-                                                            "Just a moment...",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  orangeColor,
-                                                              fontSize: 20,
-                                                              fontFamily:
-                                                                  'Inter-Bold',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                            height:
-                                                                size.height *
-                                                                    0.03),
-                                                        Text(
-                                                          'Please make sure data is available before proceeding.',
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Regular',
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                            height:
-                                                                size.height *
-                                                                    0.02),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 140),
-                                                      child:
-                                                          dialogButtonGradientSmall(
-                                                              "OK", context),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    }
-                                  });
-                                }
-                              },
-                              child: isLoading2
-                                  ? buttonTransparentGradientSmallWithLoader(
-                                      "Please Wait...", context)
-                                  : buttonTransparentGradientSmall(
-                                      "SCHEDULE RIDE",
-                                      context,
-                                    ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                if (selectedRadio == 1) {
-                                  if (pickupController.text.isEmpty &&
-                                      destinationController.text.isEmpty &&
-                                      receiversNameController.text.isEmpty &&
-                                      receiversNumberController.text.isEmpty &&
-                                      selectedVehicle == null &&
-                                      selectedBookingType == null) {
-                                    if (pickupController.text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please fill pickup address!",
-                                      );
-                                    } else if (destinationController
-                                        .text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Please fill destination address!",
-                                      );
-                                    } else if (receiversNameController
-                                        .text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please fill receiver's name!",
-                                      );
-                                    } else if (receiversNumberController
-                                        .text.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Please fill receiver's number!",
-                                      );
-                                    } else if (selectedVehicle == null) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please select a vehicle!",
-                                      );
-                                    } else if (selectedBookingType == null) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please select booking type!",
-                                      );
-                                    }
-                                  } else {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    await getDistanceAddress(
-                                        bookingsTypeId, vehicleId!);
-                                    if (double.parse(distance0!) <= 1.0) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Distance should be greater than 1.0 Km!",
-                                      );
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    } else {
-                                      // await getDistanceAddress(bookingsTypeId);
-                                      addSingleData = {
-                                        "type": "booking",
-                                        "vehicles_id": vehicleId,
-                                        "delivery_charges":
-                                            totalDeliveryAmount0,
-                                        "service_running": serviceRunning,
-                                        "total_svc_running_charges":
-                                            totalServiceCharges,
-                                        "total_tollgate_charges":
-                                            totalTollGateCharges ?? "0",
-                                        "svc_running_charges0": serviceCharges0,
-                                        "tollgate_charges0":
-                                            tollGateCharges0 ?? "0",
-                                        "bookings_types_id": bookingsTypeId,
-                                        "delivery_type": selectedRadio == 1
-                                            ? "Single"
-                                            : "Multiple",
-                                        "pickup_address": pickupController.text,
-                                        "pickup_latitude": pickupLat0,
-                                        "pickup_longitude": pickupLng0,
-                                        "destin_address":
-                                            destinationController.text,
-                                        "destin_latitude": destinLat0,
-                                        "destin_longitude": destinLng0,
-                                        "destin_distance": distance0,
-                                        "destin_time": duration0,
-                                        "destin_delivery_charges":
-                                            totalDeliveryAmount0,
-                                        "destin_vat_charges": totalVatCharges0,
-                                        "destin_total_charges":
-                                            roundedTotalAmount0 ?? "0.00",
-                                        "destin_discount": "0.00",
-                                        "destin_discounted_charges": "0.00",
-                                        "receiver_name":
-                                            receiversNameController.text,
-                                        "receiver_phone":
-                                            receiversNumberController.text,
-                                      };
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ConfirmSingleDetailsScreen(
-                                            singleData: addSingleData,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                }
-                                if (selectedRadio == 2) {
-                                  print("Zainnnnnnnnnn");
-                                  if (pickupControllers[0].text.isEmpty &&
-                                      destinationControllers[0].text.isEmpty &&
-                                      receiversNameControllers[0]
-                                          .text
-                                          .isEmpty &&
-                                      receiversNumberControllers[0]
-                                          .text
-                                          .isEmpty &&
-                                      selectedVehicle == null &&
-                                      selectedBookingType == null) {
-                                    if (pickupControllers.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please fill pickup address!",
-                                      );
-                                    } else if (destinationControllers.isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Please fill destination address!",
-                                      );
-                                    } else if (receiversNameControllers
-                                        .isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please fill receiver's name!",
-                                      );
-                                    } else if (receiversNumberControllers
-                                        .isEmpty) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message:
-                                            "Please fill receiver's number!",
-                                      );
-                                    } else if (selectedVehicle == null) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please select a vehicle!",
-                                      );
-                                    } else if (selectedBookingType == null) {
-                                      CustomToast.showToast(
-                                        fontSize: 12,
-                                        message: "Please select booking type!",
-                                      );
-                                    }
-                                  } else {
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    showDialog(
-                                      context: context,
-                                      // barrierDismissible:
-                                      //     false, // Prevents dialog from closing when tapping outside
-                                      builder: (context) {
-                                        return Dialog(
-                                          backgroundColor: Colors
-                                              .transparent, // Make dialog transparent
-                                          elevation: 0, // Remove shadow
-                                          child: Container(
-                                            padding: const EdgeInsets.all(20),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                CircularProgressIndicator(
-                                                  color: orangeColor,
-                                                  strokeWidth: 2,
-                                                ), // Your progress indicator
-                                                const SizedBox(height: 20),
-                                                const Text(
-                                                  'Loading Data...',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 20,
-                                                    fontFamily: 'Inter-Bold',
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 10),
-                                                const Text(
-                                                  'Please wait while data is being loaded.',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Regular',
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
+  //                                       Navigator.push(
+  //                                         context,
+  //                                         MaterialPageRoute(
+  //                                           builder: (context) =>
+  //                                               ScheduleRideScreen(
+  //                                             indexData0: indexData0,
+  //                                             indexData1: indexData1,
+  //                                             indexData2: indexData2,
+  //                                             indexData3: indexData3,
+  //                                             indexData4: indexData4,
+  //                                             selectedRadio: selectedRadio,
+  //                                             scheduledMultipleData:
+  //                                                 addMultipleData,
+  //                                           ),
+  //                                         ),
+  //                                       );
+  //                                     }
+  //                                   } else {
+  //                                     showDialog(
+  //                                       context: context,
+  //                                       builder: (context) {
+  //                                         return Dialog(
+  //                                           backgroundColor: Colors.white,
+  //                                           shape: RoundedRectangleBorder(
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(40),
+  //                                           ),
+  //                                           insetPadding: const EdgeInsets.only(
+  //                                               left: 20, right: 20),
+  //                                           child: SizedBox(
+  //                                             width: size.width,
+  //                                             height: size.height * 0.25,
+  //                                             child: Column(
+  //                                               children: [
+  //                                                 Padding(
+  //                                                   padding: const EdgeInsets
+  //                                                       .symmetric(
+  //                                                       horizontal: 20,
+  //                                                       vertical: 10),
+  //                                                   child: Column(
+  //                                                     children: [
+  //                                                       SizedBox(
+  //                                                           height:
+  //                                                               size.height *
+  //                                                                   0.02),
+  //                                                       Align(
+  //                                                         alignment:
+  //                                                             Alignment.topLeft,
+  //                                                         child: Text(
+  //                                                           "Just a moment...",
+  //                                                           textAlign:
+  //                                                               TextAlign.left,
+  //                                                           style: TextStyle(
+  //                                                             color:
+  //                                                                 orangeColor,
+  //                                                             fontSize: 20,
+  //                                                             fontFamily:
+  //                                                                 'Inter-Bold',
+  //                                                           ),
+  //                                                         ),
+  //                                                       ),
+  //                                                       SizedBox(
+  //                                                           height:
+  //                                                               size.height *
+  //                                                                   0.03),
+  //                                                       Text(
+  //                                                         'Please make sure data is available before proceeding.',
+  //                                                         textAlign:
+  //                                                             TextAlign.left,
+  //                                                         style: TextStyle(
+  //                                                           color: blackColor,
+  //                                                           fontSize: 14,
+  //                                                           fontFamily:
+  //                                                               'Inter-Regular',
+  //                                                         ),
+  //                                                       ),
+  //                                                       SizedBox(
+  //                                                           height:
+  //                                                               size.height *
+  //                                                                   0.02),
+  //                                                     ],
+  //                                                   ),
+  //                                                 ),
+  //                                                 GestureDetector(
+  //                                                   onTap: () {
+  //                                                     Navigator.pop(context);
+  //                                                   },
+  //                                                   child: Padding(
+  //                                                     padding:
+  //                                                         const EdgeInsets.only(
+  //                                                             left: 140),
+  //                                                     child:
+  //                                                         dialogButtonGradientSmall(
+  //                                                             "OK", context),
+  //                                                   ),
+  //                                                 ),
+  //                                               ],
+  //                                             ),
+  //                                           ),
+  //                                         );
+  //                                       },
+  //                                     );
+  //                                   }
+  //                                 });
+  //                               }
+  //                             },
+  //                             child: isLoading2
+  //                                 ? buttonTransparentGradientSmallWithLoader(
+  //                                     "Please Wait...", context)
+  //                                 : buttonTransparentGradientSmall(
+  //                                     "SCHEDULE RIDE",
+  //                                     context,
+  //                                   ),
+  //                           ),
+  //                           GestureDetector(
+  //                             onTap: () async {
+  //                               if (selectedRadio == 1) {
+  //                                 if (pickupController.text.isEmpty &&
+  //                                     destinationController.text.isEmpty &&
+  //                                     receiversNameController.text.isEmpty &&
+  //                                     receiversNumberController.text.isEmpty &&
+  //                                     selectedVehicle == null &&
+  //                                     selectedBookingType == null) {
+  //                                   if (pickupController.text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please fill pickup address!",
+  //                                     );
+  //                                   } else if (destinationController
+  //                                       .text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Please fill destination address!",
+  //                                     );
+  //                                   } else if (receiversNameController
+  //                                       .text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please fill receiver's name!",
+  //                                     );
+  //                                   } else if (receiversNumberController
+  //                                       .text.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Please fill receiver's number!",
+  //                                     );
+  //                                   } else if (selectedVehicle == null) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please select a vehicle!",
+  //                                     );
+  //                                   } else if (selectedBookingType == null) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please select booking type!",
+  //                                     );
+  //                                   }
+  //                                 } else {
+  //                                   setState(() {
+  //                                     isLoading = true;
+  //                                   });
+  //                                   await getDistanceAddress(
+  //                                       bookingsTypeId, vehicleId!);
+  //                                   if (double.parse(distance0!) <= 1.0) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Distance should be greater than 1.0 Km!",
+  //                                     );
+  //                                     setState(() {
+  //                                       isLoading = false;
+  //                                     });
+  //                                   } else {
+  //                                     // await getDistanceAddress(bookingsTypeId);
+  //                                     addSingleData = {
+  //                                       "type": "booking",
+  //                                       "vehicles_id": vehicleId,
+  //                                       "delivery_charges":
+  //                                           totalDeliveryAmount0,
+  //                                       "service_running": serviceRunning,
+  //                                       "total_svc_running_charges":
+  //                                           totalServiceCharges,
+  //                                       "total_tollgate_charges":
+  //                                           totalTollGateCharges ?? "0",
+  //                                       "svc_running_charges0": serviceCharges0,
+  //                                       "tollgate_charges0":
+  //                                           tollGateCharges0 ?? "0",
+  //                                       "bookings_types_id": bookingsTypeId,
+  //                                       "delivery_type": selectedRadio == 1
+  //                                           ? "Single"
+  //                                           : "Multiple",
+  //                                       "pickup_address": pickupController.text,
+  //                                       "pickup_latitude": pickupLat0,
+  //                                       "pickup_longitude": pickupLng0,
+  //                                       "destin_address":
+  //                                           destinationController.text,
+  //                                       "destin_latitude": destinLat0,
+  //                                       "destin_longitude": destinLng0,
+  //                                       "destin_distance": distance0,
+  //                                       "destin_time": duration0,
+  //                                       "destin_delivery_charges":
+  //                                           totalDeliveryAmount0,
+  //                                       "destin_vat_charges": totalVatCharges0,
+  //                                       "destin_total_charges":
+  //                                           roundedTotalAmount0 ?? "0.00",
+  //                                       "destin_discount": "0.00",
+  //                                       "destin_discounted_charges": "0.00",
+  //                                       "receiver_name":
+  //                                           receiversNameController.text,
+  //                                       "receiver_phone":
+  //                                           receiversNumberController.text,
+  //                                     };
+  //                                     setState(() {
+  //                                       isLoading = false;
+  //                                     });
+  //                                     Navigator.push(
+  //                                       context,
+  //                                       MaterialPageRoute(
+  //                                         builder: (context) =>
+  //                                             ConfirmSingleDetailsScreen(
+  //                                           singleData: addSingleData,
+  //                                         ),
+  //                                       ),
+  //                                     );
+  //                                   }
+  //                                 }
+  //                               }
+  //                               if (selectedRadio == 2) {
+  //                                 print("Zainnnnnnnnnn");
+  //                                 if (pickupControllers[0].text.isEmpty &&
+  //                                     destinationControllers[0].text.isEmpty &&
+  //                                     receiversNameControllers[0]
+  //                                         .text
+  //                                         .isEmpty &&
+  //                                     receiversNumberControllers[0]
+  //                                         .text
+  //                                         .isEmpty &&
+  //                                     selectedVehicle == null &&
+  //                                     selectedBookingType == null) {
+  //                                   if (pickupControllers.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please fill pickup address!",
+  //                                     );
+  //                                   } else if (destinationControllers.isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Please fill destination address!",
+  //                                     );
+  //                                   } else if (receiversNameControllers
+  //                                       .isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please fill receiver's name!",
+  //                                     );
+  //                                   } else if (receiversNumberControllers
+  //                                       .isEmpty) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message:
+  //                                           "Please fill receiver's number!",
+  //                                     );
+  //                                   } else if (selectedVehicle == null) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please select a vehicle!",
+  //                                     );
+  //                                   } else if (selectedBookingType == null) {
+  //                                     CustomToast.showToast(
+  //                                       fontSize: 12,
+  //                                       message: "Please select booking type!",
+  //                                     );
+  //                                   }
+  //                                 } else {
+  //                                   setState(() {
+  //                                     isLoading = true;
+  //                                   });
+  //                                   showDialog(
+  //                                     context: context,
+  //                                     // barrierDismissible:
+  //                                     //     false, // Prevents dialog from closing when tapping outside
+  //                                     builder: (context) {
+  //                                       return Dialog(
+  //                                         backgroundColor: Colors
+  //                                             .transparent, // Make dialog transparent
+  //                                         elevation: 0, // Remove shadow
+  //                                         child: Container(
+  //                                           padding: const EdgeInsets.all(20),
+  //                                           decoration: BoxDecoration(
+  //                                             color: Colors.white,
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(10),
+  //                                           ),
+  //                                           child: Column(
+  //                                             mainAxisSize: MainAxisSize.min,
+  //                                             children: [
+  //                                               CircularProgressIndicator(
+  //                                                 color: orangeColor,
+  //                                                 strokeWidth: 2,
+  //                                               ), // Your progress indicator
+  //                                               const SizedBox(height: 20),
+  //                                               const Text(
+  //                                                 'Loading Data...',
+  //                                                 style: TextStyle(
+  //                                                   color: Colors.black,
+  //                                                   fontSize: 20,
+  //                                                   fontFamily: 'Inter-Bold',
+  //                                                 ),
+  //                                               ),
+  //                                               const SizedBox(height: 10),
+  //                                               const Text(
+  //                                                 'Please wait while data is being loaded.',
+  //                                                 textAlign: TextAlign.center,
+  //                                                 style: TextStyle(
+  //                                                   color: Colors.black,
+  //                                                   fontSize: 14,
+  //                                                   fontFamily: 'Inter-Regular',
+  //                                                 ),
+  //                                               ),
+  //                                             ],
+  //                                           ),
+  //                                         ),
+  //                                       );
+  //                                     },
+  //                                   );
 
-                                    await getDistanceAddress(
-                                        bookingsTypeId, vehicleId!);
-                                    // Add a delay to ensure data is populated in allDataForIndexes1
-                                    Future.delayed(const Duration(seconds: 2),
-                                        () async {
-                                      // Close the loading dialog
-                                      // Navigator.of(context).pop();
+  //                                   await getDistanceAddress(
+  //                                       bookingsTypeId, vehicleId!);
+  //                                   // Add a delay to ensure data is populated in allDataForIndexes1
+  //                                   Future.delayed(const Duration(seconds: 2),
+  //                                       () async {
+  //                                     // Close the loading dialog
+  //                                     // Navigator.of(context).pop();
 
-                                      if (filteredData.isNotEmpty) {
-                                        // await getDistanceAddress(bookingsTypeId);
-                                        addMultipleData = {
-                                          "type": "booking",
-                                          "vehicles_id": vehicleId,
-                                          "totalChargesM": totalChargesM,
-                                          "totalVatM": totalVatM,
-                                          "service_running": serviceRunning,
-                                          "total_svc_running_charges":
-                                              totalServiceCharges,
-                                          "total_tollgate_charges":
-                                              totalTollGateCharges ?? "0",
-                                          "svc_running_charges0":
-                                              serviceCharges0,
-                                          "tollgate_charges0":
-                                              tollGateCharges0 ?? "0",
-                                          "svc_running_charges1":
-                                              serviceCharges1,
-                                          "tollgate_charges1":
-                                              tollGateCharges1 ?? "0",
-                                          "svc_running_charges2":
-                                              serviceCharges2,
-                                          "tollgate_charges2":
-                                              tollGateCharges2 ?? "0",
-                                          "svc_running_charges3":
-                                              serviceCharges3,
-                                          "tollgate_charges3":
-                                              tollGateCharges3 ?? "0",
-                                          "svc_running_charges4":
-                                              serviceCharges4,
-                                          "tollgate_charges4":
-                                              tollGateCharges4 ?? "0",
-                                          "bookings_types_id": bookingsTypeId,
-                                          "delivery_type": selectedRadio == 1
-                                              ? "Single"
-                                              : "Multiple",
-                                          "pickup_latitude0":
-                                              "$pickupLat0" != 'null'
-                                                  ? "$pickupLat0"
-                                                  : "0",
-                                          "pickup_longitude0":
-                                              "$pickupLng0" != 'null'
-                                                  ? "$pickupLng0"
-                                                  : "0",
-                                          "destin_latitude0":
-                                              "$destinLat0" != 'null'
-                                                  ? "$destinLat0"
-                                                  : "0",
-                                          "destin_longitude0":
-                                              "$destinLng0" != 'null'
-                                                  ? "$destinLng0"
-                                                  : "0",
-                                          "pickup_latitude1":
-                                              "$pickupLat1" != 'null'
-                                                  ? "$pickupLat1"
-                                                  : "0",
-                                          "pickup_longitude1":
-                                              "$pickupLng1" != 'null'
-                                                  ? "$pickupLng1"
-                                                  : "0",
-                                          "destin_latitude1":
-                                              "$destinLat1" != 'null'
-                                                  ? "$destinLat1"
-                                                  : "0",
-                                          "destin_longitude1":
-                                              "$destinLng1" != 'null'
-                                                  ? "$destinLng1"
-                                                  : "0",
-                                          "pickup_latitude2":
-                                              "$pickupLat2" != 'null'
-                                                  ? "$pickupLat2"
-                                                  : "0",
-                                          "pickup_longitude2":
-                                              "$pickupLat2" != 'null'
-                                                  ? "$pickupLat2"
-                                                  : "0",
-                                          "destin_latitude2":
-                                              "$destinLat2" != 'null'
-                                                  ? "$destinLat2"
-                                                  : "0",
-                                          "destin_longitude2":
-                                              "$destinLng2" != 'null'
-                                                  ? "$destinLng2"
-                                                  : "0",
-                                          "pickup_latitude3":
-                                              "$pickupLat3" != 'null'
-                                                  ? "$pickupLat3"
-                                                  : "0",
-                                          "pickup_longitude3":
-                                              "$pickupLng3" != 'null'
-                                                  ? "$pickupLng3"
-                                                  : "0",
-                                          "destin_latitude3":
-                                              "$destinLat3" != 'null'
-                                                  ? "$destinLat3"
-                                                  : "0",
-                                          "destin_longitude3":
-                                              "$destinLng3" != 'null'
-                                                  ? "$destinLng3"
-                                                  : "0",
-                                          "pickup_latitude4":
-                                              "$pickupLng4" != 'null'
-                                                  ? "$pickupLng4"
-                                                  : "0",
-                                          "pickup_longitude4":
-                                              "$pickupLng4" != 'null'
-                                                  ? "$pickupLng4"
-                                                  : "0",
-                                          "destin_latitude4":
-                                              "$destinLat4" != 'null'
-                                                  ? "$destinLat4"
-                                                  : "0",
-                                          "destin_longitude4":
-                                              "$destinLng4" != 'null'
-                                                  ? "$destinLng4"
-                                                  : "0",
-                                          "destin_distance0": distance0,
-                                          "destin_time0": duration0,
-                                          "destin_delivery_charges0":
-                                              totalDeliveryAmount0 ?? "0.00",
-                                          "destin_vat_charges0":
-                                              totalVatCharges0,
-                                          "destin_total_charges0":
-                                              roundedTotalAmount0,
-                                          "destin_discount0": "0.00",
-                                          "destin_discounted_charges0": "0.00",
-                                          "destin_distance1": distance1,
-                                          "destin_time1": duration1,
-                                          "destin_delivery_charges1":
-                                              totalDeliveryAmount1 ?? "0.00",
-                                          "destin_vat_charges1":
-                                              totalVatCharges1 ?? "0.00",
-                                          "destin_total_charges1":
-                                              roundedTotalAmount1 ?? "0.00",
-                                          "destin_discount1": "0.00",
-                                          "destin_discounted_charges1": "0.00",
-                                          "destin_distance2":
-                                              distance2 ?? "0.00",
-                                          "destin_time2": duration2,
-                                          "destin_delivery_charges2":
-                                              totalDeliveryAmount2 ?? "0.00",
-                                          "destin_vat_charges2":
-                                              totalVatCharges2 ?? "0.00",
-                                          "destin_total_charges2":
-                                              roundedTotalAmount2 ?? "0.00",
-                                          "destin_discount2": "0.00",
-                                          "destin_discounted_charges2": "0.00",
-                                          "destin_distance3":
-                                              distance3 ?? "0.00",
-                                          "destin_time3": duration3,
-                                          "destin_delivery_charges3":
-                                              totalDeliveryAmount3 ?? "0.00",
-                                          "destin_vat_charges3":
-                                              totalVatCharges3 ?? "0.00",
-                                          "destin_total_charges3":
-                                              roundedTotalAmount3 ?? "0.00",
-                                          "destin_discount3": "0.00",
-                                          "destin_discounted_charges3": "0.00",
-                                          "destin_distance4":
-                                              distance4 ?? "0.00",
-                                          "destin_time4": duration4,
-                                          "destin_delivery_charges4":
-                                              totalDeliveryAmount4 ?? "0.00",
-                                          "destin_vat_charges4":
-                                              totalVatCharges4 ?? "0.00",
-                                          "destin_total_charges4":
-                                              roundedTotalAmount4 ?? "0.00",
-                                          "destin_discount4": "0.00",
-                                          "destin_discounted_charges4": "0.00",
-                                        };
+  //                                     if (filteredData.isNotEmpty) {
+  //                                       // await getDistanceAddress(bookingsTypeId);
+  //                                       addMultipleData = {
+  //                                         "type": "booking",
+  //                                         "vehicles_id": vehicleId,
+  //                                         "totalChargesM": totalChargesM,
+  //                                         "totalVatM": totalVatM,
+  //                                         "service_running": serviceRunning,
+  //                                         "total_svc_running_charges":
+  //                                             totalServiceCharges,
+  //                                         "total_tollgate_charges":
+  //                                             totalTollGateCharges ?? "0",
+  //                                         "svc_running_charges0":
+  //                                             serviceCharges0,
+  //                                         "tollgate_charges0":
+  //                                             tollGateCharges0 ?? "0",
+  //                                         "svc_running_charges1":
+  //                                             serviceCharges1,
+  //                                         "tollgate_charges1":
+  //                                             tollGateCharges1 ?? "0",
+  //                                         "svc_running_charges2":
+  //                                             serviceCharges2,
+  //                                         "tollgate_charges2":
+  //                                             tollGateCharges2 ?? "0",
+  //                                         "svc_running_charges3":
+  //                                             serviceCharges3,
+  //                                         "tollgate_charges3":
+  //                                             tollGateCharges3 ?? "0",
+  //                                         "svc_running_charges4":
+  //                                             serviceCharges4,
+  //                                         "tollgate_charges4":
+  //                                             tollGateCharges4 ?? "0",
+  //                                         "bookings_types_id": bookingsTypeId,
+  //                                         "delivery_type": selectedRadio == 1
+  //                                             ? "Single"
+  //                                             : "Multiple",
+  //                                         "pickup_latitude0":
+  //                                             "$pickupLat0" != 'null'
+  //                                                 ? "$pickupLat0"
+  //                                                 : "0",
+  //                                         "pickup_longitude0":
+  //                                             "$pickupLng0" != 'null'
+  //                                                 ? "$pickupLng0"
+  //                                                 : "0",
+  //                                         "destin_latitude0":
+  //                                             "$destinLat0" != 'null'
+  //                                                 ? "$destinLat0"
+  //                                                 : "0",
+  //                                         "destin_longitude0":
+  //                                             "$destinLng0" != 'null'
+  //                                                 ? "$destinLng0"
+  //                                                 : "0",
+  //                                         "pickup_latitude1":
+  //                                             "$pickupLat1" != 'null'
+  //                                                 ? "$pickupLat1"
+  //                                                 : "0",
+  //                                         "pickup_longitude1":
+  //                                             "$pickupLng1" != 'null'
+  //                                                 ? "$pickupLng1"
+  //                                                 : "0",
+  //                                         "destin_latitude1":
+  //                                             "$destinLat1" != 'null'
+  //                                                 ? "$destinLat1"
+  //                                                 : "0",
+  //                                         "destin_longitude1":
+  //                                             "$destinLng1" != 'null'
+  //                                                 ? "$destinLng1"
+  //                                                 : "0",
+  //                                         "pickup_latitude2":
+  //                                             "$pickupLat2" != 'null'
+  //                                                 ? "$pickupLat2"
+  //                                                 : "0",
+  //                                         "pickup_longitude2":
+  //                                             "$pickupLat2" != 'null'
+  //                                                 ? "$pickupLat2"
+  //                                                 : "0",
+  //                                         "destin_latitude2":
+  //                                             "$destinLat2" != 'null'
+  //                                                 ? "$destinLat2"
+  //                                                 : "0",
+  //                                         "destin_longitude2":
+  //                                             "$destinLng2" != 'null'
+  //                                                 ? "$destinLng2"
+  //                                                 : "0",
+  //                                         "pickup_latitude3":
+  //                                             "$pickupLat3" != 'null'
+  //                                                 ? "$pickupLat3"
+  //                                                 : "0",
+  //                                         "pickup_longitude3":
+  //                                             "$pickupLng3" != 'null'
+  //                                                 ? "$pickupLng3"
+  //                                                 : "0",
+  //                                         "destin_latitude3":
+  //                                             "$destinLat3" != 'null'
+  //                                                 ? "$destinLat3"
+  //                                                 : "0",
+  //                                         "destin_longitude3":
+  //                                             "$destinLng3" != 'null'
+  //                                                 ? "$destinLng3"
+  //                                                 : "0",
+  //                                         "pickup_latitude4":
+  //                                             "$pickupLng4" != 'null'
+  //                                                 ? "$pickupLng4"
+  //                                                 : "0",
+  //                                         "pickup_longitude4":
+  //                                             "$pickupLng4" != 'null'
+  //                                                 ? "$pickupLng4"
+  //                                                 : "0",
+  //                                         "destin_latitude4":
+  //                                             "$destinLat4" != 'null'
+  //                                                 ? "$destinLat4"
+  //                                                 : "0",
+  //                                         "destin_longitude4":
+  //                                             "$destinLng4" != 'null'
+  //                                                 ? "$destinLng4"
+  //                                                 : "0",
+  //                                         "destin_distance0": distance0,
+  //                                         "destin_time0": duration0,
+  //                                         "destin_delivery_charges0":
+  //                                             totalDeliveryAmount0 ?? "0.00",
+  //                                         "destin_vat_charges0":
+  //                                             totalVatCharges0,
+  //                                         "destin_total_charges0":
+  //                                             roundedTotalAmount0,
+  //                                         "destin_discount0": "0.00",
+  //                                         "destin_discounted_charges0": "0.00",
+  //                                         "destin_distance1": distance1,
+  //                                         "destin_time1": duration1,
+  //                                         "destin_delivery_charges1":
+  //                                             totalDeliveryAmount1 ?? "0.00",
+  //                                         "destin_vat_charges1":
+  //                                             totalVatCharges1 ?? "0.00",
+  //                                         "destin_total_charges1":
+  //                                             roundedTotalAmount1 ?? "0.00",
+  //                                         "destin_discount1": "0.00",
+  //                                         "destin_discounted_charges1": "0.00",
+  //                                         "destin_distance2":
+  //                                             distance2 ?? "0.00",
+  //                                         "destin_time2": duration2,
+  //                                         "destin_delivery_charges2":
+  //                                             totalDeliveryAmount2 ?? "0.00",
+  //                                         "destin_vat_charges2":
+  //                                             totalVatCharges2 ?? "0.00",
+  //                                         "destin_total_charges2":
+  //                                             roundedTotalAmount2 ?? "0.00",
+  //                                         "destin_discount2": "0.00",
+  //                                         "destin_discounted_charges2": "0.00",
+  //                                         "destin_distance3":
+  //                                             distance3 ?? "0.00",
+  //                                         "destin_time3": duration3,
+  //                                         "destin_delivery_charges3":
+  //                                             totalDeliveryAmount3 ?? "0.00",
+  //                                         "destin_vat_charges3":
+  //                                             totalVatCharges3 ?? "0.00",
+  //                                         "destin_total_charges3":
+  //                                             roundedTotalAmount3 ?? "0.00",
+  //                                         "destin_discount3": "0.00",
+  //                                         "destin_discounted_charges3": "0.00",
+  //                                         "destin_distance4":
+  //                                             distance4 ?? "0.00",
+  //                                         "destin_time4": duration4,
+  //                                         "destin_delivery_charges4":
+  //                                             totalDeliveryAmount4 ?? "0.00",
+  //                                         "destin_vat_charges4":
+  //                                             totalVatCharges4 ?? "0.00",
+  //                                         "destin_total_charges4":
+  //                                             roundedTotalAmount4 ?? "0.00",
+  //                                         "destin_discount4": "0.00",
+  //                                         "destin_discounted_charges4": "0.00",
+  //                                       };
 
-                                        debugPrint(
-                                            "filteredData: $filteredData");
+  //                                       debugPrint(
+  //                                           "filteredData: $filteredData");
 
-                                        List<Map<int, dynamic>> indexData =
-                                            List.filled(5, {});
+  //                                       List<Map<int, dynamic>> indexData =
+  //                                           List.filled(5, {});
 
-                                        for (var i = 0;
-                                            i < filteredData.length;
-                                            i++) {
-                                          final dataForIndex = filteredData[i];
-                                          final dataIndexString = dataForIndex
-                                              .keys
-                                              .first; // Get the index as a String
-                                          final dataIndex =
-                                              int.tryParse(dataIndexString);
+  //                                       for (var i = 0;
+  //                                           i < filteredData.length;
+  //                                           i++) {
+  //                                         final dataForIndex = filteredData[i];
+  //                                         final dataIndexString = dataForIndex
+  //                                             .keys
+  //                                             .first; // Get the index as a String
+  //                                         final dataIndex =
+  //                                             int.tryParse(dataIndexString);
 
-                                          if (dataIndex != null &&
-                                              dataIndex >= 0 &&
-                                              dataIndex <= 4) {
-                                            indexData[dataIndex] = dataForIndex
-                                                .map((key, value) => MapEntry(
-                                                    int.parse(key), value));
-                                          } else {
-                                            debugPrint(
-                                                "Invalid or out of bounds index: $dataIndexString");
-                                          }
-                                        }
+  //                                         if (dataIndex != null &&
+  //                                             dataIndex >= 0 &&
+  //                                             dataIndex <= 4) {
+  //                                           indexData[dataIndex] = dataForIndex
+  //                                               .map((key, value) => MapEntry(
+  //                                                   int.parse(key), value));
+  //                                         } else {
+  //                                           debugPrint(
+  //                                               "Invalid or out of bounds index: $dataIndexString");
+  //                                         }
+  //                                       }
 
-                                        // Separate the data into different lists based on their indices
-                                        Map<int, dynamic> indexData0 =
-                                            indexData[0];
-                                        Map<int, dynamic> indexData1 =
-                                            indexData[1];
-                                        Map<int, dynamic> indexData2 =
-                                            indexData[2];
-                                        Map<int, dynamic> indexData3 =
-                                            indexData[3];
-                                        Map<int, dynamic> indexData4 =
-                                            indexData[4];
-                                        latLongData = {
-                                          "pickup_latitude":
-                                              "$pickupLat0" != 'null'
-                                                  ? "$pickupLat0"
-                                                  : "0",
-                                          "pickup_longitude":
-                                              "$pickupLng0" != 'null'
-                                                  ? "$pickupLng0"
-                                                  : "0",
-                                        };
-                                        print(
-                                            "latLongData in Screen: $latLongData");
-                                        debugPrint("indexData0: $indexData0");
-                                        debugPrint("indexData1: $indexData1");
-                                        debugPrint("indexData2: $indexData2");
-                                        debugPrint("indexData3: $indexData3");
-                                        debugPrint("indexData4: $indexData4");
-                                        print(
-                                            "addMultipleData: $addMultipleData");
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ConfirmMultipleDetailsScreen(
-                                              indexData0: indexData0,
-                                              indexData1: indexData1,
-                                              indexData2: indexData2,
-                                              indexData3: indexData3,
-                                              indexData4: indexData4,
-                                              multipleData: addMultipleData,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    });
-                                  }
-                                }
-                              },
-                              child: isLoading
-                                  ? buttonGradientSmallWithLoader(
-                                      "Please Wait...",
-                                      context,
-                                    )
-                                  : buttonGradientSmall(
-                                      "FIND RIDER",
-                                      context,
-                                    ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/info-icon.svg",
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            Text(
-                              'Note: Distance must be grater than 1KM',
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 10,
-                                fontFamily: 'Inter-Bold',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              "assets/images/info-icon.svg",
-                            ),
-                            SizedBox(width: size.width * 0.02),
-                            Text(
-                              'Note: Please drag down to see your location on the map.',
-                              style: TextStyle(
-                                color: blackColor,
-                                fontSize: 10,
-                                fontFamily: 'Inter-Bold',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.12),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  //                                       // Separate the data into different lists based on their indices
+  //                                       Map<int, dynamic> indexData0 =
+  //                                           indexData[0];
+  //                                       Map<int, dynamic> indexData1 =
+  //                                           indexData[1];
+  //                                       Map<int, dynamic> indexData2 =
+  //                                           indexData[2];
+  //                                       Map<int, dynamic> indexData3 =
+  //                                           indexData[3];
+  //                                       Map<int, dynamic> indexData4 =
+  //                                           indexData[4];
+  //                                       latLongData = {
+  //                                         "pickup_latitude":
+  //                                             "$pickupLat0" != 'null'
+  //                                                 ? "$pickupLat0"
+  //                                                 : "0",
+  //                                         "pickup_longitude":
+  //                                             "$pickupLng0" != 'null'
+  //                                                 ? "$pickupLng0"
+  //                                                 : "0",
+  //                                       };
+  //                                       print(
+  //                                           "latLongData in Screen: $latLongData");
+  //                                       debugPrint("indexData0: $indexData0");
+  //                                       debugPrint("indexData1: $indexData1");
+  //                                       debugPrint("indexData2: $indexData2");
+  //                                       debugPrint("indexData3: $indexData3");
+  //                                       debugPrint("indexData4: $indexData4");
+  //                                       print(
+  //                                           "addMultipleData: $addMultipleData");
+  //                                       setState(() {
+  //                                         isLoading = false;
+  //                                       });
+  //                                       Navigator.push(
+  //                                         context,
+  //                                         MaterialPageRoute(
+  //                                           builder: (context) =>
+  //                                               ConfirmMultipleDetailsScreen(
+  //                                             indexData0: indexData0,
+  //                                             indexData1: indexData1,
+  //                                             indexData2: indexData2,
+  //                                             indexData3: indexData3,
+  //                                             indexData4: indexData4,
+  //                                             multipleData: addMultipleData,
+  //                                           ),
+  //                                         ),
+  //                                       );
+  //                                     }
+  //                                   });
+  //                                 }
+  //                               }
+  //                             },
+  //                             child: isLoading
+  //                                 ? buttonGradientSmallWithLoader(
+  //                                     "Please Wait...",
+  //                                     context,
+  //                                   )
+  //                                 : buttonGradientSmall(
+  //                                     "FIND RIDER",
+  //                                     context,
+  //                                   ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.02),
+  //                     Padding(
+  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                       child: Row(
+  //                         children: [
+  //                           SvgPicture.asset(
+  //                             "assets/images/info-icon.svg",
+  //                           ),
+  //                           SizedBox(width: size.width * 0.02),
+  //                           Text(
+  //                             'Note: Distance must be grater than 1KM',
+  //                             style: TextStyle(
+  //                               color: blackColor,
+  //                               fontSize: 10,
+  //                               fontFamily: 'Inter-Bold',
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.02),
+  //                     Padding(
+  //                       padding: const EdgeInsets.symmetric(horizontal: 20),
+  //                       child: Row(
+  //                         children: [
+  //                           SvgPicture.asset(
+  //                             "assets/images/info-icon.svg",
+  //                           ),
+  //                           SizedBox(width: size.width * 0.02),
+  //                           Text(
+  //                             'Note: Please drag down to see your location on the map.',
+  //                             style: TextStyle(
+  //                               color: blackColor,
+  //                               fontSize: 10,
+  //                               fontFamily: 'Inter-Bold',
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: size.height * 0.12),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

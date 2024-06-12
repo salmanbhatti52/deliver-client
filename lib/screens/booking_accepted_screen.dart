@@ -1,9 +1,12 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import 'package:deliver_client/models/cancel_booking_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
+import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
@@ -214,7 +217,9 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
 
       // Now you have a list of passcode_verified statuses for each booking
       // You can use passcodeVerifiedList as needed
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
@@ -1885,36 +1890,65 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                       ],
                                     ),
                                   SizedBox(height: size.height * 0.02),
-                                  (updateBookingStatusModel.data!.paymentBy ==
-                                              "Sender" &&
-                                          updateBookingStatusModel
-                                                  .data!.paymentStatus ==
-                                              "Unpaid")
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            if (widget.singleData!.isNotEmpty) {
-                                              double parsedValue = double.parse(
-                                                  widget.singleData![
-                                                      'total_charges']);
-                                              totalAmount =
-                                                  (parsedValue + 0.5).floor();
-                                              debugPrint(
-                                                  "Rounded Integer: $totalAmount");
-                                            } else {
-                                              double parsedValue = double.parse(
-                                                  widget.multipleData![
-                                                      'total_charges']);
-                                              totalAmount =
-                                                  (parsedValue + 0.5).floor();
-                                              debugPrint(
-                                                  "Rounded Integer: $totalAmount");
-                                            }
-                                            makePayment();
-                                          },
-                                          child: buttonGradient(
-                                              "Make Payment", context),
-                                        )
-                                      : buttonGradient("Accepted", context),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      (updateBookingStatusModel
+                                                      .data!.paymentBy ==
+                                                  "Sender" &&
+                                              updateBookingStatusModel
+                                                      .data!.paymentStatus ==
+                                                  "Unpaid")
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                if (widget
+                                                    .singleData!.isNotEmpty) {
+                                                  double parsedValue =
+                                                      double.parse(
+                                                          widget.singleData![
+                                                              'total_charges']);
+                                                  totalAmount =
+                                                      (parsedValue + 0.5)
+                                                          .floor();
+                                                  debugPrint(
+                                                      "Rounded Integer: $totalAmount");
+                                                } else {
+                                                  double parsedValue =
+                                                      double.parse(
+                                                          widget.multipleData![
+                                                              'total_charges']);
+                                                  totalAmount =
+                                                      (parsedValue + 0.5)
+                                                          .floor();
+                                                  debugPrint(
+                                                      "Rounded Integer: $totalAmount");
+                                                }
+                                                makePayment();
+                                              },
+                                              child: buttonGradientSmall(
+                                                  "Make Payment", context),
+                                            )
+                                          : buttonGradientSmall(
+                                              "Accepted", context),
+                                      SizedBox(height: size.height * 0.02),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          final reasons =
+                                              await fetchCancellationReasons(); // Fetch cancellation reasons
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => cancelRide(
+                                                context,
+                                                reasons), // Pass reasons to cancelRide function
+                                          );
+                                        },
+                                        child: buttonGradientSmall(
+                                            "CANCEL", context),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -1941,4 +1975,246 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
       ),
     );
   }
+
+  bool isCanceling = false;
+  Future<List<RideCancellationReason>> fetchCancellationReasons() async {
+    final response = await http.post(
+      Uri.parse(
+          'https://cs.deliverbygfl.com/api/get_bookings_cancellations_reasons'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, String>{
+        'user_type': 'Customer',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (responseData['status'] == 'success') {
+        final List<dynamic> data = responseData['data'];
+        return data.map((reasonData) {
+          return RideCancellationReason(
+            id: reasonData['bookings_cancellations_reasons_id'].toString(),
+            reason: reasonData['reason'],
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch cancellation reasons');
+      }
+    } else {
+      throw Exception('Failed to fetch cancellation reasons');
+    }
+  }
+
+  CancelBookingModel cancelBookingModel = CancelBookingModel();
+
+  cancelBooking(String cancellationReasonId) async {
+    try {
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
+      String apiUrl = "$baseUrl/cancel_booking_customers";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("bookings_id: ${widget.currentBookingId}");
+      // debugPrint("users_fleet_id: ${widget.fleetId}");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.currentBookingId,
+          "bookings_cancellations_reasons_id": cancellationReasonId
+        },
+      );
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        cancelBookingModel = cancelBookingModelFromJson(responseString);
+        setState(() {});
+        debugPrint('cancelBookingModel status: ${cancelBookingModel.status}');
+      }
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  cancelRide(BuildContext context, List<RideCancellationReason> reasons) {
+    var size = MediaQuery.of(context).size;
+    String? selectedReason;
+    return StatefulBuilder(
+      builder: (context, setState) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(40),
+        ),
+        insetPadding: const EdgeInsets.only(left: 20, right: 20),
+        child: SizedBox(
+          height: size.height * 0.7,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: FutureBuilder<List<RideCancellationReason>>(
+              future: fetchCancellationReasons(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final cancellationReasons = snapshot.data!;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: SvgPicture.asset(
+                                "assets/images/close-icon.svg"),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Cancel Ride',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: orangeColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-Bold',
+                        ),
+                      ),
+                      Text(
+                        'Are you sure you want to cancel this ride?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 18,
+                          fontFamily: 'Syne-Regular',
+                        ),
+                      ),
+                      // Display cancellation reasons as radio buttons
+                      Column(
+                        children: cancellationReasons.map((reason) {
+                          return Transform.scale(
+                            scale: 0.9,
+                            child: RadioListTile<String>(
+                              title: Text(
+                                reason.reason,
+                                style: TextStyle(color: blackColor),
+                              ),
+                              value: reason.id,
+                              groupValue: selectedReason,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedReason = value!;
+                                });
+                              },
+                              activeColor: orangeColor,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              if (selectedReason != null) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await cancelBooking(selectedReason!);
+                                if (cancelBookingModel.status == "success") {
+                                  timer?.cancel();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomePageScreen(index: 0)),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                } else {
+                                  CustomToast.showToast(
+                                    fontSize: 12,
+                                    message:
+                                        "You have already cancelled this booking.",
+                                  );
+                                }
+                              } else {
+                                CustomToast.showToast(
+                                  fontSize: 12,
+                                  message:
+                                      "Please select a cancellation reason.",
+                                );
+                              }
+                              setState(() {
+                                isLoading = false;
+                              });
+                            },
+                            child: isLoading
+                                ? dialogButtonGradientSmallWithLoader(
+                                    "Please wait...", context)
+                                : Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.06,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                        stops: const [0.1, 1.5],
+                                        colors: [
+                                          orangeColor,
+                                          yellowColor,
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "Yes, Cancel Ride",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: whiteColor,
+                                          fontSize: 16,
+                                          fontFamily: 'Syne-Medium',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RideCancellationReason {
+  final String id;
+  final String reason;
+
+  RideCancellationReason({required this.id, required this.reason});
 }

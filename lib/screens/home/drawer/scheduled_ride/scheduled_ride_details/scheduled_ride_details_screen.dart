@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
+import 'package:deliver_client/screens/booking_accepted_screen.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
@@ -221,41 +222,6 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
     CustomToast.showToast(
         message: "${updateBookingStatusModel.data!.paymentStatus}");
 
-    // } catch (e) {
-    //   debugPrint('Something went wrong = ${e.toString()}');
-    //   return null;
-    // }
-  }
-
-  CancelBookingModel cancelBookingModel = CancelBookingModel();
-
-  cancelBooking() async {
-    // try {
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    userId = sharedPref.getString('userId');
-    String apiUrl = "$baseUrl/cancel_booking";
-    debugPrint("apiUrl: $apiUrl");
-    // debugPrint("bookings_id: ${widget.bookingId}");
-    // debugPrint("users_fleet_id: ${widget.fleetId}");
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Accept': 'application/json',
-      },
-      body: {
-        // "bookings_id": widget.bookingId,
-        "users_customers_id": userId,
-        // "users_fleet_id": widget.fleetId,
-      },
-    );
-    final responseString = response.body;
-    debugPrint("response: $responseString");
-    debugPrint("statusCode: ${response.statusCode}");
-    if (response.statusCode == 200) {
-      cancelBookingModel = cancelBookingModelFromJson(responseString);
-      setState(() {});
-      debugPrint('cancelBookingModel status: ${cancelBookingModel.status}');
-    }
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
     //   return null;
@@ -852,11 +818,14 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
                         : buttonGradient("In Progress", context),
                     SizedBox(height: size.height * 0.02),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        final reasons =
+                            await fetchCancellationReasons(); // Fetch cancellation reasons
                         showDialog(
                           context: context,
                           barrierDismissible: false,
-                          builder: (context) => cancelRide(context),
+                          builder: (context) => cancelRide(context,
+                              reasons), // Pass reasons to cancelRide function
                         );
                       },
                       child: buttonGradient("Cancel", context),
@@ -891,104 +860,338 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
   PageController pageController = PageController();
   ScrollController nextPageScrollController = ScrollController();
   int currentIndex = 0;
-  cancelRide(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(false);
+  // cancelRide(BuildContext context) {
+  //   var size = MediaQuery.of(context).size;
+  //   return WillPopScope(
+  //     onWillPop: () {
+  //       return Future.value(false);
+  //     },
+  //     child: StatefulBuilder(
+  //       builder: (context, setState) => Dialog(
+  //         backgroundColor: Colors.white,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(40),
+  //         ),
+  //         insetPadding: const EdgeInsets.only(left: 20, right: 20),
+  //         child: SizedBox(
+  //           height: size.height * 0.3,
+  //           child: Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 20),
+  //             child: Column(
+  //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //               children: [
+  //                 GestureDetector(
+  //                   onTap: () {
+  //                     Navigator.pop(context);
+  //                   },
+  //                   child: Align(
+  //                     alignment: Alignment.centerRight,
+  //                     child: Padding(
+  //                       padding: const EdgeInsets.only(top: 15),
+  //                       child: SvgPicture.asset("assets/images/close-icon.svg"),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: size.height * 0.01),
+  //                 Text(
+  //                   'Cancel Ride',
+  //                   textAlign: TextAlign.center,
+  //                   style: TextStyle(
+  //                     color: orangeColor,
+  //                     fontSize: 24,
+  //                     fontFamily: 'Syne-Bold',
+  //                   ),
+  //                 ),
+  //                 Text(
+  //                   'Are you sure, you want\nto cancel this ride?',
+  //                   textAlign: TextAlign.center,
+  //                   style: TextStyle(
+  //                     color: blackColor,
+  //                     fontSize: 18,
+  //                     fontFamily: 'Syne-Regular',
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: size.height * 0.01),
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //                   children: [
+  //                     GestureDetector(
+  //                       onTap: () {
+  //                         Navigator.pop(context);
+  //                       },
+  //                       child:
+  //                           dialogButtonTransparentGradientSmall("No", context),
+  //                     ),
+  //                     GestureDetector(
+  //                       onTap: () async {
+  //                         setState(() {
+  //                           isLoading = true;
+  //                         });
+  //                         await cancelBooking();
+  //                         if (cancelBookingModel.status == "success") {
+  //                           Navigator.of(context).pushAndRemoveUntil(
+  //                               MaterialPageRoute(
+  //                                   builder: (context) =>
+  //                                       const HomePageScreen()),
+  //                               (Route<dynamic> route) => false);
+  //                           setState(() {
+  //                             isLoading = false;
+  //                           });
+  //                         } else {
+  //                           CustomToast.showToast(
+  //                             fontSize: 12,
+  //                             message:
+  //                                 "You have already cancelled this booking.",
+  //                           );
+  //                           setState(() {
+  //                             isLoading = false;
+  //                           });
+  //                         }
+  //                       },
+  //                       child: isLoading
+  //                           ? dialogButtonGradientSmallWithLoader(
+  //                               "Please wait...", context)
+  //                           : dialogButtonGradientSmall("Yes", context),
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 SizedBox(height: size.height * 0.01),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+  bool isCanceling = false;
+  Future<List<RideCancellationReason>> fetchCancellationReasons() async {
+    final response = await http.post(
+      Uri.parse(
+          'https://cs.deliverbygfl.com/api/get_bookings_cancellations_reasons'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
       },
-      child: StatefulBuilder(
-        builder: (context, setState) => Dialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
-          ),
-          insetPadding: const EdgeInsets.only(left: 20, right: 20),
-          child: SizedBox(
-            height: size.height * 0.3,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: SvgPicture.asset("assets/images/close-icon.svg"),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                  Text(
-                    'Cancel Ride',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: orangeColor,
-                      fontSize: 24,
-                      fontFamily: 'Syne-Bold',
-                    ),
-                  ),
-                  Text(
-                    'Are you sure, you want\nto cancel this ride?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: blackColor,
-                      fontSize: 18,
-                      fontFamily: 'Syne-Regular',
-                    ),
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: jsonEncode(<String, String>{
+        'user_type': 'Customer',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (responseData['status'] == 'success') {
+        final List<dynamic> data = responseData['data'];
+        return data.map((reasonData) {
+          return RideCancellationReason(
+            id: reasonData['bookings_cancellations_reasons_id'].toString(),
+            reason: reasonData['reason'],
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch cancellation reasons');
+      }
+    } else {
+      throw Exception('Failed to fetch cancellation reasons');
+    }
+  }
+
+  CancelBookingModel cancelBookingModel = CancelBookingModel();
+
+  cancelBooking(String cancellationReasonId) async {
+    try {
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
+      String apiUrl = "$baseUrl/cancel_booking_customers";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint(
+          "bookings_id: ${widget.getScheduledBookingModel!.bookingsId.toString()}");
+      // debugPrint("users_fleet_id: ${widget.fleetId}");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.getScheduledBookingModel!.bookingsId.toString(),
+          "bookings_cancellations_reasons_id": cancellationReasonId
+        },
+      );
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        cancelBookingModel = cancelBookingModelFromJson(responseString);
+        setState(() {});
+        debugPrint('cancelBookingModel status: ${cancelBookingModel.status}');
+      }
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
+
+  cancelRide(BuildContext context, List<RideCancellationReason> reasons) {
+    var size = MediaQuery.of(context).size;
+    String? selectedReason;
+    return StatefulBuilder(
+      builder: (context, setState) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(40),
+        ),
+        insetPadding: const EdgeInsets.only(left: 20, right: 20),
+        child: SizedBox(
+          height: size.height * 0.7,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: FutureBuilder<List<RideCancellationReason>>(
+              future: fetchCancellationReasons(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final cancellationReasons = snapshot.data!;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child:
-                            dialogButtonTransparentGradientSmall("No", context),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: SvgPicture.asset(
+                                "assets/images/close-icon.svg"),
+                          ),
+                        ),
                       ),
-                      GestureDetector(
-                        onTap: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await cancelBooking();
-                          if (cancelBookingModel.status == "success") {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const HomePageScreen()),
-                                (Route<dynamic> route) => false);
-                            setState(() {
-                              isLoading = false;
-                            });
-                          } else {
-                            CustomToast.showToast(
-                              fontSize: 12,
-                              message:
-                                  "You have already cancelled this booking.",
-                            );
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                        },
-                        child: isLoading
-                            ? dialogButtonGradientSmallWithLoader(
-                                "Please wait...", context)
-                            : dialogButtonGradientSmall("Yes", context),
+                      Text(
+                        'Cancel Ride',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: orangeColor,
+                          fontSize: 24,
+                          fontFamily: 'Syne-Bold',
+                        ),
+                      ),
+                      Text(
+                        'Are you sure you want to cancel this ride?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: blackColor,
+                          fontSize: 18,
+                          fontFamily: 'Syne-Regular',
+                        ),
+                      ),
+                      // Display cancellation reasons as radio buttons
+                      Column(
+                        children: cancellationReasons.map((reason) {
+                          return Transform.scale(
+                            scale: 0.9,
+                            child: RadioListTile<String>(
+                              title: Text(
+                                reason.reason,
+                                style: TextStyle(color: blackColor),
+                              ),
+                              value: reason.id,
+                              groupValue: selectedReason,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  selectedReason = value!;
+                                });
+                              },
+                              activeColor: orangeColor,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              if (selectedReason != null) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                await cancelBooking(selectedReason!);
+                                if (cancelBookingModel.status == "success") {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomePageScreen(index: 0)),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                } else {
+                                  CustomToast.showToast(
+                                    fontSize: 12,
+                                    message:
+                                        "You have already cancelled this booking.",
+                                  );
+                                }
+                              } else {
+                                CustomToast.showToast(
+                                  fontSize: 12,
+                                  message:
+                                      "Please select a cancellation reason.",
+                                );
+                              }
+                              setState(() {
+                                isLoading = false;
+                              });
+                            },
+                            child: isLoading
+                                ? dialogButtonGradientSmallWithLoader(
+                                    "Please wait...", context)
+                                : Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.06,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                        stops: const [0.1, 1.5],
+                                        colors: [
+                                          orangeColor,
+                                          yellowColor,
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "Yes, Cancel Ride",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: whiteColor,
+                                          fontSize: 16,
+                                          fontFamily: 'Syne-Medium',
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ],
                       ),
                     ],
-                  ),
-                  SizedBox(height: size.height * 0.01),
-                ],
-              ),
+                  );
+                }
+              },
             ),
           ),
         ),
