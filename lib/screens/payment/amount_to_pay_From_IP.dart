@@ -92,8 +92,8 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
           "total_amount": widget.singleData!.isNotEmpty
               ? widget.singleData!['total_charges']
               : widget.multipleData!['total_charges'],
-              "payment_status": "Paid",
-           "bookings_destinations_id": "" 
+          "payment_status": "Paid",
+          "bookings_destinations_id": ""
         },
       );
       final responseString = response.body;
@@ -415,143 +415,128 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
                           ),
                           SizedBox(height: size.height * 0.04),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "PassCode Status",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Syne-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.12),
-                                      passcodeVerified == "Yes"
-                                          ? Text(
-                                              "Verified",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: pendingColor,
-                                                fontSize: 18,
-                                                fontFamily: 'Syne-Medium',
-                                              ),
-                                            )
-                                          : const SizedBox()
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.02),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Parcel Delivery Status",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Syne-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.12),
-                                      passcodeVerified != null
-                                          ? Text(
-                                              "Delivered",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: pendingColor,
-                                                fontSize: 18,
-                                                fontFamily: 'Syne-Medium',
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.02),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Payment Status",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Syne-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.12),
-                                      Text(
-                                        "Paid",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: pendingColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Syne-Medium',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: size.height * 0.02),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Payment Method",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: blackColor,
-                                          fontSize: 18,
-                                          fontFamily: 'Syne-Medium',
-                                        ),
-                                      ),
-                                      SizedBox(width: size.width * 0.085),
-                                      widget.singleData!.isNotEmpty
-                                          ? Text(
-                                              widget.singleData![
-                                                          "payment_gateways_id"] ==
-                                                      '1'
-                                                  ? "Cash"
-                                                  : "Card",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: orangeColor,
-                                                fontSize: 18,
-                                                fontFamily: 'Syne-Medium',
-                                              ),
-                                            )
-                                          : Text(
-                                              widget.multipleData![
-                                                          "payment_gateways_id"] ==
-                                                      '1'
-                                                  ? "Cash"
-                                                  : "Card",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: orangeColor,
-                                                fontSize: 18,
-                                                fontFamily: 'Syne-Medium',
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                ],
+                              Text(
+                                "PassCode Status",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
                               ),
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //         builder: (context) => const PaymentScreen(),
-                              //       ),
-                              //     );
-                              //   },
-                              //   child: SvgPicture.asset(
-                              //     'assets/images/big-orange-edit-icon.svg',
-                              //   ),
-                              // ),
+                              SizedBox(width: size.width * 0.12),
+                              passcodeVerified == "Yes"
+                                  ? Text(
+                                      "Verified",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: pendingColor,
+                                        fontSize: 18,
+                                        fontFamily: 'Syne-Medium',
+                                      ),
+                                    )
+                                  : const SizedBox()
+                            ],
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Parcel Delivery Status",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
+                              ),
+                              SizedBox(width: size.width * 0.12),
+                              passcodeVerified != null
+                                  ? Text(
+                                      "Delivered",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: pendingColor,
+                                        fontSize: 18,
+                                        fontFamily: 'Syne-Medium',
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ],
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Payment Status",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
+                              ),
+                              SizedBox(width: size.width * 0.12),
+                              Text(
+                                "Paid",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: pendingColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Payment Method",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: blackColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
+                              ),
+                              SizedBox(width: size.width * 0.085),
+                              widget.singleData!.isNotEmpty
+                                  ? Text(
+                                      widget.singleData![
+                                                  "payment_gateways_id"] ==
+                                              '1'
+                                          ? "Cash"
+                                          : "Card",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: orangeColor,
+                                        fontSize: 18,
+                                        fontFamily: 'Syne-Medium',
+                                      ),
+                                    )
+                                  : Text(
+                                      widget.multipleData![
+                                                  "payment_gateways_id"] ==
+                                              '1'
+                                          ? "Cash"
+                                          : "Card",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: orangeColor,
+                                        fontSize: 18,
+                                        fontFamily: 'Syne-Medium',
+                                      ),
+                                    ),
                             ],
                           ),
                           SizedBox(height: size.height * 0.04),

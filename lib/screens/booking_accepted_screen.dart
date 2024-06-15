@@ -734,13 +734,13 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                             size.height * 0.01),
                                                     Tooltip(
                                                       message:
-                                                          "${widget.distance} $distanceUnit",
+                                                          "${widget.singleData?["destin_distance"]} $distanceUnit",
                                                       child: Container(
                                                         color: transparentColor,
                                                         width:
                                                             size.width * 0.18,
                                                         child: AutoSizeText(
-                                                          "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
+                                                          "${widget.singleData?["destin_distance"]} $distanceUnit",
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -1655,7 +1655,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                         0.01),
                                                                 Tooltip(
                                                                   message:
-                                                                      "${widget.distance} $distanceUnit",
+                                                                      "${widget.multipleData?["destin_distance"]} $distanceUnit",
                                                                   child:
                                                                       Container(
                                                                     color:
@@ -1665,7 +1665,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                                         0.18,
                                                                     child:
                                                                         AutoSizeText(
-                                                                      "${widget.distance?.toStringAsFixed(2)} $distanceUnit",
+                                                                      "${widget.multipleData?["destin_distance"]} $distanceUnit",
                                                                       textAlign:
                                                                           TextAlign
                                                                               .center,

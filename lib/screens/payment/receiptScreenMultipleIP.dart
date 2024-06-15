@@ -392,6 +392,7 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                         ],
                                       ),
                                     ),
+                                    SizedBox(height: size.height * 0.02),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
@@ -417,40 +418,37 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                         ),
                                       ],
                                     ),
-                                    Container(
-                                      color: transparentColor,
-                                      width: size.width,
-                                      height: size.height * 0.08,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Text(
-                                            "Date",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 12,
-                                              fontFamily: 'Syne-Bold',
-                                            ),
+                                    SizedBox(height: size.height * 0.02),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          "Date",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 12,
+                                            fontFamily: 'Syne-Bold',
                                           ),
-                                          SizedBox(width: size.width * 0.005),
-                                          Text(
-                                            widget.date != null
-                                                ? DateFormat('EEEE, MMMM d, y')
-                                                    .format(DateTime.parse(
-                                                        widget.date!))
-                                                : 'Default Date',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 12,
-                                              fontFamily: 'Syne-Bold',
-                                            ),
+                                        ),
+                                       SizedBox(width: size.width * 0.06),
+                                        Text(
+                                          widget.date != null
+                                              ? DateFormat('EEEE, MMMM d, y')
+                                                  .format(DateTime.parse(
+                                                      widget.date!))
+                                              : 'Default Date',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 12,
+                                            fontFamily: 'Syne-Bold',
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                    SizedBox(height: size.height * 0.02),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,

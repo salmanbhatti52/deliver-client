@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +8,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:deliver_client/screens/splash_screen.dart';
 import 'package:deliver_client/utils/remove_scroll_glow.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,11 +49,61 @@ void main() async {
   //     builder: (context) => const MyApp(),
   //   ),
   // );
+  await Firebase.initializeApp();
+
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+
+  // print('User granted permission: ${settings.authorizationStatus}');
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Future<void> _firebaseMessagingBackgroundHandler(
+  //     RemoteMessage message) async {
+  //   await Firebase.initializeApp();
+  //   print('Handling a background message: ${message.messageId}');
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     RemoteNotification? notification = message.notification;
+  //     AndroidNotification? android = message.notification?.android;
+
+  //     if (notification != null && android != null) {
+  //       print('Message title: ${notification.title}');
+  //       print('Message body: ${notification.body}');
+  //     }
+  //   });
+
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     print('A new onMessageOpenedApp event was published!');
+  //   });
+
+  //   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  //   FirebaseMessaging.instance.getToken().then((String? token) {
+  //     assert(token != null);
+  //     print('FirebaseMessaging token: $token');
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

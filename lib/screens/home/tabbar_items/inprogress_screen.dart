@@ -252,7 +252,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
             ),
           ),
         );
-      } 
+      }
       setState(() {});
     }
     // } catch (e) {
@@ -536,7 +536,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               child: Tooltip(
                                                 message: "$passcode0",
                                                 child: Text(
-                                                  "                                               Passcode ${passcode0 ?? '--'}",
+                                                  "Passcode ${passcode0 ?? '--'}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: orangeColor,
@@ -625,7 +625,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               child: Tooltip(
                                                 message: "$passcode0",
                                                 child: Text(
-                                                  "                                               Passcode ${passcode0 ?? '--'}",
+                                                  "Passcode ${passcode0 ?? '--'}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: orangeColor,
@@ -691,7 +691,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               child: Tooltip(
                                                 message: "$passcode1",
                                                 child: Text(
-                                                  "                                               Passcode ${passcode1 ?? '--'}",
+                                                  "Passcode ${passcode1 ?? '--'}",
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     color: orangeColor,
@@ -782,7 +782,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 child: Tooltip(
                                                   message: "$passcode2",
                                                   child: Text(
-                                                    "                                               Passcode ${passcode2 ?? '--'}",
+                                                    "Passcode ${passcode2 ?? '--'}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
                                                       color: orangeColor,
@@ -875,7 +875,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 child: Tooltip(
                                                   message: "$passcode3",
                                                   child: Text(
-                                                    "                                               Passcode ${passcode3 ?? '--'}",
+                                                    "Passcode ${passcode3 ?? '--'}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
                                                       color: orangeColor,
@@ -966,7 +966,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 child: Tooltip(
                                                   message: "$passcode4",
                                                   child: Text(
-                                                    "                                               Passcode ${passcode4 ?? '--'}",
+                                                    "Passcode ${passcode4 ?? '--'}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
                                                       color: orangeColor,

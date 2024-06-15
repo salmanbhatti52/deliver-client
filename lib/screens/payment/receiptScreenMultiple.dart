@@ -314,7 +314,7 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                     height: size.height * 0.08,
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           "Date",
@@ -325,7 +325,7 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                             fontFamily: 'Syne-Bold',
                                           ),
                                         ),
-                                        SizedBox(width: size.width * 0.005),
+                                        SizedBox(width: size.width * 0.06),
                                         Text(
                                           widget.date != null
                                               ? DateFormat('EEEE, MMMM d, y')
@@ -436,6 +436,8 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 'Dropoff 1',
@@ -582,6 +584,8 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
                                                 'Dropoff 2',
@@ -751,6 +755,9 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     Text(
                                                       'Dropoff 3',
@@ -934,6 +941,9 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     Text(
                                                       'Dropoff 4',
@@ -1117,6 +1127,9 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     Text(
                                                       'Dropoff 5',

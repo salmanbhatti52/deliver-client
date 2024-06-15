@@ -135,8 +135,9 @@ class _ReceiptScreenSingleState extends State<ReceiptScreenSingle> {
                             height: 620,
                             color: whiteColor,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
@@ -188,40 +189,37 @@ class _ReceiptScreenSingleState extends State<ReceiptScreenSingle> {
                                         ),
                                       ],
                                     ),
-                                    Container(
-                                      color: transparentColor,
-                                      width: size.width,
-                                      height: size.height * 0.08,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Date",
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: orangeColor,
-                                              fontSize: 12,
-                                              fontFamily: 'Syne-Bold',
-                                            ),
+                                    SizedBox(height: size.height * 0.02),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          "Date",
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: orangeColor,
+                                            fontSize: 12,
+                                            fontFamily: 'Syne-Bold',
                                           ),
-                                          SizedBox(width: size.width * 0.13),
-                                          Text(
-                                            widget.date != null
-                                                ? DateFormat('EEEE, MMMM d, y')
-                                                    .format(DateTime.parse(
-                                                        widget.date!))
-                                                : 'Default Date',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: blackColor,
-                                              fontSize: 12,
-                                              fontFamily: 'Syne-Bold',
-                                            ),
+                                        ),
+                                        SizedBox(width: size.width * 0.06),
+                                        Text(
+                                          widget.date != null
+                                              ? DateFormat('EEEE, MMMM d, y')
+                                                  .format(DateTime.parse(
+                                                      widget.date!))
+                                              : 'Default Date',
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            color: blackColor,
+                                            fontSize: 12,
+                                            fontFamily: 'Syne-Bold',
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+                                    SizedBox(height: size.height * 0.02),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
