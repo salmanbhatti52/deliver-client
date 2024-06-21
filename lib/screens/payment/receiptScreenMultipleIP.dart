@@ -432,7 +432,7 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                             fontFamily: 'Syne-Bold',
                                           ),
                                         ),
-                                       SizedBox(width: size.width * 0.06),
+                                        SizedBox(width: size.width * 0.06),
                                         Text(
                                           widget.date != null
                                               ? DateFormat('EEEE, MMMM d, y')
@@ -557,38 +557,38 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                                 ),
                                                 SizedBox(
                                                     width: size.width * 0.3),
-                                                Text(
-                                                  '$currencyUnit ',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: orangeColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                ),
-                                                Tooltip(
-                                                  message:
-                                                      "${widget.multipleData!['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
-                                                  child: Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.16,
-                                                    child: AutoSizeText(
-                                                      "${widget.multipleData!['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                      maxFontSize: 14,
-                                                      minFontSize: 12,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Text(
+                                                //   '$currencyUnit ',
+                                                //   textAlign: TextAlign.left,
+                                                //   style: TextStyle(
+                                                //     color: orangeColor,
+                                                //     fontSize: 14,
+                                                //     fontFamily: 'Inter-Medium',
+                                                //   ),
+                                                // ),
+                                                // Tooltip(
+                                                //   message:
+                                                //       "${widget.multipleData!['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
+                                                //   child: Container(
+                                                //     color: transparentColor,
+                                                //     width: size.width * 0.16,
+                                                //     child: AutoSizeText(
+                                                //       "${widget.multipleData!['bookings_fleet'][0]['bookings_destinations']["destin_delivery_charges"]}",
+                                                //       textAlign: TextAlign.left,
+                                                //       style: TextStyle(
+                                                //         color: blackColor,
+                                                //         fontSize: 14,
+                                                //         fontFamily:
+                                                //             'Inter-Medium',
+                                                //       ),
+                                                //       maxFontSize: 14,
+                                                //       minFontSize: 12,
+                                                //       maxLines: 1,
+                                                //       overflow:
+                                                //           TextOverflow.ellipsis,
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                             SizedBox(
@@ -708,38 +708,38 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                                 ),
                                                 SizedBox(
                                                     width: size.width * 0.3),
-                                                Text(
-                                                  '$currencyUnit ',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: orangeColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                ),
-                                                Tooltip(
-                                                  message:
-                                                      "${widget.multipleData!['bookings_fleet'][1]['bookings_destinations']["destin_delivery_charges"]}",
-                                                  child: Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.16,
-                                                    child: AutoSizeText(
-                                                      "${widget.multipleData!['bookings_fleet'][1]['bookings_destinations']["destin_delivery_charges"]}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                      maxFontSize: 14,
-                                                      minFontSize: 12,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Text(
+                                                //   '$currencyUnit ',
+                                                //   textAlign: TextAlign.left,
+                                                //   style: TextStyle(
+                                                //     color: orangeColor,
+                                                //     fontSize: 14,
+                                                //     fontFamily: 'Inter-Medium',
+                                                //   ),
+                                                // ),
+                                                // Tooltip(
+                                                //   message:
+                                                //       "${widget.multipleData!['bookings_fleet'][1]['bookings_destinations']["destin_delivery_charges"]}",
+                                                //   child: Container(
+                                                //     color: transparentColor,
+                                                //     width: size.width * 0.16,
+                                                //     child: AutoSizeText(
+                                                //       "${widget.multipleData!['bookings_fleet'][1]['bookings_destinations']["destin_delivery_charges"]}",
+                                                //       textAlign: TextAlign.left,
+                                                //       style: TextStyle(
+                                                //         color: blackColor,
+                                                //         fontSize: 14,
+                                                //         fontFamily:
+                                                //             'Inter-Medium',
+                                                //       ),
+                                                //       maxFontSize: 14,
+                                                //       minFontSize: 12,
+                                                //       maxLines: 1,
+                                                //       overflow:
+                                                //           TextOverflow.ellipsis,
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                             SizedBox(
@@ -939,44 +939,44 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                                       SizedBox(
                                                           width:
                                                               size.width * 0.3),
-                                                      Text(
-                                                        '$currencyUnit ',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: orangeColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                      ),
-                                                      Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['bookings_fleet'][2]['bookings_destinations']["destin_delivery_charges"]}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.16,
-                                                          child: AutoSizeText(
-                                                            "${widget.multipleData!['bookings_fleet'][2]['bookings_destinations']["destin_delivery_charges"]}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxFontSize: 14,
-                                                            minFontSize: 12,
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      // Text(
+                                                      //   '$currencyUnit ',
+                                                      //   textAlign:
+                                                      //       TextAlign.left,
+                                                      //   style: TextStyle(
+                                                      //     color: orangeColor,
+                                                      //     fontSize: 14,
+                                                      //     fontFamily:
+                                                      //         'Inter-Medium',
+                                                      //   ),
+                                                      // ),
+                                                      // Tooltip(
+                                                      //   message:
+                                                      //       "${widget.multipleData!['bookings_fleet'][2]['bookings_destinations']["destin_delivery_charges"]}",
+                                                      //   child: Container(
+                                                      //     color:
+                                                      //         transparentColor,
+                                                      //     width:
+                                                      //         size.width * 0.16,
+                                                      //     child: AutoSizeText(
+                                                      //       "${widget.multipleData!['bookings_fleet'][2]['bookings_destinations']["destin_delivery_charges"]}",
+                                                      //       textAlign:
+                                                      //           TextAlign.left,
+                                                      //       style: TextStyle(
+                                                      //         color: blackColor,
+                                                      //         fontSize: 14,
+                                                      //         fontFamily:
+                                                      //             'Inter-Medium',
+                                                      //       ),
+                                                      //       maxFontSize: 14,
+                                                      //       minFontSize: 12,
+                                                      //       maxLines: 1,
+                                                      //       overflow:
+                                                      //           TextOverflow
+                                                      //               .ellipsis,
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -1190,44 +1190,44 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                                       SizedBox(
                                                           width:
                                                               size.width * 0.3),
-                                                      Text(
-                                                        '$currencyUnit ',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: orangeColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                      ),
-                                                      Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['bookings_fleet'][3]['bookings_destinations']["destin_delivery_charges"]}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.16,
-                                                          child: AutoSizeText(
-                                                            "${widget.multipleData!['bookings_fleet'][3]['bookings_destinations']["destin_delivery_charges"]}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxFontSize: 14,
-                                                            minFontSize: 12,
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      // Text(
+                                                      //   '$currencyUnit ',
+                                                      //   textAlign:
+                                                      //       TextAlign.left,
+                                                      //   style: TextStyle(
+                                                      //     color: orangeColor,
+                                                      //     fontSize: 14,
+                                                      //     fontFamily:
+                                                      //         'Inter-Medium',
+                                                      //   ),
+                                                      // ),
+                                                      // Tooltip(
+                                                      //   message:
+                                                      //       "${widget.multipleData!['bookings_fleet'][3]['bookings_destinations']["destin_delivery_charges"]}",
+                                                      //   child: Container(
+                                                      //     color:
+                                                      //         transparentColor,
+                                                      //     width:
+                                                      //         size.width * 0.16,
+                                                      //     child: AutoSizeText(
+                                                      //       "${widget.multipleData!['bookings_fleet'][3]['bookings_destinations']["destin_delivery_charges"]}",
+                                                      //       textAlign:
+                                                      //           TextAlign.left,
+                                                      //       style: TextStyle(
+                                                      //         color: blackColor,
+                                                      //         fontSize: 14,
+                                                      //         fontFamily:
+                                                      //             'Inter-Medium',
+                                                      //       ),
+                                                      //       maxFontSize: 14,
+                                                      //       minFontSize: 12,
+                                                      //       maxLines: 1,
+                                                      //       overflow:
+                                                      //           TextOverflow
+                                                      //               .ellipsis,
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
                                                     ],
                                                   ),
                                                   SizedBox(
@@ -1441,44 +1441,44 @@ class _ReceiptScreenMultipleIPState extends State<ReceiptScreenMultipleIP> {
                                                       SizedBox(
                                                           width:
                                                               size.width * 0.3),
-                                                      Text(
-                                                        '$currencyUnit ',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          color: orangeColor,
-                                                          fontSize: 14,
-                                                          fontFamily:
-                                                              'Inter-Medium',
-                                                        ),
-                                                      ),
-                                                      Tooltip(
-                                                        message:
-                                                            "${widget.multipleData!['bookings_fleet'][4]['bookings_destinations']["destin_delivery_charges"]}",
-                                                        child: Container(
-                                                          color:
-                                                              transparentColor,
-                                                          width:
-                                                              size.width * 0.16,
-                                                          child: AutoSizeText(
-                                                            "${widget.multipleData!['bookings_fleet'][4]['bookings_destinations']["destin_delivery_charges"]}",
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                              color: blackColor,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Inter-Medium',
-                                                            ),
-                                                            maxFontSize: 14,
-                                                            minFontSize: 12,
-                                                            maxLines: 1,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      // Text(
+                                                      //   '$currencyUnit ',
+                                                      //   textAlign:
+                                                      //       TextAlign.left,
+                                                      //   style: TextStyle(
+                                                      //     color: orangeColor,
+                                                      //     fontSize: 14,
+                                                      //     fontFamily:
+                                                      //         'Inter-Medium',
+                                                      //   ),
+                                                      // ),
+                                                      // Tooltip(
+                                                      //   message:
+                                                      //       "${widget.multipleData!['bookings_fleet'][4]['bookings_destinations']["destin_delivery_charges"]}",
+                                                      //   child: Container(
+                                                      //     color:
+                                                      //         transparentColor,
+                                                      //     width:
+                                                      //         size.width * 0.16,
+                                                      //     child: AutoSizeText(
+                                                      //       "${widget.multipleData!['bookings_fleet'][4]['bookings_destinations']["destin_delivery_charges"]}",
+                                                      //       textAlign:
+                                                      //           TextAlign.left,
+                                                      //       style: TextStyle(
+                                                      //         color: blackColor,
+                                                      //         fontSize: 14,
+                                                      //         fontFamily:
+                                                      //             'Inter-Medium',
+                                                      //       ),
+                                                      //       maxFontSize: 14,
+                                                      //       minFontSize: 12,
+                                                      //       maxLines: 1,
+                                                      //       overflow:
+                                                      //           TextOverflow
+                                                      //               .ellipsis,
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
                                                     ],
                                                   ),
                                                   SizedBox(

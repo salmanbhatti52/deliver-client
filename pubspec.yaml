@@ -76,8 +76,8 @@ dependencies:
   onesignal_flutter: ^5.1.6
   flutter_spinkit: ^5.2.1
   polyline_do: ^0.1.0
-  firebase_messaging: ^14.7.19
-  flutter_local_notifications: ^17.1.2
+  # firebase_messaging: ^14.7.19
+  # flutter_local_notifications: ^17.1.2
 
 dev_dependencies:
   flutter_test:

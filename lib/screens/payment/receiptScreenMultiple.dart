@@ -449,38 +449,38 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                 ),
                                               ),
                                               SizedBox(width: size.width * 0.3),
-                                              Text(
-                                                '$currencyUnit ',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: orangeColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
-                                                ),
-                                              ),
-                                              Tooltip(
-                                                message:
-                                                    "${widget.multipleData!["destin_delivery_charges0"]}",
-                                                child: Container(
-                                                  color: transparentColor,
-                                                  width: size.width * 0.16,
-                                                  child: AutoSizeText(
-                                                    "${widget.multipleData!["destin_delivery_charges0"]}",
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color: blackColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Inter-Medium',
-                                                    ),
-                                                    maxFontSize: 14,
-                                                    minFontSize: 12,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
+                                              // Text(
+                                              //   '$currencyUnit ',
+                                              //   textAlign: TextAlign.left,
+                                              //   style: TextStyle(
+                                              //     color: orangeColor,
+                                              //     fontSize: 14,
+                                              //     fontFamily: 'Inter-Medium',
+                                              //   ),
+                                              // ),
+                                              // Tooltip(
+                                              //   message:
+                                              //       "${widget.multipleData!["destin_delivery_charges0"]}",
+                                              //   child: Container(
+                                              //     color: transparentColor,
+                                              //     width: size.width * 0.16,
+                                              //     child: AutoSizeText(
+                                              //       "${widget.multipleData!["destin_delivery_charges0"]}",
+                                              //       textAlign: TextAlign.left,
+                                              //       style: TextStyle(
+                                              //         color: blackColor,
+                                              //         fontSize: 14,
+                                              //         fontFamily:
+                                              //             'Inter-Medium',
+                                              //       ),
+                                              //       maxFontSize: 14,
+                                              //       minFontSize: 12,
+                                              //       maxLines: 1,
+                                              //       overflow:
+                                              //           TextOverflow.ellipsis,
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.01),
@@ -597,38 +597,38 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                 ),
                                               ),
                                               SizedBox(width: size.width * 0.3),
-                                              Text(
-                                                '$currencyUnit ',
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  color: orangeColor,
-                                                  fontSize: 14,
-                                                  fontFamily: 'Inter-Medium',
-                                                ),
-                                              ),
-                                              Tooltip(
-                                                message:
-                                                    "${widget.multipleData!["destin_delivery_charges1"]}",
-                                                child: Container(
-                                                  color: transparentColor,
-                                                  width: size.width * 0.16,
-                                                  child: AutoSizeText(
-                                                    "${widget.multipleData!["destin_delivery_charges1"]}",
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      color: blackColor,
-                                                      fontSize: 14,
-                                                      fontFamily:
-                                                          'Inter-Medium',
-                                                    ),
-                                                    maxFontSize: 14,
-                                                    minFontSize: 12,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
+                                              // Text(
+                                              //   '$currencyUnit ',
+                                              //   textAlign: TextAlign.left,
+                                              //   style: TextStyle(
+                                              //     color: orangeColor,
+                                              //     fontSize: 14,
+                                              //     fontFamily: 'Inter-Medium',
+                                              //   ),
+                                              // ),
+                                              // Tooltip(
+                                              //   message:
+                                              //       "${widget.multipleData!["destin_delivery_charges1"]}",
+                                              //   child: Container(
+                                              //     color: transparentColor,
+                                              //     width: size.width * 0.16,
+                                              //     child: AutoSizeText(
+                                              //       "${widget.multipleData!["destin_delivery_charges1"]}",
+                                              //       textAlign: TextAlign.left,
+                                              //       style: TextStyle(
+                                              //         color: blackColor,
+                                              //         fontSize: 14,
+                                              //         fontFamily:
+                                              //             'Inter-Medium',
+                                              //       ),
+                                              //       maxFontSize: 14,
+                                              //       minFontSize: 12,
+                                              //       maxLines: 1,
+                                              //       overflow:
+                                              //           TextOverflow.ellipsis,
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.01),
@@ -773,41 +773,41 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                     SizedBox(
                                                         width:
                                                             size.width * 0.3),
-                                                    Text(
-                                                      '$currencyUnit ',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: orangeColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                    ),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.multipleData!["destin_delivery_charges2"]}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.16,
-                                                        child: AutoSizeText(
-                                                          "${widget.multipleData!["destin_delivery_charges2"]}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          maxFontSize: 14,
-                                                          minFontSize: 12,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Text(
+                                                    //   '$currencyUnit ',
+                                                    //   textAlign: TextAlign.left,
+                                                    //   style: TextStyle(
+                                                    //     color: orangeColor,
+                                                    //     fontSize: 14,
+                                                    //     fontFamily:
+                                                    //         'Inter-Medium',
+                                                    //   ),
+                                                    // ),
+                                                    // Tooltip(
+                                                    //   message:
+                                                    //       "${widget.multipleData!["destin_delivery_charges2"]}",
+                                                    //   child: Container(
+                                                    //     color: transparentColor,
+                                                    //     width:
+                                                    //         size.width * 0.16,
+                                                    //     child: AutoSizeText(
+                                                    //       "${widget.multipleData!["destin_delivery_charges2"]}",
+                                                    //       textAlign:
+                                                    //           TextAlign.left,
+                                                    //       style: TextStyle(
+                                                    //         color: blackColor,
+                                                    //         fontSize: 14,
+                                                    //         fontFamily:
+                                                    //             'Inter-Medium',
+                                                    //       ),
+                                                    //       maxFontSize: 14,
+                                                    //       minFontSize: 12,
+                                                    //       maxLines: 1,
+                                                    //       overflow: TextOverflow
+                                                    //           .ellipsis,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -959,41 +959,41 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                     SizedBox(
                                                         width:
                                                             size.width * 0.3),
-                                                    Text(
-                                                      '$currencyUnit ',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: orangeColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                    ),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.multipleData!["destin_delivery_charges3"]}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.16,
-                                                        child: AutoSizeText(
-                                                          "${widget.multipleData!["destin_delivery_charges3"]}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          maxFontSize: 14,
-                                                          minFontSize: 12,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Text(
+                                                    //   '$currencyUnit ',
+                                                    //   textAlign: TextAlign.left,
+                                                    //   style: TextStyle(
+                                                    //     color: orangeColor,
+                                                    //     fontSize: 14,
+                                                    //     fontFamily:
+                                                    //         'Inter-Medium',
+                                                    //   ),
+                                                    // ),
+                                                    // Tooltip(
+                                                    //   message:
+                                                    //       "${widget.multipleData!["destin_delivery_charges3"]}",
+                                                    //   child: Container(
+                                                    //     color: transparentColor,
+                                                    //     width:
+                                                    //         size.width * 0.16,
+                                                    //     child: AutoSizeText(
+                                                    //       "${widget.multipleData!["destin_delivery_charges3"]}",
+                                                    //       textAlign:
+                                                    //           TextAlign.left,
+                                                    //       style: TextStyle(
+                                                    //         color: blackColor,
+                                                    //         fontSize: 14,
+                                                    //         fontFamily:
+                                                    //             'Inter-Medium',
+                                                    //       ),
+                                                    //       maxFontSize: 14,
+                                                    //       minFontSize: 12,
+                                                    //       maxLines: 1,
+                                                    //       overflow: TextOverflow
+                                                    //           .ellipsis,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                                 SizedBox(
@@ -1145,41 +1145,41 @@ class _ReceiptScreenMultipleState extends State<ReceiptScreenMultiple> {
                                                     SizedBox(
                                                         width:
                                                             size.width * 0.3),
-                                                    Text(
-                                                      '$currencyUnit ',
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: orangeColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                    ),
-                                                    Tooltip(
-                                                      message:
-                                                          "${widget.multipleData!["destin_delivery_charges4"]}",
-                                                      child: Container(
-                                                        color: transparentColor,
-                                                        width:
-                                                            size.width * 0.16,
-                                                        child: AutoSizeText(
-                                                          "${widget.multipleData!["destin_delivery_charges4"]}",
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: TextStyle(
-                                                            color: blackColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Medium',
-                                                          ),
-                                                          maxFontSize: 14,
-                                                          minFontSize: 12,
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Text(
+                                                    //   '$currencyUnit ',
+                                                    //   textAlign: TextAlign.left,
+                                                    //   style: TextStyle(
+                                                    //     color: orangeColor,
+                                                    //     fontSize: 14,
+                                                    //     fontFamily:
+                                                    //         'Inter-Medium',
+                                                    //   ),
+                                                    // ),
+                                                    // Tooltip(
+                                                    //   message:
+                                                    //       "${widget.multipleData!["destin_delivery_charges4"]}",
+                                                    //   child: Container(
+                                                    //     color: transparentColor,
+                                                    //     width:
+                                                    //         size.width * 0.16,
+                                                    //     child: AutoSizeText(
+                                                    //       "${widget.multipleData!["destin_delivery_charges4"]}",
+                                                    //       textAlign:
+                                                    //           TextAlign.left,
+                                                    //       style: TextStyle(
+                                                    //         color: blackColor,
+                                                    //         fontSize: 14,
+                                                    //         fontFamily:
+                                                    //             'Inter-Medium',
+                                                    //       ),
+                                                    //       maxFontSize: 14,
+                                                    //       minFontSize: 12,
+                                                    //       maxLines: 1,
+                                                    //       overflow: TextOverflow
+                                                    //           .ellipsis,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                                 SizedBox(

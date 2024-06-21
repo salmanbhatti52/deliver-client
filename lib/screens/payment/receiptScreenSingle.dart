@@ -328,38 +328,38 @@ class _ReceiptScreenSingleState extends State<ReceiptScreenSingle> {
                                                 ),
                                                 SizedBox(
                                                     width: size.width * 0.3),
-                                                Text(
-                                                  '$currencyUnit ',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    color: orangeColor,
-                                                    fontSize: 14,
-                                                    fontFamily: 'Inter-Medium',
-                                                  ),
-                                                ),
-                                                Tooltip(
-                                                  message:
-                                                      "${widget.singleData?["delivery_charges"]}",
-                                                  child: Container(
-                                                    color: transparentColor,
-                                                    width: size.width * 0.18,
-                                                    child: AutoSizeText(
-                                                      "${widget.singleData?["delivery_charges"]}",
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Medium',
-                                                      ),
-                                                      maxFontSize: 14,
-                                                      minFontSize: 12,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Text(
+                                                //   '$currencyUnit ',
+                                                //   textAlign: TextAlign.left,
+                                                //   style: TextStyle(
+                                                //     color: orangeColor,
+                                                //     fontSize: 14,
+                                                //     fontFamily: 'Inter-Medium',
+                                                //   ),
+                                                // ),
+                                                // Tooltip(
+                                                //   message:
+                                                //       "${widget.singleData?["delivery_charges"]}",
+                                                //   child: Container(
+                                                //     color: transparentColor,
+                                                //     width: size.width * 0.18,
+                                                //     child: AutoSizeText(
+                                                //       "${widget.singleData?["delivery_charges"]}",
+                                                //       textAlign: TextAlign.left,
+                                                //       style: TextStyle(
+                                                //         color: blackColor,
+                                                //         fontSize: 14,
+                                                //         fontFamily:
+                                                //             'Inter-Medium',
+                                                //       ),
+                                                //       maxFontSize: 14,
+                                                //       minFontSize: 12,
+                                                //       maxLines: 1,
+                                                //       overflow:
+                                                //           TextOverflow.ellipsis,
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                             SizedBox(

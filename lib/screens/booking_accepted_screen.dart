@@ -1929,8 +1929,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                               child: buttonGradientSmall(
                                                   "Make Payment", context),
                                             )
-                                          : buttonGradientSmall(
-                                              "Accepted", context),
+                                          : const SizedBox(),
                                       SizedBox(height: size.height * 0.02),
                                       GestureDetector(
                                         onTap: () async {
