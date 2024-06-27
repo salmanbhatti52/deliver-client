@@ -1891,8 +1891,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                     ),
                                   SizedBox(height: size.height * 0.02),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       (updateBookingStatusModel
                                                       .data!.paymentBy ==
@@ -1900,51 +1899,57 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                               updateBookingStatusModel
                                                       .data!.paymentStatus ==
                                                   "Unpaid")
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                if (widget
-                                                    .singleData!.isNotEmpty) {
-                                                  double parsedValue =
-                                                      double.parse(
-                                                          widget.singleData![
-                                                              'total_charges']);
-                                                  totalAmount =
-                                                      (parsedValue + 0.5)
-                                                          .floor();
-                                                  debugPrint(
-                                                      "Rounded Integer: $totalAmount");
-                                                } else {
-                                                  double parsedValue =
-                                                      double.parse(
-                                                          widget.multipleData![
-                                                              'total_charges']);
-                                                  totalAmount =
-                                                      (parsedValue + 0.5)
-                                                          .floor();
-                                                  debugPrint(
-                                                      "Rounded Integer: $totalAmount");
-                                                }
-                                                makePayment();
-                                              },
-                                              child: buttonGradientSmall(
-                                                  "Make Payment", context),
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2.0),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (widget
+                                                      .singleData!.isNotEmpty) {
+                                                    double parsedValue =
+                                                        double.parse(widget
+                                                                .singleData![
+                                                            'total_charges']);
+                                                    totalAmount =
+                                                        (parsedValue + 0.5)
+                                                            .floor();
+                                                    debugPrint(
+                                                        "Rounded Integer: $totalAmount");
+                                                  } else {
+                                                    double parsedValue =
+                                                        double.parse(widget
+                                                                .multipleData![
+                                                            'total_charges']);
+                                                    totalAmount =
+                                                        (parsedValue + 0.5)
+                                                            .floor();
+                                                    debugPrint(
+                                                        "Rounded Integer: $totalAmount");
+                                                  }
+                                                  makePayment();
+                                                },
+                                                child: buttonGradientSmall(
+                                                    "Make Payment", context),
+                                              ),
                                             )
-                                          : const SizedBox(),
-                                      SizedBox(height: size.height * 0.02),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          final reasons =
-                                              await fetchCancellationReasons(); // Fetch cancellation reasons
-                                          showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) => cancelRide(
-                                                context,
-                                                reasons), // Pass reasons to cancelRide function
-                                          );
-                                        },
-                                        child: buttonGradientSmall(
-                                            "CANCEL", context),
+                                          : const Text(""),
+                                      Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            final reasons =
+                                                await fetchCancellationReasons(); // Fetch cancellation reasons
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (context) => cancelRide(
+                                                  context,
+                                                  reasons), // Pass reasons to cancelRide function
+                                            );
+                                          },
+                                          child: buttonGradientSmall(
+                                              "CANCEL", context),
+                                        ),
                                       ),
                                     ],
                                   ),
