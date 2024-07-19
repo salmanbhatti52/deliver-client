@@ -210,6 +210,38 @@ Widget buttonGradientSmall(buttonText, context) {
   );
 }
 
+Widget buttonGradientTiny(buttonText, context) {
+  return Center(
+    child: Container(
+      height: MediaQuery.of(context).size.height * 0.056,
+      width: MediaQuery.of(context).size.width * 0.098,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
+          stops: const [0.1, 1.5],
+          colors: [
+            orangeColor,
+            yellowColor,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: Text(
+          buttonText,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontFamily: 'Syne-Medium',
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 Widget buttonGradientSmallWithLoader(buttonText, context) {
   return Center(
     child: Container(

@@ -119,6 +119,49 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   String? riderName2;
   String? riderName3;
   String? riderName4;
+
+  bool systemSettings = false;
+  String? trackingPrefix;
+
+  Future<String?> fetchSystemSettingsDescription28() async {
+    const String apiUrl = 'https://cs.deliverbygfl.com/api/get_all_system_data';
+    setState(() {
+      systemSettings = true;
+    });
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // If the call to the server was successful, parse the JSON
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        // Find the setting with system_settings_id equal to 26
+        final setting395 = data['data'].firstWhere(
+            (setting) => setting['system_settings_id'] == 395,
+            orElse: () => null);
+        setState(() {
+          systemSettings = false;
+        });
+        if (setting395 != null) {
+          // Extract and return the description if setting 28 exists
+          trackingPrefix = setting395['description'];
+
+          return trackingPrefix;
+        } else {
+          throw Exception('System setting with ID 40 not found');
+        }
+      } else {
+        // If the server did not return a 200 OK response,
+        // throw an exception.
+        throw Exception('Failed to fetch system settings');
+      }
+    } catch (e) {
+      // Catch any exception that might occur during the process
+      print('Error fetching system settings: $e');
+      return null;
+    }
+  }
+
   UpdateBookingStatusModel updateBookingStatusModel =
       UpdateBookingStatusModel();
 
@@ -363,6 +406,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     getAllSystemData();
     loadCustomMarker();
     updateBookingStatus();
+    fetchSystemSettingsDescription28();
     print("Single Data: ${widget.singleData}");
     print("Multiple Data: ${widget.multipleData}");
     if (widget.singleData?.isNotEmpty ?? false) {
@@ -566,6 +610,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 fontFamily: 'Inter-Regular',
                                               ),
                                             ),
+
                                             SizedBox(
                                                 height: size.height * 0.01),
                                             Row(
@@ -614,6 +659,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                 height: size.height * 0.01),
                                             GestureDetector(
                                               onTap: () {
+                                                fetchSystemSettingsDescription28();
                                                 Clipboard.setData(ClipboardData(
                                                     text: "$passcode0"));
                                                 CustomToast.showToast(
@@ -982,6 +1028,64 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                               ),
                                           ],
                                         ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/images/orange-distance-icon.svg',
+                                      ),
+                                      SizedBox(width: size.width * 0.02),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 2),
+                                            child: Text(
+                                              "Tracking Number",
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                color: textHaveAccountColor,
+                                                fontSize: 14,
+                                                fontFamily: 'Inter-Regular',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: size.width * 0.04),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 2),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text:
+                                                        "$trackingPrefix${updateBookingStatusModel.data!.bookingsId}"));
+                                              },
+                                              child: Text(
+                                                "$trackingPrefix${updateBookingStatusModel.data!.bookingsId}",
+                                                textAlign: TextAlign.left,
+                                                style: TextStyle(
+                                                  color: blackColor,
+                                                  fontSize: 14,
+                                                  fontFamily: 'Inter-Regular',
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: size.height * 0.01),

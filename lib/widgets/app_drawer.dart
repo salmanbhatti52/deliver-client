@@ -3,6 +3,7 @@
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/screens/home/drawer/support/newSupport.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
+import 'package:deliver_client/widgets/orderTracking.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -245,6 +246,13 @@ class _AppDrawerState extends State<AppDrawer> {
                           image: 'assets/images/drawer-address-icon.svg',
                           onTap: () {
                             selectedItem(context, 3);
+                          },
+                        ),
+                        buildMenuItem(
+                          title: 'Tracking',
+                          image: 'assets/images/drawer-address-icon.svg',
+                          onTap: () {
+                            selectedItem(context, 10);
                           },
                         ),
                         buildMenuItem(
@@ -571,6 +579,14 @@ class _AppDrawerState extends State<AppDrawer> {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const LoginScreen()),
             (Route<dynamic> route) => false);
+        break;
+      case 10:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const OrderTrackingScreen(),
+          ),
+        );
         break;
     }
   }
