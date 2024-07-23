@@ -26,7 +26,7 @@ class NewSupportPage extends StatefulWidget {
 class _NewSupportPageState extends State<NewSupportPage> {
   Future<List<Faq>> fetchFaqs() async {
     final response = await http.post(
-      Uri.parse('https://cs.deliverbygfl.com/api/get_faqs'),
+      Uri.parse('https://deliverbygfl.com/api/get_faqs'),
       body: {"user_type": "Customer"},
     );
 

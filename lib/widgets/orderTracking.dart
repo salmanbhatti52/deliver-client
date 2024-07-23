@@ -23,7 +23,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   TrackingOrderModel trackingOrderModel = TrackingOrderModel();
   orderTracking() async {
     var headersList = {'Accept': '*/*', 'Content-Type': 'application/json'};
-    var url = Uri.parse('https://cs.deliverbygfl.com/api/bookings_track');
+    var url = Uri.parse('https://deliverbygfl.com/api/bookings_track');
 
     var body = {"bookings_id": tracking.text};
 
@@ -48,7 +48,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   String? trackingPrefix;
 
   Future<String?> fetchSystemSettingsDescription28() async {
-    const String apiUrl = 'https://cs.deliverbygfl.com/api/get_all_system_data';
+    const String apiUrl = 'https://deliverbygfl.com/api/get_all_system_data';
     setState(() {
       systemSettings = true;
     });
@@ -69,10 +69,11 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
         if (setting395 != null) {
           // Extract and return the description if setting 28 exists
           trackingPrefix = setting395['description'];
+          print("trackingPrefix: $trackingPrefix");
 
           return trackingPrefix;
         } else {
-          throw Exception('System setting with ID 40 not found');
+          throw Exception('System setting with ID 395 not found');
         }
       } else {
         // If the server did not return a 200 OK response,
@@ -226,18 +227,21 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
           const SizedBox(
             height: 10,
           ),
-          SmoothPageIndicator(
-            controller: pageController, // Use the same PageController here
-            count: trackingOrderModel.data!.bookings.bookingsDestinations
-                .length, // This should match the itemCount of the PageView.builder
-            effect: const WormEffect(
-              dotWidth: 10,
-              dotHeight: 10,
-              activeDotColor: Colors.orange,
-              dotColor: Colors.grey,
-              spacing: 6,
-            ), // Example effect, choose and customize as needed
-          ),
+          trackingOrderModel.data != null
+              ? SmoothPageIndicator(
+                  controller:
+                      pageController, // Use the same PageController here
+                  count: trackingOrderModel.data!.bookings.bookingsDestinations
+                      .length, // This should match the itemCount of the PageView.builder
+                  effect: const WormEffect(
+                    dotWidth: 10,
+                    dotHeight: 10,
+                    activeDotColor: Colors.orange,
+                    dotColor: Colors.grey,
+                    spacing: 6,
+                  ), // Example effect, choose and customize as needed
+                )
+              : const Text(""),
           trackingOrderModel.data != null
               ? Expanded(
                   child: PageView.builder(

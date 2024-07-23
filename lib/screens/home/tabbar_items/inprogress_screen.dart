@@ -124,7 +124,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   String? trackingPrefix;
 
   Future<String?> fetchSystemSettingsDescription28() async {
-    const String apiUrl = 'https://cs.deliverbygfl.com/api/get_all_system_data';
+    const String apiUrl = 'https://deliverbygfl.com/api/get_all_system_data';
     setState(() {
       systemSettings = true;
     });

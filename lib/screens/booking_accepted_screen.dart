@@ -1984,7 +1984,7 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
   Future<List<RideCancellationReason>> fetchCancellationReasons() async {
     final response = await http.post(
       Uri.parse(
-          'https://cs.deliverbygfl.com/api/get_bookings_cancellations_reasons'),
+          'https://deliverbygfl.com/api/get_bookings_cancellations_reasons'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
