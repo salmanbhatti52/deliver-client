@@ -177,53 +177,53 @@ class _LoginScreenState extends State<LoginScreen> {
   SendOtpModel sendOtpModel = SendOtpModel();
 
   sendOtp() async {
-    try {
-      String apiUrl = "$tremiiUrl/send";
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint("apiKey: $termiiApiKey");
-      debugPrint("messageType: $pinMessageType");
-      debugPrint("to: ${countryCode!.dialCode + contactNumberController.text}");
-      debugPrint("from: $pinFrom");
-      debugPrint("channel: $pinChannel");
-      debugPrint("attempts: $pinAttempts");
-      debugPrint("expiryTime: $pinExpiryTime");
-      debugPrint("length: $pinLength");
-      debugPrint("placeholder: $pinPlaceholder");
-      debugPrint("messageText: $pinMessageText");
-      debugPrint("pinType: $pinType");
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: {
-          "api_key": termiiApiKey,
-          "message_type": pinMessageType,
-          "to": countryCode!.dialCode + contactNumberController.text,
-          "from": pinFrom,
-          "channel": pinChannel,
-          "pin_attempts": pinAttempts,
-          "pin_time_to_live": pinExpiryTime,
-          "pin_length": pinLength,
-          "pin_placeholder": pinPlaceholder,
-          "message_text": pinMessageText,
-          "pin_type": pinType,
-        },
-      );
-      final responseString = response.body;
-      debugPrint("response: $responseString");
-      debugPrint("statusCode: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        sendOtpModel = sendOtpModelFromJson(responseString);
-        pinID = sendOtpModel.pinId;
-        debugPrint("pinID: $pinID");
-        setState(() {});
-        debugPrint('sendOtpModel status: ${sendOtpModel.status}');
-      }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
+    // try {
+    String apiUrl = "$tremiiUrl/send";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("apiKey: $termiiApiKey");
+    debugPrint("messageType: $pinMessageType");
+    debugPrint("to: ${countryCode!.dialCode + contactNumberController.text}");
+    debugPrint("from: $pinFrom");
+    debugPrint("channel: $pinChannel");
+    debugPrint("attempts: $pinAttempts");
+    debugPrint("expiryTime: $pinExpiryTime");
+    debugPrint("length: $pinLength");
+    debugPrint("placeholder: $pinPlaceholder");
+    debugPrint("messageText: $pinMessageText");
+    debugPrint("pinType: $pinType");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "api_key": termiiApiKey,
+        "message_type": pinMessageType,
+        "to": countryCode!.dialCode + contactNumberController.text,
+        "from": pinFrom,
+        "channel": pinChannel,
+        "pin_attempts": pinAttempts,
+        "pin_time_to_live": pinExpiryTime,
+        "pin_length": pinLength,
+        "pin_placeholder": pinPlaceholder,
+        "message_text": pinMessageText,
+        "pin_type": pinType,
+      },
+    );
+    final responseString = response.body;
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      sendOtpModel = sendOtpModelFromJson(responseString);
+      pinID = sendOtpModel.pinId;
+      debugPrint("pinID: $pinID");
+      setState(() {});
+      debugPrint('sendOtpModel status: ${sendOtpModel.status}');
     }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
   void locationPermission() async {

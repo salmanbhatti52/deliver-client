@@ -136,6 +136,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   List<Map<String, dynamic>> allDataForIndexes1 = [];
   List<List<Map<String, dynamic>>> allDataForIndexes = [];
   bool isLoading = false;
+  bool isLoadingAddress = false;
   bool isLoading2 = false;
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
@@ -246,9 +247,9 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   GetAddressesModel getAddressesModel = GetAddressesModel();
 
   getAddresses() async {
-    try {
+    // try {
       setState(() {
-        isLoading = true;
+        isLoadingAddress = true;
       });
       SharedPreferences sharedPref = await SharedPreferences.getInstance();
       userId = sharedPref.getString('userId');
@@ -274,13 +275,13 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
           addresses.add("${getAddressesModel.data?[i]}");
         }
         setState(() {
-          isLoading = false;
+          isLoadingAddress = false;
         });
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
-    }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
   GetServiceTypesModel getServiceTypesModel = GetServiceTypesModel();

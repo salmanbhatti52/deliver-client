@@ -901,8 +901,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ? widget.singleData!["delivery_time"]
           : widget.multipleData!["delivery_time"],
       "total_delivery_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["destin_total_charges"]
-          : widget.multipleData!["destin_total_charges"],
+          ? widget.singleData!["destin_total_charges"].toString()
+          : widget.multipleData!["destin_total_charges"].toString(),
       "total_vat_charges": widget.singleData!.isNotEmpty
           ? widget.singleData!["total_vat_charges"]
           : widget.multipleData!["total_vat_charges"],
@@ -1361,8 +1361,8 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ? widget.singleData!["delivery_time"]
           : widget.multipleData!["delivery_time"],
       "total_delivery_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["destin_total_charges"]
-          : widget.multipleData!["destin_total_charges"],
+          ? widget.singleData!["destin_total_charges"].toString()
+          : widget.multipleData!["destin_total_charges"].toString(),
       "total_vat_charges": widget.singleData!.isNotEmpty
           ? widget.singleData!["total_vat_charges"]
           : widget.multipleData!["total_vat_charges"],
