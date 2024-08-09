@@ -166,142 +166,142 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       UpdateBookingStatusModel();
 
   updateBookingStatus() async {
-    // try {
-    String apiUrl = "$baseUrl/get_updated_status_booking";
-    debugPrint("apiUrl: $apiUrl");
-    debugPrint("currentBookingId: ${widget.currentBookingId}");
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Accept': 'application/json',
-      },
-      body: {
-        "bookings_id": widget.currentBookingId,
-      },
-    );
-    final responseString = response.body;
-    debugPrint("response: $responseString");
-    debugPrint("statusCode: ${response.statusCode}");
-    if (response.statusCode == 200) {
-      updateBookingStatusModel =
-          updateBookingStatusModelFromJson(responseString);
+    try {
+      String apiUrl = "$baseUrl/get_updated_status_booking";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("currentBookingId: ${widget.currentBookingId}");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "bookings_id": widget.currentBookingId,
+        },
+      );
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        updateBookingStatusModel =
+            updateBookingStatusModelFromJson(responseString);
 
-      debugPrint(
-          'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        debugPrint(
+            'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-      // Access the passcode
+        // Access the passcode
 
-      passcode0 = jsonResponse['data']['bookings_fleet'][0]
-              ['bookings_destinations']['passcode'] ??
-          "";
-      debugPrint("Passcode0: $passcode0");
-      phoneNumber0 = jsonResponse['data']['bookings_fleet'][0]
-              ['bookings_destinations']['receiver_phone'] ??
-          "";
-      debugPrint("phoneNumber0: $phoneNumber0");
-      charges0 = jsonResponse['data']['bookings_fleet'][0]
-              ['bookings_destinations']['destin_total_charges'] ??
-          "";
-      debugPrint("charges0: $charges0");
-      riderName0 = jsonResponse['data']['bookings_fleet'][0]['users_fleet']
-              ['first_name'] ??
-          "";
-      debugPrint("riderName0: $riderName0");
-
-      if (jsonResponse['data']['bookings_fleet'].length > 1) {
-        passcode1 = jsonResponse['data']['bookings_fleet'][1]
+        passcode0 = jsonResponse['data']['bookings_fleet'][0]
                 ['bookings_destinations']['passcode'] ??
             "";
-        debugPrint("Passcode1: $passcode1");
-        phoneNumber1 = jsonResponse['data']['bookings_fleet'][1]
+        debugPrint("Passcode0: $passcode0");
+        phoneNumber0 = jsonResponse['data']['bookings_fleet'][0]
                 ['bookings_destinations']['receiver_phone'] ??
             "";
-        debugPrint("phoneNumber1: $phoneNumber1");
-        charges1 = jsonResponse['data']['bookings_fleet'][1]
+        debugPrint("phoneNumber0: $phoneNumber0");
+        charges0 = jsonResponse['data']['bookings_fleet'][0]
                 ['bookings_destinations']['destin_total_charges'] ??
             "";
-        debugPrint("charges1: $charges1");
-        riderName1 = jsonResponse['data']['bookings_fleet'][1]['users_fleet']
+        debugPrint("charges0: $charges0");
+        riderName0 = jsonResponse['data']['bookings_fleet'][0]['users_fleet']
                 ['first_name'] ??
             "";
-        debugPrint("riderName1: $riderName1");
-      }
-      if (jsonResponse['data']['bookings_fleet'].length > 2) {
-        passcode2 = jsonResponse['data']['bookings_fleet'][2]
-                ['bookings_destinations']['passcode'] ??
-            "";
-        debugPrint("Passcode2: $passcode2");
-        phoneNumber2 = jsonResponse['data']['bookings_fleet'][2]
-                ['bookings_destinations']['receiver_phone'] ??
-            "";
-        debugPrint("phoneNumber2: $phoneNumber2");
-        charges2 = jsonResponse['data']['bookings_fleet'][2]
-                ['bookings_destinations']['destin_total_charges'] ??
-            "";
-        debugPrint("charges2: $charges2");
-        riderName2 = jsonResponse['data']['bookings_fleet'][2]['users_fleet']
-                ['first_name'] ??
-            "";
-        debugPrint("riderName2: $riderName2");
-      }
-      if (jsonResponse['data']['bookings_fleet'].length > 3) {
-        passcode3 = jsonResponse['data']['bookings_fleet'][3]
-                ['bookings_destinations']['passcode'] ??
-            "";
-        debugPrint("Passcode3: $passcode3");
-        phoneNumber3 = jsonResponse['data']['bookings_fleet'][3]
-                ['bookings_destinations']['receiver_phone'] ??
-            "";
-        debugPrint("phoneNumber3: $phoneNumber3");
-        charges3 = jsonResponse['data']['bookings_fleet'][3]
-                ['bookings_destinations']['destin_total_charges'] ??
-            "";
-        debugPrint("charges3: $charges3");
-        riderName3 = jsonResponse['data']['bookings_fleet'][3]['users_fleet']
-                ['first_name'] ??
-            "";
-        debugPrint("riderName3: $riderName3");
-      }
-      if (jsonResponse['data']['bookings_fleet'].length > 4) {
-        passcode4 = jsonResponse['data']['bookings_fleet'][4]
-                ['bookings_destinations']['passcode'] ??
-            "";
-        debugPrint("Passcode4: $passcode4");
-        phoneNumber4 = jsonResponse['data']['bookings_fleet'][4]
-                ['bookings_destinations']['receiver_phone'] ??
-            "";
-        debugPrint("phoneNumber4: $phoneNumber4");
-        charges4 = jsonResponse['data']['bookings_fleet'][4]
-                ['bookings_destinations']['destin_total_charges'] ??
-            "";
-        debugPrint("charges4: $charges4");
-        riderName4 = jsonResponse['data']['bookings_fleet'][4]['users_fleet']
-                ['first_name'] ??
-            "";
-        debugPrint("riderName4: $riderName4");
-      }
-      if (updateBookingStatusModel.data?.status == "Completed") {
-        timer?.cancel();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AmountToPayScreen(
-              riderData: widget.riderData!,
-              singleData: widget.singleData,
-              multipleData: widget.multipleData,
-              currentBookingId: widget.currentBookingId,
-              bookingDestinationId: widget.bookingDestinationId,
+        debugPrint("riderName0: $riderName0");
+
+        if (jsonResponse['data']['bookings_fleet'].length > 1) {
+          passcode1 = jsonResponse['data']['bookings_fleet'][1]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          debugPrint("Passcode1: $passcode1");
+          phoneNumber1 = jsonResponse['data']['bookings_fleet'][1]
+                  ['bookings_destinations']['receiver_phone'] ??
+              "";
+          debugPrint("phoneNumber1: $phoneNumber1");
+          charges1 = jsonResponse['data']['bookings_fleet'][1]
+                  ['bookings_destinations']['destin_total_charges'] ??
+              "";
+          debugPrint("charges1: $charges1");
+          riderName1 = jsonResponse['data']['bookings_fleet'][1]['users_fleet']
+                  ['first_name'] ??
+              "";
+          debugPrint("riderName1: $riderName1");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 2) {
+          passcode2 = jsonResponse['data']['bookings_fleet'][2]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          debugPrint("Passcode2: $passcode2");
+          phoneNumber2 = jsonResponse['data']['bookings_fleet'][2]
+                  ['bookings_destinations']['receiver_phone'] ??
+              "";
+          debugPrint("phoneNumber2: $phoneNumber2");
+          charges2 = jsonResponse['data']['bookings_fleet'][2]
+                  ['bookings_destinations']['destin_total_charges'] ??
+              "";
+          debugPrint("charges2: $charges2");
+          riderName2 = jsonResponse['data']['bookings_fleet'][2]['users_fleet']
+                  ['first_name'] ??
+              "";
+          debugPrint("riderName2: $riderName2");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 3) {
+          passcode3 = jsonResponse['data']['bookings_fleet'][3]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          debugPrint("Passcode3: $passcode3");
+          phoneNumber3 = jsonResponse['data']['bookings_fleet'][3]
+                  ['bookings_destinations']['receiver_phone'] ??
+              "";
+          debugPrint("phoneNumber3: $phoneNumber3");
+          charges3 = jsonResponse['data']['bookings_fleet'][3]
+                  ['bookings_destinations']['destin_total_charges'] ??
+              "";
+          debugPrint("charges3: $charges3");
+          riderName3 = jsonResponse['data']['bookings_fleet'][3]['users_fleet']
+                  ['first_name'] ??
+              "";
+          debugPrint("riderName3: $riderName3");
+        }
+        if (jsonResponse['data']['bookings_fleet'].length > 4) {
+          passcode4 = jsonResponse['data']['bookings_fleet'][4]
+                  ['bookings_destinations']['passcode'] ??
+              "";
+          debugPrint("Passcode4: $passcode4");
+          phoneNumber4 = jsonResponse['data']['bookings_fleet'][4]
+                  ['bookings_destinations']['receiver_phone'] ??
+              "";
+          debugPrint("phoneNumber4: $phoneNumber4");
+          charges4 = jsonResponse['data']['bookings_fleet'][4]
+                  ['bookings_destinations']['destin_total_charges'] ??
+              "";
+          debugPrint("charges4: $charges4");
+          riderName4 = jsonResponse['data']['bookings_fleet'][4]['users_fleet']
+                  ['first_name'] ??
+              "";
+          debugPrint("riderName4: $riderName4");
+        }
+        if (updateBookingStatusModel.data?.status == "Completed") {
+          timer?.cancel();
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AmountToPayScreen(
+                riderData: widget.riderData!,
+                singleData: widget.singleData,
+                multipleData: widget.multipleData,
+                currentBookingId: widget.currentBookingId,
+                bookingDestinationId: widget.bookingDestinationId,
+              ),
             ),
-          ),
-        );
+          );
+        }
+        setState(() {});
       }
-      setState(() {});
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
     }
-    // } catch (e) {
-    //   debugPrint('Something went wrong = ${e.toString()}');
-    //   return null;
-    // }
   }
 
   getLocationSingle() {
