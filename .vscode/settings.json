@@ -4,5 +4,6 @@
         "Latt",
         "passcode"
     ],
-    "dart.flutterSdkPath": "F:\\bot\\flutter_3.7\\flutter_3.19.3\\flutter"
+    // "dart.flutterSdkPath": "F:\\bot\\flutter_3.7\\flutter_3.19.3\\flutter"
+    "dart.flutterSdkPath": "E:\\flutter\\flutter_3.19.6\\flutter"
 }

@@ -419,14 +419,21 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     debugPrint("riderLng: $riderLng");
     startTimer();
     if (widget.singleData!.isNotEmpty) {
-      double parsedValue = double.parse(widget.singleData!['total_charges']);
+      // Remove commas and parse the string to a double
+      String cleanedSingleData =
+          widget.singleData!['total_charges'].replaceAll(',', '');
+      double parsedValue = double.parse(cleanedSingleData);
       totalAmount = (parsedValue + 0.5).floor();
       debugPrint("Rounded Integer: $totalAmount");
     } else {
-      double parsedValue = double.parse(widget.multipleData!['total_charges']);
+      // Remove commas and parse the string to a double
+      String cleanedMultipleData =
+          widget.multipleData!['total_charges'].replaceAll(',', '');
+      double parsedValue = double.parse(cleanedMultipleData);
       totalAmount = (parsedValue + 0.5).floor();
       debugPrint("Rounded Integer: $totalAmount");
     }
+
     scrollController.addListener(() {
       setState(() {
         // Update the current index based on the scroll position

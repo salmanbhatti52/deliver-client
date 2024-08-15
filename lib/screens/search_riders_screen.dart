@@ -7,6 +7,7 @@ import 'package:deliver_client/models/schedule_booking_model.dart';
 import 'package:deliver_client/screens/waitingForRiders.dart';
 // import 'package:deliver_client/screens/home/tabbar_items/new_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
+import 'package:deliver_client/widgets/remove_coma.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -506,190 +507,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     userId = sharedPref.getString('userId');
     print("userIdddddddddddddddddddddddddddd: $userId");
-    // final Map<String, dynamic> requestData = {
-    //   "users_fleet_id": widget.searchRider?.usersFleetId,
-    //   "vehicles_id": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["vehicles_id"]
-    //       : widget.multipleData!["vehicles_id"],
-    //   "users_customers_id": userId,
-    //   "bookings_types_id": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["bookings_types_id"]
-    //       : widget.multipleData!["bookings_types_id"],
-    //   "delivery_type": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["delivery_type"]
-    //       : widget.multipleData!["delivery_type"],
-    //   "bookings_destinations": [
-    //     {
-    //       "pickup_address": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["pickup_address"]
-    //           : widget.multipleData!["pickup_address0"],
-    //       "pickup_latitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["pickup_latitude"]
-    //           : widget.multipleData!["pickup_latitude0"],
-    //       "pickup_longitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["pickup_longitude"]
-    //           : widget.multipleData!["pickup_longitude0"],
-    //       "destin_address": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_address"]
-    //           : widget.multipleData!["destin_address0"],
-    //       "destin_latitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_latitude"]
-    //           : widget.multipleData!["destin_latitude0"],
-    //       "destin_longitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_longitude"]
-    //           : widget.multipleData!["destin_longitude0"],
-    //       "destin_distance": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_distance"]
-    //           : widget.multipleData!["destin_distance0"],
-    //       "destin_time": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_time"]
-    //           : widget.multipleData!["destin_time0"],
-    //       "destin_delivery_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_delivery_charges"]
-    //           : widget.multipleData!["destin_delivery_charges0"],
-    //       "destin_vat_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_vat_charges"]
-    //           : widget.multipleData!["destin_vat_charges0"],
-    //       "destin_total_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_total_charges"]
-    //           : widget.multipleData!["destin_total_charges0"],
-    //       "destin_discount": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_discount"]
-    //           : widget.multipleData!["destin_discount0"],
-    //       "destin_discounted_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_discounted_charges"]
-    //           : widget.multipleData!["destin_discounted_charges0"],
-    //       "receiver_name": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["receiver_name"]
-    //           : widget.multipleData!["receiver_name0"],
-    //       "receiver_phone": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["receiver_phone"]
-    //           : widget.multipleData!["receiver_phone0"],
-    //     },
-    //     if (widget.multipleData!["pickup_address1"] != null &&
-    //         widget.multipleData!["pickup_address1"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address1"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude1"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude1"],
-    //         "destin_address": widget.multipleData!["destin_address1"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude1"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude1"],
-    //         "destin_distance": widget.multipleData!["destin_distance1"],
-    //         "destin_time": widget.multipleData!["destin_time1"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges1"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges1"],
-    //         "destin_discount": widget.multipleData!["destin_discount1"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges1"],
-    //         "receiver_name": widget.multipleData!["receiver_name1"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone1"],
-    //       },
-    //     if (widget.multipleData!["pickup_address2"] != null &&
-    //         widget.multipleData!["pickup_address2"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address2"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude2"]
-    //             ["latitude"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude2"]
-    //             ["longitude"],
-    //         "destin_address": widget.multipleData!["destin_address2"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude2"]
-    //             ["latitude"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude2"]
-    //             ["longitude"],
-    //         "destin_distance": widget.multipleData!["destin_distance2"],
-    //         "destin_time": widget.multipleData!["destin_time2"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges2"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges2"],
-    //         "destin_discount": widget.multipleData!["destin_discount2"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges2"],
-    //         "receiver_name": widget.multipleData!["receiver_name2"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone2"],
-    //       },
-    //     if (widget.multipleData!["pickup_address3"] != null &&
-    //         widget.multipleData!["pickup_address3"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address3"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude3"]
-    //             ["latitude"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude3"]
-    //             ["longitude"],
-    //         "destin_address": widget.multipleData!["destin_address3"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude3"]
-    //             ["latitude"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude3"]
-    //             ["longitude"],
-    //         "destin_distance": widget.multipleData!["destin_distance3"],
-    //         "destin_time": widget.multipleData!["destin_time3"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges3"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges3"],
-    //         "destin_discount": widget.multipleData!["destin_discount3"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges3"],
-    //         "receiver_name": widget.multipleData!["receiver_name3"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone3"],
-    //       },
-    //     if (widget.multipleData!["pickup_address4"] != null &&
-    //         widget.multipleData!["pickup_address4"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address4"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude4"]
-    //             ["latitude"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude4"]
-    //             ["longitude"],
-    //         "destin_address": widget.multipleData!["destin_address4"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude4"]
-    //             ["latitude"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude4"]
-    //             ["longitude"],
-    //         "destin_distance": widget.multipleData!["destin_distance4"],
-    //         "destin_time": widget.multipleData!["destin_time4"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges4"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges4"],
-    //         "destin_discount": widget.multipleData!["destin_discount4"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges4"],
-    //         "receiver_name": widget.multipleData!["receiver_name4"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone4"],
-    //       },
-    //   ],
-    //   "total_delivery_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["destin_total_charges"]
-    //       : widget.multipleData!["destin_total_charges"],
-    //   "total_vat_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_vat_charges"]
-    //       : widget.multipleData!["total_vat_charges"],
-    //   "total_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_charges"]
-    //       : widget.multipleData!["total_charges"],
-    //   "total_discount": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_discount"]
-    //       : widget.multipleData!["total_discount"],
-    //   "total_discounted_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_discounted_charges"]
-    //       : widget.multipleData!["total_discounted_charges"],
-    //   "payment_gateways_id": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["payment_gateways_id"]
-    //       : widget.multipleData!["payment_gateways_id"],
-    //   "payment_by": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["payment_by"]
-    //       : widget.multipleData!["payment_by"],
-    //   "payment_status": "Unpaid"
-    // };
     final Map<String, dynamic> requestData = {
       // "users_fleet_id": searchRider?.usersFleetId,
       "bookings_fleet": bookingsFleet,
@@ -727,14 +544,14 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
               ? widget.singleData!["destin_time"]
               : widget.multipleData!["destin_time0"],
           "destin_delivery_charges": widget.singleData!.isNotEmpty
-              ? widget.singleData!["destin_delivery_charges"]
-              : widget.multipleData!["destin_delivery_charges0"],
+              ? removeCommaFromString(widget.singleData!["destin_delivery_charges"])
+              : removeCommaFromString(widget.multipleData!["destin_delivery_charges0"]),
           "destin_vat_charges": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_vat_charges"]
               : widget.multipleData!["destin_vat_charges0"],
           "destin_total_charges": widget.singleData!.isNotEmpty
-              ? widget.singleData!["destin_total_charges"]
-              : widget.multipleData!["destin_total_charges0"],
+              ? removeCommaFromString(widget.singleData!["destin_total_charges"])
+              : removeCommaFromString(widget.multipleData!["destin_total_charges0"]),
           "destin_discount": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_discount"]
               : widget.multipleData!["destin_discount0"],
@@ -769,24 +586,24 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance1"],
             "destin_time": widget.multipleData!["destin_time1"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges1"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges1"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges1"],
-            "destin_discount": widget.multipleData!["destin_discount1"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges1"]),
+            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount1"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges1"],
             "receiver_name": widget.multipleData!["receiver_name1"],
             "receiver_phone": widget.multipleData!["receiver_phone1"],
             "svc_running_charges": widget.singleData!.isNotEmpty
-                ? widget.singleData!["svc_running_charges1"]
-                : widget.multipleData!["svc_running_charges1"],
+                ? removeCommaFromString(widget.singleData!["svc_running_charges1"])
+                : removeCommaFromString(widget.multipleData!["svc_running_charges1"]),
             if (widget.singleData!.isNotEmpty &&
                 widget.singleData!["tollgate_charges1"] != null)
-              "tollgate_charges": widget.singleData!["tollgate_charges1"],
+              "tollgate_charges": removeCommaFromString(widget.singleData!["tollgate_charges1"]),
             if (widget.singleData!.isEmpty &&
                 widget.multipleData!["tollgate_charges1"] != null)
-              "tollgate_charges": widget.multipleData!["tollgate_charges1"],
+              "tollgate_charges": removeCommaFromString(widget.multipleData!["tollgate_charges1"]),
           },
         if (widget.multipleData!["pickup_address2"] != null &&
             widget.multipleData!["pickup_address2"].isNotEmpty)
@@ -800,11 +617,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance2"],
             "destin_time": widget.multipleData!["destin_time2"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges2"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges2"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges2"],
-            "destin_discount": widget.multipleData!["destin_discount2"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges2"]),
+            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount2"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges2"],
             "receiver_name": widget.multipleData!["receiver_name2"],
@@ -831,11 +648,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance3"],
             "destin_time": widget.multipleData!["destin_time3"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges3"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges3"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges3"],
-            "destin_discount": widget.multipleData!["destin_discount3"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges3"]),
+            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount3"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges3"],
             "receiver_name": widget.multipleData!["receiver_name3"],
@@ -862,10 +679,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance4"],
             "destin_time": widget.multipleData!["destin_time4"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges4"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges4"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges4"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges4"]),
             "destin_discount": widget.multipleData!["destin_discount4"],
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges4"],
@@ -901,14 +718,14 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ? widget.singleData!["delivery_time"]
           : widget.multipleData!["delivery_time"],
       "total_delivery_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["destin_total_charges"].toString()
-          : widget.multipleData!["destin_total_charges"].toString(),
+          ? removeCommaFromString(widget.singleData!["destin_total_charges"].toString())
+          : removeCommaFromString(widget.multipleData!["destin_total_charges"].toString()),
       "total_vat_charges": widget.singleData!.isNotEmpty
           ? widget.singleData!["total_vat_charges"]
           : widget.multipleData!["total_vat_charges"],
       "total_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["total_charges"]
-          : widget.multipleData!["total_charges"],
+          ? removeCommaFromString(widget.singleData!["total_charges"])
+          : removeCommaFromString(widget.multipleData!["total_charges"]),
       "total_discount": widget.singleData!.isNotEmpty
           ? widget.singleData!["total_discount"]
           : widget.multipleData!["total_discount"],
@@ -961,196 +778,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     });
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
     userId = sharedPref.getString('userId');
-    // final Map<String, dynamic> requestData = {
-    //   "users_fleet_id": widget.searchRider?.usersFleetId,
-    //   "vehicles_id": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["vehicles_id"]
-    //       : widget.multipleData!["vehicles_id"],
-    //   "users_customers_id": userId,
-    //   "bookings_types_id": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["bookings_types_id"]
-    //       : widget.multipleData!["bookings_types_id"],
-    //   "delivery_type": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["delivery_type"]
-    //       : widget.multipleData!["delivery_type"],
-    //   "bookings_destinations": [
-    //     {
-    //       "pickup_address": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["pickup_address"]
-    //           : widget.multipleData!["pickup_address0"],
-    //       "pickup_latitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["pickup_latitude"]
-    //           : widget.multipleData!["pickup_latitude0"],
-    //       "pickup_longitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["pickup_longitude"]
-    //           : widget.multipleData!["pickup_longitude0"],
-    //       "destin_address": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_address"]
-    //           : widget.multipleData!["destin_address0"],
-    //       "destin_latitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_latitude"]
-    //           : widget.multipleData!["destin_latitude0"],
-    //       "destin_longitude": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_longitude"]
-    //           : widget.multipleData!["destin_longitude0"],
-    //       "destin_distance": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_distance"]
-    //           : widget.multipleData!["destin_distance0"],
-    //       "destin_time": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_time"]
-    //           : widget.multipleData!["destin_time0"],
-    //       "destin_delivery_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_delivery_charges"]
-    //           : widget.multipleData!["destin_delivery_charges0"],
-    //       "destin_vat_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_vat_charges"]
-    //           : widget.multipleData!["destin_vat_charges0"],
-    //       "destin_total_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_total_charges"]
-    //           : widget.multipleData!["destin_total_charges0"],
-    //       "destin_discount": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_discount"]
-    //           : widget.multipleData!["destin_discount0"],
-    //       "destin_discounted_charges": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["destin_discounted_charges"]
-    //           : widget.multipleData!["destin_discounted_charges0"],
-    //       "receiver_name": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["receiver_name"]
-    //           : widget.multipleData!["receiver_name0"],
-    //       "receiver_phone": widget.singleData!.isNotEmpty
-    //           ? widget.singleData!["receiver_phone"]
-    //           : widget.multipleData!["receiver_phone0"],
-    //     },
-    //     if (widget.multipleData!["pickup_address1"] != null &&
-    //         widget.multipleData!["pickup_address1"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address1"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude1"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude1"],
-    //         "destin_address": widget.multipleData!["destin_address1"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude1"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude1"],
-    //         "destin_distance": widget.multipleData!["destin_distance1"],
-    //         "destin_time": widget.multipleData!["destin_time1"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges1"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges1"],
-    //         "destin_discount": widget.multipleData!["destin_discount1"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges1"],
-    //         "receiver_name": widget.multipleData!["receiver_name1"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone1"],
-    //       },
-    //     if (widget.multipleData!["pickup_address2"] != null &&
-    //         widget.multipleData!["pickup_address2"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address2"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude2"]
-    //             ["latitude"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude2"]
-    //             ["longitude"],
-    //         "destin_address": widget.multipleData!["destin_address2"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude2"]
-    //             ["latitude"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude2"]
-    //             ["longitude"],
-    //         "destin_distance": widget.multipleData!["destin_distance2"],
-    //         "destin_time": widget.multipleData!["destin_time2"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges2"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges2"],
-    //         "destin_discount": widget.multipleData!["destin_discount2"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges2"],
-    //         "receiver_name": widget.multipleData!["receiver_name2"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone2"],
-    //       },
-    //     if (widget.multipleData!["pickup_address3"] != null &&
-    //         widget.multipleData!["pickup_address3"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address3"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude3"]
-    //             ["latitude"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude3"]
-    //             ["longitude"],
-    //         "destin_address": widget.multipleData!["destin_address3"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude3"]
-    //             ["latitude"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude3"]
-    //             ["longitude"],
-    //         "destin_distance": widget.multipleData!["destin_distance3"],
-    //         "destin_time": widget.multipleData!["destin_time3"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges3"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges3"],
-    //         "destin_discount": widget.multipleData!["destin_discount3"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges3"],
-    //         "receiver_name": widget.multipleData!["receiver_name3"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone3"],
-    //       },
-    //     if (widget.multipleData!["pickup_address4"] != null &&
-    //         widget.multipleData!["pickup_address4"].isNotEmpty)
-    //       {
-    //         "pickup_address": widget.multipleData!["pickup_address4"],
-    //         "pickup_latitude": widget.multipleData!["pickup_latitude4"]
-    //             ["latitude"],
-    //         "pickup_longitude": widget.multipleData!["pickup_longitude4"]
-    //             ["longitude"],
-    //         "destin_address": widget.multipleData!["destin_address4"],
-    //         "destin_latitude": widget.multipleData!["destin_latitude4"]
-    //             ["latitude"],
-    //         "destin_longitude": widget.multipleData!["destin_longitude4"]
-    //             ["longitude"],
-    //         "destin_distance": widget.multipleData!["destin_distance4"],
-    //         "destin_time": widget.multipleData!["destin_time4"],
-    //         "destin_delivery_charges":
-    //             widget.multipleData!["destin_delivery_charges4"],
-    //         "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
-    //         "destin_total_charges":
-    //             widget.multipleData!["destin_total_charges4"],
-    //         "destin_discount": widget.multipleData!["destin_discount4"],
-    //         "destin_discounted_charges":
-    //             widget.multipleData!["destin_discounted_charges4"],
-    //         "receiver_name": widget.multipleData!["receiver_name4"],
-    //         "receiver_phone": widget.multipleData!["receiver_phone4"],
-    //       },
-    //   ],
-    //   "delivery_date": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["delivery_date"]
-    //       : widget.multipleData!["delivery_date"],
-    //   "delivery_time": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["delivery_time"]
-    //       : widget.multipleData!["delivery_time"],
-    //   "total_delivery_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["destin_total_charges"]
-    //       : widget.multipleData!["destin_total_charges"],
-    //   "total_vat_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_vat_charges"]
-    //       : widget.multipleData!["total_vat_charges"],
-    //   "total_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_charges"]
-    //       : widget.multipleData!["total_charges"],
-    //   "total_discount": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_discount"]
-    //       : widget.multipleData!["total_discount"],
-    //   "total_discounted_charges": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["total_discounted_charges"]
-    //       : widget.multipleData!["total_discounted_charges"],
-    //   "payment_gateways_id": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["payment_gateways_id"]
-    //       : widget.multipleData!["payment_gateways_id"],
-    //   "payment_by": widget.singleData!.isNotEmpty
-    //       ? widget.singleData!["payment_by"]
-    //       : widget.multipleData!["payment_by"],
-    //   "payment_status": "Unpaid"
-    // };
     final Map<String, dynamic> requestData = {
       "bookings_fleet": bookingsFleet,
       "users_customers_id": userId.toString(),
@@ -1187,14 +814,14 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
               ? widget.singleData!["destin_time"]
               : widget.multipleData!["destin_time0"],
           "destin_delivery_charges": widget.singleData!.isNotEmpty
-              ? widget.singleData!["destin_delivery_charges"]
-              : widget.multipleData!["destin_delivery_charges0"],
+              ? removeCommaFromString(widget.singleData!["destin_delivery_charges"])
+              : removeCommaFromString(widget.multipleData!["destin_delivery_charges0"]),
           "destin_vat_charges": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_vat_charges"]
               : widget.multipleData!["destin_vat_charges0"],
           "destin_total_charges": widget.singleData!.isNotEmpty
-              ? widget.singleData!["destin_total_charges"]
-              : widget.multipleData!["destin_total_charges0"],
+              ? removeCommaFromString(widget.singleData!["destin_total_charges"])
+              : removeCommaFromString(widget.multipleData!["destin_total_charges0"]),
           "destin_discount": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_discount"]
               : widget.multipleData!["destin_discount0"],
@@ -1229,11 +856,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance1"],
             "destin_time": widget.multipleData!["destin_time1"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges1"],
+               removeCommaFromString( widget.multipleData!["destin_delivery_charges1"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges1"],
-            "destin_discount": widget.multipleData!["destin_discount1"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges1"]),
+            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount1"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges1"],
             "receiver_name": widget.multipleData!["receiver_name1"],
@@ -1260,11 +887,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance2"],
             "destin_time": widget.multipleData!["destin_time2"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges2"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges2"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges2"],
-            "destin_discount": widget.multipleData!["destin_discount2"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges2"]),
+            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount2"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges2"],
             "receiver_name": widget.multipleData!["receiver_name2"],
@@ -1291,11 +918,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance3"],
             "destin_time": widget.multipleData!["destin_time3"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges3"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges3"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges3"],
-            "destin_discount": widget.multipleData!["destin_discount3"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges3"]),
+            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount3"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges3"],
             "receiver_name": widget.multipleData!["receiver_name3"],
@@ -1322,10 +949,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_distance": widget.multipleData!["destin_distance4"],
             "destin_time": widget.multipleData!["destin_time4"],
             "destin_delivery_charges":
-                widget.multipleData!["destin_delivery_charges4"],
+                removeCommaFromString(widget.multipleData!["destin_delivery_charges4"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
             "destin_total_charges":
-                widget.multipleData!["destin_total_charges4"],
+                removeCommaFromString(widget.multipleData!["destin_total_charges4"]),
             "destin_discount": widget.multipleData!["destin_discount4"],
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges4"],
@@ -1361,14 +988,14 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ? widget.singleData!["delivery_time"]
           : widget.multipleData!["delivery_time"],
       "total_delivery_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["destin_total_charges"].toString()
-          : widget.multipleData!["destin_total_charges"].toString(),
+          ? removeCommaFromString(widget.singleData!["destin_total_charges"].toString())
+          : removeCommaFromString(widget.multipleData!["destin_total_charges"].toString()),
       "total_vat_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["total_vat_charges"]
-          : widget.multipleData!["total_vat_charges"],
+          ? removeCommaFromString(widget.singleData!["total_vat_charges"])
+          : removeCommaFromString(widget.multipleData!["total_vat_charges"]),
       "total_charges": widget.singleData!.isNotEmpty
-          ? widget.singleData!["total_charges"]
-          : widget.multipleData!["total_charges"],
+          ? removeCommaFromString(widget.singleData!["total_charges"])
+          : removeCommaFromString(widget.multipleData!["total_charges"]),
       "total_discount": widget.singleData!.isNotEmpty
           ? widget.singleData!["total_discount"]
           : widget.multipleData!["total_discount"],
