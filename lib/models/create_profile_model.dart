@@ -12,21 +12,25 @@ String createProfileModelToJson(CreateProfileModel data) =>
 
 class CreateProfileModel {
   String? status;
+  String? message;
   Data? data;
 
   CreateProfileModel({
     this.status,
+    this.message,
     this.data,
   });
 
   factory CreateProfileModel.fromJson(Map<String, dynamic> json) =>
       CreateProfileModel(
         status: json["status"],
+        message: json["message"],
         data: Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
+        "message": message,
         "data": data?.toJson(),
       };
 }

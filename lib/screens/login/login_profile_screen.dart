@@ -102,7 +102,7 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
   }
 
   CreateProfileModel createProfileModel = CreateProfileModel();
-
+  var data;
   createProfile() async {
     try {
       String apiUrl = "$baseUrl/create_profile_customers";
@@ -128,34 +128,41 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
         },
       );
       final responseString = response.body;
+      data = json.decode(responseString);
       debugPrint("response: $responseString");
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
-        createProfileModel = createProfileModelFromJson(responseString);
-        SharedPreferences sharedPref = await SharedPreferences.getInstance();
-        await sharedPref.setString('userId',
-            "${createProfileModel.data?.usersCustomersId.toString()}");
-        await sharedPref.setString(
-            'email', "${createProfileModel.data?.email}");
-        await sharedPref.setString(
-            'firstName', "${createProfileModel.data?.firstName}");
-        await sharedPref.setString(
-            'lastName', "${createProfileModel.data?.lastName}");
-        await sharedPref.setString(
-            'phoneNumber', "${createProfileModel.data?.phone}");
-        await sharedPref.setString(
-            'profilePic', "${createProfileModel.data?.profilePic}");
-        debugPrint(
-            "sharedPref userId: ${createProfileModel.data!.usersCustomersId.toString()}");
-        debugPrint("sharedPref email: ${createProfileModel.data!.email}");
-        debugPrint(
-            "sharedPref firstName: ${createProfileModel.data!.firstName}");
-        debugPrint("sharedPref lastName: ${createProfileModel.data!.lastName}");
-        debugPrint("sharedPref phoneNumber: ${createProfileModel.data!.phone}");
-        debugPrint(
-            "sharedPref profilePic: ${createProfileModel.data!.profilePic}");
-        debugPrint('createProfileModel status: ${createProfileModel.status}');
-        setState(() {});
+        if (data['status'] == "success") {
+          createProfileModel = createProfileModelFromJson(responseString);
+          SharedPreferences sharedPref = await SharedPreferences.getInstance();
+          await sharedPref.setString('userId',
+              "${createProfileModel.data?.usersCustomersId.toString()}");
+          await sharedPref.setString(
+              'email', "${createProfileModel.data?.email}");
+          await sharedPref.setString(
+              'firstName', "${createProfileModel.data?.firstName}");
+          await sharedPref.setString(
+              'lastName', "${createProfileModel.data?.lastName}");
+          await sharedPref.setString(
+              'phoneNumber', "${createProfileModel.data?.phone}");
+          await sharedPref.setString(
+              'profilePic', "${createProfileModel.data?.profilePic}");
+          debugPrint(
+              "sharedPref userId: ${createProfileModel.data!.usersCustomersId.toString()}");
+          debugPrint("sharedPref email: ${createProfileModel.data!.email}");
+          debugPrint(
+              "sharedPref firstName: ${createProfileModel.data!.firstName}");
+          debugPrint(
+              "sharedPref lastName: ${createProfileModel.data!.lastName}");
+          debugPrint(
+              "sharedPref phoneNumber: ${createProfileModel.data!.phone}");
+          debugPrint(
+              "sharedPref profilePic: ${createProfileModel.data!.profilePic}");
+          debugPrint('createProfileModel status: ${createProfileModel.status}');
+          setState(() {});
+        } else if (data['status'] == "error") {
+          createProfileModel = createProfileModelFromJson(responseString);
+        }
       }
     } catch (e) {
       debugPrint('Something went wrong = ${e.toString()}');
@@ -717,10 +724,11 @@ class _LoginProfileScreenState extends State<LoginProfileScreen> {
                               setState(() {
                                 isLoading = false;
                               });
-                            } else {
+                            } else if (data['status'] == "error") {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 CustomSnackBar(
-                                  message: "Something Went Wrong",
+                                  message:
+                                      "Email already in use, please use another email",
                                   size: MediaQuery.of(context).size,
                                 ),
                               );
