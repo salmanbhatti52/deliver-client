@@ -8,6 +8,7 @@ import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
 import 'package:deliver_client/screens/home/home_page_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
+import 'package:deliver_client/widgets/remove_coma.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:http/http.dart' as http;
@@ -1913,20 +1914,20 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
                                                 onTap: () {
                                                   if (widget
                                                       .singleData!.isNotEmpty) {
-                                                    double parsedValue =
-                                                        double.parse(widget
-                                                                .singleData![
-                                                            'total_charges']);
+                                                    double parsedValue = double
+                                                        .parse(removeCommaFromString(
+                                                            widget.singleData![
+                                                                'total_charges']));
                                                     totalAmount =
                                                         (parsedValue + 0.5)
                                                             .floor();
                                                     debugPrint(
                                                         "Rounded Integer: $totalAmount");
                                                   } else {
-                                                    double parsedValue =
-                                                        double.parse(widget
-                                                                .multipleData![
-                                                            'total_charges']);
+                                                    double parsedValue = double
+                                                        .parse(removeCommaFromString(
+                                                            widget.multipleData![
+                                                                'total_charges']));
                                                     totalAmount =
                                                         (parsedValue + 0.5)
                                                             .floor();

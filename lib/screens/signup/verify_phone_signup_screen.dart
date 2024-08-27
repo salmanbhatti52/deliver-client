@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors, unused_local_variable
 
 import 'dart:async';
+import 'dart:convert';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pinput/pinput.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +135,20 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       debugPrint("placeholder: $pinPlaceholder");
       debugPrint("messageText: $pinMessageText");
       debugPrint("pinType: $pinType");
+      var data = {
+        "api_key": termiiApiKey,
+        "message_type": pinMessageType,
+        "to": widget.phoneNumber,
+        "from": pinFrom,
+        "channel": pinChannel,
+        "pin_attempts": pinAttempts,
+        "pin_time_to_live": pinExpiryTime,
+        "pin_length": pinLength,
+        "pin_placeholder": pinPlaceholder,
+        "message_text": pinMessageText,
+        "pin_type": pinType,
+      };
+      print("Data 1: ${jsonEncode(data)}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -174,10 +189,17 @@ class _VerifyPhoneSignUpScreenState extends State<VerifyPhoneSignUpScreen> {
       setState(() {
         isLoading = true;
       });
+
       String apiUrl = "$tremiiUrl/verify";
       debugPrint("apiUrl: $apiUrl");
       debugPrint("pinId: ${widget.pinID}");
       debugPrint("pin: ${otpController.text}");
+      var data = {
+        "api_key": termiiApiKey,
+        "pin_id": widget.pinID,
+        "pin": otpController.text,
+      };
+      print("Data 2: ${jsonEncode(data)}");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {

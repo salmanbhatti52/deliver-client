@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
 import 'package:deliver_client/models/check_number_model.dart';
 import 'package:deliver_client/screens/login/new_signup.dart';
 import 'package:deliver_client/utils/size.dart';
@@ -191,6 +193,21 @@ class _LoginScreenState extends State<LoginScreen> {
     debugPrint("placeholder: $pinPlaceholder");
     debugPrint("messageText: $pinMessageText");
     debugPrint("pinType: $pinType");
+    var data = {
+      "api_key": termiiApiKey,
+      "message_type": pinMessageType,
+      "to": countryCode!.dialCode + contactNumberController.text,
+      "from": pinFrom,
+      "channel": pinChannel,
+      "pin_attempts": pinAttempts,
+      "pin_time_to_live": pinExpiryTime,
+      "pin_length": pinLength,
+      "pin_placeholder": pinPlaceholder,
+      "message_text": pinMessageText,
+      "pin_type": pinType,
+    };
+    print("Data 1: ${jsonEncode(data)}");
+
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {
