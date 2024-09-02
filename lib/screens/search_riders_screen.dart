@@ -25,6 +25,9 @@ import 'package:deliver_client/widgets/search_rider_listview.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+int tapCount = 0;
+String? newBookingId;
+
 class SearchRidersScreen extends StatefulWidget {
   final Map? singleData;
   final Map? multipleData;
@@ -269,6 +272,68 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                 ),
               ),
             );
+          } else if (createBookingModel.status == "error") {
+            setState(() {
+              isLoading = false;
+            });
+
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: const Text(
+                    'Search Limit Exceed',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  content: const Text(
+                    'No rider available. Search Limit Exceed.',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const HomePageScreen(),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                        CustomToast.showToast(
+                            message:
+                                "You have reached the maximum search LIMIT");
+
+                        // handleButtonTap();
+
+                        // Navigator.of(context).pushAndRemoveUntil(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const HomePageScreen(),
+                        //   ),
+                        //   (Route<dynamic> route) => false,
+                        // );
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(
+                          Icons.refresh,
+                          color: Colors.green,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
           }
         } else if (widget.singleData!["type"] == "schedule") {
           await scheduleBooking();
@@ -312,6 +377,67 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
                       .toString(),
                 ),
               ),
+            );
+          } else if (createBookingModel.status == "error") {
+            setState(() {
+              isLoading = false;
+            });
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: const Text(
+                    'Search Limit Exceed',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                  content: const Text(
+                    'No rider available. Search Limit Exceed.',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const HomePageScreen(),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                        CustomToast.showToast(
+                            message:
+                                "You have reached the maximum search LIMIT");
+
+                        // handleButtonTap();
+
+                        // Navigator.of(context).pushAndRemoveUntil(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const HomePageScreen(),
+                        //   ),
+                        //   (Route<dynamic> route) => false,
+                        // );
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(
+                          Icons.home,
+                          color: Colors.green,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           }
         } else if (widget.multipleData!["type"] == "schedule") {
@@ -476,6 +602,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       }
       // print("latLongData $latLongData");
       await searchRider();
+      await fetchSystemSettingsDescription28();
     }
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
@@ -502,6 +629,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     setState(() {
       isLoading = true;
     });
+
     // SharedPreferences sharedPref = await SharedPreferences.getInstance();
     // final userId = sharedPref.getString('userId');
     SharedPreferences sharedPref = await SharedPreferences.getInstance();
@@ -544,14 +672,18 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
               ? widget.singleData!["destin_time"]
               : widget.multipleData!["destin_time0"],
           "destin_delivery_charges": widget.singleData!.isNotEmpty
-              ? removeCommaFromString(widget.singleData!["destin_delivery_charges"])
-              : removeCommaFromString(widget.multipleData!["destin_delivery_charges0"]),
+              ? removeCommaFromString(
+                  widget.singleData!["destin_delivery_charges"])
+              : removeCommaFromString(
+                  widget.multipleData!["destin_delivery_charges0"]),
           "destin_vat_charges": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_vat_charges"]
               : widget.multipleData!["destin_vat_charges0"],
           "destin_total_charges": widget.singleData!.isNotEmpty
-              ? removeCommaFromString(widget.singleData!["destin_total_charges"])
-              : removeCommaFromString(widget.multipleData!["destin_total_charges0"]),
+              ? removeCommaFromString(
+                  widget.singleData!["destin_total_charges"])
+              : removeCommaFromString(
+                  widget.multipleData!["destin_total_charges0"]),
           "destin_discount": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_discount"]
               : widget.multipleData!["destin_discount0"],
@@ -585,25 +717,30 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude1"],
             "destin_distance": widget.multipleData!["destin_distance1"],
             "destin_time": widget.multipleData!["destin_time1"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges1"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges1"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges1"]),
-            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount1"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges1"]),
+            "destin_discount":
+                removeCommaFromString(widget.multipleData!["destin_discount1"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges1"],
             "receiver_name": widget.multipleData!["receiver_name1"],
             "receiver_phone": widget.multipleData!["receiver_phone1"],
             "svc_running_charges": widget.singleData!.isNotEmpty
-                ? removeCommaFromString(widget.singleData!["svc_running_charges1"])
-                : removeCommaFromString(widget.multipleData!["svc_running_charges1"]),
+                ? removeCommaFromString(
+                    widget.singleData!["svc_running_charges1"])
+                : removeCommaFromString(
+                    widget.multipleData!["svc_running_charges1"]),
             if (widget.singleData!.isNotEmpty &&
                 widget.singleData!["tollgate_charges1"] != null)
-              "tollgate_charges": removeCommaFromString(widget.singleData!["tollgate_charges1"]),
+              "tollgate_charges": removeCommaFromString(
+                  widget.singleData!["tollgate_charges1"]),
             if (widget.singleData!.isEmpty &&
                 widget.multipleData!["tollgate_charges1"] != null)
-              "tollgate_charges": removeCommaFromString(widget.multipleData!["tollgate_charges1"]),
+              "tollgate_charges": removeCommaFromString(
+                  widget.multipleData!["tollgate_charges1"]),
           },
         if (widget.multipleData!["pickup_address2"] != null &&
             widget.multipleData!["pickup_address2"].isNotEmpty)
@@ -616,12 +753,13 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude2"],
             "destin_distance": widget.multipleData!["destin_distance2"],
             "destin_time": widget.multipleData!["destin_time2"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges2"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges2"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges2"]),
-            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount2"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges2"]),
+            "destin_discount":
+                removeCommaFromString(widget.multipleData!["destin_discount2"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges2"],
             "receiver_name": widget.multipleData!["receiver_name2"],
@@ -647,12 +785,13 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude3"],
             "destin_distance": widget.multipleData!["destin_distance3"],
             "destin_time": widget.multipleData!["destin_time3"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges3"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges3"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges3"]),
-            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount3"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges3"]),
+            "destin_discount":
+                removeCommaFromString(widget.multipleData!["destin_discount3"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges3"],
             "receiver_name": widget.multipleData!["receiver_name3"],
@@ -678,11 +817,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude4"],
             "destin_distance": widget.multipleData!["destin_distance4"],
             "destin_time": widget.multipleData!["destin_time4"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges4"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges4"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges4"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges4"]),
             "destin_discount": widget.multipleData!["destin_discount4"],
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges4"],
@@ -699,6 +838,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
               "tollgate_charges": widget.multipleData!["tollgate_charges4"],
           },
       ],
+
       "service_running": widget.singleData!.isNotEmpty
           ? widget.singleData!["service_running"]
           : widget.multipleData!["service_running"],
@@ -718,8 +858,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ? widget.singleData!["delivery_time"]
           : widget.multipleData!["delivery_time"],
       "total_delivery_charges": widget.singleData!.isNotEmpty
-          ? removeCommaFromString(widget.singleData!["destin_total_charges"].toString())
-          : removeCommaFromString(widget.multipleData!["destin_total_charges"].toString()),
+          ? removeCommaFromString(
+              widget.singleData!["destin_total_charges"].toString())
+          : removeCommaFromString(
+              widget.multipleData!["destin_total_charges"].toString()),
       "total_vat_charges": widget.singleData!.isNotEmpty
           ? widget.singleData!["total_vat_charges"]
           : widget.multipleData!["total_vat_charges"],
@@ -738,8 +880,15 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       "payment_by": widget.singleData!.isNotEmpty
           ? widget.singleData!["payment_by"]
           : widget.multipleData!["payment_by"],
-      "payment_status": "Unpaid"
+      "payment_status": "Unpaid",
     };
+
+    if (tapCount > 1) {
+      requestData["booking_request_round"] = {
+        "request_round": "$tapCount",
+        "bookings_id": "$newBookingId"
+      };
+    }
     String apiUrl = "$baseUrl/send_request_booking";
     debugPrint("apiUrl: $apiUrl");
     debugPrint("requestData: $requestData");
@@ -758,6 +907,7 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
       createBookingModel = createBookingModelFromJson(responseString);
       debugPrint('createBookingModel status: ${createBookingModel.status}');
       currentBookingId = createBookingModel.data?.bookingsId.toString();
+      newBookingId = createBookingModel.data?.bookingsId.toString();
       debugPrint('currentBookingId: $currentBookingId');
       setState(() {
         isLoading = false;
@@ -814,14 +964,18 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
               ? widget.singleData!["destin_time"]
               : widget.multipleData!["destin_time0"],
           "destin_delivery_charges": widget.singleData!.isNotEmpty
-              ? removeCommaFromString(widget.singleData!["destin_delivery_charges"])
-              : removeCommaFromString(widget.multipleData!["destin_delivery_charges0"]),
+              ? removeCommaFromString(
+                  widget.singleData!["destin_delivery_charges"])
+              : removeCommaFromString(
+                  widget.multipleData!["destin_delivery_charges0"]),
           "destin_vat_charges": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_vat_charges"]
               : widget.multipleData!["destin_vat_charges0"],
           "destin_total_charges": widget.singleData!.isNotEmpty
-              ? removeCommaFromString(widget.singleData!["destin_total_charges"])
-              : removeCommaFromString(widget.multipleData!["destin_total_charges0"]),
+              ? removeCommaFromString(
+                  widget.singleData!["destin_total_charges"])
+              : removeCommaFromString(
+                  widget.multipleData!["destin_total_charges0"]),
           "destin_discount": widget.singleData!.isNotEmpty
               ? widget.singleData!["destin_discount"]
               : widget.multipleData!["destin_discount0"],
@@ -855,12 +1009,13 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude1"],
             "destin_distance": widget.multipleData!["destin_distance1"],
             "destin_time": widget.multipleData!["destin_time1"],
-            "destin_delivery_charges":
-               removeCommaFromString( widget.multipleData!["destin_delivery_charges1"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges1"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges1"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges1"]),
-            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount1"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges1"]),
+            "destin_discount":
+                removeCommaFromString(widget.multipleData!["destin_discount1"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges1"],
             "receiver_name": widget.multipleData!["receiver_name1"],
@@ -886,12 +1041,13 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude2"],
             "destin_distance": widget.multipleData!["destin_distance2"],
             "destin_time": widget.multipleData!["destin_time2"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges2"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges2"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges2"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges2"]),
-            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount2"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges2"]),
+            "destin_discount":
+                removeCommaFromString(widget.multipleData!["destin_discount2"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges2"],
             "receiver_name": widget.multipleData!["receiver_name2"],
@@ -917,12 +1073,13 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude3"],
             "destin_distance": widget.multipleData!["destin_distance3"],
             "destin_time": widget.multipleData!["destin_time3"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges3"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges3"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges3"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges3"]),
-            "destin_discount": removeCommaFromString(widget.multipleData!["destin_discount3"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges3"]),
+            "destin_discount":
+                removeCommaFromString(widget.multipleData!["destin_discount3"]),
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges3"],
             "receiver_name": widget.multipleData!["receiver_name3"],
@@ -948,11 +1105,11 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
             "destin_longitude": widget.multipleData!["destin_longitude4"],
             "destin_distance": widget.multipleData!["destin_distance4"],
             "destin_time": widget.multipleData!["destin_time4"],
-            "destin_delivery_charges":
-                removeCommaFromString(widget.multipleData!["destin_delivery_charges4"]),
+            "destin_delivery_charges": removeCommaFromString(
+                widget.multipleData!["destin_delivery_charges4"]),
             "destin_vat_charges": widget.multipleData!["destin_vat_charges4"],
-            "destin_total_charges":
-                removeCommaFromString(widget.multipleData!["destin_total_charges4"]),
+            "destin_total_charges": removeCommaFromString(
+                widget.multipleData!["destin_total_charges4"]),
             "destin_discount": widget.multipleData!["destin_discount4"],
             "destin_discounted_charges":
                 widget.multipleData!["destin_discounted_charges4"],
@@ -988,8 +1145,10 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ? widget.singleData!["delivery_time"]
           : widget.multipleData!["delivery_time"],
       "total_delivery_charges": widget.singleData!.isNotEmpty
-          ? removeCommaFromString(widget.singleData!["destin_total_charges"].toString())
-          : removeCommaFromString(widget.multipleData!["destin_total_charges"].toString()),
+          ? removeCommaFromString(
+              widget.singleData!["destin_total_charges"].toString())
+          : removeCommaFromString(
+              widget.multipleData!["destin_total_charges"].toString()),
       "total_vat_charges": widget.singleData!.isNotEmpty
           ? removeCommaFromString(widget.singleData!["total_vat_charges"])
           : removeCommaFromString(widget.multipleData!["total_vat_charges"]),
@@ -1039,6 +1198,46 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
     // }
   }
 
+  bool systemSettings = false;
+  String? round;
+
+  Future<String?> fetchSystemSettingsDescription28() async {
+    const String apiUrl = 'https://deliverbygfl.com/api/get_all_system_data';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // If the call to the server was successful, parse the JSON
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        // Find the setting with system_settings_id equal to 396
+        final setting396 = data['data'].firstWhere(
+            (setting) => setting['system_settings_id'] == 396,
+            orElse: () => null);
+        print(setting396);
+
+        if (setting396 != null) {
+          // Extract and return the description if setting 28 exists
+          round = setting396['description'];
+          print("round : $round");
+
+          return round!;
+        } else {
+          throw Exception('System setting with ID 396 not found');
+        }
+      } else {
+        // If the server did not return a 200 OK response,
+        // throw an exception.
+        throw Exception('Failed to fetch system settings');
+      }
+    } catch (e) {
+      // Catch any exception that might occur during the process
+      print('Error fetching system settings: $e');
+      return null;
+    }
+  }
+
   @override
   initState() {
     super.initState();
@@ -1072,65 +1271,153 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
           ),
         ),
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: transparentColor,
-            appBar: AppBar(
-              backgroundColor: bgColor,
-              elevation: 0,
-              scrolledUnderElevation: 0,
-              leading: GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: SvgPicture.asset(
-                    'assets/images/back-icon.svg',
-                    width: 22,
-                    height: 22,
-                    fit: BoxFit.scaleDown,
-                  ),
-                ),
-              ),
-              title: Padding(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: transparentColor,
+          appBar: AppBar(
+            backgroundColor: bgColor,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Padding(
                 padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  "Searching for Ride",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: blackColor,
-                    fontSize: 20,
-                    fontFamily: 'Syne-Bold',
-                  ),
+                child: SvgPicture.asset(
+                  'assets/images/back-icon.svg',
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.scaleDown,
                 ),
               ),
-              centerTitle: true,
             ),
-            body: isLoading == true
-                ? Center(
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      color: transparentColor,
-                      child: Lottie.asset(
-                        'assets/images/loading-icon.json',
-                        fit: BoxFit.cover,
+            title: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                "Searching for Ride",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: blackColor,
+                  fontSize: 20,
+                  fontFamily: 'Syne-Bold',
+                ),
+              ),
+            ),
+            centerTitle: true,
+          ),
+          body: isLoading
+              ? Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    color: transparentColor,
+                    child: Lottie.asset(
+                      'assets/images/loading-icon.json',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              : Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await fetchSystemSettingsDescription28();
+                      showRiderSearchBottomSheet(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange, // Button color
+                      minimumSize:
+                          const Size(256, 48), // Width and height of the button
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24.0),
                       ),
                     ),
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: Container(
-                          child: Text(
-                              "No riders found within the radius of $radiusThreshold km"),
-                        ),
-                      ),
-                    ],
-                  )),
+                    child: const Text(
+                      "Search Again",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ),
+        ),
       ),
+    );
+  }
+
+  void showRiderSearchBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                "No riders found within the radius of $radiusThreshold km",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () async {
+                  await fetchSystemSettingsDescription28();
+                  int? roundInt = int.tryParse(round ?? '0');
+                  if (roundInt != null && tapCount < roundInt) {
+                    // Check if tapCount is less than round
+                    tapCount++; // Increment tap count
+
+                    Navigator.pop(context);
+                    await getAllSystemData();
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => SearchRidersScreen(
+                    //       singleData: widget.singleData,
+                    //       multipleData: widget.multipleData,
+                    //     ),
+                    //   ),
+                    // );
+                  } else {
+                    CustomToast.showToast(
+                        message: "You have reached the maximum search LIMIT");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Cannot search riders at this time.'),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  minimumSize: const Size(256, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  elevation: 5.0,
+                ),
+                child: const Text(
+                  "Search Again",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:deliver_client/models/get_distance_addresses_model.dart';
+import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -192,6 +193,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
+        tapCount = 0;
+        print("tapCountHome: $tapCount");
         debugPrint(
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -248,36 +251,36 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
 
   getAddresses() async {
     // try {
-      setState(() {
-        isLoadingAddress = true;
-      });
-      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-      userId = sharedPref.getString('userId');
-      String apiUrl = "$baseUrl/get_addresses_customers";
-      debugPrint("apiUrl: $apiUrl");
-      debugPrint("userId: $userId");
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: {
-          "users_customers_id": userId,
-        },
-      );
-      final responseString = response.body;
-      debugPrint("response: $responseString");
-      debugPrint("statusCode: ${response.statusCode}");
-      if (response.statusCode == 200) {
-        getAddressesModel = getAddressesModelFromJson(responseString);
-        debugPrint('getAddressesModel status: ${getAddressesModel.status}');
-        for (int i = 0; i < getAddressesModel.data!.length; i++) {
-          addresses.add("${getAddressesModel.data?[i]}");
-        }
-        setState(() {
-          isLoadingAddress = false;
-        });
+    setState(() {
+      isLoadingAddress = true;
+    });
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    userId = sharedPref.getString('userId');
+    String apiUrl = "$baseUrl/get_addresses_customers";
+    debugPrint("apiUrl: $apiUrl");
+    debugPrint("userId: $userId");
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: {
+        "users_customers_id": userId,
+      },
+    );
+    final responseString = response.body;
+    debugPrint("response: $responseString");
+    debugPrint("statusCode: ${response.statusCode}");
+    if (response.statusCode == 200) {
+      getAddressesModel = getAddressesModelFromJson(responseString);
+      debugPrint('getAddressesModel status: ${getAddressesModel.status}');
+      for (int i = 0; i < getAddressesModel.data!.length; i++) {
+        addresses.add("${getAddressesModel.data?[i]}");
       }
+      setState(() {
+        isLoadingAddress = false;
+      });
+    }
     // } catch (e) {
     //   debugPrint('Something went wrong = ${e.toString()}');
     //   return null;

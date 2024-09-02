@@ -34,7 +34,7 @@ class HomePageScreen extends StatefulWidget {
 
 class _HomePageScreenState extends State<HomePageScreen>
     with SingleTickerProviderStateMixin {
-      String? token;
+  String? token;
   TabController? tabController;
   DateTime? currentBackPressTime;
   one() async {
@@ -44,8 +44,8 @@ class _HomePageScreenState extends State<HomePageScreen>
 
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.Notifications.requestPermission(true);
-    
-  token = OneSignal.User.pushSubscription.id;
+
+    token = OneSignal.User.pushSubscription.id;
     print('token Response: $token');
     setState(() {});
   }
