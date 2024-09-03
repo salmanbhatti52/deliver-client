@@ -379,6 +379,7 @@ class _WaitingForRidersState extends State<WaitingForRiders> {
   @override
   void initState() {
     super.initState();
+    fetchSystemSettingsDescription28();
     startTimer();
     startTimeoutTimer();
   }
@@ -480,7 +481,7 @@ class _WaitingForRidersState extends State<WaitingForRiders> {
               ),
             ),
             content: const Text(
-              'No rider available. Please try again.',
+              'No rider in your area. Please try again',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -489,8 +490,10 @@ class _WaitingForRidersState extends State<WaitingForRiders> {
             actions: <Widget>[
               InkWell(
                 onTap: () {
-                  int? roundInt = int.tryParse(round ?? '0');
-                  if (tapCount > roundInt!) {
+                  print("tapCount on Ride Request: $tapCount");
+                  int? roundInt = int.tryParse(round!);
+                  print("roundInt: $roundInt");
+                  if (tapCount < roundInt!) {
                     tapCount++;
                     print("tapCount: $tapCount");
                     Navigator.pushReplacement(
@@ -503,6 +506,7 @@ class _WaitingForRidersState extends State<WaitingForRiders> {
                       ),
                     );
                   } else {
+                    print("tapCount on else: $tapCount");
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) => const HomePageScreen(),
