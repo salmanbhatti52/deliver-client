@@ -133,7 +133,6 @@ class _SearchRidersScreenState extends State<SearchRidersScreen> {
   }
 
   var hasPermission = false;
-  Position? _currentPosition;
   String? currentLat;
   String? currentLng;
   LatLng? currentLocation;

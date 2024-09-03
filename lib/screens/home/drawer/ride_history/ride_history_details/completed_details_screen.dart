@@ -567,16 +567,23 @@ class _RideHistoryCompletedDetailsScreenState
                                                 ),
                                                 Column(
                                                   children: [
-                                                    SvgPicture.asset(
-                                                      'assets/images/grey-dollar-icon.svg',
-                                                      colorFilter:
-                                                          ColorFilter.mode(
-                                                              const Color(
-                                                                      0xFF292D32)
-                                                                  .withOpacity(
-                                                                      0.4),
-                                                              BlendMode.srcIn),
-                                                    ),
+                                                Text("    $currencyUnit",       style: TextStyle(
+                                                            color:
+                                                                textHaveAccountColor,
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Inter-Regular',
+                                                          ),),
+                                                    // SvgPicture.asset(
+                                                    //   'assets/images/grey-dollar-icon.svg',
+                                                    //   colorFilter:
+                                                    //       ColorFilter.mode(
+                                                    //           const Color(
+                                                    //                   0xFF292D32)
+                                                    //               .withOpacity(
+                                                    //                   0.4),
+                                                    //           BlendMode.srcIn),
+                                                    // ),
                                                     SizedBox(
                                                         height:
                                                             size.height * 0.01),
