@@ -567,13 +567,16 @@ class _RideHistoryCompletedDetailsScreenState
                                                 ),
                                                 Column(
                                                   children: [
-                                                Text("    $currencyUnit",       style: TextStyle(
-                                                            color:
-                                                                textHaveAccountColor,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Inter-Regular',
-                                                          ),),
+                                                    Text(
+                                                      "$currencyUnit",
+                                                      style: TextStyle(
+                                                        color:
+                                                            textHaveAccountColor,
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            'Inter-Regular',
+                                                      ),
+                                                    ),
                                                     // SvgPicture.asset(
                                                     //   'assets/images/grey-dollar-icon.svg',
                                                     //   colorFilter:
@@ -622,7 +625,7 @@ class _RideHistoryCompletedDetailsScreenState
                                             //     showDialog(
                                             //       context: context,
                                             //       barrierDismissible: false,
-                                            //       // barrierColor: sheetBarrierColor,
+                                            //        barrierColor: sheetBarrierColor,
                                             //       builder: (context) =>
                                             //           rebookRide(context),
                                             //     );
