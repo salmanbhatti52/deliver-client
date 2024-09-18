@@ -21,7 +21,11 @@ class OrderTrackingScreen extends StatefulWidget {
 class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   TextEditingController tracking = TextEditingController();
   TrackingOrderModel trackingOrderModel = TrackingOrderModel();
+  bool isLoading1 = false;
   orderTracking() async {
+    setState(() {
+      isLoading1 = true;
+    });
     var headersList = {'Accept': '*/*', 'Content-Type': 'application/json'};
     var url = Uri.parse('https://deliverbygfl.com/api/bookings_track');
 
@@ -36,11 +40,16 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
 
     if (res.statusCode == 200) {
       trackingOrderModel = trackingOrderModelFromJson(resBody);
-      setState(() {});
+      setState(() {
+        isLoading1 = false;
+      });
       print(resBody);
     } else {
       print(res.reasonPhrase);
       trackingOrderModel = trackingOrderModelFromJson(resBody);
+      setState(() {
+        isLoading1 = false;
+      });
     }
   }
 
