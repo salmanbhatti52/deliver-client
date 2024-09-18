@@ -4,6 +4,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:deliver_client/models/get_distance_addresses_model.dart';
+import 'package:deliver_client/models/get_profile_model.dart';
+import 'package:deliver_client/screens/home/drawer/settings/delete_account_screen.dart';
+import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
@@ -139,6 +142,89 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   bool isLoading = false;
   bool isLoadingAddress = false;
   bool isLoading2 = false;
+  String? emaildata;
+  void showSessionExpiredDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Your session is expired, please re-login',
+            style: TextStyle(color: Colors.black),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                removeDataFormSharedPreferences();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              child: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.orange),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  sharedPrefs() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    userId = sharedPref.getString('userId');
+    firstName = sharedPref.getString('firstName');
+    lastName = sharedPref.getString('lastName');
+    emaildata = sharedPref.getString('email');
+    debugPrint('sharedPrefs userId: $userId');
+    debugPrint('sharedPrefs firstName: $firstName');
+    debugPrint('sharedPrefs lastName: $lastName');
+    debugPrint('sharedPrefs emaildata: $emaildata');
+    if (getProfileModel.data!.email != emaildata) {
+      showSessionExpiredDialog(context);
+    }
+  }
+
+  removeDataFormSharedPreferences() async {
+    SharedPreferences sharedPref = await SharedPreferences.getInstance();
+    await sharedPref.clear();
+    setState(() {});
+  }
+
+  GetProfileModel getProfileModel = GetProfileModel();
+  getProfile() async {
+    try {
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      userId = sharedPref.getString('userId');
+      String apiUrl = "$baseUrl/get_profile_customers";
+      debugPrint("apiUrl: $apiUrl");
+      debugPrint("userId: $userId");
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: {
+          "users_customers_id": userId,
+        },
+      );
+      final responseString = response.body;
+      debugPrint("response: $responseString");
+      debugPrint("statusCode: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        getProfileModel = getProfileModelFromJson(responseString);
+
+        setState(() {});
+        await sharedPrefs();
+        debugPrint('getProfileModel status: ${getProfileModel.status}');
+      }
+    } catch (e) {
+      debugPrint('Something went wrong = ${e.toString()}');
+      return null;
+    }
+  }
 
   GetAllSystemDataModel getAllSystemDataModel = GetAllSystemDataModel();
   void showCustomDialog(BuildContext context) {
@@ -273,6 +359,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
     debugPrint("statusCode: ${response.statusCode}");
     if (response.statusCode == 200) {
       getAddressesModel = getAddressesModelFromJson(responseString);
+      await getProfile();
+
       debugPrint('getAddressesModel status: ${getAddressesModel.status}');
       for (int i = 0; i < getAddressesModel.data!.length; i++) {
         addresses.add("${getAddressesModel.data?[i]}");
