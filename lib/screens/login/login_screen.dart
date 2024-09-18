@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? baseUrl = dotenv.env['BASE_URL'];
   String? tremiiUrl = dotenv.env['TERMII_URL'];
-  String? token;
+  String token = "123";
   CheckNumberModel checkNumberModel = CheckNumberModel();
   one() async {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.Notifications.requestPermission(true);
 
-    token = OneSignal.User.pushSubscription.id ?? "123";
+    token = OneSignal.User.pushSubscription.id!;
     print('token Response: $token');
     setState(() {});
   }
@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'Accept': 'application/json',
       },
       body: {
-        "one_signal_id": "$token",
+        "one_signal_id": token,
         "phone": countryCode!.dialCode + contactNumberController.text,
         "latitude": currentLat,
         "longitude": currentLng
