@@ -416,8 +416,8 @@ class UsersCustomers {
   dynamic phoneVerified;
   dynamic forgotPwdOtp;
   dynamic forgotPwdOtpCreatedAt;
-  DateTime dateAdded;
-  DateTime dateModified;
+  String? dateAdded;
+  String? dateModified;
   String status;
 
   UsersCustomers({
@@ -449,8 +449,8 @@ class UsersCustomers {
     required this.phoneVerified,
     required this.forgotPwdOtp,
     required this.forgotPwdOtpCreatedAt,
-    required this.dateAdded,
-    required this.dateModified,
+    this.dateAdded,
+    this.dateModified,
     required this.status,
   });
 
@@ -483,8 +483,8 @@ class UsersCustomers {
         phoneVerified: json["phone_verified"],
         forgotPwdOtp: json["forgot_pwd_otp"],
         forgotPwdOtpCreatedAt: json["forgot_pwd_otp_created_at"],
-        dateAdded: DateTime.parse(json["date_added"]),
-        dateModified: DateTime.parse(json["date_modified"]),
+        dateAdded: json["date_added"],
+        dateModified: json["date_modified"],
         status: json["status"],
       );
 
@@ -517,8 +517,8 @@ class UsersCustomers {
         "phone_verified": phoneVerified,
         "forgot_pwd_otp": forgotPwdOtp,
         "forgot_pwd_otp_created_at": forgotPwdOtpCreatedAt,
-        "date_added": dateAdded.toIso8601String(),
-        "date_modified": dateModified.toIso8601String(),
+        "date_added": dateAdded,
+        "date_modified": dateModified,
         "status": status,
       };
 }
