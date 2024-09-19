@@ -54,6 +54,11 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   double? destLng;
   double? riderLat;
   double? riderLng;
+  LatLng? riderPosition;
+  LatLng? destinationPosition;
+  double? riderDestinLat;
+  double? riderDestinLng;
+  List<LatLng> polylineCoordinates = [];
   GoogleMapController? mapController;
   BitmapDescriptor? customMarkerIcon;
   BitmapDescriptor? customDestMarkerIcon;
@@ -119,7 +124,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   String? riderName2;
   String? riderName3;
   String? riderName4;
-
+  double? updatedLat;
+  double? updatedLng;
   bool systemSettings = false;
   String? trackingPrefix;
 
@@ -162,6 +168,57 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     }
   }
 
+  String? fleetId;
+  var data0;
+  getProfileData() async {
+    var headersList = {
+      'Accept': '*/*',
+      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.parse('https://deliverbygfl.com/api/get_profile_fleet');
+
+    var body = {"users_fleet_id": "$fleetId"};
+
+    var req = http.Request('POST', url);
+    req.headers.addAll(headersList);
+    req.body = json.encode(body);
+
+    var res = await req.send();
+    final resBody = await res.stream.bytesToString();
+    data0 = jsonDecode(resBody);
+    // Destination
+    print("data0['latitude'] ${data0['latitude']}");
+    print("data0['longitude'] ${data0['longitude']}");
+    if (res.statusCode == 200) {
+      data0 = jsonDecode(resBody);
+      print(resBody);
+      print("data is getting");
+      print("data0['latitude'] ${data0['data']['latitude']}");
+      print("data0['longitude'] ${data0['data']['longitude']}");
+      updatedLat = double.parse(data0['data']['latitude']);
+      updatedLng = double.parse(data0['data']['longitude']);
+      riderPosition =
+          LatLng(updatedLat!, updatedLng!); // Initial rider position
+      destinationPosition = LatLng(riderDestinLat!, riderDestinLng!);
+    } else {
+      print(res.reasonPhrase);
+    }
+  }
+
+  void updateRiderPosition() {
+    setState(() {
+      // Update rider position when new lat/lng are received
+      riderPosition = LatLng(updatedLat!, updatedLng!);
+      polylineCoordinates.add(riderPosition!); // Add to polyline
+    });
+
+    // Move the camera to the updated position
+    mapController?.animateCamera(
+      CameraUpdate.newLatLng(riderPosition!),
+    );
+  }
+
   UpdateBookingStatusModel updateBookingStatusModel =
       UpdateBookingStatusModel();
 
@@ -185,13 +242,24 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       if (response.statusCode == 200) {
         updateBookingStatusModel =
             updateBookingStatusModelFromJson(responseString);
+        fleetId = updateBookingStatusModel.data!.bookingsFleet![0].usersFleetId
+            .toString();
+        riderDestinLat = double.parse(updateBookingStatusModel
+            .data!.bookingsFleet![0].bookingsDestinations!.destinLatitude
+            .toString());
 
+        riderDestinLng = double.parse(updateBookingStatusModel
+            .data!.bookingsFleet![0].bookingsDestinations!.destinLongitude
+            .toString());
+
+        print(
+            "${updateBookingStatusModel.data!.bookingsFleet![0].usersFleetId}");
         debugPrint(
             'updateBookingStatusModel status: ${updateBookingStatusModel.status}');
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-
+        await getProfileData();
         // Access the passcode
-
+        updateRiderPosition();
         passcode0 = jsonResponse['data']['bookings_fleet'][0]
                 ['bookings_destinations']['passcode'] ??
             "";
@@ -364,8 +432,6 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     setState(() {});
   }
 
-  List<LatLng> polylineCoordinates = [];
-
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     if (riderLat != null &&
@@ -448,9 +514,9 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
               ? Stack(
                   children: [
                     Container(
-                      color: transparentColor,
+                      color: Colors.transparent,
                       width: size.width,
-                      height: size.height * 1,
+                      height: size.height,
                       child: GoogleMap(
                         onMapCreated: (controller) {
                           mapController = controller;
@@ -459,45 +525,37 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                         myLocationEnabled: false,
                         zoomControlsEnabled: false,
                         initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            riderLat != null ? riderLat! : 0.0,
-                            riderLng != null ? riderLng! : 0.0,
-                          ),
+                          target: riderPosition ?? const LatLng(0.0, 0.0),
                           zoom: 15,
                         ),
                         markers: {
                           Marker(
                             markerId: const MarkerId("riderMarker"),
-                            position: LatLng(
-                              riderLat != null ? riderLat! : 0.0,
-                              riderLng != null ? riderLng! : 0.0,
-                            ),
+                            position: riderPosition ?? const LatLng(0.0, 0.0),
                             icon: customMarkerIcon ??
                                 BitmapDescriptor.defaultMarker,
                           ),
                           Marker(
                             markerId: const MarkerId('destMarker'),
-                            position: LatLng(
-                              destLat != null ? destLat! : 0.0,
-                              destLng != null ? destLng! : 0.0,
-                            ),
+                            position:
+                                destinationPosition ?? const LatLng(0.0, 0.0),
                             icon: customDestMarkerIcon ??
                                 BitmapDescriptor.defaultMarker,
                           ),
                         },
-                        // polylines: {
-                        //   Polyline(
-                        //     polylineId: const PolylineId("polyline"),
-                        //     points: polylineCoordinates,
-                        //     color: orangeColor,
-                        //     geodesic: true,
-                        //     patterns: [
-                        //       PatternItem.dash(40),
-                        //       PatternItem.gap(10),
-                        //     ],
-                        //     width: 6,
-                        //   ),
-                        // },
+                        polylines: {
+                          Polyline(
+                            polylineId: const PolylineId("polyline"),
+                            points: polylineCoordinates,
+                            color: Colors.orange,
+                            geodesic: true,
+                            patterns: [
+                              PatternItem.dash(40),
+                              PatternItem.gap(10),
+                            ],
+                            width: 6,
+                          ),
+                        },
                       ),
                     ),
                     Positioned(
