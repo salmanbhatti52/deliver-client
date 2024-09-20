@@ -290,15 +290,15 @@ class _WaitingForRidersState extends State<WaitingForRiders> {
         actions: [
           InkWell(
             onTap: () async {
-                     Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchRidersScreen(
-                          singleData: widget.singleData,
-                          multipleData: widget.multipleData,
-                        ),
-                      ),
-                    );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchRidersScreen(
+                    singleData: widget.singleData,
+                    multipleData: widget.multipleData,
+                  ),
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 20),

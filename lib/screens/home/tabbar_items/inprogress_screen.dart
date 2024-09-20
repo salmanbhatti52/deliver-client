@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,6 +20,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:deliver_client/models/get_all_system_data_model.dart';
 import 'package:deliver_client/models/update_booking_status_model.dart';
 import 'package:deliver_client/screens/payment/amount_to_pay_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InProgressHomeScreen extends StatefulWidget {
   final Map? singleData;
@@ -128,6 +130,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   double? updatedLng;
   bool systemSettings = false;
   String? trackingPrefix;
+  String? estimatedTime;
+  String? distanceRemaining;
 
   Future<String?> fetchSystemSettingsDescription28() async {
     const String apiUrl = 'https://deliverbygfl.com/api/get_all_system_data';
@@ -260,6 +264,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         await getProfileData();
         // Access the passcode
         updateRiderPosition();
+        getDirections();
         passcode0 = jsonResponse['data']['bookings_fleet'][0]
                 ['bookings_destinations']['passcode'] ??
             "";
@@ -458,12 +463,65 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       if (widget.currentBookingId != null &&
           widget.currentBookingId!.isNotEmpty) {
         updateBookingStatus();
       }
     });
+  }
+
+  Future<void> getDirections() async {
+    String url =
+        "https://maps.googleapis.com/maps/api/directions/json?origin=${riderPosition!.latitude},${riderPosition!.longitude}&destination=${destinationPosition!.latitude},${destinationPosition!.longitude}&key=$mapsKey";
+
+    var response = await http.get(Uri.parse(url));
+    var data = json.decode(response.body);
+
+    if (data["status"] == "OK") {
+      // Get polyline coordinates
+      var points = data["routes"][0]["overview_polyline"]["points"];
+      polylineCoordinates = decodePolyline(points);
+
+      // Get estimated time and distance
+      var legs = data["routes"][0]["legs"][0];
+      setState(() {
+        estimatedTime = legs["duration"]["text"];
+        distanceRemaining = legs["distance"]["text"];
+      });
+    }
+  }
+
+  // Method to decode polyline to LatLng list
+  List<LatLng> decodePolyline(String encoded) {
+    List<LatLng> polyline = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1F) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+      lng += dlng;
+
+      LatLng point = LatLng(lat / 1E5, lng / 1E5);
+      polyline.add(point);
+    }
+    return polyline;
   }
 
   @override
@@ -522,11 +580,11 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                           mapController = controller;
                         },
                         mapType: MapType.normal,
-                        myLocationEnabled: false,
+                        myLocationEnabled: true, // Show user's location
                         zoomControlsEnabled: false,
                         initialCameraPosition: CameraPosition(
                           target: riderPosition ?? const LatLng(0.0, 0.0),
-                          zoom: 15,
+                          zoom: 18,
                         ),
                         markers: {
                           Marker(
@@ -548,11 +606,6 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                             polylineId: const PolylineId("polyline"),
                             points: polylineCoordinates,
                             color: Colors.orange,
-                            geodesic: true,
-                            patterns: [
-                              PatternItem.dash(40),
-                              PatternItem.gap(10),
-                            ],
                             width: 6,
                           ),
                         },
@@ -567,7 +620,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                         ),
                         child: Container(
                           width: size.width,
-                          height: size.height * 0.51,
+                          height: size.height * 0.60,
                           decoration: BoxDecoration(
                             color: whiteColor,
                           ),
@@ -577,7 +630,16 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: size.height * 0.04),
+                                  SizedBox(height: size.height * 0.01),
+                                  Center(
+                                    child: Text(
+                                      'Estimated Time: $estimatedTime Distance Left: $distanceRemaining',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  SizedBox(height: size.height * 0.01),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
@@ -1827,6 +1889,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Container(
                                                 color: transparentColor,
@@ -1846,30 +1910,97 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                       TextOverflow.ellipsis,
                                                 ),
                                               ),
-                                              SizedBox(width: size.width * 0.1),
-                                              Stack(
+                                              Row(
                                                 children: [
-                                                  SvgPicture.asset(
-                                                    'assets/images/star-with-container-icon.svg',
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      timer?.cancel();
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ChatScreen(
+                                                            callbackFunction:
+                                                                startTimer,
+                                                            riderId: widget
+                                                                .riderData!
+                                                                .data!
+                                                                .bookingsFleet![
+                                                                    0]
+                                                                .usersFleet!
+                                                                .usersFleetId
+                                                                .toString(),
+                                                            name:
+                                                                "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.firstName} ${widget.riderData!.data!.bookingsFleet![0].usersFleet!.lastName}",
+                                                            address: widget
+                                                                .riderData!
+                                                                .data!
+                                                                .bookingsFleet![
+                                                                    0]
+                                                                .usersFleet!
+                                                                .address,
+                                                            phone: widget
+                                                                .riderData!
+                                                                .data!
+                                                                .bookingsFleet![
+                                                                    0]
+                                                                .usersFleet!
+                                                                .phone,
+                                                            image: widget
+                                                                .riderData!
+                                                                .data!
+                                                                .bookingsFleet![
+                                                                    0]
+                                                                .usersFleet!
+                                                                .profilePic,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      'assets/images/message-icon.svg',
+                                                      height: 20,
+                                                      width: 20,
+                                                    ),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 1.5, left: 24),
-                                                    child: Text(
-                                                      "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.bookingsRatings}",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        color: blackColor,
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            'Inter-Regular',
-                                                      ),
+                                                  SizedBox(
+                                                      width: size.width * 0.02),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      makePhoneCall(
+                                                          "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.phone}");
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      'assets/images/call-icon.svg',
+                                                      height: 20,
+                                                      width: 20,
                                                     ),
                                                   ),
                                                 ],
                                               ),
+                                              // Stack(
+                                              //   children: [
+                                              //     SvgPicture.asset(
+                                              //       'assets/images/star-with-container-icon.svg',
+                                              //     ),
+                                              //     Padding(
+                                              //       padding:
+                                              //           const EdgeInsets.only(
+                                              //               top: 1.5, left: 24),
+                                              //       child: Text(
+                                              //         "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.bookingsRatings}",
+                                              //         textAlign:
+                                              //             TextAlign.center,
+                                              //         style: TextStyle(
+                                              //           color: blackColor,
+                                              //           fontSize: 14,
+                                              //           fontFamily:
+                                              //               'Inter-Regular',
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
                                             ],
                                           ),
                                           SizedBox(height: size.height * 0.005),
@@ -2707,5 +2838,13 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                   ),
                 ),
     );
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 }
