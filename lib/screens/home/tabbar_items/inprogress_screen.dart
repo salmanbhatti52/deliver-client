@@ -88,6 +88,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       debugPrint("statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         getAllSystemDataModel = getAllSystemDataModelFromJson(responseString);
+        await fetchSystemSettingsDescription28();
+        await fetchSystemSettingsDescription397();
         debugPrint(
             'getAllSystemDataModel status: ${getAllSystemDataModel.status}');
         for (int i = 0; i < getAllSystemDataModel.data!.length; i++) {
@@ -132,6 +134,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   String? trackingPrefix;
   String? estimatedTime;
   String? distanceRemaining;
+  String? mapRefreshTime;
 
   Future<String?> fetchSystemSettingsDescription28() async {
     const String apiUrl = 'https://deliverbygfl.com/api/get_all_system_data';
@@ -149,14 +152,59 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
         final setting395 = data['data'].firstWhere(
             (setting) => setting['system_settings_id'] == 395,
             orElse: () => null);
+        final setting397 = data['data'].firstWhere(
+            (setting) => setting['system_settings_id'] == 397,
+            orElse: () => null);
         setState(() {
           systemSettings = false;
         });
         if (setting395 != null) {
           // Extract and return the description if setting 28 exists
           trackingPrefix = setting395['description'];
+          print("trackingPrefix: $trackingPrefix");
 
           return trackingPrefix;
+        } else {
+          throw Exception('System setting with ID 40 not found');
+        }
+      } else {
+        // If the server did not return a 200 OK response,
+        // throw an exception.
+        throw Exception('Failed to fetch system settings');
+      }
+    } catch (e) {
+      // Catch any exception that might occur during the process
+      print('Error fetching system settings: $e');
+      return null;
+    }
+  }
+
+  Future<String?> fetchSystemSettingsDescription397() async {
+    const String apiUrl = 'https://deliverbygfl.com/api/get_all_system_data';
+    setState(() {
+      systemSettings = true;
+    });
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // If the call to the server was successful, parse the JSON
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        // Find the setting with system_settings_id equal to 26
+
+        final setting397 = data['data'].firstWhere(
+            (setting) => setting['system_settings_id'] == 397,
+            orElse: () => null);
+        setState(() {
+          systemSettings = false;
+        });
+        if (setting397 != null) {
+          // Extract and return the description if setting 28 exists
+          mapRefreshTime = setting397['description'];
+          print("mapRefreshTime: $mapRefreshTime");
+
+          return mapRefreshTime;
         } else {
           throw Exception('System setting with ID 40 not found');
         }
@@ -463,7 +511,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    timer = Timer.periodic(Duration(seconds: int.parse(mapRefreshTime ?? "30")),
+        (timer) {
       if (widget.currentBookingId != null &&
           widget.currentBookingId!.isNotEmpty) {
         updateBookingStatus();
@@ -530,7 +579,6 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
     getAllSystemData();
     loadCustomMarker();
     updateBookingStatus();
-    fetchSystemSettingsDescription28();
     print("Single Data: ${widget.singleData}");
     print("Multiple Data: ${widget.multipleData}");
     if (widget.singleData?.isNotEmpty ?? false) {
