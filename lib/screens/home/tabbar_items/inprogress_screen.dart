@@ -2089,7 +2089,9 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                           ? size.width * 0.3
                                                           : size.width * 0.4,
                                                       child: AutoSizeText(
-                                                        "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.address}",
+                                                        widget.riderData!.data!.bookingsFleet![0].usersFleet!.address != null 
+                                                            ? "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.address}"
+                                                            : "no location",
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(

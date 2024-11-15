@@ -18,6 +18,7 @@ import 'package:deliver_client/screens/payment/amount_paid_screen.dart';
 import 'package:deliver_client/models/update_booking_transaction_model.dart';
 
 import '../../models/update_booking_status_model.dart';
+import '../home/home_page_screen.dart';
 
 String? firstName;
 String? lastName;
@@ -440,7 +441,15 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                                         fontFamily: 'Syne-Medium',
                                       ),
                                     )
-                                  : const SizedBox()
+                                  : Text(
+                                "Not Verified",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: pendingColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
+                              )
                             ],
                           ),
                           SizedBox(height: size.height * 0.02),
@@ -467,7 +476,15 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                                         fontFamily: 'Syne-Medium',
                                       ),
                                     )
-                                  : const SizedBox(),
+                                  : Text(
+                                "Not deliver",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: pendingColor,
+                                  fontSize: 18,
+                                  fontFamily: 'Syne-Medium',
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(height: size.height * 0.02),
@@ -545,19 +562,29 @@ class _AmountToPayScreenState extends State<AmountToPayScreen> {
                               //   if (widget.singleData!["payment_gateways_id"] ==
                               //       '1') {
                               //     await updateBookingTransaction();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AmountPaidScreen(
-                                    riderData: widget.riderData!,
-                                    singleData: widget.singleData,
-                                    multipleData: widget.multipleData,
-                                    currentBookingId: widget.currentBookingId,
-                                    bookingDestinationId:
-                                        widget.bookingDestinationId,
-                                  ),
-                                ),
-                              );
+
+
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => AmountPaidScreen(
+                              //       riderData: widget.riderData!,
+                              //       singleData: widget.singleData,
+                              //       multipleData: widget.multipleData,
+                              //       currentBookingId: widget.currentBookingId,
+                              //       bookingDestinationId:
+                              //           widget.bookingDestinationId,
+                              //     ),
+                              //   ),
+                              // );
+
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      const HomePageScreen()),
+                                      (Route<dynamic> route) => false);
+
+
                               //   } else {
                               //     makePayment();
                               //   }
