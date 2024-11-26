@@ -357,7 +357,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
     final responseString = response.body;
     debugPrint("response: $responseString");
     debugPrint("statusCode: ${response.statusCode}");
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && getAddressesModel.status == "success") {
       getAddressesModel = getAddressesModelFromJson(responseString);
       await getProfile();
 
@@ -3307,31 +3307,36 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                         title: Text(prediction.name),
                                         subtitle: Text(
                                             prediction.formattedAddress ?? ''),
-                                        onTap: () {
-                                          pickupController.text =
-                                              prediction.formattedAddress!;
-                                          final double lat =
-                                              prediction.geometry!.location.lat;
-                                          final double lng =
-                                              prediction.geometry!.location.lng;
-                                          const double zoomLevel = 15.0;
-                                          onPickUpLocationSelected(
-                                              LatLng(lat, lng), zoomLevel);
-                                          pickupLat = lat.toString();
-                                          pickupLng = lng.toString();
-                                          setState(() {
-                                            pickUpPredictions.clear();
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            debugPrint("pickupLat: $pickupLat");
-                                            debugPrint("pickupLng $pickupLng");
-                                            debugPrint(
-                                                "pickupLocation: ${prediction.formattedAddress}");
-                                          });
-                                          // Move the map camera to the selected location
-                                          mapController?.animateCamera(
-                                              CameraUpdate.newLatLng(
-                                                  selectedLocation!));
+                                        onTap: () async {
+                                          final placeId = prediction.placeId; // Get the place_id of the selected prediction
+                                          final placeDetailsResponse = await places.getDetailsByPlaceId(placeId);
+
+                                          if (placeDetailsResponse.isOkay) {
+                                            final details = placeDetailsResponse.result;
+
+                                            pickupController.text = details.formattedAddress!;
+                                            final double lat = details.geometry!.location.lat;
+                                            final double lng = details.geometry!.location.lng;
+
+                                            const double zoomLevel = 15.0;
+                                            onPickUpLocationSelected(LatLng(lat, lng), zoomLevel);
+
+                                            pickupLat = lat.toString();
+                                            pickupLng = lng.toString();
+
+                                            setState(() {
+                                              pickUpPredictions.clear();
+                                              FocusManager.instance.primaryFocus?.unfocus();
+                                              debugPrint("pickupLat: $pickupLat");
+                                              debugPrint("pickupLng: $pickupLng");
+                                              debugPrint("pickupLocation: ${details.formattedAddress}");
+                                            });
+
+                                            // Move the map camera to the selected location
+                                            mapController?.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lng)));
+                                          } else {
+                                            debugPrint("Failed to fetch place details: ${placeDetailsResponse.errorMessage}");
+                                          }
                                         },
                                       );
                                     },
@@ -3436,26 +3441,29 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                   title: Text(prediction.name),
                                   subtitle:
                                       Text(prediction.formattedAddress ?? ''),
-                                  onTap: () {
-                                    destinationController.text =
-                                        prediction.formattedAddress!;
-                                    final double lat =
-                                        prediction.geometry!.location.lat;
-                                    final double lng =
-                                        prediction.geometry!.location.lng;
-                                    destinationLat = lat.toString();
-                                    destinationLng = lng.toString();
-                                    setState(() {
-                                      destinationPredictions.clear();
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      debugPrint(
-                                          "destinationLat: $destinationLat");
-                                      debugPrint(
-                                          "destinationLng $destinationLng");
-                                      debugPrint(
-                                          "destinationLocation: ${prediction.formattedAddress}");
-                                    });
+                                  onTap: () async {
+                                    final placeId = prediction.placeId; // Get the place_id of the selected prediction
+                                    final placeDetailsResponse = await places.getDetailsByPlaceId(placeId!);
+
+                                    if (placeDetailsResponse.isOkay) {
+                                      final details = placeDetailsResponse.result;
+                                      destinationController.text = details.formattedAddress!;
+                                      final double lat = details.geometry!.location.lat;
+                                      final double lng = details.geometry!.location.lng;
+                                      destinationLat = lat.toString();
+                                      destinationLng = lng.toString();
+                                      setState(() {
+                                        destinationPredictions.clear();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        debugPrint(
+                                            "destinationLat: $destinationLat");
+                                        debugPrint(
+                                            "destinationLng $destinationLng");
+                                        debugPrint(
+                                            "destinationLocation: ${prediction.formattedAddress}");
+                                      });
+                                    }
                                   },
                                 );
                               },

@@ -6,6 +6,7 @@ import 'package:deliver_client/screens/chat_screen.dart';
 import 'package:deliver_client/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:lottie/lottie.dart' as lottie;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -468,21 +469,42 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
   }
 
   Future<void> loadCustomMarker() async {
-    final ByteData bytes = await rootBundle.load(
-      'assets/images/rider-marker-icon.png',
+    final ByteData data = await rootBundle.load('assets/images/rider-marker-icon.png');
+    final Uint8List bytes = data.buffer.asUint8List();
+
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      bytes,
+      targetWidth: 200,
+      targetHeight: 200,
     );
-    final Uint8List list = bytes.buffer.asUint8List();
-    customMarkerIcon = BitmapDescriptor.fromBytes(list);
-    setState(() {});
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+
+    final ByteData? resizedBytes = await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+    if (resizedBytes != null) {
+      customMarkerIcon = BitmapDescriptor.fromBytes(resizedBytes.buffer.asUint8List());
+      setState(() {});
+    }
   }
 
   Future<void> loadCustomDestMarker() async {
-    final ByteData bytes = await rootBundle.load(
-      'assets/images/custom-dest-icon.png',
+    // Load the image from assets
+    final ByteData data = await rootBundle.load('assets/images/custom-dest-icon.png');
+    final Uint8List imageBytes = data.buffer.asUint8List();
+
+    // Decode and resize the image
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      imageBytes,
+      targetWidth: 50, // Desired width
+      targetHeight: 50, // Desired height
     );
-    final Uint8List list = bytes.buffer.asUint8List();
-    customDestMarkerIcon = BitmapDescriptor.fromBytes(list);
-    setState(() {});
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+
+    // Convert resized image to byte data
+    final ByteData? resizedBytes = await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+    if (resizedBytes != null) {
+      customDestMarkerIcon = BitmapDescriptor.fromBytes(resizedBytes.buffer.asUint8List());
+      setState(() {});
+    }
   }
 
   void getPolyPoints() async {
@@ -623,41 +645,48 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                       color: Colors.transparent,
                       width: size.width,
                       height: size.height,
-                      child: GoogleMap(
-                        onMapCreated: (controller) {
-                          mapController = controller;
-                        },
-                        mapType: MapType.normal,
-                        myLocationEnabled: true, // Show user's location
-                        zoomControlsEnabled: false,
-                        initialCameraPosition: CameraPosition(
-                          target: riderPosition ?? const LatLng(0.0, 0.0),
-                          zoom: 18,
-                        ),
-                        markers: {
-                          Marker(
-                            markerId: const MarkerId("riderMarker"),
-                            position: riderPosition ?? const LatLng(0.0, 0.0),
-                            icon: customMarkerIcon ??
-                                BitmapDescriptor.defaultMarker,
-                          ),
-                          Marker(
-                            markerId: const MarkerId('destMarker'),
-                            position:
+                      child: Column(
+                      children: [
+                        SizedBox(
+                      height: size.height * 0.6,
+                          child: GoogleMap(
+                            onMapCreated: (controller) {
+                              mapController = controller;
+                            },
+                            mapType: MapType.normal,
+                            myLocationEnabled: true, // Show user's location
+                            zoomControlsEnabled: false,
+                            initialCameraPosition: CameraPosition(
+                              target: riderPosition ?? const LatLng(0.0, 0.0),
+                              zoom: 18,
+                            ),
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId("riderMarker"),
+                                position: riderPosition ?? const LatLng(0.0, 0.0),
+                                icon: customMarkerIcon ??
+                                    BitmapDescriptor.defaultMarker,
+                              ),
+                              Marker(
+                                markerId: const MarkerId('destMarker'),
+                                position:
                                 destinationPosition ?? const LatLng(0.0, 0.0),
-                            icon: customDestMarkerIcon ??
-                                BitmapDescriptor.defaultMarker,
+                                icon: customDestMarkerIcon ??
+                                    BitmapDescriptor.defaultMarker,
+                              ),
+                            },
+                            polylines: {
+                              Polyline(
+                                polylineId: const PolylineId("polyline"),
+                                points: polylineCoordinates,
+                                color: Colors.orange,
+                                width: 6,
+                              ),
+                            },
                           ),
-                        },
-                        polylines: {
-                          Polyline(
-                            polylineId: const PolylineId("polyline"),
-                            points: polylineCoordinates,
-                            color: Colors.orange,
-                            width: 6,
-                          ),
-                        },
-                      ),
+                        ),
+                      ],
+                      )
                     ),
                     Positioned(
                       bottom: 0,
@@ -1913,19 +1942,22 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                           // );
                                         },
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                           child: Container(
                                             color: transparentColor,
                                             width: 55,
                                             height: 55,
-                                            child: FadeInImage(
-                                              placeholder: const AssetImage(
-                                                "assets/images/user-profile.png",
-                                              ),
+                                            child: widget.riderData?.data?.bookingsFleet?[0].usersFleet?.profilePic != null &&
+                                                widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic!.isNotEmpty
+                                                ? FadeInImage(
+                                              placeholder: const AssetImage("assets/images/user-profile.png"),
                                               image: NetworkImage(
                                                 '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                               ),
+                                              fit: BoxFit.cover,
+                                            )
+                                                : Image.asset(
+                                              "assets/images/user-profile.png", // Asset fallback image
                                               fit: BoxFit.cover,
                                             ),
                                           ),
