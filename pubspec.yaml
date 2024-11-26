@@ -46,9 +46,9 @@ dependencies:
   fluttertoast: ^8.2.2
   image_picker: ^1.0.7
   bottom_sheet: ^4.0.0
-  firebase_auth: ^4.9.0
+  # firebase_auth: ^5.0.0
   flutter_dotenv: ^5.1.0
-  firebase_core: ^2.15.1
+ #  firebase_core: 
   flutter_switch: ^0.3.2
   auto_size_text: ^3.0.0
   speech_balloon: ^0.0.4
