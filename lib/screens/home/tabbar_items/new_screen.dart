@@ -10,6 +10,7 @@ import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:geocoding/geocoding.dart';
@@ -355,7 +356,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
       },
     );
     final responseString = response.body;
-    debugPrint("response: $responseString");
+    debugPrint("response of get address: $responseString");
     debugPrint("statusCode: ${response.statusCode}");
     if (response.statusCode == 200 && getAddressesModel.status == "success") {
       getAddressesModel = getAddressesModelFromJson(responseString);
@@ -950,35 +951,44 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
   }
 
   Future<void> getCurrentLocation() async {
-    final Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best,
-    );
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
 
-    final List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+      final List<Placemark> placemarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
 
-    if (placemarks.isNotEmpty) {
-      final Placemark currentPlace = placemarks.first;
-      final String currentAddress =
-          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
+      if (placemarks.isNotEmpty) {
+        final Placemark currentPlace = placemarks.first;
 
-      setState(() {
-        currentLocation = LatLng(position.latitude, position.longitude);
-        selectedLocation = null; // Clear selected location
-        selectedAddressLocation = null; // Clear address location
-        selectedMarker = const MarkerId('currentLocation');
-        pickupController.text = currentAddress;
-        currentLat = position.latitude.toString();
-        currentLng = position.longitude.toString();
-        debugPrint("currentLat: $currentLat");
-        debugPrint("currentLng: $currentLng");
-        debugPrint("currentPickupLocation: $currentAddress");
-      });
+        // Construct the full address using all relevant fields
+        final String currentAddress =
+            "${currentPlace.subLocality}, ${currentPlace.locality}, ${currentPlace.administrativeArea}, ${currentPlace.postalCode}, ${currentPlace.country}";
 
-      mapController
-          ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
+        setState(() {
+          currentLocation = LatLng(position.latitude, position.longitude);
+          selectedLocation = null; // Clear selected location
+          selectedAddressLocation = null; // Clear address location
+          selectedMarker = const MarkerId('currentLocation');
+          pickupController.text = currentAddress;
+          currentLat = position.latitude.toString();
+          currentLng = position.longitude.toString();
+          debugPrint("currentLat: $currentLat");
+          debugPrint("currentLng: $currentLng");
+          debugPrint("currentPickupLocation: $currentAddress");
+        });
+
+        mapController
+            ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
+      } else {
+        debugPrint("No placemarks found.");
+      }
+    } catch (e) {
+      debugPrint("Error getting location: $e");
     }
   }
+
 
   void onPickUpLocationSelected(LatLng location, double zoomLevel) {
     setState(() {
@@ -1314,119 +1324,82 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                for (int i = 0;
-                                    i < 5 && i < distanceDurationList.length;
-                                    i++) {
-                                  final entry = distanceDurationList[i];
-                                  debugPrint(
-                                      "distanceDurationList[$i]: $entry");
-                                }
-                              });
-                            },
-                            child: Text(
-                              "Find best rider?",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: drawerTextColor,
-                                fontSize: 20,
-                                fontFamily: 'Syne-Bold',
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     setState(() {
+                          //       for (int i = 0;
+                          //           i < 5 && i < distanceDurationList.length;
+                          //           i++) {
+                          //         final entry = distanceDurationList[i];
+                          //         debugPrint(
+                          //             "distanceDurationList[$i]: $entry");
+                          //       }
+                          //     });
+                          //   },
+                          //   child: Text(
+                          //     "Find best rider?",
+                          //     textAlign: TextAlign.left,
+                          //     style: TextStyle(
+                          //       color: drawerTextColor,
+                          //       fontSize: 20,
+                          //       fontFamily: 'Syne-Bold',
+                          //     ),
+                          //   ),
+                          // ),
+                          const SizedBox(),
+                          if (selectedRadio == 1)
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isSelectedAddress = !isSelectedAddress;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    isSelectedAddress
+                                        ? 'assets/images/checkmark-icon.svg'
+                                        : 'assets/images/uncheckmark-icon.svg',
+                                  ),
+                                  SizedBox(width: size.width * 0.01),
+                                  Text(
+                                    "Saved Addresses",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 12,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          if (selectedRadio == 1)
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isSelectedAddress = true;
-                                    });
-                                  },
-                                  child: isSelectedAddress == true
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isSelectedAddress = false;
-                                            });
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/images/checkmark-icon.svg',
-                                          ),
-                                        )
-                                      : SvgPicture.asset(
-                                          'assets/images/uncheckmark-icon.svg',
-                                        ),
-                                ),
-                                SizedBox(width: size.width * 0.01),
-                                Text(
-                                  "Saved Addresses",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: drawerTextColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Syne-Bold',
-                                  ),
-                                ),
-                              ],
-                            ),
                           if (selectedRadio == 2)
-                            Row(
-                              children: [
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     removePage();
-                                //     setState(() {});
-                                //   },
-                                //   child: SvgPicture.asset(
-                                //     'assets/images/minus-icon.svg',
-                                //   ),
-                                // ),
-                                // SizedBox(width: size.width * 0.02),
-                                // GestureDetector(
-                                //   onTap: () {
-                                //     addPage();
-                                //     setState(() {});
-                                //   },
-                                //   child: SvgPicture.asset(
-                                //     'assets/images/add-icon.svg',
-                                //   ),
-                                // ),
-                                SizedBox(width: size.width * 0.03),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isSelectedAddress = true;
-                                    });
-                                  },
-                                  child: isSelectedAddress == true
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              isSelectedAddress = false;
-                                            });
-                                          },
-                                          child: SvgPicture.asset(
-                                            'assets/images/checkmark-icon.svg',
-                                          ),
-                                        )
-                                      : SvgPicture.asset(
-                                          'assets/images/uncheckmark-icon.svg',
-                                        ),
-                                ),
-                                SizedBox(width: size.width * 0.01),
-                                Text(
-                                  "Saved Addresses",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    color: drawerTextColor,
-                                    fontSize: 12,
-                                    fontFamily: 'Syne-Bold',
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isSelectedAddress = !isSelectedAddress;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    isSelectedAddress
+                                        ? 'assets/images/checkmark-icon.svg'
+                                        : 'assets/images/uncheckmark-icon.svg',
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: size.width * 0.01),
+                                  Text(
+                                    "Saved Addresses",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: drawerTextColor,
+                                      fontSize: 12,
+                                      fontFamily: 'Syne-Bold',
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                         ],
                       ),
@@ -2911,38 +2884,41 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                             "assets/images/info-icon.svg",
                           ),
                           SizedBox(width: size.width * 0.02),
-                          Text(
-                            'Note: Distance must be greater than 1 kilometer (km)',
-                            style: TextStyle(
-                              color: blackColor,
-                              fontSize: 10,
-                              fontFamily: 'Inter-Bold',
+                          Expanded(
+                            child: Text(
+                              'WE SHALL WORK TO FIND YOU THE BEST RIDER FOR YOUR LOCATION',
+                              maxLines: 2,
+                              style: TextStyle(
+                                color: blackColor,
+                                fontSize: 10,
+                                fontFamily: 'Inter-Bold',
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: size.height * 0.02),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/info-icon.svg",
-                          ),
-                          SizedBox(width: size.width * 0.02),
-                          Text(
-                            'Note: Please drag down to see your location on the map.',
-                            style: TextStyle(
-                              color: blackColor,
-                              fontSize: 10,
-                              fontFamily: 'Inter-Bold',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.22),
+                    // SizedBox(height: size.height * 0.02),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                    //   child: Row(
+                    //     children: [
+                    //       SvgPicture.asset(
+                    //         "assets/images/info-icon.svg",
+                    //       ),
+                    //       SizedBox(width: size.width * 0.02),
+                    //       Text(
+                    //         'Note: Please drag down to see your location on the map.',
+                    //         style: TextStyle(
+                    //           color: blackColor,
+                    //           fontSize: 10,
+                    //           fontFamily: 'Inter-Bold',
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    SizedBox(height: size.height * 0.2),
                   ],
                 ),
               ],
@@ -3143,7 +3119,8 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                               ),
                             ),
                             if (addressesVisible)
-                              Padding(
+                              getAddressesModel.data != null
+                                  ? Padding(
                                 padding: const EdgeInsets.only(top: 40),
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -3202,7 +3179,28 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                     },
                                   ),
                                 ),
-                              ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: filledColor,
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10),
+                                    ),
+                                  ),
+                                  width: size.width * 0.8,
+                                  height: size.height * 0.06,
+                                  child: ListTile(
+                                    title: const Text("Saved Addresses not found"),
+                                    // subtitle: Text("Saved Addresses not found"),
+                                    onTap: () {
+                                      addressesVisible = false;
+                                    },
+                                  )
+                                ),
+                              )
                           ],
                         ),
                       )

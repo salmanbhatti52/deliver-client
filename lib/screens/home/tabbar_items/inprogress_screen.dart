@@ -1318,7 +1318,7 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                   color: transparentColor,
                                                   width: size.width * 0.25,
                                                   child: Text(
-                                                    "${widget.singleData!['destin_distance']} $distanceUnit",
+                                                    "$distanceRemaining",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
                                                       color: blackColor,
@@ -1618,7 +1618,8 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
                                                   color: transparentColor,
                                                   width: size.width * 0.25,
                                                   child: Text(
-                                                    "${widget.singleData!['destin_time']}",
+                                                    "$estimatedTime",
+                                                    // "${widget.singleData!['destin_time']}",
                                                     textAlign: TextAlign.left,
                                                     style: TextStyle(
                                                       color: blackColor,
