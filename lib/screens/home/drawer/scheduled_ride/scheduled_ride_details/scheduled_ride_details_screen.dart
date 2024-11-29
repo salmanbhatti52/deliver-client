@@ -360,15 +360,27 @@ class _ScheduledRideDetailScreenState extends State<ScheduledRideDetailScreen> {
                                           color: transparentColor,
                                           width: 60,
                                           height: 65,
-                                          child: FadeInImage(
-                                            placeholder: const AssetImage(
-                                              "assets/images/user-profile.png",
-                                            ),
+                                          child: updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.profilePic != null
+                                              ? FadeInImage(
+                                            placeholder: const AssetImage("assets/images/user-profile.png"),
                                             image: NetworkImage(
                                               '$imageUrl${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
+                                          )
+                                              : Image.asset(
+                                            "assets/images/user-profile.png", // Asset fallback image
+                                            fit: BoxFit.cover,
                                           ),
+                                          // child: FadeInImage(
+                                          //   placeholder: const AssetImage(
+                                          //     "assets/images/user-profile.png",
+                                          //   ),
+                                          //   image: NetworkImage(
+                                          //     '$imageUrl${updateBookingStatusModel.data!.bookingsFleet?[index].usersFleet?.profilePic}',
+                                          //   ),
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                       ),
                                       SizedBox(width: size.width * 0.02),

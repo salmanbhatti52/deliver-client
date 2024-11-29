@@ -173,15 +173,28 @@ class _RateDriverScreenState extends State<RateDriverScreen> {
                                       color: transparentColor,
                                       width: 40,
                                       height: 40,
-                                      child: FadeInImage(
-                                        placeholder: const AssetImage(
-                                          "assets/images/user-profile.png",
-                                        ),
+                                      child: widget.riderData?.data?.bookingsFleet?[0].usersFleet?.profilePic != null &&
+                                          widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic!.isNotEmpty
+                                          ? FadeInImage(
+                                        placeholder: const AssetImage("assets/images/user-profile.png"),
                                         image: NetworkImage(
                                           '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                         ),
                                         fit: BoxFit.cover,
+                                      )
+                                          : Image.asset(
+                                        "assets/images/user-profile.png", // Asset fallback image
+                                        fit: BoxFit.cover,
                                       ),
+                                      // child: FadeInImage(
+                                      //   placeholder: const AssetImage(
+                                      //     "assets/images/user-profile.png",
+                                      //   ),
+                                      //   image: NetworkImage(
+                                      //     '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
+                                      //   ),
+                                      //   fit: BoxFit.cover,
+                                      // ),
                                     ),
                                   ),
                                   SizedBox(width: size.width * 0.02),

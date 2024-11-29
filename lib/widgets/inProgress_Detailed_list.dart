@@ -1701,15 +1701,28 @@ class _InProgressDetailedScreenState extends State<InProgressDetailedScreen> {
                                           color: transparentColor,
                                           width: 55,
                                           height: 55,
-                                          child: FadeInImage(
-                                            placeholder: const AssetImage(
-                                              "assets/images/user-profile.png",
-                                            ),
+                                          child: jsonResponse!['data']['bookings_fleet'][0]['users_fleet']['profile_pic'] != null &&
+                                              jsonResponse!['data']['bookings_fleet'][0]['users_fleet']['profile_pic']!.isNotEmpty
+                                              ? FadeInImage(
+                                            placeholder: const AssetImage("assets/images/user-profile.png"),
                                             image: NetworkImage(
                                               '$imageUrl${jsonResponse!['data']['bookings_fleet'][0]['users_fleet']['profile_pic']}',
                                             ),
                                             fit: BoxFit.cover,
+                                          )
+                                              : Image.asset(
+                                            "assets/images/user-profile.png", // Asset fallback image
+                                            fit: BoxFit.cover,
                                           ),
+                                          // child: FadeInImage(
+                                          //   placeholder: const AssetImage(
+                                          //     "assets/images/user-profile.png",
+                                          //   ),
+                                          //   image: NetworkImage(
+                                          //     '$imageUrl${jsonResponse!['data']['bookings_fleet'][0]['users_fleet']['profile_pic']}',
+                                          //   ),
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                       ),
                                     ),

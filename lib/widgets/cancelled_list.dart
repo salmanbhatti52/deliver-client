@@ -159,15 +159,27 @@ class _CancelledListState extends State<CancelledList> {
                                           color: transparentColor,
                                           width: 60,
                                           height: 65,
-                                          child: FadeInImage(
-                                            placeholder: const AssetImage(
-                                              "assets/images/user-profile.png",
-                                            ),
+                                          child: cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic != null
+                                              ? FadeInImage(
+                                            placeholder: const AssetImage("assets/images/user-profile.png"),
                                             image: NetworkImage(
                                               '$imageUrl${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
+                                          )
+                                              : Image.asset(
+                                            "assets/images/user-profile.png", // Asset fallback image
+                                            fit: BoxFit.cover,
                                           ),
+                                          // child: FadeInImage(
+                                          //   placeholder: const AssetImage(
+                                          //     "assets/images/user-profile.png",
+                                          //   ),
+                                          //   image: NetworkImage(
+                                          //     '$imageUrl${cancelledRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
+                                          //   ),
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                       ),
                                       SizedBox(width: size.width * 0.02),

@@ -152,15 +152,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: transparentColor,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: FadeInImage(
-                                  placeholder: const AssetImage(
-                                    "assets/images/user-profile.png",
-                                  ),
+                                child: getProfileModel.data!.profilePic != null &&
+                                    getProfileModel.data!.profilePic!.isNotEmpty
+                                    ? FadeInImage(
+                                  placeholder: const AssetImage("assets/images/user-profile.png"),
                                   image: NetworkImage(
                                     '$imageUrl${getProfileModel.data!.profilePic}',
                                   ),
                                   fit: BoxFit.cover,
+                                )
+                                    : Image.asset(
+                                  "assets/images/user-profile.png", // Asset fallback image
+                                  fit: BoxFit.cover,
                                 ),
+                                // child: FadeInImage(
+                                //   placeholder: const AssetImage(
+                                //     "assets/images/user-profile.png",
+                                //   ),
+                                //   image: NetworkImage(
+                                //     '$imageUrl${getProfileModel.data!.profilePic}',
+                                //   ),
+                                //   fit: BoxFit.cover,
+                                // ),
                               ),
                             ),
                           ),

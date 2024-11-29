@@ -358,7 +358,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
     final responseString = response.body;
     debugPrint("response of get address: $responseString");
     debugPrint("statusCode: ${response.statusCode}");
-    if (response.statusCode == 200 && getAddressesModel.status == "success") {
+    if (response.statusCode == 200) {
       getAddressesModel = getAddressesModelFromJson(responseString);
       await getProfile();
 
@@ -964,7 +964,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
 
         // Construct the full address using all relevant fields
         final String currentAddress =
-            "${currentPlace.subLocality}, ${currentPlace.locality}, ${currentPlace.administrativeArea}, ${currentPlace.postalCode}, ${currentPlace.country}";
+            "${currentPlace.street} ${currentPlace.subLocality} ${currentPlace.locality} ${currentPlace.administrativeArea} ${currentPlace.country}";
 
         setState(() {
           currentLocation = LatLng(position.latitude, position.longitude);

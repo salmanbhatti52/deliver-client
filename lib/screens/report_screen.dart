@@ -332,15 +332,28 @@ class _ReportScreenState extends State<ReportScreen> {
                                 decoration: BoxDecoration(
                                   color: transparentColor,
                                 ),
-                                child: FadeInImage(
-                                  placeholder: const AssetImage(
-                                    "assets/images/user-profile.png",
-                                  ),
-                                  image: NetworkImage(
-                                    '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
+                                child: widget.riderData?.data?.bookingsFleet?[0].usersFleet?.profilePic != null &&
+                              widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic!.isNotEmpty
+                                  ? FadeInImage(
+                                  placeholder: const AssetImage("assets/images/user-profile.png"),
+                              image: NetworkImage(
+                                '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
+                              ),
+                              fit: BoxFit.cover,
+                            )
+                                : Image.asset(
+                            "assets/images/user-profile.png", // Asset fallback image
+                            fit: BoxFit.cover,
+                          ),
+                                // child: FadeInImage(
+                                //   placeholder: const AssetImage(
+                                //     "assets/images/user-profile.png",
+                                //   ),
+                                //   image: NetworkImage(
+                                //     '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
+                                //   ),
+                                //   fit: BoxFit.cover,
+                                // ),
                               ),
                             ),
                           ),

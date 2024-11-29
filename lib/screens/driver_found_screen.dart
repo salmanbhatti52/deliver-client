@@ -613,15 +613,28 @@ class _DriverFoundScreenState extends State<DriverFoundScreen> {
                                           color: transparentColor,
                                           width: 55,
                                           height: 55,
-                                          child: FadeInImage(
-                                            placeholder: const AssetImage(
-                                              "assets/images/user-profile.png",
-                                            ),
+                                          child: widget.riderData!.profilePic != null &&
+                                              widget.riderData!.profilePic!.isNotEmpty
+                                              ? FadeInImage(
+                                            placeholder: const AssetImage("assets/images/user-profile.png"),
                                             image: NetworkImage(
                                               '$imageUrl${widget.riderData!.profilePic}',
                                             ),
                                             fit: BoxFit.cover,
+                                          )
+                                              : Image.asset(
+                                            "assets/images/user-profile.png", // Asset fallback image
+                                            fit: BoxFit.cover,
                                           ),
+                                          // child: FadeInImage(
+                                          //   placeholder: const AssetImage(
+                                          //     "assets/images/user-profile.png",
+                                          //   ),
+                                          //   image: NetworkImage(
+                                          //     '$imageUrl${widget.riderData!.profilePic}',
+                                          //   ),
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                       ),
                                       SizedBox(width: size.width * 0.03),

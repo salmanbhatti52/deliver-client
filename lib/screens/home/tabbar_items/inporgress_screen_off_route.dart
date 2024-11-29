@@ -1751,15 +1751,28 @@ class _InProgressOffRouteState extends State<InProgressOffRoute> {
                                             color: transparentColor,
                                             width: 55,
                                             height: 55,
-                                            child: FadeInImage(
-                                              placeholder: const AssetImage(
-                                                "assets/images/user-profile.png",
-                                              ),
+                                            child: widget.riderData?.data?.bookingsFleet?[0].usersFleet?.profilePic != null &&
+                                                widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic!.isNotEmpty
+                                                ? FadeInImage(
+                                              placeholder: const AssetImage("assets/images/user-profile.png"),
                                               image: NetworkImage(
                                                 '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
                                               ),
                                               fit: BoxFit.cover,
+                                            )
+                                                : Image.asset(
+                                              "assets/images/user-profile.png", // Asset fallback image
+                                              fit: BoxFit.cover,
                                             ),
+                                            // child: FadeInImage(
+                                            //   placeholder: const AssetImage(
+                                            //     "assets/images/user-profile.png",
+                                            //   ),
+                                            //   image: NetworkImage(
+                                            //     '$imageUrl${widget.riderData!.data!.bookingsFleet![0].usersFleet!.profilePic}',
+                                            //   ),
+                                            //   fit: BoxFit.cover,
+                                            // ),
                                           ),
                                         ),
                                       ),

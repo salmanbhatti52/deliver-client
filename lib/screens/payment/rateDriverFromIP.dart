@@ -158,15 +158,28 @@ class _RateDriverFromIPState extends State<RateDriverFromIP> {
                                   color: transparentColor,
                                   width: 40,
                                   height: 40,
-                                  child: FadeInImage(
-                                    placeholder: const AssetImage(
-                                      "assets/images/user-profile.png",
-                                    ),
+                                  child: widget.riderData!['profile_pic'] != null &&
+                                      widget.riderData!['profile_pic']!.isNotEmpty
+                                      ? FadeInImage(
+                                    placeholder: const AssetImage("assets/images/user-profile.png"),
                                     image: NetworkImage(
                                       '$imageUrl${widget.riderData!['profile_pic']}',
                                     ),
                                     fit: BoxFit.cover,
+                                  )
+                                      : Image.asset(
+                                    "assets/images/user-profile.png", // Asset fallback image
+                                    fit: BoxFit.cover,
                                   ),
+                                  // child: FadeInImage(
+                                  //   placeholder: const AssetImage(
+                                  //     "assets/images/user-profile.png",
+                                  //   ),
+                                  //   image: NetworkImage(
+                                  //     '$imageUrl${widget.riderData!['profile_pic']}',
+                                  //   ),
+                                  //   fit: BoxFit.cover,
+                                  // ),
                                 ),
                               ),
                               SizedBox(width: size.width * 0.02),

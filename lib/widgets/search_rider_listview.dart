@@ -912,15 +912,27 @@ class _RidersListState extends State<RidersList> {
                           color: transparentColor,
                           width: 35,
                           height: 35,
-                          child: FadeInImage(
-                            placeholder: const AssetImage(
-                              "assets/images/user-profile.png",
-                            ),
+                          child: widget.searchRider?.usersFleetVehicles!.image != null
+                              ? FadeInImage(
+                            placeholder: const AssetImage("assets/images/user-profile.png"),
                             image: NetworkImage(
                               '$imageUrl${widget.searchRider?.usersFleetVehicles!.image}',
                             ),
                             fit: BoxFit.cover,
+                          )
+                              : Image.asset(
+                            "assets/images/user-profile.png", // Asset fallback image
+                            fit: BoxFit.cover,
                           ),
+                          // child: FadeInImage(
+                          //   placeholder: const AssetImage(
+                          //     "assets/images/user-profile.png",
+                          //   ),
+                          //   image: NetworkImage(
+                          //     '$imageUrl${widget.searchRider?.usersFleetVehicles!.image}',
+                          //   ),
+                          //   fit: BoxFit.cover,
+                          // ),
                         ),
                         // Image.asset(
                         //   'assets/images/user-profile.png',
@@ -1043,15 +1055,27 @@ class _RidersListState extends State<RidersList> {
               offset: const Offset(0, -1.5),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
-                child: FadeInImage(
-                  placeholder: const AssetImage(
-                    "assets/images/user-profile.png",
-                  ),
+                child: widget.searchRider?.usersFleetVehicles!.image != null
+                    ? FadeInImage(
+                  placeholder: const AssetImage("assets/images/user-profile.png"),
                   image: NetworkImage(
                     '$imageUrl${widget.searchRider?.usersFleetVehicles!.image}',
                   ),
                   fit: BoxFit.cover,
+                )
+                    : Image.asset(
+                  "assets/images/user-profile.png", // Asset fallback image
+                  fit: BoxFit.cover,
                 ),
+                // child: FadeInImage(
+                //   placeholder: const AssetImage(
+                //     "assets/images/user-profile.png",
+                //   ),
+                //   image: NetworkImage(
+                //     '$imageUrl${widget.searchRider?.usersFleetVehicles!.image}',
+                //   ),
+                //   fit: BoxFit.cover,
+                // ),
               ),
             ),
     );

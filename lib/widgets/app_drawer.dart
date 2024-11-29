@@ -191,15 +191,28 @@ class _AppDrawerState extends State<AppDrawer> {
                       color: transparentColor,
                       width: 120,
                       height: 120,
-                      child: FadeInImage(
-                        placeholder: const AssetImage(
-                          "assets/images/user-profile.png",
-                        ),
+                      child: profilePic != null &&
+                          profilePic!.isNotEmpty
+                          ? FadeInImage(
+                        placeholder: const AssetImage("assets/images/user-profile.png"),
                         image: NetworkImage(
                           '$imageUrl$profilePic',
                         ),
                         fit: BoxFit.cover,
+                      )
+                          : Image.asset(
+                        "assets/images/user-profile.png", // Asset fallback image
+                        fit: BoxFit.cover,
                       ),
+                      // child: FadeInImage(
+                      //   placeholder: const AssetImage(
+                      //     "assets/images/user-profile.png",
+                      //   ),
+                      //   image: NetworkImage(
+                      //     '$imageUrl$profilePic',
+                      //   ),
+                      //   fit: BoxFit.cover,
+                      // ),
                     ),
                   ),
                   SizedBox(height: size.height * 0.02),

@@ -180,24 +180,36 @@ class _InProgressListState extends State<InProgressList> {
                                       color: transparentColor,
                                       width: 60,
                                       height: 65,
-                                      child: FadeInImage(
-                                        placeholder: const AssetImage(
-                                          "assets/images/user-profile.png",
-                                        ),
+                                      child: inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic != null
+                                          ? FadeInImage(
+                                        placeholder: const AssetImage("assets/images/user-profile.png"),
                                         image: NetworkImage(
-                                          inProgressRideModel
-                                                          .data![reverseIndex]
-                                                          .bookingsFleet !=
-                                                      null &&
-                                                  inProgressRideModel
-                                                      .data![reverseIndex]
-                                                      .bookingsFleet!
-                                                      .isNotEmpty
-                                              ? '$imageUrl${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}'
-                                              : 'default_image_url_here', // replace with your default image URL
+                                          '$imageUrl${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}',
                                         ),
                                         fit: BoxFit.cover,
+                                      )
+                                          : Image.asset(
+                                        "assets/images/user-profile.png", // Asset fallback image
+                                        fit: BoxFit.cover,
                                       ),
+                                      // child: FadeInImage(
+                                      //   placeholder: const AssetImage(
+                                      //     "assets/images/user-profile.png",
+                                      //   ),
+                                      //   image: NetworkImage(
+                                      //     inProgressRideModel
+                                      //                     .data![reverseIndex]
+                                      //                     .bookingsFleet !=
+                                      //                 null &&
+                                      //             inProgressRideModel
+                                      //                 .data![reverseIndex]
+                                      //                 .bookingsFleet!
+                                      //                 .isNotEmpty
+                                      //         ? '$imageUrl${inProgressRideModel.data![reverseIndex].bookingsFleet?[0].usersFleet?.profilePic}'
+                                      //         : 'default_image_url_here', // replace with your default image URL
+                                      //   ),
+                                      //   fit: BoxFit.cover,
+                                      // ),
                                     ),
                                   ),
                                   SizedBox(width: size.width * 0.02),

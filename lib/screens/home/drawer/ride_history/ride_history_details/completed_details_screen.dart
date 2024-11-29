@@ -275,16 +275,28 @@ class _RideHistoryCompletedDetailsScreenState
                                                     color: transparentColor,
                                                     width: 60,
                                                     height: 65,
-                                                    child: FadeInImage(
-                                                      placeholder:
-                                                          const AssetImage(
-                                                        "assets/images/user-profile.png",
-                                                      ),
+                                                    child: widget.completedRideModel?.bookingsFleet?[index].usersFleet?.profilePic != null
+                                                        ? FadeInImage(
+                                                      placeholder: const AssetImage("assets/images/user-profile.png"),
                                                       image: NetworkImage(
                                                         '$imageUrl${widget.completedRideModel?.bookingsFleet?[index].usersFleet?.profilePic}',
                                                       ),
                                                       fit: BoxFit.cover,
+                                                    )
+                                                        : Image.asset(
+                                                      "assets/images/user-profile.png", // Asset fallback image
+                                                      fit: BoxFit.cover,
                                                     ),
+                                                    // child: FadeInImage(
+                                                    //   placeholder:
+                                                    //       const AssetImage(
+                                                    //     "assets/images/user-profile.png",
+                                                    //   ),
+                                                    //   image: NetworkImage(
+                                                    //     '$imageUrl${widget.completedRideModel?.bookingsFleet?[index].usersFleet?.profilePic}',
+                                                    //   ),
+                                                    //   fit: BoxFit.cover,
+                                                    // ),
                                                   ),
                                                 ),
                                                 SizedBox(
