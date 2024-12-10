@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:deliver_client/models/get_distance_addresses_model.dart';
 import 'package:deliver_client/models/get_profile_model.dart';
 import 'package:deliver_client/screens/home/drawer/settings/delete_account_screen.dart';
+import 'package:deliver_client/screens/home/tabbar_items/location_marker.dart';
 import 'package:deliver_client/screens/login/login_screen.dart';
 import 'package:deliver_client/screens/search_riders_screen.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
@@ -3269,8 +3270,20 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                   fontFamily: 'Inter-Light',
                                 ),
                                 suffixIcon: GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     getCurrentLocation();
+                                    // final result = await Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => const FullScreenMap(),
+                                    //   ),
+                                    // );
+                                    //
+                                    // if (result != null && result is String) {
+                                    //   setState(() {
+                                    //     pickupController.text = result;
+                                    //   });
+                                    // }
                                   },
                                   child: Container(
                                     color: transparentColor,
@@ -3441,7 +3454,7 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                                       Text(prediction.formattedAddress ?? ''),
                                   onTap: () async {
                                     final placeId = prediction.placeId; // Get the place_id of the selected prediction
-                                    final placeDetailsResponse = await places.getDetailsByPlaceId(placeId!);
+                                    final placeDetailsResponse = await places.getDetailsByPlaceId(placeId);
 
                                     if (placeDetailsResponse.isOkay) {
                                       final details = placeDetailsResponse.result;

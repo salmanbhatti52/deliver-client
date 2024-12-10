@@ -156,33 +156,40 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   String currentAddress = "";
 
   Future<void> getCurrentLocation() async {
-    final Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.best,
-    );
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+      );
 
-    final List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-    if (placemarks.isNotEmpty) {
-      final Placemark currentPlace = placemarks.first;
-      currentAddress =
-          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
-      setState(() {
-        currentLocation = LatLng(position.latitude, position.longitude);
-        selectedLocation = null; // Clear selected location
-        selectedAddressLocation = null; // Clear address location
-        selectedMarker = const MarkerId('currentLocation');
-        currentLat = position.latitude.toString();
-        currentLng = position.longitude.toString();
-        debugPrint("currentLat: $currentLat");
-        debugPrint("currentLng: $currentLng");
-        // widget.currentLats = position.latitude.toString();
-        // widget.currentLngs = position.longitude.toString();
-        // debugPrint("currentLat: ${widget.currentLats}");
-        // debugPrint("currentLng: ${widget.currentLngs}");
-        debugPrint("currentPickupLocation: $currentAddress");
-      });
-      mapController
-          ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
+      final List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      if (placemarks.isNotEmpty) {
+        final Placemark currentPlace = placemarks.first;
+        currentAddress =
+            "${currentPlace.street} ${currentPlace.subLocality} ${currentPlace.locality} ${currentPlace.administrativeArea} ${currentPlace.country}";
+
+        setState(() {
+          currentLocation = LatLng(position.latitude, position.longitude);
+          selectedLocation = null; // Clear selected location
+          selectedAddressLocation = null; // Clear address location
+          selectedMarker = const MarkerId('currentLocation');
+          currentLat = position.latitude.toString();
+          currentLng = position.longitude.toString();
+          debugPrint("currentLat: $currentLat");
+          debugPrint("currentLng: $currentLng");
+          // widget.currentLats = position.latitude.toString();
+          // widget.currentLngs = position.longitude.toString();
+          // debugPrint("currentLat: ${widget.currentLats}");
+          // debugPrint("currentLng: ${widget.currentLngs}");
+          debugPrint("currentPickupLocation: $currentAddress");
+        });
+        mapController
+            ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15));
+      } else {
+        debugPrint("No placemarks found.");
+      }
+    } catch (e) {
+      debugPrint("Error getting location: $e");
     }
   }
 
@@ -215,7 +222,7 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
   GetAddressesModel getAddressesModel = GetAddressesModel();
 
   getAddresses() async {
-    try {
+    // try {
       setState(() {
         isLoading = true;
       });
@@ -246,10 +253,10 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
           isLoading = false;
         });
       }
-    } catch (e) {
-      debugPrint('Something went wrong = ${e.toString()}');
-      return null;
-    }
+    // } catch (e) {
+    //   debugPrint('Something went wrong = ${e.toString()}');
+    //   return null;
+    // }
   }
 
   @override
@@ -353,7 +360,8 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                               ),
                             ),
                             if (addressesVisible)
-                              Padding(
+                              getAddressesModel.data != null
+                                  ? Padding(
                                 padding: const EdgeInsets.only(top: 40),
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -411,6 +419,27 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                       );
                                     },
                                   ),
+                                ),
+                              )
+                              : Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: filledColor,
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    width: size.width * 0.8,
+                                    height: size.height * 0.06,
+                                    child: ListTile(
+                                      title: const Text("Saved Addresses not found"),
+                                      // subtitle: Text("Saved Addresses not found"),
+                                      onTap: () {
+                                        addressesVisible = false;
+                                      },
+                                    )
                                 ),
                               ),
                           ],
@@ -522,36 +551,72 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                                         title: Text(prediction.name),
                                         subtitle: Text(
                                             prediction.formattedAddress ?? ''),
-                                        onTap: () {
-                                          widget.pickupController.text =
-                                              prediction.formattedAddress!;
-                                          final double lat =
-                                              prediction.geometry!.location.lat;
-                                          final double lng =
-                                              prediction.geometry!.location.lng;
-                                          const double zoomLevel = 15.0;
-                                          onPickUpLocationSelected(
-                                              LatLng(lat, lng), zoomLevel);
-                                          pickupLat = lat.toString();
-                                          pickupLng = lng.toString();
-                                          setState(() {
-                                            pickUpPredictions.clear();
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                            debugPrint(
-                                                "pickupLat Mutlipe: $pickupLat");
-                                            debugPrint(
-                                                "pickupLng Mutiple: $pickupLng");
-                                            debugPrint(
-                                                "pickupLocation: ${prediction.formattedAddress}");
-                                          });
-                                          // Move the map camera to the selected location
-                                          mapController?.animateCamera(
-                                            CameraUpdate.newLatLng(
-                                                selectedLocation!),
-                                          );
+                                        onTap: () async {
+                                          final placeId = prediction.placeId; // Get the place_id of the selected prediction
+                                          final placeDetailsResponse = await places.getDetailsByPlaceId(placeId);
+
+                                          if (placeDetailsResponse.isOkay) {
+                                            final details = placeDetailsResponse.result;
+
+                                            widget.pickupController.text = details.formattedAddress!;
+                                            final double lat = details.geometry!.location.lat;
+                                            final double lng = details.geometry!.location.lng;
+
+                                            const double zoomLevel = 15.0;
+                                            onPickUpLocationSelected(LatLng(lat, lng), zoomLevel);
+
+                                            pickupLat = lat.toString();
+                                            pickupLng = lng.toString();
+
+                                            setState(() {
+                                              pickUpPredictions.clear();
+                                              FocusManager.instance.primaryFocus?.unfocus();
+                                              debugPrint("pickupLat: $pickupLat");
+                                              debugPrint("pickupLng: $pickupLng");
+                                              debugPrint("pickupLocation: ${details.formattedAddress}");
+                                            });
+
+                                            // Move the map camera to the selected location
+                                            mapController?.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lng)));
+                                          } else {
+                                            debugPrint("Failed to fetch place details: ${placeDetailsResponse.errorMessage}");
+                                          }
                                         },
                                       );
+                                      // return ListTile(
+                                      //   title: Text(prediction.name),
+                                      //   subtitle: Text(
+                                      //       prediction.formattedAddress ?? ''),
+                                      //   onTap: () {
+                                      //     widget.pickupController.text =
+                                      //         prediction.formattedAddress!;
+                                      //     final double lat =
+                                      //         prediction.geometry!.location.lat;
+                                      //     final double lng =
+                                      //         prediction.geometry!.location.lng;
+                                      //     const double zoomLevel = 15.0;
+                                      //     onPickUpLocationSelected(
+                                      //         LatLng(lat, lng), zoomLevel);
+                                      //     pickupLat = lat.toString();
+                                      //     pickupLng = lng.toString();
+                                      //     setState(() {
+                                      //       pickUpPredictions.clear();
+                                      //       FocusManager.instance.primaryFocus
+                                      //           ?.unfocus();
+                                      //       debugPrint(
+                                      //           "pickupLat Mutlipe: $pickupLat");
+                                      //       debugPrint(
+                                      //           "pickupLng Mutiple: $pickupLng");
+                                      //       debugPrint(
+                                      //           "pickupLocation: ${prediction.formattedAddress}");
+                                      //     });
+                                      //     // Move the map camera to the selected location
+                                      //     mapController?.animateCamera(
+                                      //       CameraUpdate.newLatLng(
+                                      //           selectedLocation!),
+                                      //     );
+                                      //   },
+                                      // );
                                     },
                                     separatorBuilder: (context, index) {
                                       return Divider(
@@ -655,30 +720,59 @@ class _HomeTextFieldsState extends State<HomeTextFields> {
                               itemBuilder: (context, index) {
                                 final prediction =
                                     destinationPredictions[index];
+                                // return ListTile(
+                                //   title: Text(prediction.name),
+                                //   subtitle:
+                                //       Text(prediction.formattedAddress ?? ''),
+                                //   onTap: () {
+                                //     widget.destinationController.text =
+                                //         prediction.formattedAddress!;
+                                //     final double lat =
+                                //         prediction.geometry!.location.lat;
+                                //     final double lng =
+                                //         prediction.geometry!.location.lng;
+                                //     destinationLat = lat.toString();
+                                //     destinationLng = lng.toString();
+                                //     setState(() {
+                                //       destinationPredictions.clear();
+                                //       FocusManager.instance.primaryFocus
+                                //           ?.unfocus();
+                                //       debugPrint(
+                                //           "destinationLat Multiple: $destinationLat");
+                                //       debugPrint(
+                                //           "destinationLng Multiple: $destinationLng");
+                                //       debugPrint(
+                                //           "destinationLocation: ${prediction.formattedAddress}");
+                                //     });
+                                //   },
+                                // );
                                 return ListTile(
                                   title: Text(prediction.name),
                                   subtitle:
-                                      Text(prediction.formattedAddress ?? ''),
-                                  onTap: () {
-                                    widget.destinationController.text =
-                                        prediction.formattedAddress!;
-                                    final double lat =
-                                        prediction.geometry!.location.lat;
-                                    final double lng =
-                                        prediction.geometry!.location.lng;
-                                    destinationLat = lat.toString();
-                                    destinationLng = lng.toString();
-                                    setState(() {
-                                      destinationPredictions.clear();
-                                      FocusManager.instance.primaryFocus
-                                          ?.unfocus();
-                                      debugPrint(
-                                          "destinationLat Multiple: $destinationLat");
-                                      debugPrint(
-                                          "destinationLng Multiple: $destinationLng");
-                                      debugPrint(
-                                          "destinationLocation: ${prediction.formattedAddress}");
-                                    });
+                                  Text(prediction.formattedAddress ?? ''),
+                                  onTap: () async {
+                                    final placeId = prediction.placeId; // Get the place_id of the selected prediction
+                                    final placeDetailsResponse = await places.getDetailsByPlaceId(placeId);
+
+                                    if (placeDetailsResponse.isOkay) {
+                                      final details = placeDetailsResponse.result;
+                                      widget.destinationController.text = details.formattedAddress!;
+                                      final double lat = details.geometry!.location.lat;
+                                      final double lng = details.geometry!.location.lng;
+                                      destinationLat = lat.toString();
+                                      destinationLng = lng.toString();
+                                      setState(() {
+                                        destinationPredictions.clear();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
+                                        debugPrint(
+                                            "destinationLat: $destinationLat");
+                                        debugPrint(
+                                            "destinationLng $destinationLng");
+                                        debugPrint(
+                                            "destinationLocation: ${prediction.formattedAddress}");
+                                      });
+                                    }
                                   },
                                 );
                               },

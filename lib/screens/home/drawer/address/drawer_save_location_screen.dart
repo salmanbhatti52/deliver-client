@@ -163,6 +163,7 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
   }
 
   Future<void> getCurrentLocation() async {
+    try{
     final Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.best,
     );
@@ -173,8 +174,7 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
     if (placemarks.isNotEmpty) {
       final Placemark currentPlace = placemarks.first;
       final String currentAddress =
-          "${currentPlace.name}, ${currentPlace.locality}, ${currentPlace.country}";
-
+          "${currentPlace.street} ${currentPlace.subLocality} ${currentPlace.locality} ${currentPlace.administrativeArea} ${currentPlace.country}";
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         selectedLocation = null; // Clear selected location
@@ -189,6 +189,11 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
 
       mapController
           ?.animateCamera(CameraUpdate.newLatLngZoom(currentLocation!, 15.0));
+    } else {
+      debugPrint("No placemarks found.");
+    }
+    } catch (e) {
+      debugPrint("Error getting location: $e");
     }
   }
 
@@ -383,32 +388,61 @@ class _DrawerSaveLocationScreenState extends State<DrawerSaveLocationScreen> {
                                             subtitle: Text(
                                                 prediction.formattedAddress ??
                                                     ''),
-                                            onTap: () {
-                                              searchController.text =
-                                                  prediction.formattedAddress!;
-                                              final double lat = prediction
-                                                  .geometry!.location.lat;
-                                              final double lng = prediction
-                                                  .geometry!.location.lng;
-                                              const double zoomLevel = 15.0;
-                                              onAddressLocationSelected(
-                                                  LatLng(lat, lng), zoomLevel);
-                                              addressLat = lat.toString();
-                                              addressLng = lng.toString();
-                                              setState(() {
-                                                addressPredictions.clear();
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
-                                                debugPrint("pickupLat: $addressLat");
-                                                debugPrint("pickupLng $addressLng");
-                                                debugPrint(
-                                                    "pickupLocation: ${prediction.formattedAddress}");
-                                              });
-                                              // Move the map camera to the selected location
-                                              mapController?.animateCamera(
-                                                  CameraUpdate.newLatLng(
-                                                      selectedLocation!));
+                                            onTap: () async {
+                                              final placeId = prediction.placeId; // Get the place_id of the selected prediction
+                                              final placeDetailsResponse = await places.getDetailsByPlaceId(placeId);
+
+                                              if (placeDetailsResponse.isOkay) {
+                                                final details = placeDetailsResponse.result;
+
+                                                searchController.text = details.formattedAddress!;
+                                                final double lat = details.geometry!.location.lat;
+                                                final double lng = details.geometry!.location.lng;
+
+                                                const double zoomLevel = 15.0;
+                                                onAddressLocationSelected(LatLng(lat, lng), zoomLevel);
+
+                                                addressLat = lat.toString();
+                                                addressLng = lng.toString();
+
+                                                setState(() {
+                                                  addressPredictions.clear();
+                                                  FocusManager.instance.primaryFocus?.unfocus();
+                                                  debugPrint("pickupLat: $addressLat");
+                                                  debugPrint("pickupLng: $addressLng");
+                                                  debugPrint("pickupLocation: ${details.formattedAddress}");
+                                                });
+
+                                                // Move the map camera to the selected location
+                                                mapController?.animateCamera(CameraUpdate.newLatLng(LatLng(lat, lng)));
+                                              } else {
+                                                debugPrint("Failed to fetch place details: ${placeDetailsResponse.errorMessage}");
+                                              }
+                                              // searchController.text =
+                                              //     prediction.formattedAddress!;
+                                              // final double lat = prediction
+                                              //     .geometry!.location.lat;
+                                              // final double lng = prediction
+                                              //     .geometry!.location.lng;
+                                              // const double zoomLevel = 15.0;
+                                              // onAddressLocationSelected(
+                                              //     LatLng(lat, lng), zoomLevel);
+                                              // addressLat = lat.toString();
+                                              // addressLng = lng.toString();
+                                              // setState(() {
+                                              //   addressPredictions.clear();
+                                              //   FocusManager
+                                              //       .instance.primaryFocus
+                                              //       ?.unfocus();
+                                              //   debugPrint("pickupLat: $addressLat");
+                                              //   debugPrint("pickupLng $addressLng");
+                                              //   debugPrint(
+                                              //       "pickupLocation: ${prediction.formattedAddress}");
+                                              // });
+                                              // // Move the map camera to the selected location
+                                              // mapController?.animateCamera(
+                                              //     CameraUpdate.newLatLng(
+                                              //         selectedLocation!));
                                             },
                                           );
                                         },
