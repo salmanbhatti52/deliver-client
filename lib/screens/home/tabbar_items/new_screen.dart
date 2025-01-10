@@ -2864,7 +2864,10 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
                               }
                             },
                             child: isLoading
-                                ? buttonGradientSmallWithLoader(
+                                ? isLoading2 ? buttonGradientSmall(
+                              "FIND RIDER",
+                              context,
+                            ) : buttonGradientSmallWithLoader(
                                     "Please Wait...",
                                     context,
                                   )
