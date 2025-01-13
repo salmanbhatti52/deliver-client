@@ -557,11 +557,26 @@ class _InProgressHomeScreenState extends State<InProgressHomeScreen> {
       // Get estimated time and distance
       var legs = data["routes"][0]["legs"][0];
       setState(() {
-        estimatedTime = legs["duration"]["text"];
-        distanceRemaining = legs["distance"]["text"];
+        distanceRemaining = legs["distance"]["text"]; // Example: "1.2 km"
+        estimatedTime = _parseDuration(legs["duration"]);
       });
     }
   }
+
+  String _parseDuration(Map<String, dynamic> duration) {
+    int value = duration["value"]; // Duration in seconds
+    if (value < 60) {
+      return "$value sec"; // Less than a minute
+    } else if (value < 3600) {
+      int minutes = value ~/ 60;
+      return "$minutes min"; // Less than an hour
+    } else {
+      int hours = value ~/ 3600;
+      int minutes = (value % 3600) ~/ 60;
+      return "$hours hr ${minutes > 0 ? "$minutes min" : ""}";
+    }
+  }
+
 
   // Method to decode polyline to LatLng list
   List<LatLng> decodePolyline(String encoded) {
