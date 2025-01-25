@@ -862,6 +862,11 @@ class _NewScreenState extends State<NewScreen> with WidgetsBindingObserver {
         fontSize: 12,
         message: "${getDistanceAddressesModel.message}",
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+        isLoading2 = false; // Reset the other loading state as well
+      });
     }
   }
 

@@ -457,7 +457,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                       ),
                                       _buildTimelineTile(
                                         isFirst: false,
-                                        isLast: false,
+                                        isLast: true,
                                         // Assuming there's a variable like formattedDate for this event
                                         // isPast: true, // Original
                                         isPast: formattedDate1 !=
@@ -465,23 +465,23 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                         eventCard: _buildEventCard(
                                           title: 'Order Shipped',
                                           description: formattedDate1 != null
-                                              ? 'Your order has been shipped and is on its way.'
+                                              ? 'Your order has been shipped and is on its destination.'
                                               : 'Your order is pending shipment.',
                                           icon: Icons.local_shipping,
                                         ),
                                       ),
-                                      _buildTimelineTile(
-                                        isFirst: false,
-                                        isLast: true,
-                                        // Assuming formattedDate2 is related to this event's time
-                                        isPast: formattedDate2 != null,
-                                        eventCard: _buildEventCard(
-                                          title: '$formattedDate4',
-                                          description:
-                                              formattedDate2 ?? 'Pending',
-                                          icon: Icons.home,
-                                        ),
-                                      ),
+                                      // _buildTimelineTile(
+                                      //   isFirst: false,
+                                      //   isLast: true,
+                                      //   // Assuming formattedDate2 is related to this event's time
+                                      //   isPast: formattedDate2 != null,
+                                      //   eventCard: _buildEventCard(
+                                      //     title: '$formattedDate4',
+                                      //     description:
+                                      //         formattedDate2 ?? 'Pending',
+                                      //     icon: Icons.home,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
