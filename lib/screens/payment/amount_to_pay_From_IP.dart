@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:deliver_client/screens/payment/amount_Paid_From_IP.dart';
@@ -111,8 +112,52 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
     }
   }
 
-  void startPayStack() {
-    payStackClient.initialize(publicKey: publicKey!);
+  Future<String?> fetchPaymentGatewayKey() async {
+    String apiUrl = "$baseUrl/get_payment_gateway_key";
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded', // Ensure correct content type
+        },
+        body: {
+          "payment_gateways_id": "2",
+        },
+      );
+
+      print("Response Body: ${response.body}"); // Log response for debugging
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData["status"] == "success") {
+          return responseData["data"]["key"];
+        } else {
+          print("API Error: ${responseData["status"]}");
+        }
+      } else {
+        print("Failed to fetch key. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching payment gateway key: $e");
+    }
+    return null;
+  }
+
+  void getKeyAndStartPayment() async {
+    String? publicKey = await fetchPaymentGatewayKey();
+
+    if (publicKey != null) {
+      print("Public Key: $publicKey");
+      startPayStack(publicKey);
+    } else {
+      print("Failed to fetch payment key");
+    }
+  }
+
+
+  void startPayStack(String publicKey) {
+    payStackClient.initialize(publicKey: publicKey);
   }
 
   void makePayment() async {
@@ -288,7 +333,7 @@ class _AmountToPayFromInProgressState extends State<AmountToPayFromInProgress> {
       debugPrint("Multiple data so no polyline will be shown!");
       debugPrint("Multiple data so no custom marker will be shown!");
     }
-    startPayStack();
+    getKeyAndStartPayment();
     loadCustomMarker();
     if (widget.singleData!.isNotEmpty) {
       double parsedValue = double.parse(widget.multipleData!['total_charges']);

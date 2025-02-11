@@ -128,8 +128,52 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     }
   }
 
-  void startPayStack() {
-    payStackClient.initialize(publicKey: publicKey!);
+  Future<String?> fetchPaymentGatewayKey() async {
+    String apiUrl = "$baseUrl/get_payment_gateway_key";
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded', // Ensure correct content type
+        },
+        body: {
+          "payment_gateways_id": "2",
+        },
+      );
+
+      print("Response Body: ${response.body}"); // Log response for debugging
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        if (responseData["status"] == "success") {
+          return responseData["data"]["key"];
+        } else {
+          print("API Error: ${responseData["status"]}");
+        }
+      } else {
+        print("Failed to fetch key. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching payment gateway key: $e");
+    }
+    return null;
+  }
+
+  void getKeyAndStartPayment() async {
+    String? publicKey = await fetchPaymentGatewayKey();
+
+    if (publicKey != null) {
+      print("Public Key: $publicKey");
+      startPayStack(publicKey);
+    } else {
+      print("Failed to fetch payment key");
+    }
+  }
+
+
+  void startPayStack(String publicKey) {
+    payStackClient.initialize(publicKey: publicKey);
   }
 
   void makePayment() async {
@@ -410,7 +454,8 @@ class _BookingAcceptedScreenState extends State<BookingAcceptedScreen> {
     getAllSystemData();
     loadCustomMarker();
     sharedPref();
-    startPayStack();
+    getKeyAndStartPayment();
+    // startPayStack();
     updateBookingStatus();
     lat = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.latitude}";
     lng = "${widget.riderData!.data!.bookingsFleet![0].usersFleet!.longitude}";
